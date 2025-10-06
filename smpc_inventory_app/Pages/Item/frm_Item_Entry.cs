@@ -91,7 +91,7 @@ namespace smpc_inventory_app.Pages.Item
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: " + ex.Message, "Loading Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
