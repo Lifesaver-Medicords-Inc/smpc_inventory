@@ -95,6 +95,9 @@ namespace smpc_inventory_app.Pages.Inventory
             //Get inventory data
             _rawData = await InventoryLogbookService.GetAsDatatable(currentWarehouseId);
 
+            // Add day-based columns (IN/OUT)
+            AddDailyColumnsToDataTable(_rawData);
+
             //Bind grouped data
             dgv_inventory_item.DataSource = _rawData;
 
@@ -104,6 +107,114 @@ namespace smpc_inventory_app.Pages.Inventory
                 int detailsIndex = dgv_inventory_item.Columns["details"].DisplayIndex;
                 dgv_inventory_item.Columns["total_stock"].DisplayIndex = detailsIndex + 1;
             }
+        }
+
+        private void AddDailyColumnsToDataTable(DataTable data)
+        {
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+
+            // Create columns for each day: in_1, out_1, in_2, out_2, ...
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                string inCol = $"in_{day}";
+                string outCol = $"out_{day}";
+
+                if (!data.Columns.Contains(inCol))
+                    data.Columns.Add(inCol, typeof(string));
+
+                if (!data.Columns.Contains(outCol))
+                    data.Columns.Add(outCol, typeof(string));
+            }
+
+            // Ensure totals exist
+            if (!data.Columns.Contains("in_total"))
+                data.Columns.Add("in_total", typeof(string));
+            if (!data.Columns.Contains("out_total"))
+                data.Columns.Add("out_total", typeof(string));
+        }
+
+        private void AddDailyColumnsToGrid()
+        {
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+
+            // Remove old day columns
+            var dayColumns = dgv_inventory_item.Columns.Cast<DataGridViewColumn>()
+                .Where(c => c.Name.StartsWith("in_") || c.Name.StartsWith("out_"))
+                .ToList();
+
+            foreach (var col in dayColumns)
+                dgv_inventory_item.Columns.Remove(col);
+
+            int insertAfter = 5; // Adjust based on your fixed columns
+            var newColumnGroups = new Dictionary<string, string[]>(baseColumnGroups);
+
+            // Track columns per group for grouped headers
+            List<string> inColumns = new List<string>();
+            List<string> outColumns = new List<string>();
+
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                string inCol = $"in_{day}";
+                string outCol = $"out_{day}";
+
+                // IN columns
+                var inColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = inCol,
+                    HeaderText = day.ToString(),
+                    DataPropertyName = inCol,
+                    ReadOnly = true
+                };
+                dgv_inventory_item.Columns.Add(inColumn);
+                dgv_inventory_item.Columns[inCol].DisplayIndex = insertAfter++;
+                inColumns.Add(inCol);
+
+                // OUT columns
+                var outColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = outCol,
+                    HeaderText = day.ToString(),
+                    DataPropertyName = outCol,
+                    ReadOnly = true
+                };
+                dgv_inventory_item.Columns.Add(outColumn);
+                dgv_inventory_item.Columns[outCol].DisplayIndex = insertAfter++;
+                outColumns.Add(outCol);
+            }
+
+            // Add grouped headers for IN and OUT
+            newColumnGroups["IN"] = inColumns.ToArray();
+            newColumnGroups["OUT"] = outColumns.ToArray();
+
+            // Add TOTAL at the end if missing
+            if (!dgv_inventory_item.Columns.Contains("in_total"))
+            {
+                dgv_inventory_item.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "in_total",
+                    HeaderText = "IN TOTAL",
+                    DataPropertyName = "in_total",
+                    ReadOnly = true
+                });
+            }
+
+            if (!dgv_inventory_item.Columns.Contains("out_total"))
+            {
+                dgv_inventory_item.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "out_total",
+                    HeaderText = "OUT TOTAL",
+                    DataPropertyName = "out_total",
+                    ReadOnly = true
+                });
+            }
+
+            // Apply grouped headers
+            Helpers.EnableGroupHeaders(dgv_inventory_item, newColumnGroups);
         }
 
         private async void btn_next_Click(object sender, EventArgs e)
