@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="smpc_inventory_app.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="REPORTPATH" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\SMPC\Desktop\FINAL INVENTORY\smpc_inventory_app\smpc_inventory_app\Reports</Value>
+    </Setting>
+    <Setting Name="AFTERSALESPATH" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Public\Documents\SMPC\AFTERSALES</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

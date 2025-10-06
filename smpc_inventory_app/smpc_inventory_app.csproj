@@ -1,0 +1,837 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6760BAE6-1169-4C10-92E6-DFC30C3BEC3A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>smpc_inventory_app</RootNamespace>
+    <AssemblyName>smpc_inventory_app</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="smpc_sales_system">
+      <HintPath>..\..\..\New folder\smpc_sales_system\smpc_sales_system\bin\Debug\smpc_sales_system.exe</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.CodeDom, Version=9.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.CodeDom.9.0.1\lib\net462\System.CodeDom.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\CacheData.cs" />
+    <Compile Include="Data\ENUM_ENDPOINT.cs" />
+    <Compile Include="Data\ENUM_ENTITY_TYPE.cs" />
+    <Compile Include="Data\ENUM_ITEM_SPECS.cs" />
+    <Compile Include="Data\ENUM_PAYMENT_TERMS.cs" />
+    <Compile Include="Data\ENUM_QUOTATION_PURPOSE.cs" />
+    <Compile Include="Data\ENUM_QUOTE_WITH_TEMP.cs" />
+    <Compile Include="Data\ENUM_SHIPPED_TYPE.cs" />
+    <Compile Include="Data\ENUM_TAX_CODE.cs" />
+    <Compile Include="Data\ENUM_WARRANTY.cs" />
+    <Compile Include="Data\TableContentChanged.cs" />
+    <Compile Include="Model\CurrentUserModel.cs" />
+    <Compile Include="Pages\Business_Partner_Info\BpiTemplate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\BpiTemplate.Designer.cs">
+      <DependentUpon>BpiTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\Bpi_Modal\ItemEntryModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\Bpi_Modal\ItemEntryModal.Designer.cs">
+      <DependentUpon>ItemEntryModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\Bpi_Modal\ItemModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\Bpi_Modal\ItemModal.Designer.cs">
+      <DependentUpon>ItemModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\BusinessPartnerInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\BusinessPartnerInfo.Designer.cs">
+      <DependentUpon>BusinessPartnerInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\frm_Business_Partner_Info.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\frm_Business_Partner_Info.Designer.cs">
+      <DependentUpon>frm_Business_Partner_Info.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Engineering\Bom\bom.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Engineering\Bom\bom.Designer.cs">
+      <DependentUpon>bom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Engineering\Bom\BomItemModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Engineering\Bom\BomItemModal.Designer.cs">
+      <DependentUpon>BomItemModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Engineering\Bom\BomSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Engineering\Bom\BomSearch.Designer.cs">
+      <DependentUpon>BomSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Engineering\Bom\SetupItemModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Engineering\Bom\SetupItemModal.Designer.cs">
+      <DependentUpon>SetupItemModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Engineering\Boq\boq.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Engineering\Boq\boq.Designer.cs">
+      <DependentUpon>boq.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Engineering\Boq\BoqSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Engineering\Boq\BoqSearch.Designer.cs">
+      <DependentUpon>BoqSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Engineering\Boq\ItemModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Engineering\Boq\ItemModal.Designer.cs">
+      <DependentUpon>ItemModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Engineering\Boq\ItemSetSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Engineering\Boq\ItemSetSearch.Designer.cs">
+      <DependentUpon>ItemSetSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\InventoryLogbook.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\InventoryLogbook.Designer.cs">
+      <DependentUpon>InventoryLogbook.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\InventoryTracker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\InventoryTracker.Designer.cs">
+      <DependentUpon>InventoryTracker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\InventoryTrackerModals\InventoryTrackerLocation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\InventoryTrackerModals\InventoryTrackerLocation.Designer.cs">
+      <DependentUpon>InventoryTrackerLocation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ReceivingReport.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ReceivingReport.Designer.cs">
+      <DependentUpon>ReceivingReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ReceivingReportModals\ReceivingReportSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ReceivingReportModals\ReceivingReportSearch.Designer.cs">
+      <DependentUpon>ReceivingReportSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Item\BusnessPartnerInfoModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Item\BusnessPartnerInfoModal.Designer.cs">
+      <DependentUpon>BusnessPartnerInfoModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Item\frm_Item_Entry.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Item\frm_Item_Entry.Designer.cs">
+      <DependentUpon>frm_Item_Entry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Item\ItemEntry.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Item\ItemEntry.Designer.cs">
+      <DependentUpon>ItemEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Item\ItemEntryComaparisonModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Item\ItemEntryComaparisonModal.Designer.cs">
+      <DependentUpon>ItemEntryComaparisonModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Layout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Layout.designer.cs">
+      <DependentUpon>Layout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\CanvassSheet\CanvassSheet.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\CanvassSheet\CanvassSheet.Designer.cs">
+      <DependentUpon>CanvassSheet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\CanvassSheetModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\CanvassSheetModal.Designer.cs">
+      <DependentUpon>CanvassSheetModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\ItemDetailsModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\ItemDetailsModal.Designer.cs">
+      <DependentUpon>ItemDetailsModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\PurchaseRequisitionDistributionModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\PurchaseRequisitionDistributionModal.Designer.cs">
+      <DependentUpon>PurchaseRequisitionDistributionModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\SalesOrderDistributionModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\SalesOrderDistributionModal.Designer.cs">
+      <DependentUpon>SalesOrderDistributionModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\SupplierModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\SupplierModal.Designer.cs">
+      <DependentUpon>SupplierModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\ViewDetailsModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\ViewDetailsModal.Designer.cs">
+      <DependentUpon>ViewDetailsModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\NewPurchasingList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\NewPurchasingList.Designer.cs">
+      <DependentUpon>NewPurchasingList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\PurchaseRequisitionDisbtributionCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\PurchaseRequisitionDisbtributionCard.Designer.cs">
+      <DependentUpon>PurchaseRequisitionDisbtributionCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\SalesOrderDistributionCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\SalesOrderDistributionCard.Designer.cs">
+      <DependentUpon>SalesOrderDistributionCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\PRPurchaseItemCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\PRPurchaseItemCard.Designer.cs">
+      <DependentUpon>PRPurchaseItemCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\SOPurchaseItemCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\SOPurchaseItemCard.Designer.cs">
+      <DependentUpon>SOPurchaseItemCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseOrder\PurchaseOrder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseOrder\PurchaseOrder.Designer.cs">
+      <DependentUpon>PurchaseOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Redbox\PurchaseRequisitionCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Redbox\PurchaseRequisitionCard.Designer.cs">
+      <DependentUpon>PurchaseRequisitionCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\OldPurchasingList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseList\OldPurchasingList.Designer.cs">
+      <DependentUpon>OldPurchasingList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Redbox\SalesOrderCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Redbox\SalesOrderCard.Designer.cs">
+      <DependentUpon>SalesOrderCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\production.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\production.Designer.cs">
+      <DependentUpon>production.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SearchModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\SearchModal.designer.cs">
+      <DependentUpon>SearchModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SetupSelectionModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\SetupSelectionModal.Designer.cs">
+      <DependentUpon>SetupSelectionModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SetupModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\SetupModal.Designer.cs">
+      <DependentUpon>SetupModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_entity_type.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_entity_type.Designer.cs">
+      <DependentUpon>frm_entity_type.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_industries.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_industries.Designer.cs">
+      <DependentUpon>frm_industries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_brand_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_brand_setup.Designer.cs">
+      <DependentUpon>frm_item_brand_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_class_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_class_setup.Designer.cs">
+      <DependentUpon>frm_item_class_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_material_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_material_setup.Designer.cs">
+      <DependentUpon>frm_item_material_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_name_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_name_setup.Designer.cs">
+      <DependentUpon>frm_item_name_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_pump_count_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_pump_count_setup.Designer.cs">
+      <DependentUpon>frm_item_pump_count_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_pump_type_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_pump_type_setup.Designer.cs">
+      <DependentUpon>frm_item_pump_type_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_type_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_type_setup.Designer.cs">
+      <DependentUpon>frm_item_type_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_payment_terms_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_payment_terms_setup.Designer.cs">
+      <DependentUpon>frm_payment_terms_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_position_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_position_setup.Designer.cs">
+      <DependentUpon>frm_position_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_receiving_report_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_receiving_report_setup.Designer.cs">
+      <DependentUpon>frm_receiving_report_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_unit_of_measure_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_unit_of_measure_setup.Designer.cs">
+      <DependentUpon>frm_unit_of_measure_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_warehouse_name_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_warehouse_name_setup.Designer.cs">
+      <DependentUpon>frm_warehouse_name_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_warehouse_usetype_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_warehouse_usetype_setup.Designer.cs">
+      <DependentUpon>frm_warehouse_usetype_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\ItemModelSelectionModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\ItemModelSelectionModal.Designer.cs">
+      <DependentUpon>ItemModelSelectionModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\ItemModelSetupModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\ItemModelSetupModal.Designer.cs">
+      <DependentUpon>ItemModelSetupModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_model_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_model_setup.Designer.cs">
+      <DependentUpon>frm_item_model_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_social_media_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_social_media_setup.Designer.cs">
+      <DependentUpon>frm_social_media_setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Setup\TradeTypeSelectionModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\TradeTypeSelectionModal.Designer.cs">
+      <DependentUpon>TradeTypeSelectionModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Shared\LoaderIdicatorOverlay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Shared\LoaderIdicatorOverlay.Designer.cs">
+      <DependentUpon>LoaderIdicatorOverlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\WebSocketForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\WebSocketForm.Designer.cs">
+      <DependentUpon>WebSocketForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Auth\AuthServices.cs" />
+    <Compile Include="Services\Helpers\Helpers.cs" />
+    <Compile Include="Services\Helpers\JsonHelper.cs" />
+    <Compile Include="Services\Helpers\RequestToApi.cs" />
+    <Compile Include="Services\Helpers\RouteServices.cs" />
+    <Compile Include="Services\Setup\Bom\ItemListBomServices.cs" />
+    <Compile Include="Services\Setup\Boq\BoqNotesServices.cs" />
+    <Compile Include="Services\Setup\Boq\BoqServices.cs" />
+    <Compile Include="Services\Helpers\WebsocketServices.cs" />
+    <Compile Include="Services\Setup\Bpi\BpiServices.cs" />
+    <Compile Include="Services\Setup\Bpi\ItemListBpiServices.cs" />
+    <Compile Include="Services\Setup\Bom\BomServices.cs" />
+    <Compile Include="Services\Setup\Inventory\InventoryLogbookService.cs" />
+    <Compile Include="Services\Setup\Inventory\InventoryTrackerService.cs" />
+    <Compile Include="Services\Setup\Inventory\ReceivingReportService.cs" />
+    <Compile Include="Services\Setup\Model\Inventory\InventoryList.cs" />
+    <Compile Include="Services\Setup\Item\PositionServices.cs" />
+    <Compile Include="Services\Setup\EntityServices.cs" />
+    <Compile Include="Services\Setup\IndustriesServices.cs" />
+    <Compile Include="Services\Setup\Item\GeneralSetupServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemImageServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemMaterialServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemModelServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemNameServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemClassServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemPumpCountServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemPumpTypeServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemServices.cs" />
+    <Compile Include="Services\Setup\Item\ItemTypeServices.cs" />
+    <Compile Include="Services\Setup\Item\PaymentTermsServices.cs" />
+    <Compile Include="Services\Setup\Item\ShipTypeServices.cs" />
+    <Compile Include="Services\Setup\Item\ReceivingReportServices.cs" />
+    <Compile Include="Services\Setup\Model\Bom\BomClass.cs" />
+    <Compile Include="Services\Setup\Model\Bom\ItemBomList.cs" />
+    <Compile Include="Services\Setup\Model\Boq\BoqModel.cs" />
+    <Compile Include="Services\Setup\Model\Boq\SalesWiringModel.cs" />
+    <Compile Include="Services\Setup\Model\Bpi\Bpi.cs" />
+    <Compile Include="Services\Setup\Model\Bpi\BpiEntity.cs" />
+    <Compile Include="Services\Setup\Model\Bpi\ItemBpiList.cs" />
+    <Compile Include="Services\Setup\Model\EntityModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\AdditionalSpecsModel.cs" />
+    <Compile Include="Services\Setup\Model\Purchasing\PurchaseOrderListModel.cs" />
+    <Compile Include="Services\Setup\Model\Purchasing\ReceivingReportModel.cs" />
+    <Compile Include="Services\Setup\Model\Warehouse\WarehouseAddress.cs" />
+    <Compile Include="Services\Setup\Model\Warehouse\WarehouseAreasModel.cs" />
+    <Compile Include="Services\Setup\Model\Warehouse\WarehouseNameModel.cs" />
+    <Compile Include="Services\Setup\Model\Warehouse\WarehouseUsetypeModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemImageModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemMaterialModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemProductionModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemPumpCountModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemPumpTypeModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemPurchasingModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemSalesModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\PositionModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\BomModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemSpecsModel.cs" />
+    <Compile Include="Services\Setup\Model\Purchasing\GuidingPriceModel.cs" />
+    <Compile Include="Services\Setup\Model\Purchasing\PRPurchasingListModel.cs" />
+    <Compile Include="Services\Setup\Model\Purchasing\PurchaseOrderModel.cs" />
+    <Compile Include="Services\Setup\Model\Purchasing\PurchasingCanvassSheetModel.cs" />
+    <Compile Include="Services\Setup\Model\Purchasing\SOPurchasingListModel.cs" />
+    <Compile Include="Services\Setup\Model\Purchasing\PurchasingRedboxListModel.cs" />
+    <Compile Include="Services\Setup\Model\Sales\ShipModel.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchasingList\GuidingPriceServices.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchasingList\PRPurchasingListServices.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchaseOrder\PurchaseOrderServices.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchasingList\PurchaseOrderListServices.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchasingList\PurchasingCanvassSheetServices.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchasingList\SOPurchasingListServices.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchasingRedboxListServices.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchasingList\PurchasingListSupplierServices.cs" />
+    <Compile Include="Services\Setup\Sales\ShipServices.cs" />
+    <Compile Include="Services\Setup\SocialMediaServices.cs" />
+    <Compile Include="Services\Setup\Item\UnitOfMeasurementServices.cs" />
+    <Compile Include="Services\Setup\Model\Item\BrandModel.cs" />
+    <Compile Include="Services\Setup\Item\ItemBrandServices.cs" />
+    <Compile Include="Services\Setup\Model\ApiResponseModel.cs" />
+    <Compile Include="Services\Setup\Model\GeneralSetupModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemClassModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemModelModel.cs" />
+    <Compile Include="Services\Setup\Model\IndustriesModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemTypeModel.cs" />
+    <Compile Include="Services\Setup\Model\PaymentTerms.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemNameModel.cs" />
+    <Compile Include="Services\Setup\Model\UnitOfMeasurementModel.cs" />
+    <Compile Include="Services\Setup\Warehouse\ListOfUsersServices.cs" />
+    <Compile Include="Services\Setup\Warehouse\WarehouseAddressServices.cs" />
+    <Compile Include="Services\Setup\Warehouse\WarehouseAreaServices.cs" />
+    <Compile Include="Services\Setup\Warehouse\WarehouseNameServices.cs" />
+    <Compile Include="Services\Setup\Warehouse\WarehouseUsetypeServices.cs" />
+    <EmbeddedResource Include="Pages\Business_Partner_Info\BpiTemplate.resx">
+      <DependentUpon>BpiTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Business_Partner_Info\Bpi_Modal\ItemEntryModal.resx">
+      <DependentUpon>ItemEntryModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Business_Partner_Info\Bpi_Modal\ItemModal.resx">
+      <DependentUpon>ItemModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Business_Partner_Info\BusinessPartnerInfo.resx">
+      <DependentUpon>BusinessPartnerInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Business_Partner_Info\frm_Business_Partner_Info.resx">
+      <DependentUpon>frm_Business_Partner_Info.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Engineering\Bom\bom.resx">
+      <DependentUpon>bom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Engineering\Bom\BomItemModal.resx">
+      <DependentUpon>BomItemModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Engineering\Bom\BomSearch.resx">
+      <DependentUpon>BomSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Engineering\Bom\SetupItemModal.resx">
+      <DependentUpon>SetupItemModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Engineering\Boq\boq.resx">
+      <DependentUpon>boq.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Engineering\Boq\BoqSearch.resx">
+      <DependentUpon>BoqSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Engineering\Boq\ItemModal.resx">
+      <DependentUpon>ItemModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Engineering\Boq\ItemSetSearch.resx">
+      <DependentUpon>ItemSetSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Inventory\InventoryLogbook.resx">
+      <DependentUpon>InventoryLogbook.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Inventory\InventoryTracker.resx">
+      <DependentUpon>InventoryTracker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Inventory\InventoryTrackerModals\InventoryTrackerLocation.resx">
+      <DependentUpon>InventoryTrackerLocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Inventory\ReceivingReport.resx">
+      <DependentUpon>ReceivingReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Inventory\ReceivingReportModals\ReceivingReportSearch.resx">
+      <DependentUpon>ReceivingReportSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Item\BusnessPartnerInfoModal.resx">
+      <DependentUpon>BusnessPartnerInfoModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Item\frm_Item_Entry.resx">
+      <DependentUpon>frm_Item_Entry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Item\ItemEntry.resx">
+      <DependentUpon>ItemEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Item\ItemEntryComaparisonModal.resx">
+      <DependentUpon>ItemEntryComaparisonModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Layout.resx">
+      <DependentUpon>Layout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\CanvassSheet\CanvassSheet.resx">
+      <DependentUpon>CanvassSheet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\Modal\CanvassSheetModal.resx">
+      <DependentUpon>CanvassSheetModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\Modal\ItemDetailsModal.resx">
+      <DependentUpon>ItemDetailsModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\Modal\PurchaseRequisitionDistributionModal.resx">
+      <DependentUpon>PurchaseRequisitionDistributionModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\Modal\SalesOrderDistributionModal.resx">
+      <DependentUpon>SalesOrderDistributionModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\Modal\SupplierModal.resx">
+      <DependentUpon>SupplierModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\Modal\ViewDetailsModal.resx">
+      <DependentUpon>ViewDetailsModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseList\NewPurchasingList.resx">
+      <DependentUpon>NewPurchasingList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseList\PurchaseRequisitionDisbtributionCard.resx">
+      <DependentUpon>PurchaseRequisitionDisbtributionCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseList\SalesOrderDistributionCard.resx">
+      <DependentUpon>SalesOrderDistributionCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseList\PRPurchaseItemCard.resx">
+      <DependentUpon>PRPurchaseItemCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseList\SOPurchaseItemCard.resx">
+      <DependentUpon>SOPurchaseItemCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseOrder\PurchaseOrder.resx">
+      <DependentUpon>PurchaseOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\Redbox\PurchaseRequisitionCard.resx">
+      <DependentUpon>PurchaseRequisitionCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseList\OldPurchasingList.resx">
+      <DependentUpon>OldPurchasingList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\Redbox\SalesOrderCard.resx">
+      <DependentUpon>SalesOrderCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\production.resx">
+      <DependentUpon>production.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SearchModal.resx">
+      <DependentUpon>SearchModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SetupSelectionModal.resx">
+      <DependentUpon>SetupSelectionModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SetupModal.resx">
+      <DependentUpon>SetupModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_entity_type.resx">
+      <DependentUpon>frm_entity_type.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_industries.resx">
+      <DependentUpon>frm_industries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_brand_setup.resx">
+      <DependentUpon>frm_item_brand_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_class_setup.resx">
+      <DependentUpon>frm_item_class_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_material_setup.resx">
+      <DependentUpon>frm_item_material_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_name_setup.resx">
+      <DependentUpon>frm_item_name_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_pump_count_setup.resx">
+      <DependentUpon>frm_item_pump_count_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_pump_type_setup.resx">
+      <DependentUpon>frm_item_pump_type_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_type_setup.resx">
+      <DependentUpon>frm_item_type_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_payment_terms_setup.resx">
+      <DependentUpon>frm_payment_terms_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_position_setup.resx">
+      <DependentUpon>frm_position_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_receiving_report_setup.resx">
+      <DependentUpon>frm_receiving_report_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_unit_of_measure_setup.resx">
+      <DependentUpon>frm_unit_of_measure_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_warehouse_name_setup.resx">
+      <DependentUpon>frm_warehouse_name_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_warehouse_usetype_setup.resx">
+      <DependentUpon>frm_warehouse_usetype_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\ItemModelSelectionModal.resx">
+      <DependentUpon>ItemModelSelectionModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\ItemModelSetupModal.resx">
+      <DependentUpon>ItemModelSetupModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_model_setup.resx">
+      <DependentUpon>frm_item_model_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_social_media_setup.resx">
+      <DependentUpon>frm_social_media_setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\TradeTypeSelectionModal.resx">
+      <DependentUpon>TradeTypeSelectionModal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Shared\LoaderIdicatorOverlay.resx">
+      <DependentUpon>LoaderIdicatorOverlay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\WebSocketForm.resx">
+      <DependentUpon>WebSocketForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\spinner.png" />
+    <None Include="Resources\word.png" />
+    <None Include="Resources\search.png" />
+    <None Include="Resources\pdf.png" />
+    <None Include="Resources\img.png" />
+    <None Include="Resources\gallery.png" />
+    <None Include="Resources\excel.png" />
+    <None Include="Resources\file.png" />
+    <None Include="Resources\FolderIcon.png" />
+    <Content Include="Resources\Icons.png" />
+    <Content Include="Resources\icons8-expand-arrow-48.png" />
+    <None Include="Resources\sssss.bmp" />
+    <None Include="Resources\no-pictures.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
