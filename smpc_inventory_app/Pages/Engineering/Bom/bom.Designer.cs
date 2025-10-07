@@ -30,24 +30,14 @@ namespace smpc_inventory_app.Pages
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(bom));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_title = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.pnl_label = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.pnl_components = new System.Windows.Forms.Panel();
             this.dg_bom = new System.Windows.Forms.DataGridView();
-            this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.short_desc = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_bom_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.size = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bom_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.uom_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.unit_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.net_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataBindingBomComponents = new System.Windows.Forms.BindingSource(this.components);
             this.ds_bom_components = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
@@ -96,6 +86,16 @@ namespace smpc_inventory_app.Pages
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip4 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.short_desc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_bom_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.size = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bom_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.uom_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.unit_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.net_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_title.SuspendLayout();
             this.pnl_label.SuspendLayout();
             this.pnl_components.SuspendLayout();
@@ -178,86 +178,6 @@ namespace smpc_inventory_app.Pages
             this.dg_bom.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_bom_CellClick);
             this.dg_bom.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_bom_CellEndEdit);
             this.dg_bom.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg_bom_EditingControlShowing);
-            // 
-            // item_code
-            // 
-            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.item_code.DataPropertyName = "item_code";
-            this.item_code.HeaderText = "ITEM CODE";
-            this.item_code.Name = "item_code";
-            this.item_code.ReadOnly = true;
-            // 
-            // short_desc
-            // 
-            this.short_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.short_desc.DataPropertyName = "short_desc";
-            this.short_desc.HeaderText = "ITEM DESCRIPTION";
-            this.short_desc.Name = "short_desc";
-            this.short_desc.ReadOnly = true;
-            // 
-            // item_id
-            // 
-            this.item_id.DataPropertyName = "item_id";
-            this.item_id.HeaderText = "item_id";
-            this.item_id.Name = "item_id";
-            this.item_id.Visible = false;
-            // 
-            // item_bom_id
-            // 
-            this.item_bom_id.DataPropertyName = "item_bom_id";
-            this.item_bom_id.HeaderText = "item_bom_id";
-            this.item_bom_id.Name = "item_bom_id";
-            this.item_bom_id.Visible = false;
-            // 
-            // size
-            // 
-            this.size.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.size.DataPropertyName = "size";
-            this.size.HeaderText = "SIZE";
-            this.size.Name = "size";
-            this.size.ReadOnly = true;
-            // 
-            // bom_qty
-            // 
-            this.bom_qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.bom_qty.DataPropertyName = "bom_qty";
-            this.bom_qty.FillWeight = 50F;
-            this.bom_qty.HeaderText = "QTY";
-            this.bom_qty.Name = "bom_qty";
-            // 
-            // uom_name
-            // 
-            this.uom_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.uom_name.DataPropertyName = "uom_name";
-            this.uom_name.FillWeight = 60F;
-            this.uom_name.HeaderText = "UOM";
-            this.uom_name.Name = "uom_name";
-            this.uom_name.ReadOnly = true;
-            // 
-            // unit_price
-            // 
-            this.unit_price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.unit_price.DataPropertyName = "unit_price";
-            dataGridViewCellStyle3.Format = "C2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.unit_price.DefaultCellStyle = dataGridViewCellStyle3;
-            this.unit_price.FillWeight = 60F;
-            this.unit_price.HeaderText = "UNIT PRICE";
-            this.unit_price.Name = "unit_price";
-            // 
-            // net_price
-            // 
-            this.net_price.DataPropertyName = "net_price";
-            this.net_price.HeaderText = "NET PRICE";
-            this.net_price.Name = "net_price";
-            this.net_price.ReadOnly = true;
-            // 
-            // id
-            // 
-            this.id.DataPropertyName = "id";
-            this.id.HeaderText = "id";
-            this.id.Name = "id";
-            this.id.Visible = false;
             // 
             // dataBindingBomComponents
             // 
@@ -637,7 +557,7 @@ namespace smpc_inventory_app.Pages
             this.btn_next.Image = ((System.Drawing.Image)(resources.GetObject("btn_next.Image")));
             this.btn_next.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btn_next.Name = "btn_next";
-            this.btn_next.Size = new System.Drawing.Size(52, 22);
+            this.btn_next.Size = new System.Drawing.Size(51, 22);
             this.btn_next.Text = "Next";
             this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
             // 
@@ -660,6 +580,86 @@ namespace smpc_inventory_app.Pages
             // 
             this.contextMenuStrip4.Name = "contextMenuStrip4";
             this.contextMenuStrip4.Size = new System.Drawing.Size(61, 4);
+            // 
+            // item_code
+            // 
+            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.item_code.DataPropertyName = "item_code";
+            this.item_code.HeaderText = "ITEM CODE";
+            this.item_code.Name = "item_code";
+            this.item_code.ReadOnly = true;
+            // 
+            // short_desc
+            // 
+            this.short_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.short_desc.DataPropertyName = "short_desc";
+            this.short_desc.HeaderText = "ITEM DESCRIPTION";
+            this.short_desc.Name = "short_desc";
+            this.short_desc.ReadOnly = true;
+            // 
+            // item_id
+            // 
+            this.item_id.DataPropertyName = "item_id";
+            this.item_id.HeaderText = "item_id";
+            this.item_id.Name = "item_id";
+            this.item_id.Visible = false;
+            // 
+            // item_bom_id
+            // 
+            this.item_bom_id.DataPropertyName = "item_bom_id";
+            this.item_bom_id.HeaderText = "item_bom_id";
+            this.item_bom_id.Name = "item_bom_id";
+            this.item_bom_id.Visible = false;
+            // 
+            // size
+            // 
+            this.size.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.size.DataPropertyName = "size";
+            this.size.HeaderText = "SIZE";
+            this.size.Name = "size";
+            this.size.ReadOnly = true;
+            // 
+            // bom_qty
+            // 
+            this.bom_qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.bom_qty.DataPropertyName = "bom_qty";
+            this.bom_qty.FillWeight = 50F;
+            this.bom_qty.HeaderText = "QTY (*)";
+            this.bom_qty.Name = "bom_qty";
+            // 
+            // uom_name
+            // 
+            this.uom_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.uom_name.DataPropertyName = "uom_name";
+            this.uom_name.FillWeight = 60F;
+            this.uom_name.HeaderText = "UOM";
+            this.uom_name.Name = "uom_name";
+            this.uom_name.ReadOnly = true;
+            // 
+            // unit_price
+            // 
+            this.unit_price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.unit_price.DataPropertyName = "unit_price";
+            dataGridViewCellStyle1.Format = "C2";
+            dataGridViewCellStyle1.NullValue = null;
+            this.unit_price.DefaultCellStyle = dataGridViewCellStyle1;
+            this.unit_price.FillWeight = 60F;
+            this.unit_price.HeaderText = "UNIT PRICE (*)";
+            this.unit_price.Name = "unit_price";
+            // 
+            // net_price
+            // 
+            this.net_price.DataPropertyName = "net_price";
+            this.net_price.HeaderText = "NET PRICE";
+            this.net_price.Name = "net_price";
+            this.net_price.ReadOnly = true;
+            // 
+            // id
+            // 
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "id";
+            this.id.Name = "id";
+            this.id.Visible = false;
             // 
             // bom
             // 

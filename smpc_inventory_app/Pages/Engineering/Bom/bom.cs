@@ -108,13 +108,17 @@ namespace smpc_inventory_app.Pages
             foreach (DataGridViewColumn col in dg_bom.Columns)
             {
                 col.ReadOnly = true;
+                col.DefaultCellStyle.BackColor = Color.LightGray;
             }
 
             if (isEdit)
             {
                 // Explicitly allow editing for these columns only
                 dg_bom.Columns["unit_price"].ReadOnly = false;
+                dg_bom.Columns["unit_price"].DefaultCellStyle.BackColor = Color.White;
                 dg_bom.Columns["bom_qty"].ReadOnly = false;
+                dg_bom.Columns["bom_qty"].DefaultCellStyle.BackColor = Color.White;
+
 
                 dg_bom.AllowUserToAddRows = true;
             }
