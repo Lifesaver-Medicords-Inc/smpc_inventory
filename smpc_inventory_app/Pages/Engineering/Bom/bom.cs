@@ -554,7 +554,7 @@ namespace smpc_inventory_app.Pages
 
             string[] columnsToShow = { "item_id", "general_name", "item_code", "item_model", "short_desc" };
 
-            using (BomSearch bomSearch = new BomSearch("Search Items", allBomItemList, columnsToShow))
+            using (BomSearch bomSearch = new BomSearch("Search Items", BomHead, columnsToShow))
             {
                 if (bomSearch.ShowDialog() == DialogResult.OK && bomSearch.SelectedItem != null)
                 {
