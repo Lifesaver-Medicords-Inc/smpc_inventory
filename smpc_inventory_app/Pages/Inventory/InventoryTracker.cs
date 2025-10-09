@@ -35,7 +35,7 @@ namespace smpc_inventory_app.Pages
 
             dgv_inventory_item.AutoGenerateColumns = false;
             Helpers.EnableGroupHeaders(dgv_inventory_item, columnGroups);
-            Helpers.FreezeVisibleColumns(dgv_inventory_item, 6);
+            Helpers.FreezeVisibleColumns(dgv_inventory_item, 4);
         }
 
         private async void InventoryTracker_Load(object sender, EventArgs e)
@@ -235,7 +235,7 @@ namespace smpc_inventory_app.Pages
                 dgv_inventory_item.Columns.Remove(col);
             }
 
-            int insertAfter = 7;
+            int insertAfter = 6;
 
             // Reset column groups for zones
             var newColumnGroups = new Dictionary<string, string[]>(columnGroups); // copy existing RESERVED/OUTBOUND

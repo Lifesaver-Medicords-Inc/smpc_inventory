@@ -32,7 +32,6 @@ namespace smpc_inventory_app.Pages
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_title = new System.Windows.Forms.Panel();
             this.btn_next = new System.Windows.Forms.Button();
-            this.btn_inv_logbook = new System.Windows.Forms.Button();
             this.lbl_warehouse = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -52,6 +51,7 @@ namespace smpc_inventory_app.Pages
             this.remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rem_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.warehouse_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.warehouse_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_title.SuspendLayout();
             this.pnl_fill.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_inventory_item)).BeginInit();
@@ -60,7 +60,6 @@ namespace smpc_inventory_app.Pages
             // pnl_title
             // 
             this.pnl_title.Controls.Add(this.btn_next);
-            this.pnl_title.Controls.Add(this.btn_inv_logbook);
             this.pnl_title.Controls.Add(this.lbl_warehouse);
             this.pnl_title.Controls.Add(this.label1);
             this.pnl_title.Dock = System.Windows.Forms.DockStyle.Top;
@@ -80,19 +79,6 @@ namespace smpc_inventory_app.Pages
             this.btn_next.Text = "<";
             this.btn_next.UseVisualStyleBackColor = true;
             this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
-            // 
-            // btn_inv_logbook
-            // 
-            this.btn_inv_logbook.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_inv_logbook.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btn_inv_logbook.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_inv_logbook.Location = new System.Drawing.Point(1099, 22);
-            this.btn_inv_logbook.Name = "btn_inv_logbook";
-            this.btn_inv_logbook.Size = new System.Drawing.Size(169, 23);
-            this.btn_inv_logbook.TabIndex = 6;
-            this.btn_inv_logbook.Text = "INVENTORY LOGBOOK";
-            this.btn_inv_logbook.UseVisualStyleBackColor = false;
             // 
             // lbl_warehouse
             // 
@@ -160,7 +146,8 @@ namespace smpc_inventory_app.Pages
             this.units_outbound,
             this.remarks,
             this.rem_id,
-            this.warehouse_id});
+            this.warehouse_id,
+            this.warehouse_name});
             this.dgv_inventory_item.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_inventory_item.EnableHeadersVisualStyles = false;
             this.dgv_inventory_item.Location = new System.Drawing.Point(0, 0);
@@ -177,6 +164,7 @@ namespace smpc_inventory_app.Pages
             this.id.HeaderText = "ID";
             this.id.Name = "id";
             this.id.ReadOnly = true;
+            this.id.Visible = false;
             // 
             // pod_id
             // 
@@ -184,6 +172,7 @@ namespace smpc_inventory_app.Pages
             this.pod_id.HeaderText = "POD ID";
             this.pod_id.Name = "pod_id";
             this.pod_id.ReadOnly = true;
+            this.pod_id.Visible = false;
             // 
             // item_code
             // 
@@ -287,6 +276,14 @@ namespace smpc_inventory_app.Pages
             this.warehouse_id.ReadOnly = true;
             this.warehouse_id.Visible = false;
             // 
+            // warehouse_name
+            // 
+            this.warehouse_name.DataPropertyName = "warehouse_name";
+            this.warehouse_name.HeaderText = "WAREHOUSE NAME";
+            this.warehouse_name.Name = "warehouse_name";
+            this.warehouse_name.ReadOnly = true;
+            this.warehouse_name.Visible = false;
+            // 
             // InventoryTracker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -310,7 +307,6 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.Panel pnl_title;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lbl_warehouse;
-        private System.Windows.Forms.Button btn_inv_logbook;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel pnl_fill;
         private System.Windows.Forms.DataGridView dgv_inventory_item;
@@ -329,5 +325,6 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.DataGridViewTextBoxColumn remarks;
         private System.Windows.Forms.DataGridViewTextBoxColumn rem_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn warehouse_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn warehouse_name;
     }
 }
