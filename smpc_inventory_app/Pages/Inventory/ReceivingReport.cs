@@ -153,6 +153,13 @@ namespace smpc_inventory_app.Pages.Inventory
             ToggleButtons(true);
             SetEditableColumns(true);
             ToggleColumn(false);
+
+            //Force repopulation of bin location if warehouse is already selected
+            if (cmb_warehouse_name.SelectedItem is WarehouseNameModel selectedWarehouse)
+            {
+                _ = ForcePopulateBinLocation(selectedWarehouse);
+            }
+
         }
 
         private void btn_new_Click(object sender, EventArgs e)
@@ -320,6 +327,23 @@ namespace smpc_inventory_app.Pages.Inventory
                         Helpers.ShowDialogMessage("error", "Reason for rejection is required when rejected quantity is entered.");
                         return; // stop save
                     }
+                }
+            }
+
+            //New validation block here
+            foreach (DataGridViewRow row in dgv_main.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                decimal receivedQty = 0;
+                decimal.TryParse(row.Cells["received_qty"]?.Value?.ToString(), out receivedQty);
+                decimal rejectedQty = 0;
+                decimal.TryParse(row.Cells["rejected_qty"]?.Value?.ToString(), out rejectedQty);
+
+                if (rejectedQty > receivedQty)
+                {
+                    Helpers.ShowDialogMessage("error", "Rejected quantity cannot be greater than received quantity.");
+                    return;
                 }
             }
 
@@ -681,6 +705,13 @@ namespace smpc_inventory_app.Pages.Inventory
                     }
                 }
             }
+        }
+
+        private async Task ForcePopulateBinLocation(WarehouseNameModel selectedWarehouse)
+        {
+            var warehouseAreas = await ReceivingReportService.GetWarehouseArea(selectedWarehouse.id);
+            _warehouseAreas = warehouseAreas ?? new List<WarehouseAreaModel>();
+            PopulateBinLocationColumn(_warehouseAreas);
         }
 
         private async void cmb_warehouse_name_SelectedIndexChanged(object sender, EventArgs e)
