@@ -29,17 +29,15 @@ namespace smpc_inventory_app.Pages.Inventory
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_title = new System.Windows.Forms.Panel();
+            this.cmb_month = new System.Windows.Forms.ComboBox();
+            this.cmb_year = new System.Windows.Forms.ComboBox();
             this.txt_search = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.lbl_month = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.lbl_year = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btn_make_report = new System.Windows.Forms.Button();
-            this.btn_next = new System.Windows.Forms.Button();
-            this.btn_inv_logbook = new System.Windows.Forms.Button();
             this.lbl_warehouse = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -55,8 +53,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.in_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.out_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.location = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.warehouse_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.warehouse_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_title.SuspendLayout();
             this.pnl_fill.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_inventory_item)).BeginInit();
@@ -64,15 +60,13 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // pnl_title
             // 
+            this.pnl_title.Controls.Add(this.cmb_month);
+            this.pnl_title.Controls.Add(this.cmb_year);
             this.pnl_title.Controls.Add(this.txt_search);
             this.pnl_title.Controls.Add(this.label3);
-            this.pnl_title.Controls.Add(this.lbl_month);
             this.pnl_title.Controls.Add(this.label5);
-            this.pnl_title.Controls.Add(this.lbl_year);
             this.pnl_title.Controls.Add(this.label2);
             this.pnl_title.Controls.Add(this.btn_make_report);
-            this.pnl_title.Controls.Add(this.btn_next);
-            this.pnl_title.Controls.Add(this.btn_inv_logbook);
             this.pnl_title.Controls.Add(this.lbl_warehouse);
             this.pnl_title.Controls.Add(this.label1);
             this.pnl_title.Dock = System.Windows.Forms.DockStyle.Top;
@@ -81,9 +75,29 @@ namespace smpc_inventory_app.Pages.Inventory
             this.pnl_title.Size = new System.Drawing.Size(1285, 77);
             this.pnl_title.TabIndex = 3;
             // 
+            // cmb_month
+            // 
+            this.cmb_month.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_month.FormattingEnabled = true;
+            this.cmb_month.Location = new System.Drawing.Point(65, 50);
+            this.cmb_month.Name = "cmb_month";
+            this.cmb_month.Size = new System.Drawing.Size(121, 21);
+            this.cmb_month.TabIndex = 16;
+            this.cmb_month.SelectedIndexChanged += new System.EventHandler(this.cmb_month_SelectedIndexChanged);
+            // 
+            // cmb_year
+            // 
+            this.cmb_year.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_year.FormattingEnabled = true;
+            this.cmb_year.Location = new System.Drawing.Point(270, 50);
+            this.cmb_year.Name = "cmb_year";
+            this.cmb_year.Size = new System.Drawing.Size(121, 21);
+            this.cmb_year.TabIndex = 15;
+            this.cmb_year.SelectedIndexChanged += new System.EventHandler(this.cmb_year_SelectedIndexChanged);
+            // 
             // txt_search
             // 
-            this.txt_search.Location = new System.Drawing.Point(465, 51);
+            this.txt_search.Location = new System.Drawing.Point(497, 51);
             this.txt_search.Name = "txt_search";
             this.txt_search.Size = new System.Drawing.Size(284, 20);
             this.txt_search.TabIndex = 14;
@@ -92,38 +106,20 @@ namespace smpc_inventory_app.Pages.Inventory
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(402, 54);
+            this.label3.Location = new System.Drawing.Point(433, 54);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(47, 13);
             this.label3.TabIndex = 13;
             this.label3.Text = "FILTER:";
             // 
-            // lbl_month
-            // 
-            this.lbl_month.AutoSize = true;
-            this.lbl_month.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_month.Location = new System.Drawing.Point(252, 54);
-            this.lbl_month.Name = "lbl_month";
-            this.lbl_month.Size = new System.Drawing.Size(0, 13);
-            this.lbl_month.TabIndex = 12;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(188, 54);
+            this.label5.Location = new System.Drawing.Point(212, 54);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 13);
             this.label5.TabIndex = 11;
             this.label5.Text = "MONTH";
-            // 
-            // lbl_year
-            // 
-            this.lbl_year.AutoSize = true;
-            this.lbl_year.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_year.Location = new System.Drawing.Point(73, 54);
-            this.lbl_year.Name = "lbl_year";
-            this.lbl_year.Size = new System.Drawing.Size(0, 13);
-            this.lbl_year.TabIndex = 10;
             // 
             // label2
             // 
@@ -146,31 +142,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.btn_make_report.TabIndex = 8;
             this.btn_make_report.Text = "MAKE REPORT";
             this.btn_make_report.UseVisualStyleBackColor = false;
-            // 
-            // btn_next
-            // 
-            this.btn_next.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_next.ForeColor = System.Drawing.Color.Black;
-            this.btn_next.Location = new System.Drawing.Point(880, 14);
-            this.btn_next.Name = "btn_next";
-            this.btn_next.Size = new System.Drawing.Size(75, 23);
-            this.btn_next.TabIndex = 7;
-            this.btn_next.Text = "<";
-            this.btn_next.UseVisualStyleBackColor = true;
-            this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
-            // 
-            // btn_inv_logbook
-            // 
-            this.btn_inv_logbook.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_inv_logbook.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btn_inv_logbook.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_inv_logbook.Location = new System.Drawing.Point(1099, 34);
-            this.btn_inv_logbook.Name = "btn_inv_logbook";
-            this.btn_inv_logbook.Size = new System.Drawing.Size(169, 23);
-            this.btn_inv_logbook.TabIndex = 6;
-            this.btn_inv_logbook.Text = "INVENTORY TRACKER";
-            this.btn_inv_logbook.UseVisualStyleBackColor = false;
+            this.btn_make_report.Click += new System.EventHandler(this.btn_make_report_Click);
             // 
             // lbl_warehouse
             // 
@@ -214,14 +186,14 @@ namespace smpc_inventory_app.Pages.Inventory
             this.dgv_inventory_item.AllowUserToAddRows = false;
             this.dgv_inventory_item.AllowUserToDeleteRows = false;
             this.dgv_inventory_item.AllowUserToResizeColumns = false;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv_inventory_item.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_inventory_item.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv_inventory_item.ColumnHeadersHeight = 50;
             this.dgv_inventory_item.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
@@ -233,15 +205,14 @@ namespace smpc_inventory_app.Pages.Inventory
             this.end,
             this.in_total,
             this.out_total,
-            this.location,
-            this.warehouse_name,
-            this.warehouse_id});
+            this.location});
             this.dgv_inventory_item.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_inventory_item.EnableHeadersVisualStyles = false;
             this.dgv_inventory_item.Location = new System.Drawing.Point(0, 0);
             this.dgv_inventory_item.Name = "dgv_inventory_item";
             this.dgv_inventory_item.Size = new System.Drawing.Size(1285, 484);
             this.dgv_inventory_item.TabIndex = 5;
+            this.dgv_inventory_item.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_inventory_item_CellClick);
             // 
             // id
             // 
@@ -249,6 +220,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.id.HeaderText = "ID";
             this.id.Name = "id";
             this.id.ReadOnly = true;
+            this.id.Visible = false;
             // 
             // pod_id
             // 
@@ -256,6 +228,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.pod_id.HeaderText = "POD ID";
             this.pod_id.Name = "pod_id";
             this.pod_id.ReadOnly = true;
+            this.pod_id.Visible = false;
             // 
             // general_name
             // 
@@ -271,18 +244,20 @@ namespace smpc_inventory_app.Pages.Inventory
             this.brand.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.brand.DataPropertyName = "brand";
             this.brand.HeaderText = "BRAND";
+            this.brand.MinimumWidth = 150;
             this.brand.Name = "brand";
             this.brand.ReadOnly = true;
             this.brand.Width = 150;
             // 
             // item_desc
             // 
-            this.item_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.item_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.item_desc.DataPropertyName = "item_desc";
             this.item_desc.HeaderText = "ITEM DESCRIPTION";
-            this.item_desc.MinimumWidth = 230;
+            this.item_desc.MinimumWidth = 200;
             this.item_desc.Name = "item_desc";
             this.item_desc.ReadOnly = true;
+            this.item_desc.Width = 200;
             // 
             // beg
             // 
@@ -328,22 +303,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.location.ReadOnly = true;
             this.location.Visible = false;
             // 
-            // warehouse_name
-            // 
-            this.warehouse_name.DataPropertyName = "warehouse_name";
-            this.warehouse_name.HeaderText = "WAREHOUSE NAME";
-            this.warehouse_name.Name = "warehouse_name";
-            this.warehouse_name.ReadOnly = true;
-            this.warehouse_name.Visible = false;
-            // 
-            // warehouse_id
-            // 
-            this.warehouse_id.DataPropertyName = "warehouse_id";
-            this.warehouse_id.HeaderText = "WAREHOUSE ID";
-            this.warehouse_id.Name = "warehouse_id";
-            this.warehouse_id.ReadOnly = true;
-            this.warehouse_id.Visible = false;
-            // 
             // InventoryLogbook
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -365,17 +324,13 @@ namespace smpc_inventory_app.Pages.Inventory
         #endregion
 
         private System.Windows.Forms.Panel pnl_title;
-        private System.Windows.Forms.Button btn_next;
-        private System.Windows.Forms.Button btn_inv_logbook;
         private System.Windows.Forms.Label lbl_warehouse;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel pnl_fill;
         private System.Windows.Forms.DataGridView dgv_inventory_item;
         private System.Windows.Forms.Button btn_make_report;
-        private System.Windows.Forms.Label lbl_month;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label lbl_year;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txt_search;
         private System.Windows.Forms.Label label3;
@@ -389,7 +344,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private System.Windows.Forms.DataGridViewTextBoxColumn in_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn out_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn location;
-        private System.Windows.Forms.DataGridViewTextBoxColumn warehouse_name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn warehouse_id;
+        private System.Windows.Forms.ComboBox cmb_month;
+        private System.Windows.Forms.ComboBox cmb_year;
     }
 }

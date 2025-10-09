@@ -12,25 +12,15 @@ namespace smpc_inventory_app.Services.Setup.Inventory
 {
     class InventoryLogbookService
     {
-        public static async Task<DataTable> GetAsDatatable(int warehouseNameId)
+        public static async Task<DataTable> GetAsDatatable()
         {
             var response = await RequestToApi<ApiResponseModel<List<InventoryLogbookView>>>.Get(ENUM_ENDPOINT.INVENTORYLOGBOOK);
-
+             
             if (response?.Data == null || !response.Data.Any())
                 return new DataTable();
 
-            // filter before converting to DataTable
-            var filtered = response.Data.Where(item => item.warehouse_id == warehouseNameId).ToList();
-
-            DataTable invTracker = JsonHelper.ToDataTable(filtered);
+            DataTable invTracker = JsonHelper.ToDataTable(response.Data);
             return invTracker;
-        }
-
-        public static async Task<List<WarehouseName>> GetWarehouseName()
-        {
-            var response = await RequestToApi<ApiResponseModel<List<WarehouseName>>>.Get(ENUM_ENDPOINT.WAREHOUSENAME);
-
-            return response.Data;
         }
     }
 }

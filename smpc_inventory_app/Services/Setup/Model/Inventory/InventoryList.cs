@@ -69,17 +69,23 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         [Column("location")]
         public string location { get; set; }
 
-        [Column("qty")]
-        public string qty { get; set; }
+        [Column("qty_in")]
+        public int qty_in { get; set; }
 
-        [Column("uom")]
-        public string uom { get; set; }
+        [Column("qty_out")]
+        public int qty_out { get; set; }
 
-        [Column("warehouse_name")]
-        public string warehouse_name { get; set; }
+        [Column("date")]
+        public string date { get; set; }
 
-        [Column("warehouse_id")]
-        public int warehouse_id { get; set; }
+        [Column("rr_no")]
+        public int rr_no { get; set; }
+
+        [Column("po_no")]
+        public int po_no { get; set; }
+
+        [Column("supplier_name")]
+        public string supplier_name { get; set; }
     }
 
     class WarehouseName
