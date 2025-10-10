@@ -79,10 +79,10 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         public string date { get; set; }
 
         [Column("rr_no")]
-        public int rr_no { get; set; }
+        public string rr_no { get; set; }
 
         [Column("po_no")]
-        public int po_no { get; set; }
+        public string po_no { get; set; }
 
         [Column("supplier_name")]
         public string supplier_name { get; set; }

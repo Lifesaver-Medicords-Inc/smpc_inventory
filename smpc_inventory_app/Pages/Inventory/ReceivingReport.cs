@@ -330,7 +330,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 }
             }
 
-            //New validation block here
+            //Validation for the rejected qty
             foreach (DataGridViewRow row in dgv_main.Rows)
             {
                 if (row.IsNewRow) continue;
@@ -902,75 +902,82 @@ namespace smpc_inventory_app.Pages.Inventory
                 decimal.TryParse(row.Cells["received_qty"].Value?.ToString(), out receivedQty);
                 decimal.TryParse(row.Cells["rejected_qty"].Value?.ToString(), out rejectedQty);
 
-                // Validation: received or rejected cannot exceed ordered individually
+                List<string> validationMessages = new List<string>();
+                bool resetCell = false;
+
+                // Validation 1: received cannot exceed ordered
                 if (receivedQty > orderedQty)
                 {
-                    MessageBox.Show($"Received quantity cannot exceed ordered quantity ({orderedQty}).", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    validationMessages.Add($"Received quantity cannot exceed ordered quantity ({orderedQty}).");
                     row.Cells["received_qty"].Value = orderedQty;
-                    return;
                 }
 
+                // Validation 2: rejected cannot exceed ordered
                 if (rejectedQty > orderedQty)
                 {
-                    MessageBox.Show($"Rejected quantity cannot exceed ordered quantity ({orderedQty}).", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    validationMessages.Add($"Rejected quantity cannot exceed ordered quantity ({orderedQty}).");
                     row.Cells["rejected_qty"].Value = orderedQty;
-                    return;
                 }
 
-                // Validation: sum of received + rejected cannot exceed ordered
+                // Validation 3: total cannot exceed ordered
                 if ((receivedQty + rejectedQty) > orderedQty)
                 {
-                    MessageBox.Show($"The sum of received ({receivedQty}) and rejected ({rejectedQty}) " +
-                                    $"cannot exceed ordered quantity ({orderedQty}).", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    // Reset the changed cell back to keep consistency
+                    validationMessages.Add($"The sum of received ({receivedQty}) and rejected ({rejectedQty}) " +
+                                           $"cannot exceed ordered quantity ({orderedQty}).");
                     row.Cells[colName].Value = 0;
+                    resetCell = true;
+                }
+
+                // Only show one message box if there are validation errors
+                if (validationMessages.Any())
+                {
+                    MessageBox.Show(string.Join("\n", validationMessages),
+                        "Invalid Input",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Auto-fill UOMs if qty has value and UOM is empty
+                // --- Auto-fill / Clear UOM and Reason Logic ---
+
                 string orderedUom = row.Cells["ordered_uom"].Value?.ToString();
 
-                if (receivedQty > 0 && string.IsNullOrWhiteSpace(row.Cells["received_uom"].Value?.ToString()))
+                // Received UOM handling
+                if (receivedQty > 0)
                 {
-                    row.Cells["received_uom"].Value = orderedUom;
-                }
-                else if (string.IsNullOrWhiteSpace(row.Cells["received_qty"].Value?.ToString()))
-                {
-                    // Clear received_uom if received_qty is cleared or backspaced
-                    row.Cells["received_uom"].Value = string.Empty;
-                }
-
-                if (rejectedQty > 0)
-                {
-                    // Require reason_for_rejection
-                    string reason = row.Cells["reason_for_rejection"].Value?.ToString();
-                    if (string.IsNullOrWhiteSpace(reason))
-                    {
-                        MessageBox.Show("Reason for rejection is required when a rejected quantity is entered.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-
-                    if (string.IsNullOrWhiteSpace(row.Cells["rejected_uom"].Value?.ToString()))
-                    {
-                        row.Cells["rejected_uom"].Value = orderedUom;
-                    }
+                    if (string.IsNullOrWhiteSpace(row.Cells["received_uom"].Value?.ToString()))
+                        row.Cells["received_uom"].Value = orderedUom;
                 }
                 else
                 {
-                    // Clear reason_for_rejection if rejected qty is 0 or empty
-                    row.Cells["reason_for_rejection"].Value = string.Empty;
+                    row.Cells["received_uom"].Value = string.Empty;
+                }
 
-                    // Clear rejected_uom if rejected_qty is cleared or backspaced
+                // Rejected handling
+                if (rejectedQty > 0)
+                {
+                    string reason = row.Cells["reason_for_rejection"].Value?.ToString();
+                    if (string.IsNullOrWhiteSpace(reason))
+                    {
+                        MessageBox.Show("Reason for rejection is required when a rejected quantity is entered.",
+                                        "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(row.Cells["rejected_uom"].Value?.ToString()))
+                        row.Cells["rejected_uom"].Value = orderedUom;
+                }
+                else
+                {
+                    row.Cells["reason_for_rejection"].Value = string.Empty;
                     row.Cells["rejected_uom"].Value = string.Empty;
                 }
 
+                // Make reason_for_rejection editable only when rejectedQty > 0
                 if (dgv.Columns.Contains("reason_for_rejection"))
                 {
                     row.Cells["reason_for_rejection"].ReadOnly = !(rejectedQty > 0);
-
                     if (rejectedQty <= 0)
-                    {
                         row.Cells["reason_for_rejection"].Value = string.Empty;
-                    }
                 }
             }
         }
