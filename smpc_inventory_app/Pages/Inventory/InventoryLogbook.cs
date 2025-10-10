@@ -10,8 +10,6 @@ using smpc_app.Services.Helpers;
 using System.Windows.Forms;
 using smpc_inventory_app.Services.Setup.Inventory;
 using System.Globalization;
-using smpc_inventory_app.Pages.Inventory.InventoryLogbookModals;
-
 namespace smpc_inventory_app.Pages.Inventory
 {
     public partial class InventoryLogbook : UserControl
@@ -37,7 +35,6 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             try
             {
-                var Loading = new LoadingScreen();
 
                 Helpers.Loading.ShowLoading(dgv_inventory_item, "Fetching data...");
                 await LoadData();
@@ -518,9 +515,6 @@ namespace smpc_inventory_app.Pages.Inventory
 
         private void btn_make_report_Click(object sender, EventArgs e)
         {
-            var reportForm = new InventoryReport();
-
-            reportForm.ShowDialog();
         }
     }
 }

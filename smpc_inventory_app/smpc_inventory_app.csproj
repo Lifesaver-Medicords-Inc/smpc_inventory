@@ -174,18 +174,6 @@
     <Compile Include="Pages\Inventory\InventoryLogbook.Designer.cs">
       <DependentUpon>InventoryLogbook.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Inventory\InventoryLogbookModals\InventoryReport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Pages\Inventory\InventoryLogbookModals\InventoryReport.Designer.cs">
-      <DependentUpon>InventoryReport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Inventory\InventoryLogbookModals\ReportPreview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Pages\Inventory\InventoryLogbookModals\ReportPreview.Designer.cs">
-      <DependentUpon>ReportPreview.cs</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Inventory\InventoryTracker.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -239,12 +227,6 @@
     </Compile>
     <Compile Include="Pages\Layout.designer.cs">
       <DependentUpon>Layout.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\LoadingScreen.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Pages\LoadingScreen.Designer.cs">
-      <DependentUpon>LoadingScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Login.cs">
       <SubType>Form</SubType>
@@ -641,12 +623,6 @@
     <EmbeddedResource Include="Pages\Inventory\InventoryLogbook.resx">
       <DependentUpon>InventoryLogbook.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Pages\Inventory\InventoryLogbookModals\InventoryReport.resx">
-      <DependentUpon>InventoryReport.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Pages\Inventory\InventoryLogbookModals\ReportPreview.resx">
-      <DependentUpon>ReportPreview.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Pages\Inventory\InventoryTracker.resx">
       <DependentUpon>InventoryTracker.cs</DependentUpon>
     </EmbeddedResource>
@@ -673,9 +649,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Layout.resx">
       <DependentUpon>Layout.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Pages\LoadingScreen.resx">
-      <DependentUpon>LoadingScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
