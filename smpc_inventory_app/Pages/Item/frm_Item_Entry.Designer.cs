@@ -75,6 +75,8 @@
             this.tabcontrol1 = new System.Windows.Forms.TabControl();
             this.tab_item_specs = new System.Windows.Forms.TabPage();
             this.pnl_additional_specs = new System.Windows.Forms.Panel();
+            this.cmb_calibration = new System.Windows.Forms.ComboBox();
+            this.lbl_calibration = new System.Windows.Forms.Label();
             this.txt_pump_type_compatability = new System.Windows.Forms.TextBox();
             this.btn_select_pump_type = new System.Windows.Forms.Button();
             this.btn_add_weight_uom = new System.Windows.Forms.Button();
@@ -460,7 +462,7 @@
             this.pnl_header.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnl_header.Location = new System.Drawing.Point(0, 54);
             this.pnl_header.Name = "pnl_header";
-            this.pnl_header.Size = new System.Drawing.Size(1237, 139);
+            this.pnl_header.Size = new System.Drawing.Size(1237, 155);
             this.pnl_header.TabIndex = 9;
             // 
             // label6
@@ -547,7 +549,7 @@
             this.cmb_item_tangibility_type.Items.AddRange(new object[] {
             "TANGIBLE",
             "NON-TANGIBLE"});
-            this.cmb_item_tangibility_type.Location = new System.Drawing.Point(983, 39);
+            this.cmb_item_tangibility_type.Location = new System.Drawing.Point(983, 37);
             this.cmb_item_tangibility_type.Name = "cmb_item_tangibility_type";
             this.cmb_item_tangibility_type.Size = new System.Drawing.Size(200, 21);
             this.cmb_item_tangibility_type.TabIndex = 43;
@@ -557,7 +559,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(901, 43);
+            this.label35.Location = new System.Drawing.Point(901, 39);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(76, 13);
             this.label35.TabIndex = 41;
@@ -579,11 +581,12 @@
             this.txt_id.Size = new System.Drawing.Size(54, 20);
             this.txt_id.TabIndex = 39;
             this.txt_id.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txt_id.Visible = false;
             // 
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(398, 109);
+            this.label34.Location = new System.Drawing.Point(397, 105);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(18, 13);
             this.label34.TabIndex = 38;
@@ -756,9 +759,9 @@
             // 
             this.pnl_child.Controls.Add(this.tabcontrol1);
             this.pnl_child.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnl_child.Location = new System.Drawing.Point(0, 193);
+            this.pnl_child.Location = new System.Drawing.Point(0, 209);
             this.pnl_child.Name = "pnl_child";
-            this.pnl_child.Size = new System.Drawing.Size(1237, 557);
+            this.pnl_child.Size = new System.Drawing.Size(1237, 541);
             this.pnl_child.TabIndex = 15;
             // 
             // tabcontrol1
@@ -773,7 +776,7 @@
             this.tabcontrol1.Location = new System.Drawing.Point(0, 0);
             this.tabcontrol1.Name = "tabcontrol1";
             this.tabcontrol1.SelectedIndex = 0;
-            this.tabcontrol1.Size = new System.Drawing.Size(1237, 557);
+            this.tabcontrol1.Size = new System.Drawing.Size(1237, 541);
             this.tabcontrol1.TabIndex = 4;
             // 
             // tab_item_specs
@@ -791,6 +794,8 @@
             // 
             // pnl_additional_specs
             // 
+            this.pnl_additional_specs.Controls.Add(this.cmb_calibration);
+            this.pnl_additional_specs.Controls.Add(this.lbl_calibration);
             this.pnl_additional_specs.Controls.Add(this.txt_pump_type_compatability);
             this.pnl_additional_specs.Controls.Add(this.btn_select_pump_type);
             this.pnl_additional_specs.Controls.Add(this.btn_add_weight_uom);
@@ -833,12 +838,36 @@
             this.pnl_additional_specs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_additional_specs.Location = new System.Drawing.Point(338, 3);
             this.pnl_additional_specs.Name = "pnl_additional_specs";
-            this.pnl_additional_specs.Size = new System.Drawing.Size(453, 525);
+            this.pnl_additional_specs.Size = new System.Drawing.Size(422, 525);
             this.pnl_additional_specs.TabIndex = 4;
+            // 
+            // cmb_calibration
+            // 
+            this.cmb_calibration.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_calibration.FormattingEnabled = true;
+            this.cmb_calibration.Items.AddRange(new object[] {
+            "FACTORY CALIBRATED",
+            "NWRB CALIBRATED",
+            "MAYNILAD CALIBRATED"});
+            this.cmb_calibration.Location = new System.Drawing.Point(188, 328);
+            this.cmb_calibration.Name = "cmb_calibration";
+            this.cmb_calibration.Size = new System.Drawing.Size(168, 21);
+            this.cmb_calibration.TabIndex = 153;
+            this.cmb_calibration.Tag = "";
+            this.cmb_calibration.Visible = false;
+            // 
+            // lbl_calibration
+            // 
+            this.lbl_calibration.AutoSize = true;
+            this.lbl_calibration.Location = new System.Drawing.Point(10, 331);
+            this.lbl_calibration.Name = "lbl_calibration";
+            this.lbl_calibration.Size = new System.Drawing.Size(81, 13);
+            this.lbl_calibration.TabIndex = 152;
+            this.lbl_calibration.Text = "CALIBRATION:";
             // 
             // txt_pump_type_compatability
             // 
-            this.txt_pump_type_compatability.Location = new System.Drawing.Point(219, 224);
+            this.txt_pump_type_compatability.Location = new System.Drawing.Point(188, 220);
             this.txt_pump_type_compatability.Name = "txt_pump_type_compatability";
             this.txt_pump_type_compatability.ReadOnly = true;
             this.txt_pump_type_compatability.Size = new System.Drawing.Size(168, 20);
@@ -849,7 +878,7 @@
             // 
             this.btn_select_pump_type.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_select_pump_type.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.btn_select_pump_type.Location = new System.Drawing.Point(388, 223);
+            this.btn_select_pump_type.Location = new System.Drawing.Point(357, 220);
             this.btn_select_pump_type.Name = "btn_select_pump_type";
             this.btn_select_pump_type.Size = new System.Drawing.Size(29, 21);
             this.btn_select_pump_type.TabIndex = 150;
@@ -862,7 +891,7 @@
             this.btn_add_weight_uom.BackColor = System.Drawing.Color.Transparent;
             this.btn_add_weight_uom.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_weight_uom.BackgroundImage")));
             this.btn_add_weight_uom.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_add_weight_uom.Location = new System.Drawing.Point(387, 317);
+            this.btn_add_weight_uom.Location = new System.Drawing.Point(355, 305);
             this.btn_add_weight_uom.Name = "btn_add_weight_uom";
             this.btn_add_weight_uom.Size = new System.Drawing.Size(30, 22);
             this.btn_add_weight_uom.TabIndex = 148;
@@ -874,7 +903,7 @@
             this.btn_add_volume_uom.BackColor = System.Drawing.Color.Transparent;
             this.btn_add_volume_uom.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_volume_uom.BackgroundImage")));
             this.btn_add_volume_uom.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_add_volume_uom.Location = new System.Drawing.Point(387, 295);
+            this.btn_add_volume_uom.Location = new System.Drawing.Point(355, 284);
             this.btn_add_volume_uom.Name = "btn_add_volume_uom";
             this.btn_add_volume_uom.Size = new System.Drawing.Size(30, 22);
             this.btn_add_volume_uom.TabIndex = 146;
@@ -886,7 +915,7 @@
             this.btn_pump_count.BackColor = System.Drawing.Color.Transparent;
             this.btn_pump_count.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_pump_count.BackgroundImage")));
             this.btn_pump_count.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_pump_count.Location = new System.Drawing.Point(387, 246);
+            this.btn_pump_count.Location = new System.Drawing.Point(356, 241);
             this.btn_pump_count.Name = "btn_pump_count";
             this.btn_pump_count.Size = new System.Drawing.Size(30, 22);
             this.btn_pump_count.TabIndex = 145;
@@ -898,7 +927,7 @@
             this.btn_pump_type.BackColor = System.Drawing.Color.Transparent;
             this.btn_pump_type.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_pump_type.BackgroundImage")));
             this.btn_pump_type.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_pump_type.Location = new System.Drawing.Point(417, 222);
+            this.btn_pump_type.Location = new System.Drawing.Point(386, 219);
             this.btn_pump_type.Name = "btn_pump_type";
             this.btn_pump_type.Size = new System.Drawing.Size(30, 22);
             this.btn_pump_type.TabIndex = 144;
@@ -910,7 +939,7 @@
             this.btn_add_material.BackColor = System.Drawing.Color.Transparent;
             this.btn_add_material.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_material.BackgroundImage")));
             this.btn_add_material.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_add_material.Location = new System.Drawing.Point(387, 48);
+            this.btn_add_material.Location = new System.Drawing.Point(356, 49);
             this.btn_add_material.Name = "btn_add_material";
             this.btn_add_material.Size = new System.Drawing.Size(30, 22);
             this.btn_add_material.TabIndex = 60;
@@ -919,7 +948,7 @@
             // 
             // txt_size
             // 
-            this.txt_size.Location = new System.Drawing.Point(219, 272);
+            this.txt_size.Location = new System.Drawing.Point(188, 263);
             this.txt_size.Name = "txt_size";
             this.txt_size.Size = new System.Drawing.Size(168, 20);
             this.txt_size.TabIndex = 139;
@@ -927,7 +956,7 @@
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(40, 275);
+            this.label44.Location = new System.Drawing.Point(11, 267);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(34, 13);
             this.label44.TabIndex = 138;
@@ -936,7 +965,7 @@
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(39, 250);
+            this.label42.Location = new System.Drawing.Point(10, 250);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(170, 13);
             this.label42.TabIndex = 137;
@@ -946,7 +975,7 @@
             // 
             this.cmb_pump_count_compatability.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_pump_count_compatability.FormattingEnabled = true;
-            this.cmb_pump_count_compatability.Location = new System.Drawing.Point(219, 247);
+            this.cmb_pump_count_compatability.Location = new System.Drawing.Point(188, 241);
             this.cmb_pump_count_compatability.Name = "cmb_pump_count_compatability";
             this.cmb_pump_count_compatability.Size = new System.Drawing.Size(168, 21);
             this.cmb_pump_count_compatability.TabIndex = 136;
@@ -955,7 +984,7 @@
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(39, 230);
+            this.label41.Location = new System.Drawing.Point(10, 230);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(160, 13);
             this.label41.TabIndex = 135;
@@ -964,7 +993,7 @@
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(38, 206);
+            this.label40.Location = new System.Drawing.Point(9, 206);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(112, 13);
             this.label40.TabIndex = 134;
@@ -977,7 +1006,7 @@
             this.cmb_connection_type.Items.AddRange(new object[] {
             "FLANGED",
             "THREADED"});
-            this.cmb_connection_type.Location = new System.Drawing.Point(219, 200);
+            this.cmb_connection_type.Location = new System.Drawing.Point(188, 198);
             this.cmb_connection_type.Name = "cmb_connection_type";
             this.cmb_connection_type.Size = new System.Drawing.Size(168, 21);
             this.cmb_connection_type.TabIndex = 132;
@@ -987,7 +1016,7 @@
             // 
             this.cmb_material.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_material.FormattingEnabled = true;
-            this.cmb_material.Location = new System.Drawing.Point(219, 50);
+            this.cmb_material.Location = new System.Drawing.Point(188, 50);
             this.cmb_material.Name = "cmb_material";
             this.cmb_material.Size = new System.Drawing.Size(168, 21);
             this.cmb_material.TabIndex = 131;
@@ -996,7 +1025,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(39, 53);
+            this.label39.Location = new System.Drawing.Point(10, 53);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(64, 13);
             this.label39.TabIndex = 127;
@@ -1005,7 +1034,7 @@
             // cmb_weight_unit_of_measure
             // 
             this.cmb_weight_unit_of_measure.FormattingEnabled = true;
-            this.cmb_weight_unit_of_measure.Location = new System.Drawing.Point(330, 317);
+            this.cmb_weight_unit_of_measure.Location = new System.Drawing.Point(299, 306);
             this.cmb_weight_unit_of_measure.Name = "cmb_weight_unit_of_measure";
             this.cmb_weight_unit_of_measure.Size = new System.Drawing.Size(56, 21);
             this.cmb_weight_unit_of_measure.TabIndex = 126;
@@ -1014,7 +1043,7 @@
             // cmb_volume_unit_of_measure
             // 
             this.cmb_volume_unit_of_measure.FormattingEnabled = true;
-            this.cmb_volume_unit_of_measure.Location = new System.Drawing.Point(330, 295);
+            this.cmb_volume_unit_of_measure.Location = new System.Drawing.Point(299, 284);
             this.cmb_volume_unit_of_measure.Name = "cmb_volume_unit_of_measure";
             this.cmb_volume_unit_of_measure.Size = new System.Drawing.Size(56, 21);
             this.cmb_volume_unit_of_measure.TabIndex = 125;
@@ -1038,7 +1067,7 @@
             // 
             // txt_long_description
             // 
-            this.txt_long_description.Location = new System.Drawing.Point(219, 393);
+            this.txt_long_description.Location = new System.Drawing.Point(188, 393);
             this.txt_long_description.Multiline = true;
             this.txt_long_description.Name = "txt_long_description";
             this.txt_long_description.Size = new System.Drawing.Size(166, 54);
@@ -1046,56 +1075,56 @@
             // 
             // txt_weight
             // 
-            this.txt_weight.Location = new System.Drawing.Point(219, 317);
+            this.txt_weight.Location = new System.Drawing.Point(188, 306);
             this.txt_weight.Name = "txt_weight";
-            this.txt_weight.Size = new System.Drawing.Size(105, 20);
+            this.txt_weight.Size = new System.Drawing.Size(110, 20);
             this.txt_weight.TabIndex = 120;
             // 
             // txt_volume
             // 
-            this.txt_volume.Location = new System.Drawing.Point(219, 295);
+            this.txt_volume.Location = new System.Drawing.Point(188, 284);
             this.txt_volume.Name = "txt_volume";
-            this.txt_volume.Size = new System.Drawing.Size(105, 20);
+            this.txt_volume.Size = new System.Drawing.Size(110, 20);
             this.txt_volume.TabIndex = 118;
             // 
             // txt_liquid_type
             // 
-            this.txt_liquid_type.Location = new System.Drawing.Point(219, 178);
+            this.txt_liquid_type.Location = new System.Drawing.Point(188, 177);
             this.txt_liquid_type.Name = "txt_liquid_type";
             this.txt_liquid_type.Size = new System.Drawing.Size(168, 20);
             this.txt_liquid_type.TabIndex = 116;
             // 
             // txt_service_factor
             // 
-            this.txt_service_factor.Location = new System.Drawing.Point(219, 157);
+            this.txt_service_factor.Location = new System.Drawing.Point(188, 156);
             this.txt_service_factor.Name = "txt_service_factor";
             this.txt_service_factor.Size = new System.Drawing.Size(168, 20);
             this.txt_service_factor.TabIndex = 114;
             // 
             // txt_motor_manufacturer
             // 
-            this.txt_motor_manufacturer.Location = new System.Drawing.Point(219, 136);
+            this.txt_motor_manufacturer.Location = new System.Drawing.Point(188, 135);
             this.txt_motor_manufacturer.Name = "txt_motor_manufacturer";
             this.txt_motor_manufacturer.Size = new System.Drawing.Size(168, 20);
             this.txt_motor_manufacturer.TabIndex = 112;
             // 
             // txt_motor_enclosure
             // 
-            this.txt_motor_enclosure.Location = new System.Drawing.Point(219, 115);
+            this.txt_motor_enclosure.Location = new System.Drawing.Point(188, 114);
             this.txt_motor_enclosure.Name = "txt_motor_enclosure";
             this.txt_motor_enclosure.Size = new System.Drawing.Size(168, 20);
             this.txt_motor_enclosure.TabIndex = 110;
             // 
             // txt_driver_type
             // 
-            this.txt_driver_type.Location = new System.Drawing.Point(219, 94);
+            this.txt_driver_type.Location = new System.Drawing.Point(188, 93);
             this.txt_driver_type.Name = "txt_driver_type";
             this.txt_driver_type.Size = new System.Drawing.Size(168, 20);
             this.txt_driver_type.TabIndex = 108;
             // 
             // txt_suction_pressure
             // 
-            this.txt_suction_pressure.Location = new System.Drawing.Point(219, 73);
+            this.txt_suction_pressure.Location = new System.Drawing.Point(188, 72);
             this.txt_suction_pressure.Name = "txt_suction_pressure";
             this.txt_suction_pressure.Size = new System.Drawing.Size(168, 20);
             this.txt_suction_pressure.TabIndex = 106;
@@ -1103,7 +1132,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(38, 396);
+            this.label19.Location = new System.Drawing.Point(10, 396);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(116, 13);
             this.label19.TabIndex = 121;
@@ -1112,7 +1141,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(39, 320);
+            this.label15.Location = new System.Drawing.Point(9, 309);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(54, 13);
             this.label15.TabIndex = 119;
@@ -1121,7 +1150,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(38, 298);
+            this.label16.Location = new System.Drawing.Point(9, 288);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(55, 13);
             this.label16.TabIndex = 117;
@@ -1130,7 +1159,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(38, 181);
+            this.label17.Location = new System.Drawing.Point(9, 181);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(77, 13);
             this.label17.TabIndex = 115;
@@ -1139,7 +1168,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(38, 160);
+            this.label18.Location = new System.Drawing.Point(9, 160);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(102, 13);
             this.label18.TabIndex = 113;
@@ -1148,7 +1177,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(38, 139);
+            this.label11.Location = new System.Drawing.Point(9, 139);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(150, 13);
             this.label11.TabIndex = 111;
@@ -1157,7 +1186,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(38, 118);
+            this.label12.Location = new System.Drawing.Point(9, 118);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(119, 13);
             this.label12.TabIndex = 109;
@@ -1166,7 +1195,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(38, 97);
+            this.label13.Location = new System.Drawing.Point(9, 97);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(82, 13);
             this.label13.TabIndex = 107;
@@ -1175,7 +1204,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(38, 76);
+            this.label14.Location = new System.Drawing.Point(9, 76);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(120, 13);
             this.label14.TabIndex = 105;
@@ -1184,10 +1213,10 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(38, 23);
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(11, 31);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(152, 16);
+            this.label9.Size = new System.Drawing.Size(126, 13);
             this.label9.TabIndex = 104;
             this.label9.Text = "ADDITIONAL SPECS";
             // 
@@ -1203,9 +1232,9 @@
             this.pnl_item_image.Controls.Add(this.img_preview);
             this.pnl_item_image.Controls.Add(this.label10);
             this.pnl_item_image.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnl_item_image.Location = new System.Drawing.Point(791, 3);
+            this.pnl_item_image.Location = new System.Drawing.Point(760, 3);
             this.pnl_item_image.Name = "pnl_item_image";
-            this.pnl_item_image.Size = new System.Drawing.Size(435, 525);
+            this.pnl_item_image.Size = new System.Drawing.Size(466, 525);
             this.pnl_item_image.TabIndex = 3;
             // 
             // lbl_filename
@@ -1285,10 +1314,10 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(13, 29);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(124, 16);
+            this.label10.Size = new System.Drawing.Size(103, 13);
             this.label10.TabIndex = 77;
             this.label10.Text = "ITEM PICTURES";
             // 
@@ -1309,7 +1338,7 @@
             // 
             // txt_manufacturer_origin
             // 
-            this.txt_manufacturer_origin.Location = new System.Drawing.Point(169, 447);
+            this.txt_manufacturer_origin.Location = new System.Drawing.Point(183, 393);
             this.txt_manufacturer_origin.Name = "txt_manufacturer_origin";
             this.txt_manufacturer_origin.Size = new System.Drawing.Size(139, 20);
             this.txt_manufacturer_origin.TabIndex = 102;
@@ -1317,7 +1346,7 @@
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(22, 450);
+            this.label38.Location = new System.Drawing.Point(36, 396);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(141, 13);
             this.label38.TabIndex = 101;
@@ -1353,7 +1382,7 @@
             this.dgv_template.Location = new System.Drawing.Point(36, 71);
             this.dgv_template.Name = "dgv_template";
             this.dgv_template.RowHeadersVisible = false;
-            this.dgv_template.Size = new System.Drawing.Size(272, 363);
+            this.dgv_template.Size = new System.Drawing.Size(272, 302);
             this.dgv_template.TabIndex = 100;
             // 
             // cmb_template
@@ -1380,9 +1409,10 @@
             // label8
             // 
             this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(22, 29);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(67, 13);
+            this.label8.Size = new System.Drawing.Size(76, 13);
             this.label8.TabIndex = 98;
             this.label8.Text = "TEMPLATE:";
             // 
@@ -2333,7 +2363,7 @@
             this.tab_attachments.Location = new System.Drawing.Point(4, 22);
             this.tab_attachments.Name = "tab_attachments";
             this.tab_attachments.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_attachments.Size = new System.Drawing.Size(1229, 531);
+            this.tab_attachments.Size = new System.Drawing.Size(1229, 515);
             this.tab_attachments.TabIndex = 5;
             this.tab_attachments.Text = "ATTACHMENTS";
             this.tab_attachments.UseVisualStyleBackColor = true;
@@ -2343,7 +2373,7 @@
             this.pnl_attachments.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_attachments.Location = new System.Drawing.Point(3, 3);
             this.pnl_attachments.Name = "pnl_attachments";
-            this.pnl_attachments.Size = new System.Drawing.Size(1223, 525);
+            this.pnl_attachments.Size = new System.Drawing.Size(1223, 509);
             this.pnl_attachments.TabIndex = 1;
             // 
             // salesBindingSource1
@@ -2671,5 +2701,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
         private System.Windows.Forms.ComboBox cmb_item_name;
         private System.Windows.Forms.Label lbl_filename;
+        private System.Windows.Forms.ComboBox cmb_calibration;
+        private System.Windows.Forms.Label lbl_calibration;
     }
 }

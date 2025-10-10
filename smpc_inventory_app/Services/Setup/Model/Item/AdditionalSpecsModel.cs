@@ -26,12 +26,12 @@ namespace smpc_inventory_app.Services.Setup.Model.Item
         public int volume_unit_of_measure_id { get; set; }
         public decimal weight { get; set; } 
         public int weight_unit_of_measure_id { get; set; }
-
+        public string calibration { get; set; }
         //public decimal length { get; set; } 
         //public int length_unit_of_measure_id { get; set; }
         //public decimal height { get; set; }
         //public int height_unit_of_measure_id { get; set; }
-        public string long_desc { get; set; }
+        public string long_description { get; set; }
     }
     class AdditionalSpecs
     {

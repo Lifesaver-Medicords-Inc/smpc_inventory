@@ -97,18 +97,6 @@ namespace smpc_inventory_app.Pages.Item
             {
 
             }
-
-        }
-        private async Task LoadSetupData()
-        {
-            //await FetchClassSetup();
-            //await FetchNameSetup();
-            //await FetchBrandSetup();
-            //await FetchUOMSetup();
-            //await FetchItemTradeType();
-            //await FetchMaterialSetup();
-            //await FetchPumpTypeSetup();
-            //await FetchPumpCountSetup();
         }
         private async void FetchItemData()
         {
@@ -134,7 +122,6 @@ namespace smpc_inventory_app.Pages.Item
                 ItemProduction = JsonHelper.ToDataTable(records.itemproduction)
             });
 
-            // back on UI thread
             items = tables.Items;
             itemspecs = tables.ItemSpecs;
             additionalspecs = tables.AdditionalSpecs;
@@ -145,7 +132,6 @@ namespace smpc_inventory_app.Pages.Item
 
             if (records.items.Count != 0)
             {
-                // ensure UI updates run on UI thread
                 if (this.InvokeRequired)
                     this.BeginInvoke(new Action(() => Bind(true)));
                 else
@@ -156,8 +142,6 @@ namespace smpc_inventory_app.Pages.Item
                 MessageBox.Show("No records found.");
             }
         }
-
-
         private void Bind(bool isBind = false)
         {
             if (isBind)
@@ -232,6 +216,17 @@ namespace smpc_inventory_app.Pages.Item
 
                     cmb_template.SelectedItem = dataView.Count > 0 ? dataView[0]["template"].ToString() : null;
                     txt_manufacturer_origin.Text = dataView.Count > 0 ? dataView[0]["manufacturer_origin"].ToString() : null;
+
+                    if (cmb_template.Text == "PUMP" || cmb_template.Text == "WATER METER")
+                    {
+                        cmb_calibration.Visible = true;
+                        lbl_calibration.Visible = true;
+                    }
+                    else
+                    {
+                        cmb_calibration.Visible = false;
+                        lbl_calibration.Visible = false;
+                    }
                 }
 
                 var matchingAdditionalSpec = records.additionalspecs.FirstOrDefault(spec => spec.based_id == currentItemId);
@@ -254,6 +249,18 @@ namespace smpc_inventory_app.Pages.Item
                                                     .Select(int.Parse)
                                                     .ToList();
                 txt_pump_type_compatability.Tag = currentSelectedPumpTypeIds;
+                // Setting default value 
+                if (matchingAdditionalSpec.connection_type == "" || string.IsNullOrEmpty(matchingAdditionalSpec.connection_type))
+                {
+                    cmb_connection_type.SelectedIndex = -1;
+                    cmb_connection_type.Text = "";
+                }
+                if (matchingAdditionalSpec.calibration == "" || string.IsNullOrEmpty(matchingAdditionalSpec.calibration))
+                {
+                    cmb_calibration.SelectedIndex = -1;
+                    cmb_calibration.Text = "";
+                }
+
 
                 // Bind Images
 
@@ -524,7 +531,8 @@ namespace smpc_inventory_app.Pages.Item
                 cmb_connection_type,
                 cmb_pump_count_compatability,
                 cmb_volume_unit_of_measure,
-                cmb_weight_unit_of_measure
+                cmb_weight_unit_of_measure,
+                cmb_calibration
             );
 
             chk_is_stop_selling.Checked = false;
@@ -892,6 +900,17 @@ namespace smpc_inventory_app.Pages.Item
                     dgv_template.Rows.Clear();
                     dt_template = getTemplate();
                     dgv_template.DataSource = dt_template;
+
+                    if(cmb_template.Text == "PUMP" || cmb_template.Text == "WATER METER")
+                    {
+                        cmb_calibration.Visible = true;
+                        lbl_calibration.Visible = true;
+                    }
+                    else
+                    {
+                        cmb_calibration.Visible = false;
+                        lbl_calibration.Visible = false;
+                    }
                 }
             }
         }
@@ -1290,6 +1309,10 @@ namespace smpc_inventory_app.Pages.Item
             if (tangibility == "NON-TANGIBLE")
             {
                 RemoveTabPage("tab_item_specs");
+            }
+            if (tabcontrol1.TabPages.Count > 0)
+            {
+                tabcontrol1.SelectedIndex = 0;
             }
         }
         private void RemoveTabPage(string tabName)
