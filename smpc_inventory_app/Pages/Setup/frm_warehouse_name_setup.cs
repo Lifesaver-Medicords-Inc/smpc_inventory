@@ -18,7 +18,7 @@ namespace smpc_inventory_app.Pages.Setup
 {
     public partial class frm_warehouse_name_setup : UserControl
     {
-        string currentUserPosition = CacheData.CurrentUser.position_id.ToString().ToLower();
+        string currentUserPosition = CacheData.CurrentUser.position.name.ToString().ToLower();
         WarehouseList warehouseDataList;
         DataTable warehousename;
         DataTable address;
@@ -341,7 +341,6 @@ namespace smpc_inventory_app.Pages.Setup
                 cmb_warehouse_manager.Items.Clear();
                 cmb_warehouse_manager.Items.AddRange(managerList.ToArray());
             }
-
             if ((WarehouseNameTable != null && WarehouseNameTable.Rows.Count > 0) &&
                 (currentUserPosition.ToLower().Contains("manager") ||
                  currentUserPosition.ToLower().Contains("admin")))

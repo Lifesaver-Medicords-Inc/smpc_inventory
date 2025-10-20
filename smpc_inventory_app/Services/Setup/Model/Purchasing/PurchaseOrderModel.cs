@@ -67,6 +67,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Purchasing
     class PurchaseOrderDetailsViewModel
     {
         public int pod_id { get; set; }
+        public int item_id { get; set; }
         public string item_code { get; set; }
         public string item_description { get; set; }
         public string ordered_qty { get; set; }

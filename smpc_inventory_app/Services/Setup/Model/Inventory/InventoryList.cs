@@ -27,6 +27,9 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         [Column("item_desc")]
         public string item_desc { get; set; }
 
+        [Column("calibration")]
+        public string calibration { get; set; }
+
         [Column("location")]
         public string location { get; set; }
 
@@ -57,6 +60,9 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         [Column("pod_id")]
         public int pod_id { get; set; }
 
+        [Column("item_id")]
+        public int item_id { get; set; }
+
         [Column("general_name")]
         public string general_name { get; set; }
 
@@ -64,10 +70,22 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         public string brand { get; set; }
 
         [Column("item_desc")]
-        public string item_desc { get; set; }
+        public string item_description { get; set; }
+
+        [Column("item_category")]
+        public string item_category { get; set; }
+
+        [Column("item_code")]
+        public string item_code { get; set; }
+
+        [Column("item_model")]
+        public string item_model { get; set; }
 
         [Column("location")]
         public string location { get; set; }
+
+        [Column("calibration")]
+        public string calibration { get; set; }
 
         [Column("qty_in")]
         public int qty_in { get; set; }
@@ -86,6 +104,9 @@ namespace smpc_inventory_app.Services.Setup.Inventory
 
         [Column("supplier_name")]
         public string supplier_name { get; set; }
+
+        [Column("remarks")]
+        public string remarks { get; set; }
     }
 
     class WarehouseName

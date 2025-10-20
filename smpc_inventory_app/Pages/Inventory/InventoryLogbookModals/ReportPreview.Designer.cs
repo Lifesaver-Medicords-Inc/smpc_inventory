@@ -40,9 +40,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.chb_report_title = new System.Windows.Forms.CheckBox();
             this.chb_page_no = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.txt_paper_size = new System.Windows.Forms.TextBox();
-            this.txt_file_size = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox10 = new System.Windows.Forms.TextBox();
@@ -59,13 +56,11 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.label5 = new System.Windows.Forms.Label();
             this.btn_close = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.lbl_page);
             this.panel1.Controls.Add(this.btn_next);
             this.panel1.Controls.Add(this.btn_prev);
@@ -76,9 +71,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.panel1.Controls.Add(this.chb_report_title);
             this.panel1.Controls.Add(this.chb_page_no);
             this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.txt_paper_size);
-            this.panel1.Controls.Add(this.txt_file_size);
-            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.textBox8);
             this.panel1.Controls.Add(this.textBox9);
             this.panel1.Controls.Add(this.textBox10);
@@ -199,31 +191,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.label7.Size = new System.Drawing.Size(116, 13);
             this.label7.TabIndex = 58;
             this.label7.Text = "HEADERS & FOOTERS";
-            // 
-            // txt_paper_size
-            // 
-            this.txt_paper_size.Location = new System.Drawing.Point(919, 351);
-            this.txt_paper_size.Name = "txt_paper_size";
-            this.txt_paper_size.ReadOnly = true;
-            this.txt_paper_size.Size = new System.Drawing.Size(153, 20);
-            this.txt_paper_size.TabIndex = 57;
-            // 
-            // txt_file_size
-            // 
-            this.txt_file_size.Location = new System.Drawing.Point(919, 331);
-            this.txt_file_size.Name = "txt_file_size";
-            this.txt_file_size.ReadOnly = true;
-            this.txt_file_size.Size = new System.Drawing.Size(153, 20);
-            this.txt_file_size.TabIndex = 56;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(776, 334);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 13);
-            this.label6.TabIndex = 55;
-            this.label6.Text = "FILE SIZE:";
             // 
             // textBox8
             // 
@@ -365,15 +332,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.label1.TabIndex = 1;
             this.label1.Text = "REPORT PREVIEW";
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(776, 354);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(73, 13);
-            this.label8.TabIndex = 68;
-            this.label8.Text = "PAPER SIZE:";
-            // 
             // ReportPreview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -403,9 +361,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txt_paper_size;
-        private System.Windows.Forms.TextBox txt_file_size;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.TextBox textBox10;
@@ -420,6 +375,5 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private System.Windows.Forms.Button btn_prev;
         private System.Windows.Forms.Label lbl_page;
         private System.Windows.Forms.Button btn_next;
-        private System.Windows.Forms.Label label8;
     }
 }

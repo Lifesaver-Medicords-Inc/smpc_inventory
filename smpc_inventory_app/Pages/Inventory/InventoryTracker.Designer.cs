@@ -48,6 +48,7 @@ namespace smpc_inventory_app.Pages
             this.uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.zone = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.units_outbound = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.calibration = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rem_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.warehouse_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -144,6 +145,7 @@ namespace smpc_inventory_app.Pages
             this.uom,
             this.zone,
             this.units_outbound,
+            this.calibration,
             this.remarks,
             this.rem_id,
             this.warehouse_id,
@@ -252,6 +254,15 @@ namespace smpc_inventory_app.Pages
             this.units_outbound.ReadOnly = true;
             this.units_outbound.Width = 80;
             // 
+            // calibration
+            // 
+            this.calibration.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.calibration.DataPropertyName = "calibration";
+            this.calibration.HeaderText = "CALIBRATION";
+            this.calibration.Name = "calibration";
+            this.calibration.ReadOnly = true;
+            this.calibration.Width = 150;
+            // 
             // remarks
             // 
             this.remarks.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -322,6 +333,7 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.DataGridViewTextBoxColumn uom;
         private System.Windows.Forms.DataGridViewTextBoxColumn zone;
         private System.Windows.Forms.DataGridViewTextBoxColumn units_outbound;
+        private System.Windows.Forms.DataGridViewTextBoxColumn calibration;
         private System.Windows.Forms.DataGridViewTextBoxColumn remarks;
         private System.Windows.Forms.DataGridViewTextBoxColumn rem_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn warehouse_id;

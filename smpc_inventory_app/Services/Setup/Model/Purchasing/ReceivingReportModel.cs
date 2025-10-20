@@ -56,6 +56,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Purchasing
     {
         public int id { get; set; }
         public int pod_id { get; set; }
+        public int item_id { get; set; }
         public int receiving_report_id { get; set; }
         public string item_code { get; set; }
         public string item_description { get; set; }

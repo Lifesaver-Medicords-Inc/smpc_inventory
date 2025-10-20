@@ -47,7 +47,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.pod_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.general_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.brand = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_desc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.beg = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.end = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.in_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -200,7 +200,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.pod_id,
             this.general_name,
             this.brand,
-            this.item_desc,
+            this.item_description,
             this.beg,
             this.end,
             this.in_total,
@@ -249,15 +249,15 @@ namespace smpc_inventory_app.Pages.Inventory
             this.brand.ReadOnly = true;
             this.brand.Width = 150;
             // 
-            // item_desc
+            // item_description
             // 
-            this.item_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.item_desc.DataPropertyName = "item_desc";
-            this.item_desc.HeaderText = "ITEM DESCRIPTION";
-            this.item_desc.MinimumWidth = 200;
-            this.item_desc.Name = "item_desc";
-            this.item_desc.ReadOnly = true;
-            this.item_desc.Width = 200;
+            this.item_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.item_description.DataPropertyName = "item_description";
+            this.item_description.HeaderText = "ITEM DESCRIPTION";
+            this.item_description.MinimumWidth = 200;
+            this.item_description.Name = "item_description";
+            this.item_description.ReadOnly = true;
+            this.item_description.Width = 200;
             // 
             // beg
             // 
@@ -334,17 +334,17 @@ namespace smpc_inventory_app.Pages.Inventory
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txt_search;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cmb_month;
+        private System.Windows.Forms.ComboBox cmb_year;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn pod_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn general_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn brand;
-        private System.Windows.Forms.DataGridViewTextBoxColumn item_desc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn item_description;
         private System.Windows.Forms.DataGridViewTextBoxColumn beg;
         private System.Windows.Forms.DataGridViewTextBoxColumn end;
         private System.Windows.Forms.DataGridViewTextBoxColumn in_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn out_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn location;
-        private System.Windows.Forms.ComboBox cmb_month;
-        private System.Windows.Forms.ComboBox cmb_year;
     }
 }
