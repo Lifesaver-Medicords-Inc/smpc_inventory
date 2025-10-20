@@ -402,6 +402,7 @@ namespace smpc_inventory_app.Pages.Inventory
 
                 int detailId = row.Cells["id"]?.Value == null ? 0 : Convert.ToInt32(row.Cells["id"].Value);
                 int podId = row.Cells["pod_id"]?.Value == null ? 0 : Convert.ToInt32(row.Cells["pod_id"].Value);
+                int itemId = row.Cells["item_id"]?.Value == null ? 0 : Convert.ToInt32(row.Cells["item_id"].Value);
                 string binLocation = row.Cells["cmb_bin_location"]?.Value?.ToString();
 
                 // Validate and transform bin_location
@@ -418,6 +419,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 {
                     id = detailId,
                     pod_id = podId,
+                    item_id = itemId,
                     item_code = row.Cells["item_code"]?.Value?.ToString(),
                     item_description = row.Cells["item_description"]?.Value?.ToString(),
                     ordered_qty = row.Cells["ordered_qty"]?.Value?.ToString(),

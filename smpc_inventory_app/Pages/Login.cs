@@ -34,8 +34,8 @@ namespace smpc_inventory_app.Pages
         private void frm_login_Load(object sender, EventArgs e)
         {
             //admin
-            txt_employee_id.Text = "IT-WD-1";
-            txt_password.Text = "IT-WD-1";
+            txt_employee_id.Text = "MO-A-24";
+            txt_password.Text = "MO-A-24";
 
             //inv manager
             //txt_employee_id.Text = "IM-IM-25";

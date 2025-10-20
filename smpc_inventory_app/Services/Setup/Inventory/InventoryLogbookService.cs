@@ -22,5 +22,16 @@ namespace smpc_inventory_app.Services.Setup.Inventory
             DataTable invTracker = JsonHelper.ToDataTable(response.Data);
             return invTracker;
         }
+
+        public static async Task<List<InventoryLogbookView>> GetAsList()
+        {
+            var response = await RequestToApi<ApiResponseModel<List<InventoryLogbookView>>>.Get(ENUM_ENDPOINT.INVENTORYLOGBOOK);
+
+            if (response?.Data == null || !response.Data.Any())
+                return new List<InventoryLogbookView>();
+
+            return response.Data;
+        }
+
     }
 }

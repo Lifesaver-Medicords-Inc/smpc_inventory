@@ -166,7 +166,7 @@ namespace Inventory_SMPC.Pages
             if (DialogResult.OK == login.ShowDialog())
             {
                 lbl_name.Text = CacheData.CurrentUser.first_name + " " + CacheData.CurrentUser.last_name;
-                lbl_position.Text = CacheData.CurrentUser.position_id;
+                lbl_position.Text = CacheData.CurrentUser.position.name;
                 lbl_department.Text = CacheData.CurrentUser.department;
                 this.Enabled = true;
 

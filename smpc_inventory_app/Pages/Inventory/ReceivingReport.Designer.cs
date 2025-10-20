@@ -71,6 +71,22 @@ namespace smpc_inventory_app.Pages.Inventory
             this.tbc_main = new System.Windows.Forms.TabControl();
             this.main = new System.Windows.Forms.TabPage();
             this.dgv_main = new System.Windows.Forms.DataGridView();
+            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pod_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ordered_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ordered_uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.received_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.received_uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.serial_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bin_location = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cmb_bin_location = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.rejected_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rejected_uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.reason_for_rejection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.attachment = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -87,21 +103,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.treeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.renameFileItem = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.reason_for_rejection = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rejected_uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rejected_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cmb_bin_location = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.bin_location = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.serial_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.received_uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.received_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ordered_uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ordered_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pod_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_head.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnl_main.SuspendLayout();
@@ -561,6 +562,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.number,
             this.id,
             this.pod_id,
+            this.item_id,
             this.item_code,
             this.item_description,
             this.ordered_qty,
@@ -584,6 +586,145 @@ namespace smpc_inventory_app.Pages.Inventory
             this.dgv_main.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_main_DataError);
             this.dgv_main.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgv_main_EditingControlShowing);
             this.dgv_main.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dgv_main_RowPostPaint);
+            // 
+            // number
+            // 
+            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.number.DataPropertyName = "number";
+            this.number.Frozen = true;
+            this.number.HeaderText = "#";
+            this.number.Name = "number";
+            this.number.ReadOnly = true;
+            this.number.Width = 50;
+            // 
+            // id
+            // 
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "ID";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            this.id.Visible = false;
+            // 
+            // pod_id
+            // 
+            this.pod_id.DataPropertyName = "pod_id";
+            this.pod_id.HeaderText = "POD ID";
+            this.pod_id.Name = "pod_id";
+            this.pod_id.ReadOnly = true;
+            this.pod_id.Visible = false;
+            // 
+            // item_id
+            // 
+            this.item_id.DataPropertyName = "item_id";
+            this.item_id.HeaderText = "ITEM ID";
+            this.item_id.Name = "item_id";
+            this.item_id.ReadOnly = true;
+            // 
+            // item_code
+            // 
+            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.item_code.DataPropertyName = "item_code";
+            this.item_code.HeaderText = "ITEM CODE";
+            this.item_code.Name = "item_code";
+            this.item_code.ReadOnly = true;
+            this.item_code.Width = 120;
+            // 
+            // item_description
+            // 
+            this.item_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.item_description.DataPropertyName = "item_description";
+            this.item_description.HeaderText = "ITEM DESCRIPTION";
+            this.item_description.Name = "item_description";
+            this.item_description.ReadOnly = true;
+            this.item_description.Width = 200;
+            // 
+            // ordered_qty
+            // 
+            this.ordered_qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ordered_qty.DataPropertyName = "ordered_qty";
+            this.ordered_qty.HeaderText = "QTY";
+            this.ordered_qty.Name = "ordered_qty";
+            this.ordered_qty.ReadOnly = true;
+            this.ordered_qty.Width = 80;
+            // 
+            // ordered_uom
+            // 
+            this.ordered_uom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ordered_uom.DataPropertyName = "ordered_uom";
+            this.ordered_uom.HeaderText = "UOM";
+            this.ordered_uom.Name = "ordered_uom";
+            this.ordered_uom.ReadOnly = true;
+            this.ordered_uom.Width = 80;
+            // 
+            // received_qty
+            // 
+            this.received_qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.received_qty.DataPropertyName = "received_qty";
+            this.received_qty.HeaderText = "QTY";
+            this.received_qty.Name = "received_qty";
+            this.received_qty.ReadOnly = true;
+            this.received_qty.Width = 80;
+            // 
+            // received_uom
+            // 
+            this.received_uom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.received_uom.DataPropertyName = "received_uom";
+            this.received_uom.HeaderText = "UOM";
+            this.received_uom.Name = "received_uom";
+            this.received_uom.ReadOnly = true;
+            this.received_uom.Width = 80;
+            // 
+            // serial_number
+            // 
+            this.serial_number.DataPropertyName = "serial_number";
+            this.serial_number.HeaderText = "SERIAL NUMBER/S";
+            this.serial_number.Name = "serial_number";
+            this.serial_number.ReadOnly = true;
+            this.serial_number.Width = 150;
+            // 
+            // bin_location
+            // 
+            this.bin_location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.bin_location.DataPropertyName = "bin_location";
+            this.bin_location.HeaderText = "BIN LOCATION";
+            this.bin_location.Name = "bin_location";
+            this.bin_location.ReadOnly = true;
+            this.bin_location.Width = 200;
+            // 
+            // cmb_bin_location
+            // 
+            this.cmb_bin_location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.cmb_bin_location.HeaderText = "BIN LOCATION";
+            this.cmb_bin_location.Name = "cmb_bin_location";
+            this.cmb_bin_location.Visible = false;
+            this.cmb_bin_location.Width = 200;
+            // 
+            // rejected_qty
+            // 
+            this.rejected_qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.rejected_qty.DataPropertyName = "rejected_qty";
+            this.rejected_qty.HeaderText = "QTY";
+            this.rejected_qty.Name = "rejected_qty";
+            this.rejected_qty.ReadOnly = true;
+            this.rejected_qty.Width = 80;
+            // 
+            // rejected_uom
+            // 
+            this.rejected_uom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.rejected_uom.DataPropertyName = "rejected_uom";
+            this.rejected_uom.HeaderText = "UOM";
+            this.rejected_uom.Name = "rejected_uom";
+            this.rejected_uom.ReadOnly = true;
+            this.rejected_uom.Width = 80;
+            // 
+            // reason_for_rejection
+            // 
+            this.reason_for_rejection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.reason_for_rejection.DataPropertyName = "reason_for_rejection";
+            this.reason_for_rejection.HeaderText = "REASON FOR REJECTION";
+            this.reason_for_rejection.Name = "reason_for_rejection";
+            this.reason_for_rejection.ReadOnly = true;
+            this.reason_for_rejection.Width = 200;
             // 
             // attachment
             // 
@@ -744,138 +885,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.renameFileItem.Name = "renameFileItem";
             this.renameFileItem.Size = new System.Drawing.Size(61, 4);
             // 
-            // reason_for_rejection
-            // 
-            this.reason_for_rejection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.reason_for_rejection.DataPropertyName = "reason_for_rejection";
-            this.reason_for_rejection.HeaderText = "REASON FOR REJECTION";
-            this.reason_for_rejection.Name = "reason_for_rejection";
-            this.reason_for_rejection.ReadOnly = true;
-            this.reason_for_rejection.Width = 200;
-            // 
-            // rejected_uom
-            // 
-            this.rejected_uom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.rejected_uom.DataPropertyName = "rejected_uom";
-            this.rejected_uom.HeaderText = "UOM";
-            this.rejected_uom.Name = "rejected_uom";
-            this.rejected_uom.ReadOnly = true;
-            this.rejected_uom.Width = 80;
-            // 
-            // rejected_qty
-            // 
-            this.rejected_qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.rejected_qty.DataPropertyName = "rejected_qty";
-            this.rejected_qty.HeaderText = "QTY";
-            this.rejected_qty.Name = "rejected_qty";
-            this.rejected_qty.ReadOnly = true;
-            this.rejected_qty.Width = 80;
-            // 
-            // cmb_bin_location
-            // 
-            this.cmb_bin_location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.cmb_bin_location.HeaderText = "BIN LOCATION";
-            this.cmb_bin_location.Name = "cmb_bin_location";
-            this.cmb_bin_location.Visible = false;
-            this.cmb_bin_location.Width = 200;
-            // 
-            // bin_location
-            // 
-            this.bin_location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.bin_location.DataPropertyName = "bin_location";
-            this.bin_location.HeaderText = "BIN LOCATION";
-            this.bin_location.Name = "bin_location";
-            this.bin_location.ReadOnly = true;
-            this.bin_location.Width = 200;
-            // 
-            // serial_number
-            // 
-            this.serial_number.DataPropertyName = "serial_number";
-            this.serial_number.HeaderText = "SERIAL NUMBER/S";
-            this.serial_number.Name = "serial_number";
-            this.serial_number.ReadOnly = true;
-            this.serial_number.Width = 150;
-            // 
-            // received_uom
-            // 
-            this.received_uom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.received_uom.DataPropertyName = "received_uom";
-            this.received_uom.HeaderText = "UOM";
-            this.received_uom.Name = "received_uom";
-            this.received_uom.ReadOnly = true;
-            this.received_uom.Width = 80;
-            // 
-            // received_qty
-            // 
-            this.received_qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.received_qty.DataPropertyName = "received_qty";
-            this.received_qty.HeaderText = "QTY";
-            this.received_qty.Name = "received_qty";
-            this.received_qty.ReadOnly = true;
-            this.received_qty.Width = 80;
-            // 
-            // ordered_uom
-            // 
-            this.ordered_uom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ordered_uom.DataPropertyName = "ordered_uom";
-            this.ordered_uom.HeaderText = "UOM";
-            this.ordered_uom.Name = "ordered_uom";
-            this.ordered_uom.ReadOnly = true;
-            this.ordered_uom.Width = 80;
-            // 
-            // ordered_qty
-            // 
-            this.ordered_qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ordered_qty.DataPropertyName = "ordered_qty";
-            this.ordered_qty.HeaderText = "QTY";
-            this.ordered_qty.Name = "ordered_qty";
-            this.ordered_qty.ReadOnly = true;
-            this.ordered_qty.Width = 80;
-            // 
-            // item_description
-            // 
-            this.item_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.item_description.DataPropertyName = "item_description";
-            this.item_description.HeaderText = "ITEM DESCRIPTION";
-            this.item_description.Name = "item_description";
-            this.item_description.ReadOnly = true;
-            this.item_description.Width = 200;
-            // 
-            // item_code
-            // 
-            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.item_code.DataPropertyName = "item_code";
-            this.item_code.HeaderText = "ITEM CODE";
-            this.item_code.Name = "item_code";
-            this.item_code.ReadOnly = true;
-            this.item_code.Width = 120;
-            // 
-            // pod_id
-            // 
-            this.pod_id.DataPropertyName = "pod_id";
-            this.pod_id.HeaderText = "POD ID";
-            this.pod_id.Name = "pod_id";
-            this.pod_id.ReadOnly = true;
-            this.pod_id.Visible = false;
-            // 
-            // id
-            // 
-            this.id.DataPropertyName = "id";
-            this.id.HeaderText = "ID";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            this.id.Visible = false;
-            // 
-            // number
-            // 
-            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.number.DataPropertyName = "number";
-            this.number.Frozen = true;
-            this.number.HeaderText = "#";
-            this.number.Name = "number";
-            this.number.ReadOnly = true;
-            this.number.Width = 50;
-            // 
             // ReceivingReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -973,6 +982,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private System.Windows.Forms.DataGridViewTextBoxColumn number;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn pod_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn item_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_code;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_description;
         private System.Windows.Forms.DataGridViewTextBoxColumn ordered_qty;
