@@ -30,9 +30,8 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lbl_page = new System.Windows.Forms.Label();
-            this.btn_next = new System.Windows.Forms.Button();
-            this.btn_prev = new System.Windows.Forms.Button();
+            this.pnl_filter = new System.Windows.Forms.Panel();
+            this.pnl_column = new System.Windows.Forms.Panel();
             this.pnl_preview = new System.Windows.Forms.Panel();
             this.chb_report_doc = new System.Windows.Forms.CheckBox();
             this.chb_report_time = new System.Windows.Forms.CheckBox();
@@ -40,15 +39,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.chb_report_title = new System.Windows.Forms.CheckBox();
             this.chb_page_no = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.txt_filters_applied = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.txt_columns_selected = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txt_total = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -61,9 +52,9 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.lbl_page);
-            this.panel1.Controls.Add(this.btn_next);
-            this.panel1.Controls.Add(this.btn_prev);
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.pnl_filter);
+            this.panel1.Controls.Add(this.pnl_column);
             this.panel1.Controls.Add(this.pnl_preview);
             this.panel1.Controls.Add(this.chb_report_doc);
             this.panel1.Controls.Add(this.chb_report_time);
@@ -71,15 +62,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.panel1.Controls.Add(this.chb_report_title);
             this.panel1.Controls.Add(this.chb_page_no);
             this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.textBox8);
-            this.panel1.Controls.Add(this.textBox9);
-            this.panel1.Controls.Add(this.textBox10);
-            this.panel1.Controls.Add(this.txt_filters_applied);
             this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.textBox5);
-            this.panel1.Controls.Add(this.textBox6);
-            this.panel1.Controls.Add(this.textBox4);
-            this.panel1.Controls.Add(this.txt_columns_selected);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.txt_total);
             this.panel1.Controls.Add(this.label2);
@@ -90,49 +73,40 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1084, 611);
+            this.panel1.Size = new System.Drawing.Size(1184, 611);
             this.panel1.TabIndex = 0;
             // 
-            // lbl_page
+            // pnl_filter
             // 
-            this.lbl_page.AutoSize = true;
-            this.lbl_page.Location = new System.Drawing.Point(644, 567);
-            this.lbl_page.Name = "lbl_page";
-            this.lbl_page.Size = new System.Drawing.Size(30, 13);
-            this.lbl_page.TabIndex = 67;
-            this.lbl_page.Text = "1/12";
+            this.pnl_filter.AutoScroll = true;
+            this.pnl_filter.Location = new System.Drawing.Point(904, 263);
+            this.pnl_filter.Name = "pnl_filter";
+            this.pnl_filter.Size = new System.Drawing.Size(268, 116);
+            this.pnl_filter.TabIndex = 69;
             // 
-            // btn_next
+            // pnl_column
             // 
-            this.btn_next.Location = new System.Drawing.Point(681, 562);
-            this.btn_next.Name = "btn_next";
-            this.btn_next.Size = new System.Drawing.Size(75, 23);
-            this.btn_next.TabIndex = 66;
-            this.btn_next.Text = ">>";
-            this.btn_next.UseVisualStyleBackColor = true;
-            // 
-            // btn_prev
-            // 
-            this.btn_prev.Location = new System.Drawing.Point(559, 562);
-            this.btn_prev.Name = "btn_prev";
-            this.btn_prev.Size = new System.Drawing.Size(75, 23);
-            this.btn_prev.TabIndex = 65;
-            this.btn_prev.Text = "<<";
-            this.btn_prev.UseVisualStyleBackColor = true;
+            this.pnl_column.AutoScroll = true;
+            this.pnl_column.Location = new System.Drawing.Point(904, 114);
+            this.pnl_column.Name = "pnl_column";
+            this.pnl_column.Size = new System.Drawing.Size(268, 116);
+            this.pnl_column.TabIndex = 68;
             // 
             // pnl_preview
             // 
+            this.pnl_preview.AutoScroll = true;
             this.pnl_preview.BackColor = System.Drawing.Color.White;
             this.pnl_preview.Location = new System.Drawing.Point(12, 40);
             this.pnl_preview.Name = "pnl_preview";
             this.pnl_preview.Size = new System.Drawing.Size(744, 516);
             this.pnl_preview.TabIndex = 64;
+            this.pnl_preview.Resize += new System.EventHandler(this.pnl_preview_Resize);
             // 
             // chb_report_doc
             // 
             this.chb_report_doc.AutoSize = true;
             this.chb_report_doc.Enabled = false;
-            this.chb_report_doc.Location = new System.Drawing.Point(765, 512);
+            this.chb_report_doc.Location = new System.Drawing.Point(779, 498);
             this.chb_report_doc.Name = "chb_report_doc";
             this.chb_report_doc.Size = new System.Drawing.Size(122, 17);
             this.chb_report_doc.TabIndex = 63;
@@ -143,7 +117,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             // 
             this.chb_report_time.AutoSize = true;
             this.chb_report_time.Enabled = false;
-            this.chb_report_time.Location = new System.Drawing.Point(765, 489);
+            this.chb_report_time.Location = new System.Drawing.Point(779, 475);
             this.chb_report_time.Name = "chb_report_time";
             this.chb_report_time.Size = new System.Drawing.Size(100, 17);
             this.chb_report_time.TabIndex = 62;
@@ -154,7 +128,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             // 
             this.chb_report_date.AutoSize = true;
             this.chb_report_date.Enabled = false;
-            this.chb_report_date.Location = new System.Drawing.Point(765, 466);
+            this.chb_report_date.Location = new System.Drawing.Point(779, 521);
             this.chb_report_date.Name = "chb_report_date";
             this.chb_report_date.Size = new System.Drawing.Size(103, 17);
             this.chb_report_date.TabIndex = 61;
@@ -165,18 +139,17 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             // 
             this.chb_report_title.AutoSize = true;
             this.chb_report_title.Enabled = false;
-            this.chb_report_title.Location = new System.Drawing.Point(765, 443);
+            this.chb_report_title.Location = new System.Drawing.Point(779, 455);
             this.chb_report_title.Name = "chb_report_title";
-            this.chb_report_title.Size = new System.Drawing.Size(104, 17);
+            this.chb_report_title.Size = new System.Drawing.Size(15, 14);
             this.chb_report_title.TabIndex = 60;
-            this.chb_report_title.Text = "REPORT TITLE";
             this.chb_report_title.UseVisualStyleBackColor = true;
             // 
             // chb_page_no
             // 
             this.chb_page_no.AutoSize = true;
             this.chb_page_no.Enabled = false;
-            this.chb_page_no.Location = new System.Drawing.Point(765, 420);
+            this.chb_page_no.Location = new System.Drawing.Point(779, 432);
             this.chb_page_no.Name = "chb_page_no";
             this.chb_page_no.Size = new System.Drawing.Size(112, 17);
             this.chb_page_no.TabIndex = 59;
@@ -186,84 +159,20 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(762, 390);
+            this.label7.Location = new System.Drawing.Point(776, 406);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(116, 13);
             this.label7.TabIndex = 58;
             this.label7.Text = "HEADERS & FOOTERS";
             // 
-            // textBox8
-            // 
-            this.textBox8.Location = new System.Drawing.Point(919, 281);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.ReadOnly = true;
-            this.textBox8.Size = new System.Drawing.Size(153, 20);
-            this.textBox8.TabIndex = 54;
-            // 
-            // textBox9
-            // 
-            this.textBox9.Location = new System.Drawing.Point(919, 261);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.ReadOnly = true;
-            this.textBox9.Size = new System.Drawing.Size(153, 20);
-            this.textBox9.TabIndex = 53;
-            // 
-            // textBox10
-            // 
-            this.textBox10.Location = new System.Drawing.Point(919, 241);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.ReadOnly = true;
-            this.textBox10.Size = new System.Drawing.Size(153, 20);
-            this.textBox10.TabIndex = 52;
-            // 
-            // txt_filters_applied
-            // 
-            this.txt_filters_applied.Location = new System.Drawing.Point(919, 221);
-            this.txt_filters_applied.Name = "txt_filters_applied";
-            this.txt_filters_applied.ReadOnly = true;
-            this.txt_filters_applied.Size = new System.Drawing.Size(153, 20);
-            this.txt_filters_applied.TabIndex = 51;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(776, 224);
+            this.label4.Location = new System.Drawing.Point(776, 263);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(102, 13);
             this.label4.TabIndex = 50;
             this.label4.Text = "FILTERS APPLIED:";
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(919, 171);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(153, 20);
-            this.textBox5.TabIndex = 49;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(919, 151);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(153, 20);
-            this.textBox6.TabIndex = 48;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(919, 131);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(153, 20);
-            this.textBox4.TabIndex = 47;
-            // 
-            // txt_columns_selected
-            // 
-            this.txt_columns_selected.Location = new System.Drawing.Point(919, 111);
-            this.txt_columns_selected.Name = "txt_columns_selected";
-            this.txt_columns_selected.ReadOnly = true;
-            this.txt_columns_selected.Size = new System.Drawing.Size(153, 20);
-            this.txt_columns_selected.TabIndex = 46;
             // 
             // label3
             // 
@@ -281,6 +190,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.txt_total.ReadOnly = true;
             this.txt_total.Size = new System.Drawing.Size(85, 20);
             this.txt_total.TabIndex = 44;
+            this.txt_total.Text = "1";
             // 
             // label2
             // 
@@ -314,7 +224,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_close.BackColor = System.Drawing.Color.LightCoral;
             this.btn_close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_close.Location = new System.Drawing.Point(948, 576);
+            this.btn_close.Location = new System.Drawing.Point(1048, 576);
             this.btn_close.Name = "btn_close";
             this.btn_close.Size = new System.Drawing.Size(124, 23);
             this.btn_close.TabIndex = 40;
@@ -336,10 +246,12 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1084, 611);
+            this.ClientSize = new System.Drawing.Size(1184, 611);
             this.Controls.Add(this.panel1);
             this.Name = "ReportPreview";
             this.Text = "ReportPreview";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ReportPreview_FormClosed);
+            this.Load += new System.EventHandler(this.ReportPreview_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -354,17 +266,9 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private System.Windows.Forms.TextBox txt_doc_no;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox txt_columns_selected;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txt_total;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox txt_filters_applied;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel pnl_preview;
         private System.Windows.Forms.CheckBox chb_report_doc;
@@ -372,8 +276,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private System.Windows.Forms.CheckBox chb_report_date;
         private System.Windows.Forms.CheckBox chb_report_title;
         private System.Windows.Forms.CheckBox chb_page_no;
-        private System.Windows.Forms.Button btn_prev;
-        private System.Windows.Forms.Label lbl_page;
-        private System.Windows.Forms.Button btn_next;
+        private System.Windows.Forms.Panel pnl_column;
+        private System.Windows.Forms.Panel pnl_filter;
     }
 }

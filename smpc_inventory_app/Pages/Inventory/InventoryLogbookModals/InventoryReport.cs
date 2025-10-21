@@ -41,10 +41,50 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
 
         private void btn_preview_Click(object sender, EventArgs e)
         {
-            // Create and show the preview modal
-            var previewForm = new ReportPreview();
+            // Get all checked checkboxes inside pnl_main
+            var checkedCheckboxes = GetAllCheckboxes(pnl_main)
+                .Where(chk => chk.Checked
+                    && !chk.Name.StartsWith("chb_graph", StringComparison.OrdinalIgnoreCase)
+                    && !chk.Name.StartsWith("chb_combine", StringComparison.OrdinalIgnoreCase))
+                .Select(chk => chk.Name
+                    .Replace("chb_", "")                  // remove prefix
+                    .Replace("_", " ")                    // replace underscores with spaces
+                    .ToUpper())                           // make all uppercase
+                .ToList();
 
-            previewForm.ShowDialog();
+            // Ensure at least one checkbox is selected
+            if (!checkedCheckboxes.Any())
+            {
+                Helpers.ShowDialogMessage("warning", "Please select at least one column to preview.");
+                return;
+            }
+
+            try
+            {
+                // Generate the report, but save to the temp path
+                var result = GenerateExcelReport(true);
+
+                // Make the file read-only
+                File.SetAttributes(result.FilePath, File.GetAttributes(result.FilePath) | FileAttributes.ReadOnly);
+
+                // Open the preview form
+                var previewForm = new ReportPreview
+                {
+                    FileName = result.FileName,
+                    ReportCode = result.ReportCode,
+                    TempFilePath = result.FilePath,
+                    ColumnList = checkedCheckboxes,
+                    BrandList = result.SelectedBrands,
+                    ItemCategoryList = result.SelectedItemCategory,
+                    GeneralNameList = result.SelectedGeneralName
+                };
+
+                previewForm.ShowDialog();
+            }
+            catch (NullReferenceException)
+            {
+
+            }
         }
 
         private async void InventoryReport_Load(object sender, EventArgs e)
@@ -591,11 +631,27 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             GenerateExcelReport();
         }
 
-        private void GenerateExcelReport(string outputPath = null)
+        private ReportGenerationResult GenerateExcelReport(bool isPreview = false)
         {
+            // --- Generate custom Excel filename ---
+            string selectedMonth = cmb_month.Text;
+            string selectedYear = cmb_year.Text;
+
+            // Convert month to number for filename
+            int monthNumber = DateTime.ParseExact(selectedMonth, "MMMM",
+                System.Globalization.CultureInfo.InvariantCulture).Month;
+
+            // Generate a random 4-digit code (can be replaced with a counter or timestamp)
+            string randomCode = new Random().Next(1000, 9999).ToString();
+            string reportCode = $"INVREP#{randomCode}";
+
+            string uniqueSuffix = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string fileName = $"InventoryReport_{selectedYear}_{monthNumber:D2}_INVREP#{randomCode}_{uniqueSuffix}.xlsx";
+
+            // Save to user's Desktop
             string filePath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                "InventoryReport.xlsx"
+                fileName
             );
 
             try
@@ -603,20 +659,14 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                 if (_inventoryList == null || !_inventoryList.Any())
                 {
                     Helpers.ShowDialogMessage("error", "No inventory data loaded.");
-                    return;
+                    return null;
                 }
 
                 if (string.IsNullOrWhiteSpace(cmb_month.Text) || string.IsNullOrWhiteSpace(cmb_year.Text))
                 {
                     Helpers.ShowDialogMessage("warning", "Please select both a month and a year before creating the report.");
-                    return;
+                    return null;
                 }
-
-                string selectedMonth = cmb_month.Text;
-                string selectedYear = cmb_year.Text;
-
-                int monthNumber = DateTime.ParseExact(selectedMonth, "MMMM",
-                    System.Globalization.CultureInfo.InvariantCulture).Month;
 
                 var filteredList = _inventoryList
                     .Where(i =>
@@ -653,7 +703,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                         $"• General Name: {generalNameFilters}" +
                         "No Data Found");
 
-                    return;
+                    return null;
                 }
 
                 var checkedCheckboxes = GetAllCheckboxes(pnl_main)
@@ -663,7 +713,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                 if (!checkedCheckboxes.Any())
                 {
                     Helpers.ShowDialogMessage("warning", "Please select at least one checkbox before creating the Excel file.");
-                    return;
+                    return null;
                 }
 
                 var propertyOrder = new List<string>
@@ -932,7 +982,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                     if (!locationPrefixes.Any())
                     {
                         Helpers.ShowDialogMessage("warning", "No valid zone locations found in the data.");
-                        return;
+                        return null;
                     }
 
                     foreach (var locPrefix in locationPrefixes)
@@ -963,15 +1013,41 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                 }
 
                 workbook.SaveAs(filePath);
+
+                // Update the class fields
+                _selectedBrands = _selectedBrands ?? new List<string>();
+                _selectedItemCategory = _selectedItemCategory ?? new List<string>();
+                _selectedGeneralName = _selectedGeneralName ?? new List<string>();
+
+                // Build result object
+                var result = new ReportGenerationResult
+                {
+                    FileName = fileName,
+                    ReportCode = reportCode,
+                    FilePath = filePath,
+                    SelectedBrands = _selectedBrands,
+                    SelectedItemCategory = _selectedItemCategory,
+                    SelectedGeneralName = _selectedGeneralName
+                };
+
+                // If preview, skip saving message
+                if (isPreview)
+                    return result;
+
                 Helpers.ShowDialogMessage("success", $"Excel file created successfully for {selectedMonth} {selectedYear} at:\n{filePath}");
+
+
+                return result;
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (ArgumentOutOfRangeException)
             {
                 Helpers.ShowDialogMessage("warning", "Please select at least one checkbox before creating the Excel file.");
+                return null;
             }
             catch (Exception ex)
             {
                 Helpers.ShowDialogMessage("error", "Error: " + ex.Message);
+                return null;
             }
         }
 
@@ -1448,6 +1524,16 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                         yield return childCb;
                 }
             }
+        }
+
+        public class ReportGenerationResult
+        {
+            public string FileName { get; set; }
+            public string ReportCode { get; set; }
+            public string FilePath { get; set; }
+            public List<string> SelectedBrands { get; set; }
+            public List<string> SelectedItemCategory { get; set; }
+            public List<string> SelectedGeneralName { get; set; }
         }
     }
 }
