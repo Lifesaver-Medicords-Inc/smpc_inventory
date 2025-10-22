@@ -161,6 +161,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.cmb_month.Name = "cmb_month";
             this.cmb_month.Size = new System.Drawing.Size(121, 21);
             this.cmb_month.TabIndex = 42;
+            this.cmb_month.SelectedIndexChanged += new System.EventHandler(this.cmb_month_SelectedIndexChanged);
             // 
             // cmb_year
             // 
@@ -170,6 +171,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.cmb_year.Name = "cmb_year";
             this.cmb_year.Size = new System.Drawing.Size(121, 21);
             this.cmb_year.TabIndex = 41;
+            this.cmb_year.SelectedIndexChanged += new System.EventHandler(this.cmb_year_SelectedIndexChanged);
             // 
             // btn_create
             // 
@@ -247,7 +249,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.chb_combine_brand.TabIndex = 30;
             this.chb_combine_brand.Text = "Combine";
             this.chb_combine_brand.UseVisualStyleBackColor = true;
-            this.chb_combine_brand.CheckedChanged += new System.EventHandler(this.checkBox_combine);
             // 
             // chb_combine_general_name
             // 
@@ -258,7 +259,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.chb_combine_general_name.TabIndex = 27;
             this.chb_combine_general_name.Text = "Combine";
             this.chb_combine_general_name.UseVisualStyleBackColor = true;
-            this.chb_combine_general_name.CheckedChanged += new System.EventHandler(this.checkBox_combine);
             // 
             // label9
             // 
@@ -434,7 +434,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.chb_combine_item_category.TabIndex = 9;
             this.chb_combine_item_category.Text = "Combine";
             this.chb_combine_item_category.UseVisualStyleBackColor = true;
-            this.chb_combine_item_category.CheckedChanged += new System.EventHandler(this.checkBox_combine);
             // 
             // label6
             // 

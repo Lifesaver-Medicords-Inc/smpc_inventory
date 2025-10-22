@@ -21,6 +21,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private List<string> _selectedBrands = new List<string>();
         private List<string> _selectedItemCategory = new List<string>();
         private List<string> _selectedGeneralName = new List<string>();
+        private List<string> _cartesianCombinations;
         private bool _isUpdating = false;
         private readonly string _selectedYear;
         private readonly string _selectedMonth;
@@ -138,26 +139,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                     chb_daily_in_out.Checked = true;
                 }
             };
-        }
-
-        private void checkBox_combine(object sender, EventArgs e)
-        {
-            // Get all checkboxes you want to control
-            var checkboxes = new List<CheckBox> { chb_combine_item_category, chb_combine_general_name, chb_combine_brand };
-
-            // Count how many are checked
-            int checkedCount = checkboxes.Count(cb => cb.Checked);
-
-            // If more than 2 are checked, uncheck the one that triggered the event
-            if (checkedCount > 2)
-            {
-                CheckBox changedBox = sender as CheckBox;
-                if (changedBox != null)
-                {
-                    changedBox.Checked = false;
-                    Helpers.ShowDialogMessage("warning", "You can select at most 2 options.");
-                }
-            }
         }
 
         private void UpdateCombineFilterLock()
@@ -756,248 +737,153 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
 
                 var workbook = new XLWorkbook();
 
-                if (_selectedGeneralName.Any() && !combineGeneralName)
-                {
-                    // --- SHEETS BY GENERAL NAME ---
-                    foreach (var generalName in _selectedGeneralName)
-                    {
-                        var generalNameData = filteredList
-                            .Where(i => string.Equals(i.general_name, generalName, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
+                // Determine grouping strategy
+                Func<InventoryLogbookView, string> groupSelector = null;
+                string groupingType = null;
 
-                        string sheetName = generalName.Length > 31 ? generalName.Substring(0, 31) : generalName;
+                // LOCATION always takes priority
+                if (includeLocation)
+                {
+                    groupingType = "location";
+                    groupSelector = i => !string.IsNullOrWhiteSpace(i.location)
+                        ? i.location.Split('-')[0].Trim()
+                        : string.Empty;
+                }
+                else if (_selectedGeneralName.Any() && !combineGeneralName &&
+                         _selectedItemCategory.Any() && !combineItemCategory &&
+                         combineBrand)
+                {
+                    // General Name + Item Category
+                    groupingType = "general_name_item_category";
+                    var allCombinations = (from g in _selectedGeneralName
+                                           from c in _selectedItemCategory
+                                           select $"{g} | {c}").ToList();
+
+                    groupSelector = i => $"{i.general_name} | {i.item_category}";
+
+                    // Store the combinations for later use (to ensure empty sheets are created)
+                    _cartesianCombinations = allCombinations;
+                }
+                else if (_selectedGeneralName.Any() && !combineGeneralName &&
+                         _selectedBrands.Any() && !combineBrand &&
+                         combineItemCategory)
+                {
+                    // General Name + Brand
+                    groupingType = "general_name_brand";
+                    var allCombinations = (from g in _selectedGeneralName
+                                           from b in _selectedBrands
+                                           select $"{g} | {b}").ToList();
+
+                    groupSelector = i => $"{i.general_name} | {i.brand}";
+                    _cartesianCombinations = allCombinations;
+                }
+                else if (_selectedItemCategory.Any() && !combineItemCategory &&
+                         _selectedBrands.Any() && !combineBrand &&
+                         combineGeneralName)
+                {
+                    // Item Category + Brand
+                    groupingType = "item_category_brand";
+                    var allCombinations = (from c in _selectedItemCategory
+                                           from b in _selectedBrands
+                                           select $"{c} | {b}").ToList();
+
+                    groupSelector = i => $"{i.item_category} | {i.brand}";
+                    _cartesianCombinations = allCombinations;
+                }
+                else if (_selectedGeneralName.Any() && !combineGeneralName)
+                {
+                    // General Name only
+                    groupingType = "general_name";
+                    groupSelector = i => i.general_name;
+                }
+                else if (_selectedItemCategory.Any() && !combineItemCategory)
+                {
+                    // Item Category only
+                    groupingType = "item_category";
+                    groupSelector = i => i.item_category;
+                }
+                else if (_selectedBrands.Any() && !combineBrand)
+                {
+                    // Brand only
+                    groupingType = "brand";
+                    groupSelector = i => i.brand;
+                }
+                else
+                {
+                    // --- SINGLE SHEET MODE ---
+                    groupingType = "single";
+                    groupSelector = null;
+                }
+
+                // --- Generate sheets ---
+                if (groupSelector != null)
+                {
+                    var groups = filteredList
+                        .Where(i => !string.IsNullOrWhiteSpace(groupSelector(i)))
+                        .GroupBy(groupSelector)
+                        .ToDictionary(g => g.Key, g => g.ToList());
+
+                    // Add missing Cartesian combinations as empty groups
+                    if (_cartesianCombinations != null && _cartesianCombinations.Any())
+                    {
+                        foreach (var combo in _cartesianCombinations)
+                        {
+                            if (!groups.ContainsKey(combo))
+                                groups[combo] = new List<InventoryLogbookView>();
+                        }
+                    }
+
+                    // --- Build a complete list of sheet names to include ---
+                    var allSheetNames = new List<string>();
+
+                    // Add all grouped names that actually have data
+                    allSheetNames.AddRange(groups.Keys);
+
+                    // Add missing sheet names based on user selections
+                    if (groupingType == "brand" && _selectedBrands.Any())
+                        allSheetNames.AddRange(_selectedBrands.Except(allSheetNames));
+                    else if (groupingType == "item_category" && _selectedItemCategory.Any())
+                        allSheetNames.AddRange(_selectedItemCategory.Except(allSheetNames));
+                    else if (groupingType == "general_name" && _selectedGeneralName.Any())
+                        allSheetNames.AddRange(_selectedGeneralName.Except(allSheetNames));
+
+                    // Remove duplicates and sort alphabetically
+                    allSheetNames = allSheetNames.Distinct().OrderBy(n => n).ToList();
+
+                    foreach (var name in allSheetNames)
+                    {
+                        string sheetName = string.IsNullOrWhiteSpace(name) ? "Unnamed" : name;
+                        if (sheetName.Length > 31)
+                            sheetName = sheetName.Substring(0, 31);
 
                         var worksheet = workbook.Worksheets.Add(sheetName);
+
+                        // Get the actual data for this group (or empty if none)
+                        var groupData = groups.ContainsKey(name) ? groups[name] : new List<InventoryLogbookView>();
+
+                        // Write the sheet
                         WriteInventorySheet(
                             worksheet,
-                            generalNameData,
+                            groupData,
                             orderedCheckboxes,
                             selectedYear,
                             monthNumber,
                             includeTotal,
                             includeDaily,
-                            includeLocation: false,
+                            includeLocation: groupingType == "location",
                             combineCalibration,
                             combineItemCategory,
                             combineGeneralName,
                             combineBrand
                         );
 
-                        AdjustColumnWidthsAndFreeze(worksheet);
-                    }
-                }
-                else if (combineGeneralName && _selectedItemCategory.Any() && !combineItemCategory)
-                {
-                    // --- SHEETS BY ITEM CATEGORY ---
-                    foreach (var category in _selectedItemCategory)
-                    {
-                        var categoryData = filteredList
-                            .Where(i => string.Equals(i.item_category, category, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        string sheetName = category.Length > 31 ? category.Substring(0, 31) : category;
-
-                        var worksheet = workbook.Worksheets.Add(sheetName);
-                        WriteInventorySheet(
-                            worksheet,
-                            categoryData,
-                            orderedCheckboxes,
-                            selectedYear,
-                            monthNumber,
-                            includeTotal,
-                            includeDaily,
-                            includeLocation: false,
-                            combineCalibration,
-                            combineItemCategory,
-                            combineGeneralName,
-                            combineBrand
-                        );
-
-                        AdjustColumnWidthsAndFreeze(worksheet);
-                    }
-                }
-                else if (_selectedItemCategory.Any() && !_selectedGeneralName.Any() && !combineItemCategory)
-                {
-                    // --- SHEETS BY ITEM CATEGORY ---
-                    foreach (var category in _selectedItemCategory)
-                    {
-                        var categoryData = filteredList
-                            .Where(i => string.Equals(i.item_category, category, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        string sheetName = category.Length > 31 ? category.Substring(0, 31) : category;
-
-                        var worksheet = workbook.Worksheets.Add(sheetName);
-                        WriteInventorySheet(
-                            worksheet,
-                            categoryData,
-                            orderedCheckboxes,
-                            selectedYear,
-                            monthNumber,
-                            includeTotal,
-                            includeDaily,
-                            includeLocation: false,
-                            combineCalibration,
-                            combineItemCategory,
-                            combineGeneralName,
-                            combineBrand
-                        );
-
-                        AdjustColumnWidthsAndFreeze(worksheet);
-                    }
-                }
-                else if (combineGeneralName && _selectedBrands.Any() && !_selectedItemCategory.Any())
-                {
-                    // --- SHEETS BY BRAND ---
-                    foreach (var brand in _selectedBrands)
-                    {
-                        var brandData = filteredList
-                            .Where(i => string.Equals(i.brand, brand, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        string sheetName = brand.Length > 31 ? brand.Substring(0, 31) : brand;
-
-                        var worksheet = workbook.Worksheets.Add(sheetName);
-                        WriteInventorySheet(
-                            worksheet,
-                            brandData,
-                            orderedCheckboxes,
-                            selectedYear,
-                            monthNumber,
-                            includeTotal,
-                            includeDaily,
-                            includeLocation: false,
-                            combineCalibration,
-                            combineItemCategory,
-                            combineGeneralName,
-                            combineBrand
-                        );
-
-                        AdjustColumnWidthsAndFreeze(worksheet);
-                    }
-                }
-                else if (combineItemCategory)
-                {
-                    // --- SHEETS BY BRAND ---
-                    foreach (var brand in _selectedBrands)
-                    {
-                        var brandData = filteredList
-                            .Where(i => string.Equals(i.brand, brand, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        string sheetName = brand.Length > 31 ? brand.Substring(0, 31) : brand;
-
-                        var worksheet = workbook.Worksheets.Add(sheetName);
-                        WriteInventorySheet(
-                            worksheet,
-                            brandData,
-                            orderedCheckboxes,
-                            selectedYear,
-                            monthNumber,
-                            includeTotal,
-                            includeDaily,
-                            includeLocation: false,
-                            combineCalibration,
-                            combineItemCategory,
-                            combineGeneralName,
-                            combineBrand
-                        );
-
-                        AdjustColumnWidthsAndFreeze(worksheet);
-                    }
-                }
-                else if (combineGeneralName && combineItemCategory)
-                {
-                    // --- SHEETS BY BRAND ---
-                    foreach (var brand in _selectedBrands)
-                    {
-                        var brandData = filteredList
-                            .Where(i => string.Equals(i.brand, brand, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        string sheetName = brand.Length > 31 ? brand.Substring(0, 31) : brand;
-
-                        var worksheet = workbook.Worksheets.Add(sheetName);
-                        WriteInventorySheet(
-                            worksheet,
-                            brandData,
-                            orderedCheckboxes,
-                            selectedYear,
-                            monthNumber,
-                            includeTotal,
-                            includeDaily,
-                            includeLocation: false,
-                            combineCalibration,
-                            combineItemCategory,
-                            combineGeneralName,
-                            combineBrand
-                        );
-
-                        AdjustColumnWidthsAndFreeze(worksheet);
-                    }
-                }
-                else if (_selectedBrands.Any() && !_selectedGeneralName.Any() && !_selectedItemCategory.Any() && !combineBrand)
-                {
-                    // --- SHEETS BY BRAND ---
-                    foreach (var brand in _selectedBrands)
-                    {
-                        var brandData = filteredList
-                            .Where(i => string.Equals(i.brand, brand, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        string sheetName = brand.Length > 31 ? brand.Substring(0, 31) : brand;
-
-                        var worksheet = workbook.Worksheets.Add(sheetName);
-                        WriteInventorySheet(
-                            worksheet,
-                            brandData,
-                            orderedCheckboxes,
-                            selectedYear,
-                            monthNumber,
-                            includeTotal,
-                            includeDaily,
-                            includeLocation: false,
-                            combineCalibration,
-                            combineItemCategory,
-                            combineGeneralName,
-                            combineBrand
-                        );
-
-                        AdjustColumnWidthsAndFreeze(worksheet);
-                    }
-                }
-                //chb_location checked, multiple sheets by location zone
-                else if (includeLocation)
-                {
-                    // --- MULTI-SHEET MODE ---
-                    var locationPrefixes = filteredList
-                        .Select(x => !string.IsNullOrWhiteSpace(x.location)
-                            ? x.location.Split('-')[0].Trim()
-                            : string.Empty)
-                        .Where(x => !string.IsNullOrEmpty(x))
-                        .Distinct()
-                        .OrderBy(x => x)
-                        .ToList();
-
-                    if (!locationPrefixes.Any())
-                    {
-                        Helpers.ShowDialogMessage("warning", "No valid zone locations found in the data.");
-                        return null;
-                    }
-
-                    foreach (var locPrefix in locationPrefixes)
-                    {
-                        var locationData = filteredList
-                            .Where(x => !string.IsNullOrWhiteSpace(x.location) &&
-                                        x.location.Split('-')[0].Trim().Equals(locPrefix, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        if (!locationData.Any()) continue;
-
-                        var worksheet = workbook.Worksheets.Add(locPrefix);
-
-                        // Build header and write data (same as before)
-                        WriteInventorySheet(worksheet, locationData, orderedCheckboxes, selectedYear, monthNumber, includeTotal, includeDaily, includeLocation, combineCalibration, combineItemCategory, combineGeneralName, combineBrand);
+                        // If the sheet has no data, add a note
+                        if (!groupData.Any())
+                        {
+                            worksheet.Cell(3, 1).Value = "No data available for this selection.";
+                            worksheet.Cell(3, 1).Style.Font.Italic = true;
+                            worksheet.Cell(3, 1).Style.Font.FontColor = XLColor.Gray;
+                        }
 
                         AdjustColumnWidthsAndFreeze(worksheet);
                     }
@@ -1007,7 +893,20 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                     // --- SINGLE SHEET MODE ---
                     var worksheet = workbook.Worksheets.Add("Inventory Report");
 
-                    WriteInventorySheet(worksheet, filteredList, orderedCheckboxes, selectedYear, monthNumber, includeTotal, includeDaily, includeLocation, combineCalibration, combineItemCategory, combineGeneralName, combineBrand);
+                    WriteInventorySheet(
+                        worksheet,
+                        filteredList, // may be empty
+                        orderedCheckboxes,
+                        selectedYear,
+                        monthNumber,
+                        includeTotal,
+                        includeDaily,
+                        includeLocation,
+                        combineCalibration,
+                        combineItemCategory,
+                        combineGeneralName,
+                        combineBrand
+                    );
 
                     AdjustColumnWidthsAndFreeze(worksheet);
                 }
@@ -1534,6 +1433,28 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             public List<string> SelectedBrands { get; set; }
             public List<string> SelectedItemCategory { get; set; }
             public List<string> SelectedGeneralName { get; set; }
+        }
+
+        private void cmb_month_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            chb_combine_brand.Checked = false;
+            chb_combine_general_name.Checked = false;
+            chb_combine_item_category.Checked = false;
+
+            chb_combine_brand.Enabled = false;
+            chb_combine_general_name.Enabled = false;
+            chb_combine_item_category.Enabled = false;
+        }
+
+        private void cmb_year_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            chb_combine_brand.Checked = false;
+            chb_combine_general_name.Checked = false;
+            chb_combine_item_category.Checked = false;
+
+            chb_combine_brand.Enabled = false;
+            chb_combine_general_name.Enabled = false;
+            chb_combine_item_category.Enabled = false;
         }
     }
 }

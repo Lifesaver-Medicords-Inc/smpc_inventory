@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
+using smpc_app.Services.Helpers;
 
 namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
 {
@@ -69,7 +70,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             {
                 if (string.IsNullOrEmpty(TempFilePath) || !File.Exists(TempFilePath))
                 {
-                    MessageBox.Show("No file found to preview.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Helpers.ShowDialogMessage("error", "No file found to preview.");
                     Close();
                     return;
                 }
@@ -84,6 +85,40 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                 // Configure Excel for embedding
                 excelApp.DisplayFormulaBar = false;
                 excelApp.DisplayStatusBar = false;
+
+                // Protect workbook from editing (with safe COM exception handling)
+                foreach (Excel.Worksheet sheet in workbook.Worksheets)
+                {
+                    try
+                    {
+                        sheet.Protect(Contents: true, UserInterfaceOnly: true);
+                        sheet.EnableSelection = Excel.XlEnableSelection.xlNoSelection;
+                    }
+                    catch (System.Runtime.InteropServices.COMException ex)
+                    {
+                        // Excel “protected sheet” or automation error (HRESULT 0x800A03EC)
+                        if (ex.HResult == unchecked((int)0x800A03EC) &&
+                            ex.Message.IndexOf("protected", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            // Sheet is already protected — ignore silently in preview mode
+                            continue;
+                        }
+                        else
+                        {
+                            // Other Excel COM error — show it for debugging
+                            MessageBox.Show($"Error protecting sheet '{sheet.Name}': {ex.Message}",
+                                "Excel Protection Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            Helpers.ShowDialogMessage("error", $"Error protecting sheet '{sheet.Name}': {ex.Message}" + "Excel Protection Error");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ShowDialogMessage("error", $"Unexpected error protecting sheet '{sheet.Name}': {ex.Message}" + "Excel Error");
+                    }
+                }
+
+                // Hide UI elements for a clean preview
+                excelApp.ActiveWindow.DisplayHeadings = false;
 
                 // Get Excel window handle
                 IntPtr excelHandle = (IntPtr)excelApp.Hwnd;
@@ -100,18 +135,33 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                 int zoomLevel = Math.Max(50, Math.Min(120, pnl_preview.Width / 10));
                 worksheet.Application.ActiveWindow.Zoom = zoomLevel;
 
+                // Apply same zoom on sheet change
+                excelApp.SheetActivate += (object Sh) =>
+                {
+                    try
+                    {
+                        Excel.Worksheet ws = Sh as Excel.Worksheet;
+                        if (ws != null)
+                        {
+                            zoomLevel = Math.Max(50, Math.Min(120, pnl_preview.Width / 10));
+                            ws.Application.ActiveWindow.Zoom = zoomLevel;
+                        }
+                    }
+                    catch { }
+                };
+
                 // Show Excel
                 excelApp.Visible = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error displaying Excel preview: " + ex.Message, "Preview Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Helpers.ShowDialogMessage("error", "Error displaying Excel preview: " + ex.Message + "Preview Error");
+
             }
 
+            // Populate your panels
             PopulatePanelWithCheckboxes(pnl_column, ColumnList);
 
-            // Combine the lists
             var combinedFilterList = new List<string>();
             if (GeneralNameList != null) combinedFilterList.AddRange(GeneralNameList);
             if (ItemCategoryList != null) combinedFilterList.AddRange(ItemCategoryList);
