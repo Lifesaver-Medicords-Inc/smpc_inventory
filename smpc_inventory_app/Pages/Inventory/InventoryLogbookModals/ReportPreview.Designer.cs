@@ -33,11 +33,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.pnl_filter = new System.Windows.Forms.Panel();
             this.pnl_column = new System.Windows.Forms.Panel();
             this.pnl_preview = new System.Windows.Forms.Panel();
-            this.chb_report_doc = new System.Windows.Forms.CheckBox();
-            this.chb_report_time = new System.Windows.Forms.CheckBox();
-            this.chb_report_date = new System.Windows.Forms.CheckBox();
-            this.chb_report_title = new System.Windows.Forms.CheckBox();
-            this.chb_page_no = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -47,20 +42,17 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.label5 = new System.Windows.Forms.Label();
             this.btn_close = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.txt_report_title = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.txt_report_title);
             this.panel1.Controls.Add(this.pnl_filter);
             this.panel1.Controls.Add(this.pnl_column);
             this.panel1.Controls.Add(this.pnl_preview);
-            this.panel1.Controls.Add(this.chb_report_doc);
-            this.panel1.Controls.Add(this.chb_report_time);
-            this.panel1.Controls.Add(this.chb_report_date);
-            this.panel1.Controls.Add(this.chb_report_title);
-            this.panel1.Controls.Add(this.chb_page_no);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
@@ -102,68 +94,14 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.pnl_preview.TabIndex = 64;
             this.pnl_preview.Resize += new System.EventHandler(this.pnl_preview_Resize);
             // 
-            // chb_report_doc
-            // 
-            this.chb_report_doc.AutoSize = true;
-            this.chb_report_doc.Enabled = false;
-            this.chb_report_doc.Location = new System.Drawing.Point(779, 498);
-            this.chb_report_doc.Name = "chb_report_doc";
-            this.chb_report_doc.Size = new System.Drawing.Size(122, 17);
-            this.chb_report_doc.TabIndex = 63;
-            this.chb_report_doc.Text = "REPORT DOC. NO.";
-            this.chb_report_doc.UseVisualStyleBackColor = true;
-            // 
-            // chb_report_time
-            // 
-            this.chb_report_time.AutoSize = true;
-            this.chb_report_time.Enabled = false;
-            this.chb_report_time.Location = new System.Drawing.Point(779, 475);
-            this.chb_report_time.Name = "chb_report_time";
-            this.chb_report_time.Size = new System.Drawing.Size(100, 17);
-            this.chb_report_time.TabIndex = 62;
-            this.chb_report_time.Text = "REPORT TIME";
-            this.chb_report_time.UseVisualStyleBackColor = true;
-            // 
-            // chb_report_date
-            // 
-            this.chb_report_date.AutoSize = true;
-            this.chb_report_date.Enabled = false;
-            this.chb_report_date.Location = new System.Drawing.Point(779, 521);
-            this.chb_report_date.Name = "chb_report_date";
-            this.chb_report_date.Size = new System.Drawing.Size(103, 17);
-            this.chb_report_date.TabIndex = 61;
-            this.chb_report_date.Text = "REPORT DATE";
-            this.chb_report_date.UseVisualStyleBackColor = true;
-            // 
-            // chb_report_title
-            // 
-            this.chb_report_title.AutoSize = true;
-            this.chb_report_title.Enabled = false;
-            this.chb_report_title.Location = new System.Drawing.Point(779, 455);
-            this.chb_report_title.Name = "chb_report_title";
-            this.chb_report_title.Size = new System.Drawing.Size(15, 14);
-            this.chb_report_title.TabIndex = 60;
-            this.chb_report_title.UseVisualStyleBackColor = true;
-            // 
-            // chb_page_no
-            // 
-            this.chb_page_no.AutoSize = true;
-            this.chb_page_no.Enabled = false;
-            this.chb_page_no.Location = new System.Drawing.Point(779, 432);
-            this.chb_page_no.Name = "chb_page_no";
-            this.chb_page_no.Size = new System.Drawing.Size(112, 17);
-            this.chb_page_no.TabIndex = 59;
-            this.chb_page_no.Text = "PAGE NUMBERS";
-            this.chb_page_no.UseVisualStyleBackColor = true;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(776, 406);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(116, 13);
+            this.label7.Size = new System.Drawing.Size(60, 13);
             this.label7.TabIndex = 58;
-            this.label7.Text = "HEADERS & FOOTERS";
+            this.label7.Text = "FILENAME";
             // 
             // label4
             // 
@@ -242,6 +180,13 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.label1.TabIndex = 1;
             this.label1.Text = "REPORT PREVIEW";
             // 
+            // txt_report_title
+            // 
+            this.txt_report_title.Location = new System.Drawing.Point(779, 432);
+            this.txt_report_title.Name = "txt_report_title";
+            this.txt_report_title.Size = new System.Drawing.Size(318, 20);
+            this.txt_report_title.TabIndex = 70;
+            // 
             // ReportPreview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -271,12 +216,8 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel pnl_preview;
-        private System.Windows.Forms.CheckBox chb_report_doc;
-        private System.Windows.Forms.CheckBox chb_report_time;
-        private System.Windows.Forms.CheckBox chb_report_date;
-        private System.Windows.Forms.CheckBox chb_report_title;
-        private System.Windows.Forms.CheckBox chb_page_no;
         private System.Windows.Forms.Panel pnl_column;
         private System.Windows.Forms.Panel pnl_filter;
+        private System.Windows.Forms.TextBox txt_report_title;
     }
 }

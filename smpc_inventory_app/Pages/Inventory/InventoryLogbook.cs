@@ -553,7 +553,7 @@ namespace smpc_inventory_app.Pages.Inventory
             string selectedYear = cmb_year.SelectedItem.ToString();
             string selectedMonth = cmb_month.SelectedItem.ToString();
 
-            var reportForm = new InventoryReport(selectedYear, selectedMonth);
+            var reportForm = new InventoryReport { _selectedYear = selectedYear, _selectedMonth = selectedMonth};
 
             reportForm.ShowDialog();
         }

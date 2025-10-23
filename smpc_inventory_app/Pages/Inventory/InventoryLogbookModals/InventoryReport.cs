@@ -23,18 +23,16 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private List<string> _selectedGeneralName = new List<string>();
         private List<string> _cartesianCombinations;
         private bool _isUpdating = false;
-        private readonly string _selectedYear;
-        private readonly string _selectedMonth;
+        public string _selectedYear { get; set; }
+        public string _selectedMonth { get; set; }
+        public string FileName { get; set; }
 
-        public InventoryReport(string selectedYear, string selectedMonth)
+        public InventoryReport()
         {
             InitializeComponent();
 
             // Center the modal relative to its parent form
             this.StartPosition = FormStartPosition.CenterParent;
-
-            _selectedYear = selectedYear;
-            _selectedMonth = selectedMonth;
 
             CheckDailyInOut();
             UpdateCombineFilterLock();
@@ -71,13 +69,14 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                 // Open the preview form
                 var previewForm = new ReportPreview
                 {
-                    FileName = result.FileName,
+                    FileName = result.FileName.Replace(".xlsx", ""),
                     ReportCode = result.ReportCode,
                     TempFilePath = result.FilePath,
                     ColumnList = checkedCheckboxes,
                     BrandList = result.SelectedBrands,
                     ItemCategoryList = result.SelectedItemCategory,
-                    GeneralNameList = result.SelectedGeneralName
+                    GeneralNameList = result.SelectedGeneralName,
+                    ParentFormRef = this
                 };
 
                 previewForm.ShowDialog();
@@ -626,14 +625,34 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             string randomCode = new Random().Next(1000, 9999).ToString();
             string reportCode = $"INVREP#{randomCode}";
 
-            string uniqueSuffix = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string fileName = $"InventoryReport_{selectedYear}_{monthNumber:D2}_INVREP#{randomCode}_{uniqueSuffix}.xlsx";
+            // --- Use provided FileName if available and data exists ---
+            string fileName;
+            if (!string.IsNullOrWhiteSpace(FileName))
+            {
+                fileName = FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase)
+                    ? FileName
+                    : $"{FileName}.xlsx";
+            }
+            else
+            {
+                fileName = $"InventoryReport_{selectedYear}_{monthNumber:D2}_{reportCode}.xlsx";
+            }
 
-            // Save to user's Desktop
-            string filePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                fileName
-            );
+            // Save to user's Desktop (avoid overwriting existing files)
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string filePath = Path.Combine(desktopPath, fileName);
+
+            // If a file with the same name exists, append a counter (_1, _2, etc.)
+            int counter = 1;
+            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
+            string fileExt = Path.GetExtension(fileName);
+
+            while (File.Exists(filePath))
+            {
+                fileName = $"{fileNameWithoutExt}({counter}){fileExt}";
+                filePath = Path.Combine(desktopPath, fileName);
+                counter++;
+            }
 
             try
             {

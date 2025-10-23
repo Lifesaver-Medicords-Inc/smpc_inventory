@@ -24,6 +24,8 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         public List<string> ItemCategoryList { get; set; }
         public List<string> GeneralNameList { get; set; }
 
+        public InventoryReport ParentFormRef { get; set; }
+
         private Excel.Application excelApp;
         private Excel.Workbook workbook;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -51,6 +53,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private const uint SWP_NOCOPYBITS = 0x0100;
         private const uint SWP_NOOWNERZORDER = 0x0200;
         private const uint SWP_NOSENDCHANGING = 0x0400;
+
         public ReportPreview()
         {
             InitializeComponent();
@@ -61,6 +64,14 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
 
         private void btn_close_Click(object sender, EventArgs e)
         {
+            string fileName = txt_report_title.Text.Trim(); // or txt_filename.Text if that’s the control name
+
+            // Pass the value to the new form
+            if (ParentFormRef != null)
+            {
+                ParentFormRef.FileName = fileName;
+            }
+
             this.Close();
         }
 
@@ -170,7 +181,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             PopulatePanelWithCheckboxes(pnl_filter, combinedFilterList);
 
             txt_doc_no.Text = ReportCode;
-            chb_report_title.Text = FileName;
+            txt_report_title.Text = FileName;
         }
 
         private void ReportPreview_FormClosed(object sender, FormClosedEventArgs e)
