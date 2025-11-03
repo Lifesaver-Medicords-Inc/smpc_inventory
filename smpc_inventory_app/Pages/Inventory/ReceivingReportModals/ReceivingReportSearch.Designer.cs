@@ -29,9 +29,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgv_rr_search = new System.Windows.Forms.DataGridView();
-            this.txt_search = new System.Windows.Forms.TextBox();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -39,6 +38,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.warehouse_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.prepared_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ref_doc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txt_search = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_rr_search)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,14 +46,14 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             // 
             this.dgv_rr_search.AllowUserToAddRows = false;
             this.dgv_rr_search.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv_rr_search.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_rr_search.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgv_rr_search.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_rr_search.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
@@ -68,14 +68,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.dgv_rr_search.Size = new System.Drawing.Size(802, 389);
             this.dgv_rr_search.TabIndex = 2;
             this.dgv_rr_search.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_rr_search_CellClick);
-            // 
-            // txt_search
-            // 
-            this.txt_search.Location = new System.Drawing.Point(350, 215);
-            this.txt_search.Name = "txt_search";
-            this.txt_search.Size = new System.Drawing.Size(100, 20);
-            this.txt_search.TabIndex = 3;
-            this.txt_search.TextChanged += new System.EventHandler(this.txt_search_TextChanged);
             // 
             // id
             // 
@@ -139,6 +131,14 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.ref_doc.ReadOnly = true;
             this.ref_doc.Width = 140;
             // 
+            // txt_search
+            // 
+            this.txt_search.Location = new System.Drawing.Point(350, 215);
+            this.txt_search.Name = "txt_search";
+            this.txt_search.Size = new System.Drawing.Size(100, 20);
+            this.txt_search.TabIndex = 3;
+            this.txt_search.TextChanged += new System.EventHandler(this.txt_search_TextChanged);
+            // 
             // ReceivingReportSearch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -159,7 +159,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         #endregion
 
         private System.Windows.Forms.DataGridView dgv_rr_search;
-        private System.Windows.Forms.TextBox txt_search;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn supplier_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn supplier_code;
@@ -167,5 +166,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         private System.Windows.Forms.DataGridViewTextBoxColumn warehouse_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn prepared_by;
         private System.Windows.Forms.DataGridViewTextBoxColumn ref_doc;
+        private System.Windows.Forms.TextBox txt_search;
     }
 }

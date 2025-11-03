@@ -53,6 +53,9 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
 
         private void txt_search_TextChanged(object sender, EventArgs e)
         {
+            if (rrTable == null || rrTable.Rows.Count == 0)
+                return;
+
             string searchText = txt_search.Text.Trim();
 
             if (string.IsNullOrEmpty(searchText) || searchText == placeHolderText)

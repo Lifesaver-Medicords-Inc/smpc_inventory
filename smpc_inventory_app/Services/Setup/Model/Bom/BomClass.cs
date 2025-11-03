@@ -16,6 +16,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bom
     {
         public int id { get; set; }
         public int item_id { get; set; }
+        public string short_desc { get; set; }
         public string general_name { get; set; }
         public string item_model { get; set; }
         public string item_code { get; set; }
