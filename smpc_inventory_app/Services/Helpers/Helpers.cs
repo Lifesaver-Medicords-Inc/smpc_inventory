@@ -975,7 +975,7 @@ namespace smpc_app.Services.Helpers
                 else if (control is ComboBox comboBox)
                 {
                     if (string.Equals(comboBox.Tag as string, "REQUIRED", StringComparison.OrdinalIgnoreCase)
-                        && comboBox.SelectedIndex < 0)   // ✅ correct check for DropDownList
+                        && comboBox.SelectedIndex < 0)   //correct check for DropDownList
                     {
                         FlashRed(comboBox);
                         isError = true;

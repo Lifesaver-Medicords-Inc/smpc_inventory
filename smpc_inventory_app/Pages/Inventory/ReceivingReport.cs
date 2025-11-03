@@ -577,7 +577,7 @@ namespace smpc_inventory_app.Pages.Inventory
             }
             catch (Exception ex)
             {
-                Helpers.ShowDialogMessage("error", $"Failed to delete: {ex.Message}");
+                Helpers.ShowDialogMessage("error", $"Failed to load: {ex.Message}");
             }
             finally
             {
