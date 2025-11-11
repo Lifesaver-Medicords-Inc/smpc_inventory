@@ -12,6 +12,9 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         [Column("id")]
         public int id { get; set; }
 
+        [Column("rr_id")]
+        public int rr_id { get; set; }
+
         [Column("pod_id")]
         public int pod_id { get; set; }
 

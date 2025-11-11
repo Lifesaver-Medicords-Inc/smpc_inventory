@@ -35,7 +35,7 @@ namespace smpc_inventory_app.Pages
 
             dgv_inventory_item.AutoGenerateColumns = false;
             Helpers.EnableGroupHeaders(dgv_inventory_item, columnGroups);
-            Helpers.FreezeVisibleColumns(dgv_inventory_item, 4);
+            Helpers.FreezeVisibleColumns(dgv_inventory_item, 3);
         }
 
         private async void InventoryTracker_Load(object sender, EventArgs e)
@@ -380,6 +380,7 @@ namespace smpc_inventory_app.Pages
 
             if (row.Cells["pod_id"].Value == null) return;
 
+            int rrId = Convert.ToInt32(row.Cells["rr_id"].Value);
             int podId = Convert.ToInt32(row.Cells["pod_id"].Value);
             int rrdId = Convert.ToInt32(row.Cells["id"].Value);
             var newValue = row.Cells[e.ColumnIndex].Value?.ToString();
@@ -387,6 +388,7 @@ namespace smpc_inventory_app.Pages
             // Prepare payload
             var data = new Dictionary<string, dynamic>
             {
+                { "rr_id", rrId },
                 { "pod_id", podId },
                 { "rrd_id", rrdId },
                 { "remarks", newValue }

@@ -38,6 +38,7 @@ namespace smpc_inventory_app.Pages
             this.pnl_fill = new System.Windows.Forms.Panel();
             this.dgv_inventory_item = new System.Windows.Forms.DataGridView();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rr_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pod_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.general_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -135,6 +136,7 @@ namespace smpc_inventory_app.Pages
             this.dgv_inventory_item.ColumnHeadersHeight = 50;
             this.dgv_inventory_item.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
+            this.rr_id,
             this.pod_id,
             this.item_code,
             this.general_name,
@@ -167,6 +169,14 @@ namespace smpc_inventory_app.Pages
             this.id.Name = "id";
             this.id.ReadOnly = true;
             this.id.Visible = false;
+            // 
+            // rr_id
+            // 
+            this.rr_id.DataPropertyName = "rr_id";
+            this.rr_id.HeaderText = "RR ID";
+            this.rr_id.Name = "rr_id";
+            this.rr_id.ReadOnly = true;
+            this.rr_id.Visible = false;
             // 
             // pod_id
             // 
@@ -323,6 +333,7 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.DataGridView dgv_inventory_item;
         private System.Windows.Forms.Button btn_next;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn rr_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn pod_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_code;
         private System.Windows.Forms.DataGridViewTextBoxColumn general_name;

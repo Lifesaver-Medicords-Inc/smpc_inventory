@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace smpc_inventory_app.Services.Auth
 {
-    internal class AuthServices
+    internal class AuthServices 
     {
          static string url = "/login";
              
