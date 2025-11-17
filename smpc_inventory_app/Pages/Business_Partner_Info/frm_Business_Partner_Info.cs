@@ -191,5 +191,10 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
         {
 
         }
+
+        private void txt_tel_no_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

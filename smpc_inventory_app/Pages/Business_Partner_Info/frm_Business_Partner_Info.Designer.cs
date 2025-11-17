@@ -30,12 +30,19 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Business_Partner_Info));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.MainTop_Panel = new System.Windows.Forms.Panel();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btn_new = new System.Windows.Forms.ToolStripButton();
+            this.btn_search = new System.Windows.Forms.ToolStripButton();
+            this.btn_prev = new System.Windows.Forms.ToolStripButton();
+            this.btn_next = new System.Windows.Forms.ToolStripButton();
+            this.btn_print = new System.Windows.Forms.ToolStripButton();
             this.BPI = new System.Windows.Forms.Label();
             this.Parent_Panel = new System.Windows.Forms.Panel();
+            this.btn_add_industries = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.txt_sales_agent = new System.Windows.Forms.TextBox();
             this.txt_tel_no = new System.Windows.Forms.TextBox();
@@ -141,14 +148,8 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
             this.panel2 = new System.Windows.Forms.Panel();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.btn_new = new System.Windows.Forms.ToolStripButton();
-            this.btn_search = new System.Windows.Forms.ToolStripButton();
-            this.btn_prev = new System.Windows.Forms.ToolStripButton();
-            this.btn_next = new System.Windows.Forms.ToolStripButton();
-            this.btn_print = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btn_add_industries = new System.Windows.Forms.Button();
             this.MainTop_Panel.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.Parent_Panel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.Child_panel.SuspendLayout();
@@ -176,7 +177,6 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
             this.HISTORY.SuspendLayout();
             this.history_panel.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // flowLayoutPanel2
@@ -195,6 +195,61 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
             this.MainTop_Panel.Size = new System.Drawing.Size(1237, 26);
             this.MainTop_Panel.TabIndex = 2;
             this.MainTop_Panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btn_new,
+            this.btn_search,
+            this.btn_prev,
+            this.btn_next,
+            this.btn_print});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(301, 25);
+            this.toolStrip1.TabIndex = 0;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // btn_new
+            // 
+            this.btn_new.Image = ((System.Drawing.Image)(resources.GetObject("btn_new.Image")));
+            this.btn_new.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_new.Name = "btn_new";
+            this.btn_new.Size = new System.Drawing.Size(51, 22);
+            this.btn_new.Text = "New";
+            // 
+            // btn_search
+            // 
+            this.btn_search.Image = ((System.Drawing.Image)(resources.GetObject("btn_search.Image")));
+            this.btn_search.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_search.Name = "btn_search";
+            this.btn_search.Size = new System.Drawing.Size(62, 22);
+            this.btn_search.Text = "Search";
+            // 
+            // btn_prev
+            // 
+            this.btn_prev.Image = ((System.Drawing.Image)(resources.GetObject("btn_prev.Image")));
+            this.btn_prev.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_prev.Name = "btn_prev";
+            this.btn_prev.Size = new System.Drawing.Size(72, 22);
+            this.btn_prev.Text = "Previous";
+            // 
+            // btn_next
+            // 
+            this.btn_next.Image = ((System.Drawing.Image)(resources.GetObject("btn_next.Image")));
+            this.btn_next.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_next.Name = "btn_next";
+            this.btn_next.Size = new System.Drawing.Size(52, 22);
+            this.btn_next.Text = "Next";
+            // 
+            // btn_print
+            // 
+            this.btn_print.Image = ((System.Drawing.Image)(resources.GetObject("btn_print.Image")));
+            this.btn_print.ImageTransparentColor = System.Drawing.Color.LightBlue;
+            this.btn_print.Name = "btn_print";
+            this.btn_print.Size = new System.Drawing.Size(52, 22);
+            this.btn_print.Text = "Print";
             // 
             // BPI
             // 
@@ -230,6 +285,17 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
             this.Parent_Panel.TabIndex = 3;
             this.Parent_Panel.Paint += new System.Windows.Forms.PaintEventHandler(this.Parent_Panel_Paint);
             // 
+            // btn_add_industries
+            // 
+            this.btn_add_industries.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_add_industries.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.btn_add_industries.Location = new System.Drawing.Point(336, 38);
+            this.btn_add_industries.Name = "btn_add_industries";
+            this.btn_add_industries.Size = new System.Drawing.Size(30, 22);
+            this.btn_add_industries.TabIndex = 13;
+            this.btn_add_industries.Text = "...";
+            this.btn_add_industries.UseVisualStyleBackColor = true;
+            // 
             // button5
             // 
             this.button5.Location = new System.Drawing.Point(8, 99);
@@ -252,6 +318,7 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
             this.txt_tel_no.Name = "txt_tel_no";
             this.txt_tel_no.Size = new System.Drawing.Size(200, 20);
             this.txt_tel_no.TabIndex = 11;
+            this.txt_tel_no.TextChanged += new System.EventHandler(this.txt_tel_no_TextChanged);
             // 
             // txt_tin
             // 
@@ -1206,72 +1273,6 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
-            // btn_new
-            // 
-            this.btn_new.Image = ((System.Drawing.Image)(resources.GetObject("btn_new.Image")));
-            this.btn_new.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_new.Name = "btn_new";
-            this.btn_new.Size = new System.Drawing.Size(51, 22);
-            this.btn_new.Text = "New";
-            // 
-            // btn_search
-            // 
-            this.btn_search.Image = ((System.Drawing.Image)(resources.GetObject("btn_search.Image")));
-            this.btn_search.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_search.Name = "btn_search";
-            this.btn_search.Size = new System.Drawing.Size(62, 22);
-            this.btn_search.Text = "Search";
-            // 
-            // btn_prev
-            // 
-            this.btn_prev.Image = ((System.Drawing.Image)(resources.GetObject("btn_prev.Image")));
-            this.btn_prev.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_prev.Name = "btn_prev";
-            this.btn_prev.Size = new System.Drawing.Size(72, 22);
-            this.btn_prev.Text = "Previous";
-            // 
-            // btn_next
-            // 
-            this.btn_next.Image = ((System.Drawing.Image)(resources.GetObject("btn_next.Image")));
-            this.btn_next.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_next.Name = "btn_next";
-            this.btn_next.Size = new System.Drawing.Size(52, 22);
-            this.btn_next.Text = "Next";
-            // 
-            // btn_print
-            // 
-            this.btn_print.Image = ((System.Drawing.Image)(resources.GetObject("btn_print.Image")));
-            this.btn_print.ImageTransparentColor = System.Drawing.Color.LightBlue;
-            this.btn_print.Name = "btn_print";
-            this.btn_print.Size = new System.Drawing.Size(52, 22);
-            this.btn_print.Text = "Print";
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btn_new,
-            this.btn_search,
-            this.btn_prev,
-            this.btn_next,
-            this.btn_print});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(301, 25);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // btn_add_industries
-            // 
-            this.btn_add_industries.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_add_industries.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.btn_add_industries.Location = new System.Drawing.Point(336, 38);
-            this.btn_add_industries.Name = "btn_add_industries";
-            this.btn_add_industries.Size = new System.Drawing.Size(30, 22);
-            this.btn_add_industries.TabIndex = 13;
-            this.btn_add_industries.Text = "...";
-            this.btn_add_industries.UseVisualStyleBackColor = true;
-            // 
             // frm_Business_Partner_Info
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1289,6 +1290,8 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
             this.Load += new System.EventHandler(this.frm_Business_Partner_Info_Load);
             this.MainTop_Panel.ResumeLayout(false);
             this.MainTop_Panel.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.Parent_Panel.ResumeLayout(false);
             this.Parent_Panel.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -1323,8 +1326,6 @@ namespace Inventory_SMPC.Pages.Business_Partner_Info
             this.history_panel.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

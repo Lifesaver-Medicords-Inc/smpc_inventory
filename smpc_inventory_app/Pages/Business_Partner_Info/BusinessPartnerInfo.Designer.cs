@@ -31,18 +31,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BusinessPartnerInfo));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel_header = new System.Windows.Forms.Panel();
             this.BPI = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btn_new = new System.Windows.Forms.ToolStripButton();
             this.btn_search = new System.Windows.Forms.ToolStripButton();
-            this.btn_prev = new System.Windows.Forms.ToolStripButton();
-            this.btn_next = new System.Windows.Forms.ToolStripButton();
-            this.btn_print = new System.Windows.Forms.ToolStripButton();
             this.btn_edit = new System.Windows.Forms.ToolStripButton();
+            this.btn_print = new System.Windows.Forms.ToolStripButton();
+            this.btn_save = new System.Windows.Forms.ToolStripButton();
+            this.btn_revise = new System.Windows.Forms.ToolStripButton();
+            this.btn_close = new System.Windows.Forms.ToolStripButton();
+            this.btn_next = new System.Windows.Forms.ToolStripButton();
+            this.btn_prev = new System.Windows.Forms.ToolStripButton();
             this.panel_header_records = new System.Windows.Forms.Panel();
             this.lbl_bpi_id = new System.Windows.Forms.Label();
             this.txt_id = new System.Windows.Forms.TextBox();
@@ -61,6 +64,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.main_panel = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
@@ -285,14 +289,19 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tin_tool_tip = new System.Windows.Forms.ToolTip(this.components);
             this.buttonPanel = new System.Windows.Forms.Panel();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btn_add_page = new System.Windows.Forms.Button();
             this.panel_for_flowlayout = new System.Windows.Forms.Panel();
             this.flowLayout_panel = new System.Windows.Forms.FlowLayoutPanel();
+            this.tt_add_page_disabled = new System.Windows.Forms.ToolTip(this.components);
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.button2 = new System.Windows.Forms.Button();
             this.panel_header.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel_header_records.SuspendLayout();
             this.main_panel.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
@@ -346,6 +355,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.footer_panel.SuspendLayout();
             this.buttonPanel.SuspendLayout();
             this.panel_for_flowlayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel_header
@@ -381,12 +391,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btn_new,
             this.btn_search,
-            this.btn_prev,
-            this.btn_next,
+            this.btn_edit,
             this.btn_print,
-            this.btn_edit});
+            this.btn_save,
+            this.btn_revise,
+            this.btn_close,
+            this.btn_next,
+            this.btn_prev});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 30, 0);
             this.toolStrip1.Size = new System.Drawing.Size(1250, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
@@ -410,23 +424,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_search.Text = "Search";
             this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
             // 
-            // btn_prev
+            // btn_edit
             // 
-            this.btn_prev.Image = ((System.Drawing.Image)(resources.GetObject("btn_prev.Image")));
-            this.btn_prev.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_prev.Name = "btn_prev";
-            this.btn_prev.Size = new System.Drawing.Size(72, 22);
-            this.btn_prev.Text = "Previous";
-            this.btn_prev.Click += new System.EventHandler(this.btn_prev_Click);
-            // 
-            // btn_next
-            // 
-            this.btn_next.Image = ((System.Drawing.Image)(resources.GetObject("btn_next.Image")));
-            this.btn_next.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_next.Name = "btn_next";
-            this.btn_next.Size = new System.Drawing.Size(52, 22);
-            this.btn_next.Text = "Next";
-            this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
+            this.btn_edit.Image = ((System.Drawing.Image)(resources.GetObject("btn_edit.Image")));
+            this.btn_edit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_edit.Name = "btn_edit";
+            this.btn_edit.Size = new System.Drawing.Size(47, 22);
+            this.btn_edit.Text = "Edit";
+            this.btn_edit.Click += new System.EventHandler(this.btn_edit_Click);
             // 
             // btn_print
             // 
@@ -436,14 +441,56 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_print.Size = new System.Drawing.Size(52, 22);
             this.btn_print.Text = "Print";
             // 
-            // btn_edit
+            // btn_save
             // 
-            this.btn_edit.Image = ((System.Drawing.Image)(resources.GetObject("btn_edit.Image")));
-            this.btn_edit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_edit.Name = "btn_edit";
-            this.btn_edit.Size = new System.Drawing.Size(47, 22);
-            this.btn_edit.Text = "Edit";
-            this.btn_edit.Click += new System.EventHandler(this.btn_edit_Click);
+            this.btn_save.Image = ((System.Drawing.Image)(resources.GetObject("btn_save.Image")));
+            this.btn_save.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_save.Name = "btn_save";
+            this.btn_save.Size = new System.Drawing.Size(51, 22);
+            this.btn_save.Text = "Save";
+            this.btn_save.Visible = false;
+            this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
+            // 
+            // btn_revise
+            // 
+            this.btn_revise.Image = ((System.Drawing.Image)(resources.GetObject("btn_revise.Image")));
+            this.btn_revise.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_revise.Name = "btn_revise";
+            this.btn_revise.Size = new System.Drawing.Size(65, 22);
+            this.btn_revise.Text = "Update";
+            this.btn_revise.Visible = false;
+            this.btn_revise.Click += new System.EventHandler(this.btn_revise_Click);
+            // 
+            // btn_close
+            // 
+            this.btn_close.Image = ((System.Drawing.Image)(resources.GetObject("btn_close.Image")));
+            this.btn_close.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_close.Name = "btn_close";
+            this.btn_close.Size = new System.Drawing.Size(56, 22);
+            this.btn_close.Text = "Close";
+            this.btn_close.Visible = false;
+            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
+            // 
+            // btn_next
+            // 
+            this.btn_next.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btn_next.Image = ((System.Drawing.Image)(resources.GetObject("btn_next.Image")));
+            this.btn_next.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_next.Name = "btn_next";
+            this.btn_next.Size = new System.Drawing.Size(52, 22);
+            this.btn_next.Text = "Next";
+            this.btn_next.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
+            // 
+            // btn_prev
+            // 
+            this.btn_prev.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btn_prev.Image = ((System.Drawing.Image)(resources.GetObject("btn_prev.Image")));
+            this.btn_prev.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_prev.Name = "btn_prev";
+            this.btn_prev.Size = new System.Drawing.Size(72, 22);
+            this.btn_prev.Text = "Previous";
+            this.btn_prev.Click += new System.EventHandler(this.btn_prev_Click);
             // 
             // panel_header_records
             // 
@@ -478,6 +525,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.lbl_bpi_id.Size = new System.Drawing.Size(15, 13);
             this.lbl_bpi_id.TabIndex = 34;
             this.lbl_bpi_id.Text = "id";
+            this.lbl_bpi_id.Visible = false;
             // 
             // txt_id
             // 
@@ -485,6 +533,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.txt_id.Name = "txt_id";
             this.txt_id.Size = new System.Drawing.Size(59, 20);
             this.txt_id.TabIndex = 33;
+            this.txt_id.Visible = false;
             this.txt_id.TextChanged += new System.EventHandler(this.txt_id_TextChanged);
             // 
             // btn_add_setup
@@ -630,20 +679,30 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // main_panel
             // 
-            this.main_panel.Controls.Add(this.tabControl1);
+            this.main_panel.Controls.Add(this.panel3);
             this.main_panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.main_panel.Location = new System.Drawing.Point(0, 151);
             this.main_panel.Name = "main_panel";
             this.main_panel.Size = new System.Drawing.Size(1250, 867);
             this.main_panel.TabIndex = 4;
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.tabControl1);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(1250, 867);
+            this.panel3.TabIndex = 2;
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Location = new System.Drawing.Point(0, 89);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1250, 682);
+            this.tabControl1.Size = new System.Drawing.Size(1250, 867);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -652,7 +711,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1242, 656);
+            this.tabPage1.Size = new System.Drawing.Size(1242, 841);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
@@ -666,13 +725,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabControl2.Controls.Add(this.ITEMS);
             this.tabControl2.Controls.Add(this.ACCREDITATION);
             this.tabControl2.Controls.Add(this.HISTORY);
-            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.ItemSize = new System.Drawing.Size(152, 18);
-            this.tabControl2.Location = new System.Drawing.Point(3, 3);
+            this.tabControl2.Location = new System.Drawing.Point(3, 93);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
             this.tabControl2.ShowToolTips = true;
-            this.tabControl2.Size = new System.Drawing.Size(1236, 650);
+            this.tabControl2.Size = new System.Drawing.Size(1203, 549);
             this.tabControl2.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl2.TabIndex = 0;
             // 
@@ -682,7 +740,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.GENERAL.Location = new System.Drawing.Point(4, 22);
             this.GENERAL.Name = "GENERAL";
             this.GENERAL.Padding = new System.Windows.Forms.Padding(3);
-            this.GENERAL.Size = new System.Drawing.Size(1228, 624);
+            this.GENERAL.Size = new System.Drawing.Size(1195, 523);
             this.GENERAL.TabIndex = 0;
             this.GENERAL.Text = "GENERAL";
             this.GENERAL.UseVisualStyleBackColor = true;
@@ -731,7 +789,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_general.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel_general.Location = new System.Drawing.Point(3, 3);
             this.panel_general.Name = "panel_general";
-            this.panel_general.Size = new System.Drawing.Size(1222, 618);
+            this.panel_general.Size = new System.Drawing.Size(1189, 517);
             this.panel_general.TabIndex = 0;
             // 
             // label16
@@ -742,6 +800,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label16.Size = new System.Drawing.Size(103, 13);
             this.label16.TabIndex = 47;
             this.label16.Text = "BRANCH SALES ID";
+            this.label16.Visible = false;
             // 
             // txt_branch_sales_id
             // 
@@ -749,6 +808,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.txt_branch_sales_id.Name = "txt_branch_sales_id";
             this.txt_branch_sales_id.Size = new System.Drawing.Size(68, 20);
             this.txt_branch_sales_id.TabIndex = 46;
+            this.txt_branch_sales_id.Visible = false;
             // 
             // lbl_general_based_id
             // 
@@ -758,6 +818,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.lbl_general_based_id.Size = new System.Drawing.Size(91, 13);
             this.lbl_general_based_id.TabIndex = 45;
             this.lbl_general_based_id.Text = "general_based_id";
+            this.lbl_general_based_id.Visible = false;
             // 
             // txt_general_based_id
             // 
@@ -765,6 +826,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.txt_general_based_id.Name = "txt_general_based_id";
             this.txt_general_based_id.Size = new System.Drawing.Size(54, 20);
             this.txt_general_based_id.TabIndex = 44;
+            this.txt_general_based_id.Visible = false;
             // 
             // lbl_general_id
             // 
@@ -774,6 +836,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.lbl_general_id.Size = new System.Drawing.Size(15, 13);
             this.lbl_general_id.TabIndex = 43;
             this.lbl_general_id.Text = "id";
+            this.lbl_general_id.Visible = false;
             // 
             // txt_general_id
             // 
@@ -781,6 +844,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.txt_general_id.Name = "txt_general_id";
             this.txt_general_id.Size = new System.Drawing.Size(54, 20);
             this.txt_general_id.TabIndex = 42;
+            this.txt_general_id.Visible = false;
             // 
             // txt_affiliated
             // 
@@ -1105,7 +1169,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.CONTACTS.Location = new System.Drawing.Point(4, 22);
             this.CONTACTS.Name = "CONTACTS";
             this.CONTACTS.Padding = new System.Windows.Forms.Padding(3);
-            this.CONTACTS.Size = new System.Drawing.Size(1228, 624);
+            this.CONTACTS.Size = new System.Drawing.Size(1195, 523);
             this.CONTACTS.TabIndex = 1;
             this.CONTACTS.Text = "CONTACTS";
             this.CONTACTS.UseVisualStyleBackColor = true;
@@ -1132,13 +1196,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_contacts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_contacts.Location = new System.Drawing.Point(3, 3);
             this.dg_contacts.Name = "dg_contacts";
-            this.dg_contacts.RowHeadersVisible = false;
-            this.dg_contacts.Size = new System.Drawing.Size(1222, 618);
+            this.dg_contacts.Size = new System.Drawing.Size(1189, 517);
             this.dg_contacts.TabIndex = 0;
             this.dg_contacts.CellBorderStyleChanged += new System.EventHandler(this.dataGridView1_CellBorderStyleChanged);
             this.dg_contacts.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dg_contacts_CellBeginEdit);
             this.dg_contacts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            this.dg_contacts.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dg_contacts.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellEndEdit);
             this.dg_contacts.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellEnter);
             this.dg_contacts.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dg_contacts_CellValidating);
@@ -1342,7 +1404,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.ADDRESS.Location = new System.Drawing.Point(4, 22);
             this.ADDRESS.Name = "ADDRESS";
             this.ADDRESS.Padding = new System.Windows.Forms.Padding(3);
-            this.ADDRESS.Size = new System.Drawing.Size(1228, 624);
+            this.ADDRESS.Size = new System.Drawing.Size(1195, 523);
             this.ADDRESS.TabIndex = 2;
             this.ADDRESS.Text = "ADDRESS";
             this.ADDRESS.UseVisualStyleBackColor = true;
@@ -1361,7 +1423,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_address.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_address.Location = new System.Drawing.Point(3, 3);
             this.dg_address.Name = "dg_address";
-            this.dg_address.Size = new System.Drawing.Size(1222, 618);
+            this.dg_address.Size = new System.Drawing.Size(1189, 517);
             this.dg_address.TabIndex = 0;
             this.dg_address.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dg_address_UserDeletedRow);
             this.dg_address.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dg_address_UserDeletingRow);
@@ -1457,7 +1519,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.FINANCE.Location = new System.Drawing.Point(4, 22);
             this.FINANCE.Name = "FINANCE";
             this.FINANCE.Padding = new System.Windows.Forms.Padding(3);
-            this.FINANCE.Size = new System.Drawing.Size(1228, 624);
+            this.FINANCE.Size = new System.Drawing.Size(1195, 523);
             this.FINANCE.TabIndex = 3;
             this.FINANCE.Text = "FINANCE";
             this.FINANCE.UseVisualStyleBackColor = true;
@@ -1468,7 +1530,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.finance_tabpage_nale.Dock = System.Windows.Forms.DockStyle.Fill;
             this.finance_tabpage_nale.Location = new System.Drawing.Point(3, 53);
             this.finance_tabpage_nale.Name = "finance_tabpage_nale";
-            this.finance_tabpage_nale.Size = new System.Drawing.Size(1222, 568);
+            this.finance_tabpage_nale.Size = new System.Drawing.Size(1189, 467);
             this.finance_tabpage_nale.TabIndex = 19;
             // 
             // tabControl_Finance
@@ -1479,7 +1541,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabControl_Finance.Location = new System.Drawing.Point(0, 0);
             this.tabControl_Finance.Name = "tabControl_Finance";
             this.tabControl_Finance.SelectedIndex = 0;
-            this.tabControl_Finance.Size = new System.Drawing.Size(1222, 568);
+            this.tabControl_Finance.Size = new System.Drawing.Size(1189, 467);
             this.tabControl_Finance.TabIndex = 0;
             // 
             // tabPage2
@@ -1488,7 +1550,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1214, 542);
+            this.tabPage2.Size = new System.Drawing.Size(1181, 441);
             this.tabPage2.TabIndex = 0;
             this.tabPage2.Text = "PENDING";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1510,7 +1572,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_finance_pending.Name = "dg_finance_pending";
             this.dg_finance_pending.ReadOnly = true;
             this.dg_finance_pending.RowHeadersVisible = false;
-            this.dg_finance_pending.Size = new System.Drawing.Size(1208, 536);
+            this.dg_finance_pending.Size = new System.Drawing.Size(1175, 435);
             this.dg_finance_pending.TabIndex = 0;
             // 
             // date
@@ -1607,7 +1669,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1214, 542);
+            this.tabPage3.Size = new System.Drawing.Size(1181, 441);
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "TRANSACTIONS";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1626,7 +1688,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataGridView4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView4.Location = new System.Drawing.Point(3, 3);
             this.dataGridView4.Name = "dataGridView4";
-            this.dataGridView4.Size = new System.Drawing.Size(1208, 536);
+            this.dataGridView4.Size = new System.Drawing.Size(1175, 435);
             this.dataGridView4.TabIndex = 0;
             // 
             // finance_trans_so
@@ -1700,7 +1762,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_finance.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel_finance.Location = new System.Drawing.Point(3, 3);
             this.panel_finance.Name = "panel_finance";
-            this.panel_finance.Size = new System.Drawing.Size(1222, 50);
+            this.panel_finance.Size = new System.Drawing.Size(1189, 50);
             this.panel_finance.TabIndex = 18;
             // 
             // txt_finance_branch_id
@@ -1762,7 +1824,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.ITEMS.Location = new System.Drawing.Point(4, 22);
             this.ITEMS.Name = "ITEMS";
             this.ITEMS.Padding = new System.Windows.Forms.Padding(3);
-            this.ITEMS.Size = new System.Drawing.Size(1228, 624);
+            this.ITEMS.Size = new System.Drawing.Size(1195, 523);
             this.ITEMS.TabIndex = 4;
             this.ITEMS.Text = "ITEMS";
             this.ITEMS.UseVisualStyleBackColor = true;
@@ -1771,9 +1833,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.pnl_new_added_item.Controls.Add(this.btn_add_new_item);
             this.pnl_new_added_item.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnl_new_added_item.Location = new System.Drawing.Point(3, 499);
+            this.pnl_new_added_item.Location = new System.Drawing.Point(3, 510);
             this.pnl_new_added_item.Name = "pnl_new_added_item";
-            this.pnl_new_added_item.Size = new System.Drawing.Size(1222, 122);
+            this.pnl_new_added_item.Size = new System.Drawing.Size(1189, 10);
             this.pnl_new_added_item.TabIndex = 8;
             // 
             // btn_add_new_item
@@ -1808,7 +1870,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_items.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_items.Location = new System.Drawing.Point(3, 86);
             this.dg_items.Name = "dg_items";
-            this.dg_items.Size = new System.Drawing.Size(1222, 535);
+            this.dg_items.Size = new System.Drawing.Size(1189, 434);
             this.dg_items.TabIndex = 7;
             this.dg_items.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_items_CellClick);
             this.dg_items.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView5_CellContentClick);
@@ -1837,9 +1899,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.price.DataPropertyName = "price";
-            dataGridViewCellStyle7.Format = "N6";
-            dataGridViewCellStyle7.NullValue = "0";
-            this.price.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle5.Format = "N6";
+            dataGridViewCellStyle5.NullValue = "0";
+            this.price.DefaultCellStyle = dataGridViewCellStyle5;
             this.price.HeaderText = "PRICE";
             this.price.Name = "price";
             this.price.ReadOnly = true;
@@ -1899,11 +1961,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // item_graph
             // 
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle8.NullValue = "GRAPH >>";
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.NullValue = "GRAPH >>";
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle6;
             this.item_graph.HeaderText = "";
             this.item_graph.MinimumWidth = 70;
             this.item_graph.Name = "item_graph";
@@ -2013,13 +2075,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_item.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel_item.Location = new System.Drawing.Point(3, 3);
             this.panel_item.Name = "panel_item";
-            this.panel_item.Size = new System.Drawing.Size(1222, 83);
+            this.panel_item.Size = new System.Drawing.Size(1189, 83);
             this.panel_item.TabIndex = 6;
             this.panel_item.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_item_Paint);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1144, 54);
+            this.button1.Location = new System.Drawing.Point(1111, 44);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 37;
@@ -2120,7 +2182,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.ACCREDITATION.Location = new System.Drawing.Point(4, 22);
             this.ACCREDITATION.Name = "ACCREDITATION";
             this.ACCREDITATION.Padding = new System.Windows.Forms.Padding(3);
-            this.ACCREDITATION.Size = new System.Drawing.Size(1228, 624);
+            this.ACCREDITATION.Size = new System.Drawing.Size(1195, 523);
             this.ACCREDITATION.TabIndex = 5;
             this.ACCREDITATION.Text = "ACCREDITATION";
             this.ACCREDITATION.UseVisualStyleBackColor = true;
@@ -2142,7 +2204,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_accreditations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_accreditations.Location = new System.Drawing.Point(3, 63);
             this.dg_accreditations.Name = "dg_accreditations";
-            this.dg_accreditations.Size = new System.Drawing.Size(1222, 558);
+            this.dg_accreditations.Size = new System.Drawing.Size(1189, 457);
             this.dg_accreditations.TabIndex = 1;
             this.dg_accreditations.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView7_CellClick);
             this.dg_accreditations.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_accreditations_CellContentClick);
@@ -2271,7 +2333,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 63);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1222, 558);
+            this.panel2.Size = new System.Drawing.Size(1189, 457);
             this.panel2.TabIndex = 3;
             // 
             // panel_accreditation
@@ -2280,7 +2342,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_accreditation.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel_accreditation.Location = new System.Drawing.Point(3, 3);
             this.panel_accreditation.Name = "panel_accreditation";
-            this.panel_accreditation.Size = new System.Drawing.Size(1222, 60);
+            this.panel_accreditation.Size = new System.Drawing.Size(1189, 60);
             this.panel_accreditation.TabIndex = 2;
             // 
             // btn_upload_image
@@ -2299,7 +2361,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.HISTORY.Location = new System.Drawing.Point(4, 22);
             this.HISTORY.Name = "HISTORY";
             this.HISTORY.Padding = new System.Windows.Forms.Padding(3);
-            this.HISTORY.Size = new System.Drawing.Size(1228, 624);
+            this.HISTORY.Size = new System.Drawing.Size(1195, 523);
             this.HISTORY.TabIndex = 7;
             this.HISTORY.Text = "HISTORY";
             this.HISTORY.UseVisualStyleBackColor = true;
@@ -2310,7 +2372,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.history_panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.history_panel.Location = new System.Drawing.Point(3, 3);
             this.history_panel.Name = "history_panel";
-            this.history_panel.Size = new System.Drawing.Size(1222, 618);
+            this.history_panel.Size = new System.Drawing.Size(1189, 517);
             this.history_panel.TabIndex = 0;
             // 
             // tabControl_History
@@ -2323,7 +2385,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabControl_History.Name = "tabControl_History";
             this.tabControl_History.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.tabControl_History.SelectedIndex = 0;
-            this.tabControl_History.Size = new System.Drawing.Size(1222, 618);
+            this.tabControl_History.Size = new System.Drawing.Size(1189, 517);
             this.tabControl_History.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl_History.TabIndex = 0;
             // 
@@ -2332,7 +2394,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1214, 592);
+            this.tabPage4.Size = new System.Drawing.Size(1181, 491);
             this.tabPage4.TabIndex = 0;
             this.tabPage4.Text = "TRANSACTION LOG";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -2343,7 +2405,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(1214, 592);
+            this.tabPage5.Size = new System.Drawing.Size(1181, 491);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "DATA LOG";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -2361,7 +2423,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_history.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_history.Location = new System.Drawing.Point(3, 3);
             this.dg_history.Name = "dg_history";
-            this.dg_history.Size = new System.Drawing.Size(1208, 586);
+            this.dg_history.Size = new System.Drawing.Size(1175, 485);
             this.dg_history.TabIndex = 0;
             // 
             // atdateDataGridViewTextBoxColumn
@@ -2476,9 +2538,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.footer_panel.Controls.Add(this.btn_update);
             this.footer_panel.Controls.Add(this.btn_qoute);
             this.footer_panel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.footer_panel.Location = new System.Drawing.Point(0, 923);
+            this.footer_panel.Location = new System.Drawing.Point(0, 919);
             this.footer_panel.Name = "footer_panel";
-            this.footer_panel.Size = new System.Drawing.Size(1250, 95);
+            this.footer_panel.Size = new System.Drawing.Size(1250, 99);
             this.footer_panel.TabIndex = 5;
             this.footer_panel.Paint += new System.Windows.Forms.PaintEventHandler(this.footer_panel_Paint);
             // 
@@ -2541,30 +2603,31 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // buttonPanel
             // 
-            this.buttonPanel.Controls.Add(this.button5);
+            this.buttonPanel.Controls.Add(this.button2);
+            this.buttonPanel.Controls.Add(this.btn_add_page);
             this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.buttonPanel.Location = new System.Drawing.Point(0, 151);
             this.buttonPanel.Name = "buttonPanel";
-            this.buttonPanel.Size = new System.Drawing.Size(1250, 27);
+            this.buttonPanel.Size = new System.Drawing.Size(1250, 35);
             this.buttonPanel.TabIndex = 7;
             // 
-            // button5
+            // btn_add_page
             // 
-            this.button5.Location = new System.Drawing.Point(8, 0);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 26);
-            this.button5.TabIndex = 21;
-            this.button5.Text = "ADD PAGE";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click_1);
+            this.btn_add_page.Location = new System.Drawing.Point(7, 3);
+            this.btn_add_page.Name = "btn_add_page";
+            this.btn_add_page.Size = new System.Drawing.Size(75, 26);
+            this.btn_add_page.TabIndex = 21;
+            this.btn_add_page.Text = "ADD PAGE";
+            this.btn_add_page.UseVisualStyleBackColor = true;
+            this.btn_add_page.Click += new System.EventHandler(this.button5_Click_1);
             // 
             // panel_for_flowlayout
             // 
             this.panel_for_flowlayout.Controls.Add(this.flowLayout_panel);
             this.panel_for_flowlayout.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel_for_flowlayout.Location = new System.Drawing.Point(0, 178);
+            this.panel_for_flowlayout.Location = new System.Drawing.Point(0, 186);
             this.panel_for_flowlayout.Name = "panel_for_flowlayout";
-            this.panel_for_flowlayout.Size = new System.Drawing.Size(1250, 82);
+            this.panel_for_flowlayout.Size = new System.Drawing.Size(1250, 76);
             this.panel_for_flowlayout.TabIndex = 8;
             // 
             // flowLayout_panel
@@ -2572,8 +2635,22 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.flowLayout_panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayout_panel.Location = new System.Drawing.Point(0, 0);
             this.flowLayout_panel.Name = "flowLayout_panel";
-            this.flowLayout_panel.Size = new System.Drawing.Size(1250, 82);
+            this.flowLayout_panel.Size = new System.Drawing.Size(1250, 76);
             this.flowLayout_panel.TabIndex = 4;
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(88, 5);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(109, 23);
+            this.button2.TabIndex = 22;
+            this.button2.Text = "+ ADD GROUP";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // BusinessPartnerInfo
             // 
@@ -2598,6 +2675,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_header_records.ResumeLayout(false);
             this.panel_header_records.PerformLayout();
             this.main_panel.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
@@ -2655,6 +2733,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.footer_panel.ResumeLayout(false);
             this.buttonPanel.ResumeLayout(false);
             this.panel_for_flowlayout.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2902,7 +2981,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.Panel buttonPanel;
         private System.Windows.Forms.Panel panel_for_flowlayout;
         private System.Windows.Forms.FlowLayoutPanel flowLayout_panel;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btn_add_page;
         private System.Data.DataColumn dataColumn49;
         private System.Windows.Forms.DataGridViewCheckBoxColumn is_default_contact;
         private System.Windows.Forms.DataGridViewTextBoxColumn number;
@@ -2916,5 +2995,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.DataGridViewTextBoxColumn branch_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn contact_notes;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripButton btn_save;
+        private System.Windows.Forms.ToolStripButton btn_close;
+        private System.Windows.Forms.ToolStripButton btn_revise;
+        private System.Windows.Forms.ToolTip tt_add_page_disabled;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button button2;
     }
 }
