@@ -1,4 +1,4 @@
-using smpc_app.Services.Helpers;
+﻿using smpc_app.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,12 +23,10 @@ namespace smpc_inventory_app.Pages.Setup
 
             LoadData(data);
         }
-
         private void LoadData(DataTable data)
         {
             DataTable filteredTable = new DataTable();
 
-            // Add only selected columns with display text
             foreach (var pair in columnMappings)
             {
                 if (data.Columns.Contains(pair.Key))
@@ -51,12 +49,11 @@ namespace smpc_inventory_app.Pages.Setup
             }
 
             dgv_items.DataSource = filteredTable;
-        }
 
-
-        private void dgv_items_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0) SelectItem();
+            if (dgv_items.Columns.Contains("ID"))
+            {
+                dgv_items.Columns["ID"].Visible = false;
+            }
         }
 
         private void dgv_items_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -68,25 +65,24 @@ namespace smpc_inventory_app.Pages.Setup
         {
             if (dgv_items.SelectedRows.Count > 0)
             {
-                SelectedIndex = dgv_items.SelectedRows[0].Index;
-                SelectedItem = ((DataRowView)dgv_items.SelectedRows[0].DataBoundItem).Row;
+                var selectedRow = (DataRowView)dgv_items.SelectedRows[0].DataBoundItem;
+                var id = selectedRow["id"]; 
+
+                SelectedItem = Dt.AsEnumerable().FirstOrDefault(r => r["id"].Equals(id));
+                SelectedIndex = Dt.Rows.IndexOf(SelectedItem);
+
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void txt_search_TextChanged(object sender, EventArgs e)
         {
             string searchval = txt_search.Text;
 
-            var filteredData = Helpers.FilterDataTable(Dt, searchval, columnMappings.Keys.ToArray());
+            var filterColumns = columnMappings.Keys.Where(k => k != "id").ToArray();
+            var filteredData = Helpers.FilterDataTable(Dt, searchval, filterColumns);
 
-            LoadData(filteredData); // Re-apply mapping and refresh view
+            LoadData(filteredData); 
         }
 
 

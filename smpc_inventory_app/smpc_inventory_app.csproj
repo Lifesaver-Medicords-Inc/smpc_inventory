@@ -193,11 +193,23 @@
     <Compile Include="Data\ENUM_WARRANTY.cs" />
     <Compile Include="Data\TableContentChanged.cs" />
     <Compile Include="Model\CurrentUserModel.cs" />
+    <Compile Include="Pages\Business_Partner_Info\BpiBranchUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\BpiBranchUC.Designer.cs">
+      <DependentUpon>BpiBranchUC.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Business_Partner_Info\BpiTemplate.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Pages\Business_Partner_Info\BpiTemplate.Designer.cs">
       <DependentUpon>BpiTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\Bpi_Modal\AddNewBranchModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Business_Partner_Info\Bpi_Modal\AddNewBranchModal.Designer.cs">
+      <DependentUpon>AddNewBranchModal.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Business_Partner_Info\Bpi_Modal\ItemEntryModal.cs">
       <SubType>Form</SubType>
@@ -695,8 +707,14 @@
     <Compile Include="Services\Setup\Warehouse\WarehouseAreaServices.cs" />
     <Compile Include="Services\Setup\Warehouse\WarehouseNameServices.cs" />
     <Compile Include="Services\Setup\Warehouse\WarehouseUsetypeServices.cs" />
+    <EmbeddedResource Include="Pages\Business_Partner_Info\BpiBranchUC.resx">
+      <DependentUpon>BpiBranchUC.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pages\Business_Partner_Info\BpiTemplate.resx">
       <DependentUpon>BpiTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Business_Partner_Info\Bpi_Modal\AddNewBranchModal.resx">
+      <DependentUpon>AddNewBranchModal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Business_Partner_Info\Bpi_Modal\ItemEntryModal.resx">
       <DependentUpon>ItemEntryModal.cs</DependentUpon>
