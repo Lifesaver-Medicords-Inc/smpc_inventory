@@ -197,7 +197,7 @@ namespace smpc_inventory_app.Pages.Inventory
                     string dateStr = row["date"]?.ToString();
                     if (string.IsNullOrWhiteSpace(dateStr)) return false;
 
-                    if (DateTime.TryParseExact(dateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                    if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture,
                                                DateTimeStyles.None, out DateTime parsedDate))
                     {
                         return parsedDate.Month == targetMonth && parsedDate.Year == targetYear;
@@ -227,7 +227,7 @@ namespace smpc_inventory_app.Pages.Inventory
                     int qtyIn = int.TryParse(row["qty_in"]?.ToString(), out int tmpIn) ? tmpIn : 0;
                     int qtyOut = int.TryParse(row["qty_out"]?.ToString(), out int tmpOut) ? tmpOut : 0;
 
-                    if (DateTime.TryParseExact(dateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                    if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
                     {
                         int day = parsedDate.Day;
                         string inCol = $"IN_{day}";
@@ -254,7 +254,7 @@ namespace smpc_inventory_app.Pages.Inventory
                     int qtyIn = int.TryParse(row["qty_in"]?.ToString(), out int tmpIn) ? tmpIn : 0;
                     int qtyOut = int.TryParse(row["qty_out"]?.ToString(), out int tmpOut) ? tmpOut : 0;
 
-                    if (DateTime.TryParseExact(dateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                    if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
                     {
                         int day = parsedDate.Day;
                         string inCol = $"IN_{day}";
@@ -416,7 +416,7 @@ namespace smpc_inventory_app.Pages.Inventory
             foreach (DataRow row in _rawData.Rows)
             {
                 string dateStr = row["date"]?.ToString();
-                if (DateTime.TryParseExact(dateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture,
                                            DateTimeStyles.None, out DateTime parsedDate))
                 {
                     validDates.Add(parsedDate);
@@ -462,7 +462,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 .Select(row =>
                 {
                     string dateStr = row["date"]?.ToString();
-                    if (DateTime.TryParseExact(dateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+                    if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
                     {
                         return dt.Year == selectedYear ? dt.Month : (int?)null;
                     }
@@ -502,7 +502,7 @@ namespace smpc_inventory_app.Pages.Inventory
             var filteredRows = _rawData.AsEnumerable().Where(row =>
             {
                 string dateStr = row["date"]?.ToString();
-                if (DateTime.TryParseExact(dateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture,
                                            DateTimeStyles.None, out DateTime parsedDate))
                 {
                     return parsedDate.Year == selectedYear && parsedDate.Month == selectedMonth;

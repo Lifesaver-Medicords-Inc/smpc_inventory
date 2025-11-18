@@ -281,68 +281,45 @@ namespace smpc_inventory_app.Pages.Inventory
                 return;
             }
 
-            // Validation for received_qty
             foreach (DataGridViewRow row in dgv_main.Rows)
             {
                 if (row.IsNewRow) continue;
 
-                string receivedQty = row.Cells["received_qty"]?.Value?.ToString();
-                if (string.IsNullOrWhiteSpace(receivedQty))
+                int orderedQty = int.TryParse(row.Cells["ordered_qty"]?.Value?.ToString(), out orderedQty) ? orderedQty : 0;
+                int receivedQty = int.TryParse(row.Cells["received_qty"]?.Value?.ToString(), out receivedQty) ? receivedQty : 0;
+                int rejectedQty = int.TryParse(row.Cells["rejected_qty"]?.Value?.ToString(), out rejectedQty) ? rejectedQty : 0;
+
+                // Required: received qty
+                if (receivedQty == 0 && string.IsNullOrWhiteSpace(row.Cells["received_qty"]?.Value?.ToString()))
                 {
-                    Helpers.ShowDialogMessage("error", "Received quantity is required for all items.");
-                    return; // stop save
+                    Helpers.ShowDialogMessage("error", "Received quantity is required.");
+                    return;
                 }
-            }
 
-            // Validation for bin location
-            foreach (DataGridViewRow row in dgv_main.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                string receivedQty = row.Cells["bin_location"]?.Value?.ToString();
-                if (string.IsNullOrWhiteSpace(receivedQty))
+                // Required: bin location
+                if (string.IsNullOrWhiteSpace(row.Cells["bin_location"]?.Value?.ToString()))
                 {
-                    Helpers.ShowDialogMessage("error", "Bin location is required for all items.");
-                    return; // stop save
+                    Helpers.ShowDialogMessage("error", "Bin location is required.");
+                    return;
                 }
-            }
 
-            // Extra validation for rejection reason
-            foreach (DataGridViewRow row in dgv_main.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                decimal orderedQty = 0;
-                decimal.TryParse(row.Cells["ordered_qty"].Value?.ToString(), out orderedQty);
-                decimal receivedQty = 0;
-                decimal.TryParse(row.Cells["received_qty"].Value?.ToString(), out receivedQty);
-                decimal rejectedQty = 0;
-                decimal.TryParse(row.Cells["rejected_qty"].Value?.ToString(), out rejectedQty);
-
-                if (rejectedQty > 0)
-                {
-                    string reason = row.Cells["reason_for_rejection"].Value?.ToString();
-                    if (string.IsNullOrWhiteSpace(reason))
-                    {
-                        Helpers.ShowDialogMessage("error", "Reason for rejection is required when rejected quantity is entered.");
-                        return; // stop save
-                    }
-                }
-            }
-
-            //Validation for the rejected qty
-            foreach (DataGridViewRow row in dgv_main.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                decimal receivedQty = 0;
-                decimal.TryParse(row.Cells["received_qty"]?.Value?.ToString(), out receivedQty);
-                decimal rejectedQty = 0;
-                decimal.TryParse(row.Cells["rejected_qty"]?.Value?.ToString(), out rejectedQty);
-
+                // Validation for rejected qty
                 if (rejectedQty > receivedQty)
                 {
                     Helpers.ShowDialogMessage("error", "Rejected quantity cannot be greater than received quantity.");
+                    return;
+                }
+
+                if (receivedQty > orderedQty)
+                {
+                    Helpers.ShowDialogMessage("error", "Received quantity cannot be greater than ordered quantity.");
+                    return;
+                }
+
+                // Require reason if rejected
+                if (rejectedQty > 0 && string.IsNullOrWhiteSpace(row.Cells["reason_for_rejection"]?.Value?.ToString()))
+                {
+                    Helpers.ShowDialogMessage("error", "Reason for rejection is required.");
                     return;
                 }
             }
@@ -350,15 +327,15 @@ namespace smpc_inventory_app.Pages.Inventory
             // If empty, set current date automatically
             if (string.IsNullOrWhiteSpace(txt_date_received.Text))
             {
-                txt_date_received.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                txt_date_received.Text = DateTime.Now.ToString("MM/dd/yyyy");
             }
             else
             {
                 // Only validate if user actually entered something
                 DateTime parsedDate;
-                if (!DateTime.TryParseExact(txt_date_received.Text, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsedDate))
+                if (!DateTime.TryParseExact(txt_date_received.Text, "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsedDate))
                 {
-                    Helpers.ShowDialogMessage("error", "Invalid Date format. Please use dd/MM/yyyy (e.g. 23/09/2025).");
+                    Helpers.ShowDialogMessage("error", "Invalid Date format. Please use MM/dd/yyyy (e.g. 09/23/2025).");
                     return;
                 }
             }
@@ -771,6 +748,8 @@ namespace smpc_inventory_app.Pages.Inventory
             //fill this declared value by the receiving reports data
             _rrData = await ReceivingReportService.GetRRRecords();
 
+            _rrData.receiving_report.Reverse();
+
             if (_rrData != null && _rrData.receiving_report != null && _rrData.receiving_report.Count > 0)
             {
                 //set this variable to the parent of the rr
@@ -907,39 +886,6 @@ namespace smpc_inventory_app.Pages.Inventory
                 List<string> validationMessages = new List<string>();
                 bool resetCell = false;
 
-                // Validation 1: received cannot exceed ordered
-                if (receivedQty > orderedQty)
-                {
-                    validationMessages.Add($"Received quantity cannot exceed ordered quantity ({orderedQty}).");
-                    row.Cells["received_qty"].Value = orderedQty;
-                }
-
-                // Validation 2: rejected cannot exceed ordered
-                if (rejectedQty > orderedQty)
-                {
-                    validationMessages.Add($"Rejected quantity cannot exceed ordered quantity ({orderedQty}).");
-                    row.Cells["rejected_qty"].Value = orderedQty;
-                }
-
-                // Validation 3: total cannot exceed ordered
-                if ((receivedQty + rejectedQty) > orderedQty)
-                {
-                    validationMessages.Add($"The sum of received ({receivedQty}) and rejected ({rejectedQty}) " +
-                                           $"cannot exceed ordered quantity ({orderedQty}).");
-                    row.Cells[colName].Value = 0;
-                    resetCell = true;
-                }
-
-                // Only show one message box if there are validation errors
-                if (validationMessages.Any())
-                {
-                    MessageBox.Show(string.Join("\n", validationMessages),
-                        "Invalid Input",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    return;
-                }
-
                 // --- Auto-fill / Clear UOM and Reason Logic ---
 
                 string orderedUom = row.Cells["ordered_uom"].Value?.ToString();
@@ -958,13 +904,6 @@ namespace smpc_inventory_app.Pages.Inventory
                 // Rejected handling
                 if (rejectedQty > 0)
                 {
-                    string reason = row.Cells["reason_for_rejection"].Value?.ToString();
-                    if (string.IsNullOrWhiteSpace(reason))
-                    {
-                        MessageBox.Show("Reason for rejection is required when a rejected quantity is entered.",
-                                        "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-
                     if (string.IsNullOrWhiteSpace(row.Cells["rejected_uom"].Value?.ToString()))
                         row.Cells["rejected_uom"].Value = orderedUom;
                 }

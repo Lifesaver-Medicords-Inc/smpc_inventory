@@ -40,9 +40,11 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         {
             rrTable = await ReceivingReportService.GetRRRecordsAsDataTable();
 
-            if (rrTable.Rows.Count > 0)
+            DataTable reversedTable = rrTable.AsEnumerable().Reverse().CopyToDataTable();
+
+            if (reversedTable.Rows.Count > 0)
             {
-                dgv_rr_search.DataSource = rrTable;
+                dgv_rr_search.DataSource = reversedTable;
             }
             else
             {

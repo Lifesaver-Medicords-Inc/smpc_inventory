@@ -72,7 +72,7 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         [Column("brand")]
         public string brand { get; set; }
 
-        [Column("item_desc")]
+        [Column("item_description")]
         public string item_description { get; set; }
 
         [Column("item_category")]
