@@ -85,266 +85,187 @@ namespace smpc_inventory_app.Pages.Inventory
             // Filter the DataGridView using the selected filters
             FilterByYearAndMonth();
 
-            // Group rows by pod_id
-            DataTable groupedData = GroupByPodId(_rawData);
+            // Group rows by item_id
+            DataTable groupedData = GroupByItemId(_rawData);
 
             //Bind grouped data
             dgv_inventory_item.DataSource = groupedData;
-
-            //Add dynamic "IN" and "OUT" columns per day without clearing existing columns
-            AddInOutColumnsWithGroupHeaders();
         }
 
-        private void AddInOutColumnsWithGroupHeaders()
+        private void StyleInOutColumns()
         {
-            // Use the selected year and month, not DateTime.Now
-            if (cmb_year.SelectedItem == null || cmb_month.SelectedItem == null)
-                return;
-
-            int selectedYear = int.Parse(cmb_year.SelectedItem.ToString());
-            int selectedMonth = DateTime.ParseExact(cmb_month.SelectedItem.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
-
-            int daysInMonth = DateTime.DaysInMonth(selectedYear, selectedMonth);
-
-            // Add new IN/OUT columns and track their names
-            for (int day = 1; day <= daysInMonth; day++)
+            foreach (DataGridViewColumn col in dgv_inventory_item.Columns)
             {
-                string inColumnName = $"IN_{day}";
-                string outColumnName = $"OUT_{day}";
-
-                // --- Add IN column ---
-                if (!dgv_inventory_item.Columns.Contains(inColumnName))
+                if (col.Name.StartsWith("IN_") || col.Name.StartsWith("OUT_"))
                 {
-                    DataGridViewTextBoxColumn inCol = new DataGridViewTextBoxColumn
-                    {
-                        Name = inColumnName,
-                        DataPropertyName = inColumnName,
-                        HeaderText = "IN",
-                        ReadOnly = true,
-                        AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-                    };
-                    dgv_inventory_item.Columns.Add(inCol);
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    col.MinimumWidth = 50;
                 }
+            }
+        }
 
-                // --- Add OUT column ---
-                if (!dgv_inventory_item.Columns.Contains(outColumnName))
+        private void FixInOutHeaders()
+        {
+            foreach (DataGridViewColumn col in dgv_inventory_item.Columns)
+            {
+                if (col.Name.StartsWith("IN_"))
+                    col.HeaderText = "IN";
+
+                if (col.Name.StartsWith("OUT_"))
+                    col.HeaderText = "OUT";
+            }
+        }
+
+        private void AddDynamicColumns(DataTable table)
+        {
+            foreach (DataColumn col in table.Columns)
+            {
+                // Skip the columns you already created in designer
+                if (dgv_inventory_item.Columns.Contains(col.ColumnName))
+                    continue;
+
+                // Skip non-IN/OUT columns
+                if (!col.ColumnName.StartsWith("IN_") && !col.ColumnName.StartsWith("OUT_"))
+                    continue;
+
+                // Create a new DataGridView column
+                var gridCol = new DataGridViewTextBoxColumn
                 {
-                    DataGridViewTextBoxColumn outCol = new DataGridViewTextBoxColumn
-                    {
-                        Name = outColumnName,
-                        DataPropertyName = outColumnName,
-                        HeaderText = "OUT",
-                        ReadOnly = true,
-                        AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-                    };
-                    dgv_inventory_item.Columns.Add(outCol);
-                }
+                    Name = col.ColumnName,
+                    HeaderText = col.ColumnName,
+                    DataPropertyName = col.ColumnName,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                };
 
-                // Ensure OUT column is right beside its corresponding IN column
-                int inIndex = dgv_inventory_item.Columns[inColumnName].DisplayIndex;
-                dgv_inventory_item.Columns[outColumnName].DisplayIndex = inIndex + 1;
+                dgv_inventory_item.Columns.Add(gridCol);
             }
         }
 
         private void RemoveInOutColumns()
         {
-            // Collect all column names that start with IN_ or OUT_
-            var columnsToRemove = dgv_inventory_item.Columns
-                .Cast<DataGridViewColumn>()
-                .Where(c => c.Name.StartsWith("IN_") || c.Name.StartsWith("OUT_"))
-                .Select(c => c.Name)
-                .ToList();
-
-            // Remove them safely
-            foreach (var colName in columnsToRemove)
+            for (int i = dgv_inventory_item.Columns.Count - 1; i >= 0; i--)
             {
-                dgv_inventory_item.Columns.Remove(colName);
+                var col = dgv_inventory_item.Columns[i].Name;
+                if (col.StartsWith("IN_") || col.StartsWith("OUT_"))
+                    dgv_inventory_item.Columns.RemoveAt(i);
             }
         }
 
-        private DataTable GroupByPodId(DataTable rawData)
+        private DataTable GroupByItemId(DataTable rawData)
         {
-            if (rawData == null || !rawData.Columns.Contains("pod_id"))
+            if (rawData == null || !rawData.Columns.Contains("item_id"))
                 return rawData;
 
-            _cellMetaData.Clear(); // clear previous metadata before rebuilding
+            _cellMetaData.Clear();
 
             DataTable grouped = rawData.Clone();
 
-            int targetMonth = DateTime.ParseExact(cmb_month.SelectedItem.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
-            int targetYear = int.Parse(cmb_year.SelectedItem.ToString());
-            int daysInMonth = DateTime.DaysInMonth(targetYear, targetMonth);
-
-            // Add dynamic IN and OUT columns
-            for (int day = 1; day <= daysInMonth; day++)
+            // Remove unnecessary date columns from clone
+            foreach (DataColumn col in rawData.Columns)
             {
-                string inColName = $"IN_{day}";
-                string outColName = $"OUT_{day}";
-
-                if (!grouped.Columns.Contains(inColName))
-                    grouped.Columns.Add(inColName, typeof(int));
-
-                if (!grouped.Columns.Contains(outColName))
-                    grouped.Columns.Add(outColName, typeof(int));
+                if (!grouped.Columns.Contains(col.ColumnName))
+                    grouped.Columns.Add(col.ColumnName, col.DataType);
             }
 
-            var groups = rawData.AsEnumerable().GroupBy(r => r["pod_id"]);
+            var groups = rawData.AsEnumerable().GroupBy(r => r["item_id"]);
 
             foreach (var group in groups)
             {
-                var filteredRows = group.Where(row =>
+                // Filter only rows that have data (IN or OUT)
+                var filteredRows = group.Where(r =>
                 {
-                    string dateStr = row["date"]?.ToString();
-                    if (string.IsNullOrWhiteSpace(dateStr)) return false;
-
-                    if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture,
-                                               DateTimeStyles.None, out DateTime parsedDate))
-                    {
-                        return parsedDate.Month == targetMonth && parsedDate.Year == targetYear;
-                    }
-
-                    return false;
+                    int qtyIn = int.TryParse(r["qty_in"]?.ToString(), out int qIn) ? qIn : 0;
+                    int qtyOut = int.TryParse(r["qty_out"]?.ToString(), out int qOut) ? qOut : 0;
+                    return qtyIn >= 0 || qtyOut >= 0;
                 }).ToList();
 
                 if (!filteredRows.Any())
                     continue;
 
                 DataRow newRow = grouped.NewRow();
-
                 var first = group.First();
-                newRow["pod_id"] = first["pod_id"];
-                if (rawData.Columns.Contains("item_code")) newRow["item_code"] = first["item_code"];
-                if (rawData.Columns.Contains("general_name")) newRow["general_name"] = first["general_name"];
-                if (rawData.Columns.Contains("brand")) newRow["brand"] = first["brand"];
-                if (rawData.Columns.Contains("item_description")) newRow["item_description"] = first["item_description"];
-                if (rawData.Columns.Contains("details")) newRow["details"] = first["details"];
-                if (rawData.Columns.Contains("uom")) newRow["uom"] = first["uom"];
 
-                // --- Process each row ---
-                foreach (var row in filteredRows)
+                // Basic item info
+                foreach (DataColumn col in rawData.Columns)
                 {
-                    string dateStr = row["date"]?.ToString();
-                    int qtyIn = int.TryParse(row["qty_in"]?.ToString(), out int tmpIn) ? tmpIn : 0;
-                    int qtyOut = int.TryParse(row["qty_out"]?.ToString(), out int tmpOut) ? tmpOut : 0;
-
-                    if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                    if (newRow.Table.Columns.Contains(col.ColumnName) &&
+                        col.ColumnName != "qty_in" &&
+                        col.ColumnName != "qty_out" &&
+                        col.ColumnName != "date" &&
+                        col.ColumnName != "supplier_name" &&
+                        col.ColumnName != "rr_no" &&
+                        col.ColumnName != "po_no")
                     {
-                        int day = parsedDate.Day;
-                        string inCol = $"IN_{day}";
-                        string outCol = $"OUT_{day}";
-
-                        // --- Aggregate quantities ---
-                        int currentIn = newRow[inCol] == DBNull.Value ? 0 : Convert.ToInt32(newRow[inCol]);
-                        int currentOut = newRow[outCol] == DBNull.Value ? 0 : Convert.ToInt32(newRow[outCol]);
-                        newRow[inCol] = currentIn + qtyIn;
-                        newRow[outCol] = currentOut + qtyOut;
+                        newRow[col.ColumnName] = first[col.ColumnName];
                     }
                 }
 
+                // --- Count IN & OUT transactions ---
+                int totalInCount = filteredRows.Count(r => Convert.ToInt32(r["qty_in"]) >= 0);
+                int totalOutCount = filteredRows.Count(r => Convert.ToInt32(r["qty_out"]) >= 0);
+
+                int inIndex = 1;
+                int outIndex = 1;
+                int currentRowIndex = grouped.Rows.Count;
                 grouped.Rows.Add(newRow);
-                int currentRowIndex = grouped.Rows.Count - 1;
 
-                // --- Store metadata for this grouped row ---
                 foreach (var row in filteredRows)
                 {
-                    string dateStr = row["date"]?.ToString();
-                    string supplierName = row["supplier_name"]?.ToString();
-                    string rrNo = row["rr_no"]?.ToString() ?? "";
-                    string poNo = row["po_no"]?.ToString() ?? "";
-                    int qtyIn = int.TryParse(row["qty_in"]?.ToString(), out int tmpIn) ? tmpIn : 0;
-                    int qtyOut = int.TryParse(row["qty_out"]?.ToString(), out int tmpOut) ? tmpOut : 0;
+                    int qtyIn = int.TryParse(row["qty_in"]?.ToString(), out int qIn) ? qIn : 0;
+                    int qtyOut = int.TryParse(row["qty_out"]?.ToString(), out int qOut) ? qOut : 0;
 
-                    if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                    if (qtyIn >= 0)
                     {
-                        int day = parsedDate.Day;
-                        string inCol = $"IN_{day}";
-                        string outCol = $"OUT_{day}";
+                        string col = $"IN_{inIndex}";
+                        if (!grouped.Columns.Contains(col))
+                            grouped.Columns.Add(col, typeof(int));
+                        newRow[col] = qtyIn;
 
-                        if (qtyIn > 0)
-                        {
-                            if (!_cellMetaData.ContainsKey((currentRowIndex, inCol)))
-                                _cellMetaData[(currentRowIndex, inCol)] = new List<(int, string, string, string, string)>();
+                        AddCellMetadata(row, currentRowIndex, col);
+                        inIndex++;
+                    }
 
-                            _cellMetaData[(currentRowIndex, inCol)].Add((qtyIn, rrNo, poNo, dateStr, supplierName));
-                        }
+                    if (qtyOut >= 0)
+                    {
+                        string col = $"OUT_{outIndex}";
+                        if (!grouped.Columns.Contains(col))
+                            grouped.Columns.Add(col, typeof(int));
+                        newRow[col] = qtyOut;
 
-                        if (qtyOut > 0)
-                        {
-                            if (!_cellMetaData.ContainsKey((currentRowIndex, outCol)))
-                                _cellMetaData[(currentRowIndex, outCol)] = new List<(int, string, string, string, string)>();
-
-                            _cellMetaData[(currentRowIndex, outCol)].Add((qtyOut, rrNo, poNo, dateStr, supplierName));
-                        }
+                        AddCellMetadata(row, currentRowIndex, col);
+                        outIndex++;
                     }
                 }
+
+                // Compute totals
+                newRow["in_total"] = Enumerable.Range(1, totalInCount)
+                                               .Select(i => Convert.ToInt32(newRow[$"IN_{i}"] ?? 0))
+                                               .Sum();
+
+                newRow["out_total"] = Enumerable.Range(1, totalOutCount)
+                                                .Select(i => Convert.ToInt32(newRow[$"OUT_{i}"] ?? 0))
+                                                .Sum();
             }
 
-            ComputeInTotals(grouped);
-            ComputeOutTotals(grouped);
             return grouped;
         }
 
-        private void ComputeInTotals(DataTable grouped)
+        private void AddCellMetadata(DataRow src, int rowIndex, string colName)
         {
-            if (grouped == null) return;
+            int qty = (src["qty_in"].ToString() != "0")
+                        ? Convert.ToInt32(src["qty_in"])
+                        : Convert.ToInt32(src["qty_out"]);
 
-            foreach (DataRow row in grouped.Rows)
-            {
-                int totalIn = 0;
+            string rrNo = src["rr_no"]?.ToString() ?? "";
+            string poNo = src["po_no"]?.ToString() ?? "";
+            string date = src["date"]?.ToString() ?? "";
+            string supplier = src["supplier_name"]?.ToString() ?? "";
 
-                // Go through all columns that start with "IN_"
-                foreach (DataColumn col in grouped.Columns)
-                {
-                    if (col.ColumnName.StartsWith("IN_", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (row[col] != DBNull.Value && int.TryParse(row[col].ToString(), out int val))
-                        {
-                            totalIn += val;
-                        }
-                    }
-                }
+            if (!_cellMetaData.ContainsKey((rowIndex, colName)))
+                _cellMetaData[(rowIndex, colName)] = new List<(int, string, string, string, string)>();
 
-                // Store the total in "in_total" column (make sure it exists)
-                if (grouped.Columns.Contains("in_total"))
-                    row["in_total"] = totalIn;
-                else
-                {
-                    grouped.Columns.Add("in_total", typeof(int));
-                    row["in_total"] = totalIn;
-                }
-            }
+            _cellMetaData[(rowIndex, colName)].Add((qty, rrNo, poNo, date, supplier));
         }
-
-        private void ComputeOutTotals(DataTable grouped)
-        {
-            if (grouped == null) return;
-
-            foreach (DataRow row in grouped.Rows)
-            {
-                int totalOut = 0;
-
-                foreach (DataColumn col in grouped.Columns)
-                {
-                    if (col.ColumnName.StartsWith("OUT_", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (row[col] != DBNull.Value && int.TryParse(row[col].ToString(), out int val))
-                        {
-                            totalOut += val;
-                        }
-                    }
-                }
-
-                // Store total in "out_total" column
-                if (grouped.Columns.Contains("out_total"))
-                    row["out_total"] = totalOut;
-                else
-                {
-                    grouped.Columns.Add("out_total", typeof(int));
-                    row["out_total"] = totalOut;
-                }
-            }
-        }
-
 
         private void txt_search_TextChanged(object sender, EventArgs e)
         {
@@ -364,6 +285,10 @@ namespace smpc_inventory_app.Pages.Inventory
             var cellValue = dgv_inventory_item.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
 
             if (cellValue == null || string.IsNullOrWhiteSpace(cellValue.ToString()))
+                return;
+
+            // Check if cell value is zero (assuming numeric value)
+            if (decimal.TryParse(cellValue.ToString(), out decimal numericValue) && numericValue == 0)
                 return;
 
             if (_cellMetaData.TryGetValue((e.RowIndex, columnName), out var metaList))
@@ -489,44 +414,34 @@ namespace smpc_inventory_app.Pages.Inventory
 
         private void FilterByYearAndMonth()
         {
-            if (_rawData == null || !_rawData.Columns.Contains("date"))
-                return;
+            if (_rawData.Rows.Count == 0) return;
 
-            if (cmb_year.SelectedItem == null || cmb_month.SelectedItem == null)
-                return;
+            string selectedYear = cmb_year.SelectedItem?.ToString();
+            string selectedMonth = cmb_month.SelectedItem?.ToString();
 
-            int selectedYear = int.Parse(cmb_year.SelectedItem.ToString());
-            int selectedMonth = DateTime.ParseExact(cmb_month.SelectedItem.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
+            DataTable filteredTable = _rawData.Clone();
 
-            // Filter rows that match the selected year and month
-            var filteredRows = _rawData.AsEnumerable().Where(row =>
+            foreach (DataRow row in _rawData.Rows)
             {
-                string dateStr = row["date"]?.ToString();
-                if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture,
-                                           DateTimeStyles.None, out DateTime parsedDate))
+                DateTime transDate = DateTime.Parse(row["date"].ToString());
+                if (transDate.Year.ToString() == selectedYear &&
+                    transDate.ToString("MMMM") == selectedMonth)
                 {
-                    return parsedDate.Year == selectedYear && parsedDate.Month == selectedMonth;
+                    filteredTable.Rows.Add(row.ItemArray);
                 }
-                return false;
-            });
-
-            if (!filteredRows.Any())
-            {
-                dgv_inventory_item.DataSource = null;
-                return;
             }
 
-            DataTable filteredTable = filteredRows.CopyToDataTable();
+            DataTable grouped = GroupByItemId(filteredTable);
 
-            // Group and bind the filtered data
-            DataTable grouped = GroupByPodId(filteredTable);
-            dgv_inventory_item.DataSource = grouped;
-
-            //Remove existing IN/OUT columns first
             RemoveInOutColumns();
 
-            // Re-add dynamic IN/OUT columns (if needed)
-            AddInOutColumnsWithGroupHeaders();
+            AddDynamicColumns(grouped);
+
+            FixInOutHeaders();
+
+            StyleInOutColumns();
+
+            dgv_inventory_item.DataSource = grouped;
         }
 
         private void cmb_month_SelectedIndexChanged(object sender, EventArgs e)

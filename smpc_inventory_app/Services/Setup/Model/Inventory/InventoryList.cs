@@ -96,6 +96,12 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         [Column("qty_out")]
         public int qty_out { get; set; }
 
+        [Column("in_total")]
+        public int in_total { get; set; }
+
+        [Column("out_total")]
+        public int out_total { get; set; }
+
         [Column("date")]
         public string date { get; set; }
 

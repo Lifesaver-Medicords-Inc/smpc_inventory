@@ -29,7 +29,7 @@ namespace smpc_inventory_app.Pages.Inventory
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_title = new System.Windows.Forms.Panel();
             this.cmb_month = new System.Windows.Forms.ComboBox();
             this.cmb_year = new System.Windows.Forms.ComboBox();
@@ -43,16 +43,16 @@ namespace smpc_inventory_app.Pages.Inventory
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnl_fill = new System.Windows.Forms.Panel();
             this.dgv_inventory_item = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pod_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.general_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.brand = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.beg = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.end = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.in_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.out_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.location = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.out_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.in_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.end = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.beg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.brand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.general_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_title.SuspendLayout();
             this.pnl_fill.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_inventory_item)).BeginInit();
@@ -186,18 +186,18 @@ namespace smpc_inventory_app.Pages.Inventory
             this.dgv_inventory_item.AllowUserToAddRows = false;
             this.dgv_inventory_item.AllowUserToDeleteRows = false;
             this.dgv_inventory_item.AllowUserToResizeColumns = false;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv_inventory_item.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_inventory_item.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv_inventory_item.ColumnHeadersHeight = 50;
             this.dgv_inventory_item.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
-            this.pod_id,
+            this.item_id,
             this.general_name,
             this.brand,
             this.item_description,
@@ -210,44 +210,54 @@ namespace smpc_inventory_app.Pages.Inventory
             this.dgv_inventory_item.EnableHeadersVisualStyles = false;
             this.dgv_inventory_item.Location = new System.Drawing.Point(0, 0);
             this.dgv_inventory_item.Name = "dgv_inventory_item";
+            this.dgv_inventory_item.ReadOnly = true;
             this.dgv_inventory_item.Size = new System.Drawing.Size(1285, 484);
             this.dgv_inventory_item.TabIndex = 5;
             this.dgv_inventory_item.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_inventory_item_CellClick);
             // 
-            // id
+            // location
             // 
-            this.id.DataPropertyName = "id";
-            this.id.HeaderText = "ID";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            this.id.Visible = false;
+            this.location.DataPropertyName = "location";
+            this.location.HeaderText = "LOCATION";
+            this.location.Name = "location";
+            this.location.ReadOnly = true;
+            this.location.Visible = false;
             // 
-            // pod_id
+            // out_total
             // 
-            this.pod_id.DataPropertyName = "pod_id";
-            this.pod_id.HeaderText = "POD ID";
-            this.pod_id.Name = "pod_id";
-            this.pod_id.ReadOnly = true;
-            this.pod_id.Visible = false;
+            this.out_total.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.out_total.DataPropertyName = "out_total";
+            this.out_total.HeaderText = "OUT";
+            this.out_total.Name = "out_total";
+            this.out_total.ReadOnly = true;
+            this.out_total.Width = 80;
             // 
-            // general_name
+            // in_total
             // 
-            this.general_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.general_name.DataPropertyName = "general_name";
-            this.general_name.HeaderText = "GENERAL NAME";
-            this.general_name.Name = "general_name";
-            this.general_name.ReadOnly = true;
-            this.general_name.Width = 200;
+            this.in_total.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.in_total.DataPropertyName = "in_total";
+            this.in_total.HeaderText = "IN";
+            this.in_total.Name = "in_total";
+            this.in_total.ReadOnly = true;
+            this.in_total.Width = 80;
             // 
-            // brand
+            // end
             // 
-            this.brand.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.brand.DataPropertyName = "brand";
-            this.brand.HeaderText = "BRAND";
-            this.brand.MinimumWidth = 150;
-            this.brand.Name = "brand";
-            this.brand.ReadOnly = true;
-            this.brand.Width = 150;
+            this.end.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.end.DataPropertyName = "end";
+            this.end.HeaderText = "END";
+            this.end.Name = "end";
+            this.end.ReadOnly = true;
+            this.end.Width = 80;
+            // 
+            // beg
+            // 
+            this.beg.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.beg.DataPropertyName = "beg";
+            this.beg.HeaderText = "BEG";
+            this.beg.Name = "beg";
+            this.beg.ReadOnly = true;
+            this.beg.Width = 80;
             // 
             // item_description
             // 
@@ -259,49 +269,40 @@ namespace smpc_inventory_app.Pages.Inventory
             this.item_description.ReadOnly = true;
             this.item_description.Width = 200;
             // 
-            // beg
+            // brand
             // 
-            this.beg.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.beg.DataPropertyName = "beg";
-            this.beg.HeaderText = "BEG";
-            this.beg.Name = "beg";
-            this.beg.ReadOnly = true;
-            this.beg.Width = 80;
+            this.brand.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.brand.DataPropertyName = "brand";
+            this.brand.HeaderText = "BRAND";
+            this.brand.MinimumWidth = 150;
+            this.brand.Name = "brand";
+            this.brand.ReadOnly = true;
+            this.brand.Width = 150;
             // 
-            // end
+            // general_name
             // 
-            this.end.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.end.DataPropertyName = "end";
-            this.end.HeaderText = "END";
-            this.end.Name = "end";
-            this.end.ReadOnly = true;
-            this.end.Width = 80;
+            this.general_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.general_name.DataPropertyName = "general_name";
+            this.general_name.HeaderText = "GENERAL NAME";
+            this.general_name.Name = "general_name";
+            this.general_name.ReadOnly = true;
+            this.general_name.Width = 200;
             // 
-            // in_total
+            // item_id
             // 
-            this.in_total.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.in_total.DataPropertyName = "in_total";
-            this.in_total.HeaderText = "IN";
-            this.in_total.Name = "in_total";
-            this.in_total.ReadOnly = true;
-            this.in_total.Width = 80;
+            this.item_id.DataPropertyName = "item_id";
+            this.item_id.HeaderText = "ITEM ID";
+            this.item_id.Name = "item_id";
+            this.item_id.ReadOnly = true;
+            this.item_id.Visible = false;
             // 
-            // out_total
+            // id
             // 
-            this.out_total.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.out_total.DataPropertyName = "out_total";
-            this.out_total.HeaderText = "OUT";
-            this.out_total.Name = "out_total";
-            this.out_total.ReadOnly = true;
-            this.out_total.Width = 80;
-            // 
-            // location
-            // 
-            this.location.DataPropertyName = "location";
-            this.location.HeaderText = "LOCATION";
-            this.location.Name = "location";
-            this.location.ReadOnly = true;
-            this.location.Visible = false;
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "ID";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            this.id.Visible = false;
             // 
             // InventoryLogbook
             // 
@@ -337,7 +338,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private System.Windows.Forms.ComboBox cmb_month;
         private System.Windows.Forms.ComboBox cmb_year;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn pod_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn item_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn general_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn brand;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_description;
