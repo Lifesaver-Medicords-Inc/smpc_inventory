@@ -27,23 +27,25 @@ namespace smpc_inventory_app.Pages.Inventory
         private int _currentRRIndex = -1;
         private bool _suppressRefDocBinding = false;
         private bool _suppressWarehouseBinding = false;
+        private bool _isEditing = false;
         private List<PurchaseOrderViewModel> _poData;
         private List<PurchaseOrderDetailsViewModel> _poDetailsView;
         private bool _isNewMode = false;
-        private bool _isNotClickable = true;
         private List<WarehouseAreaModel> _warehouseAreas = new List<WarehouseAreaModel>();
-        private ComboBox _binComboBox;
-        private string _currentZone = "";
-        private string _currentArea = "";
-        private string _currentRack = "";
-        private string _currentLevel = "";
+        private List<string> _zone;
+        private List<string> _area;
+        private List<string> _rack;
+        private List<string> _level;
+        private List<string> _bins;
+        private List<string> _location_code;
         private readonly string receivingReportPath = Settings.Default.RECEIVINGREPORTPATH;
         private TreeNode selectedNode;
+        private Dictionary<int, ComboBox> rowComboBoxes = new Dictionary<int, ComboBox>();
 
         private readonly string[] systemFolders =
         {
-        "DELIVERY RECEIPT",
-        "ITEM PICTURES"
+            "DELIVERY RECEIPT",
+            "ITEM PICTURES"
         };
 
         //Dictionaries for the column grouping of datagridviews
@@ -53,6 +55,15 @@ namespace smpc_inventory_app.Pages.Inventory
             { "RECEIVED", new string[] { "received_qty", "received_uom" } },
             { "REJECTED", new string[] { "rejected_qty", "rejected_uom" } },
         };
+
+        private class CascadingTag
+        {
+            public string Zone { get; set; }
+            public string Area { get; set; }
+            public string Rack { get; set; }
+            public string Level { get; set; }
+            public string Bin { get; set; }
+        }
 
         public ReceivingReport()
         {
@@ -103,26 +114,6 @@ namespace smpc_inventory_app.Pages.Inventory
             cmb_warehouse_name.Enabled = true;
         }
 
-        private void ToggleColumn(bool isEdit)
-        {
-            try
-            {
-                if (dgv_main.Columns.Contains("bin_location"))
-                    dgv_main.Columns["bin_location"].Visible = !isEdit;
-
-                if (dgv_main.Columns.Contains("cmb_bin_location"))
-                    dgv_main.Columns["cmb_bin_location"].Visible = isEdit;
-
-                if (dgv_main.Columns.Contains("cmb_bin_location"))
-                    dgv_main.Columns["cmb_bin_location"].ReadOnly = !isEdit;
-            }
-            catch (InvalidOperationException)
-            {
-                if (dgv_main.Columns.Contains("cmb_bin_location"))
-                    dgv_main.Columns["cmb_bin_location"].Visible = !isEdit;
-            }
-        }
-
         private void ClearDGVs()
         {
             //Clear only the rows, keep columns
@@ -147,28 +138,20 @@ namespace smpc_inventory_app.Pages.Inventory
 
         private void btn_edit_Click(object sender, EventArgs e)
         {
-            _isNotClickable = false;
             _isNewMode = false;
             _suppressWarehouseBinding = false;
+            _isEditing = true;
             ToggleButtons(true);
             SetEditableColumns(true);
-            ToggleColumn(false);
-
-            //Force repopulation of bin location if warehouse is already selected
-            if (cmb_warehouse_name.SelectedItem is WarehouseNameModel selectedWarehouse)
-            {
-                _ = ForcePopulateBinLocation(selectedWarehouse);
-            }
-
         }
 
         private void btn_new_Click(object sender, EventArgs e)
         {
+            _isEditing = true;
             cmb_ref_doc.SelectedIndex = -1;
             cmb_ref_doc.Text = string.Empty;
             cmb_ref_doc.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            _isNotClickable = false;
             _suppressRefDocBinding = false;
             _suppressWarehouseBinding = false;
             _isNewMode = true;
@@ -176,7 +159,6 @@ namespace smpc_inventory_app.Pages.Inventory
             ToggleButtons(true);
             ClearDGVs();
             SetEditableColumns(true);
-            ToggleColumn(true);
 
             cmb_ref_doc.Enabled = true;
             Helpers.ResetControls(pnl_main);
@@ -186,10 +168,9 @@ namespace smpc_inventory_app.Pages.Inventory
 
         private async void btn_close_Click(object sender, EventArgs e)
         {
-            _isNotClickable = true;
+            _isEditing = false;
             await DisableEditMode();
             SetEditableColumns(false);
-            ToggleColumn(false);
             cmb_ref_doc.DropDownStyle = ComboBoxStyle.DropDown;
             await LoadReceivingReports();
         }
@@ -380,7 +361,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 int detailId = row.Cells["id"]?.Value == null ? 0 : Convert.ToInt32(row.Cells["id"].Value);
                 int podId = row.Cells["pod_id"]?.Value == null ? 0 : Convert.ToInt32(row.Cells["pod_id"].Value);
                 int itemId = row.Cells["item_id"]?.Value == null ? 0 : Convert.ToInt32(row.Cells["item_id"].Value);
-                string binLocation = row.Cells["cmb_bin_location"]?.Value?.ToString();
+                string binLocation = row.Cells["bin_location"]?.Value?.ToString();
 
                 // Validate and transform bin_location
                 if (!string.IsNullOrWhiteSpace(binLocation))
@@ -442,6 +423,7 @@ namespace smpc_inventory_app.Pages.Inventory
             }
             finally
             {
+                _isEditing = false;
                 int savedRecordId = 0;
                 int.TryParse(txt_id.Text, out savedRecordId);
 
@@ -466,8 +448,6 @@ namespace smpc_inventory_app.Pages.Inventory
                 }
 
                 SetEditableColumns(false);
-                ToggleColumn(false);
-                _isNotClickable = true;
                 cmb_ref_doc.DropDownStyle = ComboBoxStyle.DropDown;
                 Helpers.Loading.HideLoading(dgv_main);
             }
@@ -524,6 +504,7 @@ namespace smpc_inventory_app.Pages.Inventory
             }
             finally
             {
+                _isEditing = false;
                 // Reload list (LoadReceivingReports will re-populate _receivingReports and call ShowCurrentRecord)
                 await DisableEditMode();
                 await LoadPODoc();
@@ -659,59 +640,15 @@ namespace smpc_inventory_app.Pages.Inventory
             _suppressWarehouseBinding = false;
         }
 
-        private void PopulateBinLocationColumn(List<WarehouseAreaModel> warehouseAreas)
-        {
-            if (dgv_main.Columns.Contains("cmb_bin_location") &&
-                dgv_main.Columns["cmb_bin_location"] is DataGridViewComboBoxColumn cmbCol)
-            {
-                // Clear old items
-                cmbCol.Items.Clear();
-
-                // Build cascade list
-                var binLocations = BuildBinLocationList(warehouseAreas);
-
-                foreach (var loc in binLocations)
-                {
-                    cmbCol.Items.Add(loc);
-                }
-
-                // Clear existing selections in the grid to avoid mismatches
-                foreach (DataGridViewRow row in dgv_main.Rows)
-                {
-                    if (row.Cells["cmb_bin_location"] is DataGridViewComboBoxCell cell)
-                    {
-                        cell.Value = null; // reset the cell value
-                    }
-                }
-            }
-        }
-
-        private async Task ForcePopulateBinLocation(WarehouseNameModel selectedWarehouse)
-        {
-            var warehouseAreas = await ReceivingReportService.GetWarehouseArea(selectedWarehouse.id);
-            _warehouseAreas = warehouseAreas ?? new List<WarehouseAreaModel>();
-            PopulateBinLocationColumn(_warehouseAreas);
-        }
-
         private async void cmb_warehouse_name_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_suppressWarehouseBinding) return;
 
             bool enabled = cmb_warehouse_name.SelectedItem != null;
 
-            var col = dgv_main.Columns["cmb_bin_location"];
-            col.ReadOnly = !enabled;
-
-            col.DefaultCellStyle.BackColor = enabled ? Color.White : Color.LightGray;
-
             if (cmb_warehouse_name.SelectedIndex >= 0 && cmb_warehouse_name.SelectedItem is WarehouseNameModel selectedWarehouse)
             {
-                // Get filtered warehouse areas
-                var warehouseAreas = await ReceivingReportService.GetWarehouseArea(selectedWarehouse.id);
-
-                _warehouseAreas = warehouseAreas ?? new List<WarehouseAreaModel>();
-
-                PopulateBinLocationColumn(_warehouseAreas);
+                await LoadWarehouseAreasAsync(selectedWarehouse.id);
 
                 // Find matching address
                 var address = _warehouseData?.warehouse_address?.FirstOrDefault(a => a.warehouse_name_id == selectedWarehouse.id);
@@ -738,6 +675,51 @@ namespace smpc_inventory_app.Pages.Inventory
             {
                 txt_address.Text = string.Empty;
             }
+        }
+
+        private async Task LoadWarehouseAreasAsync(int warehouseId)
+        {
+            var warehouseAreas = await ReceivingReportService.GetWarehouseArea(warehouseId);
+
+            _warehouseAreas = warehouseAreas ?? new List<WarehouseAreaModel>();
+
+            _zone = _warehouseAreas
+                .Select(x => x.zone)
+                .Where(z => !string.IsNullOrWhiteSpace(z))
+                .Distinct()
+                .ToList();
+
+            _area = _warehouseAreas
+                .Select(x => x.area)
+                .Where(a => !string.IsNullOrWhiteSpace(a))
+                .Distinct()
+                .ToList();
+
+            _rack = _warehouseAreas
+                .Select(x => x.rack)
+                .Where(r => !string.IsNullOrWhiteSpace(r))
+                .Distinct()
+                .ToList();
+
+            _level = _warehouseAreas
+                .Select(x => x.level)
+                .Where(l => !string.IsNullOrWhiteSpace(l))
+                .Distinct()
+                .ToList();
+
+            _bins = _warehouseAreas
+                .Select(x => x.bins)
+                .Where(b => !string.IsNullOrWhiteSpace(b))
+                .Distinct()
+                .ToList();
+
+            _location_code = _warehouseAreas
+                .Select(x => x.location_code)
+                .Where(b => !string.IsNullOrWhiteSpace(b))
+                .Distinct()
+                .ToList();
+
+            RefreshAllRowCombos();
         }
 
         private async Task LoadReceivingReports()
@@ -774,7 +756,7 @@ namespace smpc_inventory_app.Pages.Inventory
             }
         }
 
-        private void ShowCurrentRecord()
+        private async void ShowCurrentRecord()
         {
             _suppressRefDocBinding = true;
             _suppressWarehouseBinding = true;
@@ -819,6 +801,17 @@ namespace smpc_inventory_app.Pages.Inventory
             else
             {
                 cmb_ref_doc.Text = current.ref_doc;
+            }
+
+            if (!string.IsNullOrWhiteSpace(cmb_warehouse_name.Text))
+            {
+                var selected = _warehouseData.warehouse_name
+                    .FirstOrDefault(w => w.name == cmb_warehouse_name.Text);
+
+                if (selected != null)
+                {
+                    await LoadWarehouseAreasAsync(selected.id);
+                }
             }
 
             //Bind child details (grids)
@@ -929,224 +922,6 @@ namespace smpc_inventory_app.Pages.Inventory
             {
                 dgv_main.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
-        }
-
-        private List<string> BuildBinLocationList(List<WarehouseAreaModel> warehouseAreas)
-        {
-            var list = new List<string>();
-
-            foreach (var a in warehouseAreas)
-            {
-                // Build cascade string, skipping null/empty levels
-                var parts = new List<string> { a.zone, a.area, a.rack, a.level, a.bins };
-                string cascade = string.Join(" - ", parts.Where(p => !string.IsNullOrWhiteSpace(p)));
-
-                // Use location_code if you want unique value mapping
-                list.Add(cascade);
-            }
-
-            return list.Distinct().OrderBy(x => x).ToList();
-        }
-
-        private void dgv_main_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            // Assign combo box control properties to the combo box column in the datagridview
-            if (dgv_main.CurrentCell.ColumnIndex == dgv_main.Columns["cmb_bin_location"].Index && e.Control is ComboBox combo)
-            {
-                //Remove old event handler and replace with our new one
-                _binComboBox = combo;
-                _binComboBox.SelectedIndexChanged -= BinComboBox_SelectedIndexChanged;
-                _binComboBox.SelectedIndexChanged += BinComboBox_SelectedIndexChanged;
-
-                _binComboBox.DropDown -= BinComboBox_DropDown;
-                _binComboBox.DropDown += BinComboBox_DropDown;
-
-                _binComboBox.Leave -= BinComboBox_Leave;
-                _binComboBox.Leave += BinComboBox_Leave;
-
-                // Start fresh with zones
-                LoadZones(_binComboBox);
-            }
-        }
-
-        //Load the zones
-        private void LoadZones(ComboBox combo)
-        {
-            combo.Items.Clear();
-            var zones = _warehouseAreas.Select(x => x.zone).Distinct().OrderBy(x => x);
-            foreach (var z in zones) combo.Items.Add(z);
-            _currentZone = "";
-            _currentArea = "";
-            _currentRack = "";
-            _currentLevel = "";
-        }
-
-        // Load Areas
-        private void LoadAreas(ComboBox combo, string zone)
-        {
-            combo.Items.Clear();
-            var areas = _warehouseAreas
-                .Where(x => x.zone == zone)
-                .Select(x => x.area)
-                .Distinct()
-                .OrderBy(x => x);
-
-            if (!areas.Any())
-            {
-                string finalValue = zone;
-                dgv_main.CurrentCell.Value = finalValue;
-                dgv_main.CurrentRow.Cells["bin_location"].Value = finalValue;
-
-                dgv_main.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                dgv_main.EndEdit();
-
-                combo.DroppedDown = false; // auto-close
-                return;
-            }
-
-            foreach (var a in areas)
-                combo.Items.Add($"{zone}-{a}");
-        }
-
-        // Load Racks
-        private void LoadRacks(ComboBox combo, string zone, string area)
-        {
-            combo.Items.Clear();
-            var racks = _warehouseAreas
-                .Where(x => x.zone == zone && x.area == area)
-                .Select(x => x.rack)
-                .Distinct()
-                .OrderBy(x => x);
-
-            if (!racks.Any())
-            {
-                string finalValue = $"{zone}-{area}";
-                dgv_main.CurrentCell.Value = finalValue;
-                dgv_main.CurrentRow.Cells["bin_location"].Value = finalValue;
-
-                dgv_main.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                dgv_main.EndEdit();
-
-                combo.DroppedDown = false;
-                return;
-            }
-
-            foreach (var r in racks)
-                combo.Items.Add($"{zone}-{area}-{r}");
-        }
-
-        // Load Levels
-        private void LoadLevels(ComboBox combo, string zone, string area, string rack)
-        {
-            combo.Items.Clear();
-            var levels = _warehouseAreas
-                .Where(x => x.zone == zone && x.area == area && x.rack == rack)
-                .Select(x => x.level)
-                .Distinct()
-                .OrderBy(x => x);
-
-            if (!levels.Any())
-            {
-                string finalValue = $"{zone}-{area}-{rack}";
-                dgv_main.CurrentCell.Value = finalValue;
-                dgv_main.CurrentRow.Cells["bin_location"].Value = finalValue;
-
-                dgv_main.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                dgv_main.EndEdit();
-
-                combo.DroppedDown = false;
-                return;
-            }
-
-            foreach (var l in levels)
-                combo.Items.Add($"{zone}-{area}-{rack}-{l}");
-        }
-
-        // Load Bins (with numeric expansion)
-        private void LoadBins(ComboBox combo, string zone, string area, string rack, string level)
-        {
-            combo.Items.Clear();
-
-            var binValues = _warehouseAreas
-                .Where(x => x.zone == zone && x.area == area && x.rack == rack && x.level == level)
-                .Select(x => x.bins)
-                .Distinct()
-                .OrderBy(x => x);
-
-            if (!binValues.Any())
-            {
-                dgv_main.CurrentCell.Value = $"{zone}-{area}-{rack}-{level}";
-                combo.DroppedDown = false; // auto-close
-                return;
-            }
-
-            foreach (var b in binValues)
-            {
-                if (int.TryParse(b, out int maxBin))
-                {
-                    for (int i = 1; i <= maxBin; i++)
-                        combo.Items.Add($"{zone}-{area}-{rack}-{level}-{i}");
-                }
-                else
-                {
-                    combo.Items.Add($"{zone}-{area}-{rack}-{level}-{b}");
-                }
-            }
-        }
-
-        private void BinComboBox_Leave(object sender, EventArgs e)
-        {
-            ToggleColumn(false);
-        }
-
-        private void dgv_main_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (_isNotClickable) return;
-
-            // Make sure it's not the header row
-            if (e.RowIndex >= 0 && e.ColumnIndex == dgv_main.Columns["bin_location"].Index)
-            {
-                ToggleColumn(true);
-                var cmbCol = (DataGridViewComboBoxColumn)dgv_main.Columns["cmb_bin_location"];
-                cmbCol.Items.Clear();
-            }
-        }
-
-        private void BinComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_binComboBox?.SelectedItem == null) return;
-
-            string value = _binComboBox.SelectedItem.ToString();
-            dgv_main.CurrentCell.Value = value; // keep selection
-
-            // Also set the value in the bin_location column (text column)
-            if (dgv_main.CurrentRow != null && dgv_main.CurrentRow.Cells["bin_location"] != null)
-            {
-                dgv_main.CurrentRow.Cells["bin_location"].Value = value;
-            }
-
-            var parts = value.Split('-');
-            if (parts.Length >= 1) _currentZone = parts[0];
-            if (parts.Length >= 2) _currentArea = parts[1];
-            if (parts.Length >= 3) _currentRack = parts[2];
-            if (parts.Length >= 4) _currentLevel = parts[3];
-        }
-
-        private void BinComboBox_DropDown(object sender, EventArgs e)
-        {
-            if (_binComboBox == null) return;
-
-            // Load appropriate items depending on current value
-            if (string.IsNullOrEmpty(_currentZone))
-                LoadZones(_binComboBox);
-            else if (string.IsNullOrEmpty(_currentArea))
-                LoadAreas(_binComboBox, _currentZone);
-            else if (string.IsNullOrEmpty(_currentRack))
-                LoadRacks(_binComboBox, _currentZone, _currentArea);
-            else if (string.IsNullOrEmpty(_currentLevel))
-                LoadLevels(_binComboBox, _currentZone, _currentArea, _currentRack);
-            else
-                LoadBins(_binComboBox, _currentZone, _currentArea, _currentRack, _currentLevel);
         }
 
         private void dgv_main_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -1964,6 +1739,251 @@ namespace smpc_inventory_app.Pages.Inventory
                     }
                 }
             }
+        }
+
+        private void RefreshAllRowCombos()
+        {
+            // Remove all dynamically created ComboBoxes
+            foreach (var cb in rowComboBoxes.Values)
+            {
+                if (dgv_main.Controls.Contains(cb))
+                    dgv_main.Controls.Remove(cb);
+            }
+
+            rowComboBoxes.Clear();
+
+            // Clear bin_location column because warehouse changed
+            foreach (DataGridViewRow row in dgv_main.Rows)
+            {
+                row.Cells["bin_location"].Value = "";
+            }
+        }
+
+        private void dgv_main_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Ignore header and invalid clicks
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            if (!_isEditing)
+                return;
+
+            if (cmb_warehouse_name.Text == null || cmb_warehouse_name.Text == "")
+            {
+                HideAllRowCombos();
+                return;
+            }
+
+            string columnName = dgv_main.Columns[e.ColumnIndex].Name;
+
+            if (columnName == "bin_location")
+            {
+                ShowRowSpecificCombo(e.RowIndex, e.ColumnIndex);
+            }
+            else
+            {
+                HideAllRowCombos();
+            }
+        }
+
+        private void ShowRowSpecificCombo(int rowIndex, int colIndex)
+        {
+            if (!rowComboBoxes.ContainsKey(rowIndex))
+            {
+                ComboBox cb = new ComboBox();
+                cb.Visible = false;
+                cb.DropDownStyle = ComboBoxStyle.DropDown;
+                cb.AutoCompleteMode = AutoCompleteMode.None;
+                cb.AutoCompleteSource = AutoCompleteSource.None;
+
+                // Initially fill ComboBox with zones
+                if (_zone != null && _zone.Count > 0)
+                    cb.Items.AddRange(_zone.ToArray());
+
+                // Event handler for selection
+                cb.SelectedIndexChanged += (s, e) => OnRowComboSelected(rowIndex, cb, e);
+                cb.KeyDown += (s, e) => OnRowComboKeyDown(rowIndex, cb, e);
+
+                rowComboBoxes[rowIndex] = cb;
+                dgv_main.Controls.Add(cb);
+            }
+
+            ComboBox combo = rowComboBoxes[rowIndex];
+
+            // Position it
+            Rectangle rect = dgv_main.GetCellDisplayRectangle(colIndex, rowIndex, true);
+            combo.SetBounds(rect.X, rect.Y, rect.Width, rect.Height);
+
+            // Preload existing value
+            var cell = dgv_main.Rows[rowIndex].Cells[colIndex];
+            combo.Text = cell.Value?.ToString() ?? "";
+
+            HideAllRowCombos();
+            combo.Visible = true;
+            combo.BringToFront();
+            combo.Focus();
+            combo.DroppedDown = true;
+        }
+
+        private void OnRowComboKeyDown(int rowIndex, ComboBox combo, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Back)
+            {
+                //CLEAR displayed text
+                combo.Text = "";
+
+                //Reset cascading level
+                combo.Items.Clear();
+                combo.Items.AddRange(_zone.ToArray()); // start again from zone
+
+                //Reset the tag
+                combo.Tag = new CascadingTag();
+
+                //Clear bin_location cell
+                dgv_main.Rows[rowIndex].Cells["bin_location"].Value = "";
+
+                e.SuppressKeyPress = true; // prevent default deletion sound
+            }
+        }
+
+        private void OnRowComboSelected(int rowIndex, ComboBox combo, EventArgs e)
+        {
+            var cell = dgv_main.Rows[rowIndex].Cells["bin_location"];
+
+            // Load tag state
+            CascadingTag tag = combo.Tag as CascadingTag ?? new CascadingTag();
+
+            string selected = combo.Text;
+
+            // Zone → Area
+            if (_zone.Contains(selected))
+            {
+                combo.Items.Clear();
+                var areas = _warehouseAreas
+                    .Where(w => w.zone == selected)
+                    .Select(w => w.area)
+                    .Distinct()
+                    .ToList();
+
+                var cleaned = areas
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct()
+                    .ToArray();
+
+                combo.Items.AddRange(cleaned);
+                if (areas.Any(a => !string.IsNullOrWhiteSpace(a)))
+                    combo.DroppedDown = true;
+
+                tag.Zone = selected;
+                tag.Area = tag.Rack = tag.Level = tag.Bin = "";
+            }
+            // Area → Rack
+            else if (_area.Contains(selected))
+            {
+                combo.Items.Clear();
+                var racks = _warehouseAreas
+                    .Where(w => w.zone == tag.Zone && w.area == selected)
+                    .Select(w => w.rack)
+                    .Distinct()
+                    .ToList();
+
+                var cleaned = racks
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct()
+                    .ToArray();
+
+                combo.Items.AddRange(cleaned);
+                if (racks.Any(r => !string.IsNullOrWhiteSpace(r)))
+                    combo.DroppedDown = true;
+
+                tag.Area = selected;
+                tag.Rack = tag.Level = tag.Bin = "";
+            }
+            // Rack → Level
+            else if (_rack.Contains(selected))
+            {
+                combo.Items.Clear();
+                var levels = _warehouseAreas
+                    .Where(w => w.zone == tag.Zone && w.area == tag.Area && w.rack == selected)
+                    .Select(w => w.level)
+                    .Distinct()
+                    .ToList();
+
+                var cleaned = levels
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct()
+                    .ToArray();
+
+                combo.Items.AddRange(cleaned);
+                if (levels.Any(l => !string.IsNullOrWhiteSpace(l)))
+                    combo.DroppedDown = true;
+
+                tag.Rack = selected;
+                tag.Level = tag.Bin = "";
+            }
+            // Level → Bin (generate numbers 1..max IF bins exist)
+            else if (_level.Contains(selected))
+            {
+                combo.Items.Clear();
+
+                // Get bin values for this zone/area/rack/level
+                var binStrings = _warehouseAreas
+                    .Where(w => w.zone == tag.Zone &&
+                                w.area == tag.Area &&
+                                w.rack == tag.Rack &&
+                                w.level == selected)
+                    .Select(w => w.bins)
+                    .Where(b => !string.IsNullOrWhiteSpace(b))
+                    .Distinct()
+                    .ToList();
+
+                // Parse valid numbers
+                var binNumbers = new List<int>();
+                foreach (var b in binStrings)
+                {
+                    if (int.TryParse(b, out int binNum))
+                        binNumbers.Add(binNum);
+                }
+
+                //Nothing found? -> leave combo completely empty
+                if (binNumbers.Count == 0)
+                {
+                    tag.Level = selected;
+                    tag.Bin = "";
+                    return;   // do not open dropdown
+                }
+
+                //Found bins -> generate 1..max
+                int maxBin = binNumbers.Max();
+
+                var binList = Enumerable.Range(1, maxBin)
+                                        .Select(n => n.ToString())
+                                        .ToArray();
+
+                combo.Items.AddRange(binList);
+                combo.DroppedDown = true;
+
+                tag.Level = selected;
+                tag.Bin = "";
+            }
+            // Bin selected → final path
+            else if (_bins.Contains(selected))
+            {
+                tag.Bin = selected;
+            }
+
+            // Update tag
+            combo.Tag = tag;
+
+            // Write current partial/full path to bin_location
+            string path = $"{tag.Zone}-{tag.Area}-{tag.Rack}-{tag.Level}-{tag.Bin}".Trim('-').Replace("--", "-");
+            cell.Value = path;
+        }
+
+        private void HideAllRowCombos()
+        {
+            foreach (var kvp in rowComboBoxes)
+                kvp.Value.Visible = false;
         }
     }
 }
