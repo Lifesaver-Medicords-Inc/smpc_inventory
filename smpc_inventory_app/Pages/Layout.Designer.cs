@@ -31,38 +31,38 @@ namespace Inventory_SMPC.Pages
         {
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Dashboard");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Item Entry");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Canvass Sheet");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Business Partner Info");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Purchasing List");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Purchase Order");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Purchase Reqiusition");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Purchase Return");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Purchasing", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Business Partner Info");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Purchasing List");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Purchase Order");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Purchase Reqiusition");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Purchase Return");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Purchasing", new System.Windows.Forms.TreeNode[] {
+            treeNode4,
             treeNode5,
             treeNode6,
-            treeNode7,
-            treeNode8});
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("BOM");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("BOQ");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Engineering", new System.Windows.Forms.TreeNode[] {
-            treeNode10,
-            treeNode11});
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Item Brand");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Item Class");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Item Material");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Item Name");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Item Pump Count");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Item Pump Type");
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Item Type");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Unit of Measure");
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Payment terms");
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Social Media");
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Entity Type");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Industries");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Position");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Warehouse Use Type");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Warehouse");
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Setup", new System.Windows.Forms.TreeNode[] {
+            treeNode7});
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("BOM");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("BOQ");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Engineering", new System.Windows.Forms.TreeNode[] {
+            treeNode9,
+            treeNode10});
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Item Brand");
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Item Class");
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Item Material");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Item Name");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Item Pump Count");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Item Pump Type");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Item Type");
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Unit of Measure");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Payment terms");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Social Media");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Entity Type");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Industries");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Position");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Warehouse Use Type");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Warehouse");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Setup", new System.Windows.Forms.TreeNode[] {
+            treeNode12,
             treeNode13,
             treeNode14,
             treeNode15,
@@ -76,19 +76,19 @@ namespace Inventory_SMPC.Pages
             treeNode23,
             treeNode24,
             treeNode25,
-            treeNode26,
-            treeNode27});
-            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Receiving Report");
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Receiving Report2");
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Inventory Logbook");
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Inventory Tracker");
-            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
+            treeNode26});
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Receiving Report");
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Receiving Report2");
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Inventory Logbook");
+            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Inventory Tracker");
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
+            treeNode28,
             treeNode29,
             treeNode30,
-            treeNode31,
-            treeNode32});
+            treeNode31});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SMPC));
             this.MainPanel = new System.Windows.Forms.Panel();
+            this.container = new System.Windows.Forms.Panel();
             this.tabContainer = new System.Windows.Forms.TabControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -113,6 +113,7 @@ namespace Inventory_SMPC.Pages
             this.toolStripStatusLabel8 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbl_status = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainPanel.SuspendLayout();
+            this.container.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -122,7 +123,7 @@ namespace Inventory_SMPC.Pages
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.tabContainer);
+            this.MainPanel.Controls.Add(this.container);
             this.MainPanel.Controls.Add(this.panel1);
             this.MainPanel.Controls.Add(this.MainLeft_Panel);
             this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -131,17 +132,28 @@ namespace Inventory_SMPC.Pages
             this.MainPanel.Size = new System.Drawing.Size(1288, 637);
             this.MainPanel.TabIndex = 1;
             // 
+            // container
+            // 
+            this.container.Controls.Add(this.tabContainer);
+            this.container.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.container.Location = new System.Drawing.Point(235, 0);
+            this.container.Name = "container";
+            this.container.Size = new System.Drawing.Size(740, 637);
+            this.container.TabIndex = 5;
+            // 
             // tabContainer
             // 
             this.tabContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabContainer.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.tabContainer.Location = new System.Drawing.Point(235, 0);
+            this.tabContainer.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.tabContainer.Location = new System.Drawing.Point(0, 0);
             this.tabContainer.Name = "tabContainer";
             this.tabContainer.SelectedIndex = 0;
             this.tabContainer.Size = new System.Drawing.Size(740, 637);
             this.tabContainer.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabContainer.TabIndex = 2;
             this.tabContainer.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabContainer_DrawItem);
+            this.tabContainer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabContainer_MouseDown);
             // 
             // panel1
             // 
@@ -168,6 +180,7 @@ namespace Inventory_SMPC.Pages
             this.flowPanelRedBox.AutoScroll = true;
             this.flowPanelRedBox.BackColor = System.Drawing.Color.LightCoral;
             this.flowPanelRedBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowPanelRedBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.flowPanelRedBox.Location = new System.Drawing.Point(0, 0);
             this.flowPanelRedBox.Name = "flowPanelRedBox";
             this.flowPanelRedBox.Size = new System.Drawing.Size(313, 579);
@@ -215,86 +228,82 @@ namespace Inventory_SMPC.Pages
             // Sidebar
             // 
             this.Sidebar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Sidebar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Sidebar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
             this.Sidebar.Location = new System.Drawing.Point(0, 0);
             this.Sidebar.Name = "Sidebar";
             treeNode1.Name = "DASHBOARD";
             treeNode1.Text = "Dashboard";
             treeNode2.Name = "ITEM ENTRY";
             treeNode2.Text = "Item Entry";
-            treeNode3.Name = "CANVASS SHEET";
-            treeNode3.Text = "Canvass Sheet";
-            treeNode4.Name = "BUSINESS PARTNER INFO";
-            treeNode4.Text = "Business Partner Info";
-            treeNode5.Name = "PURCHASING LIST";
-            treeNode5.Text = "Purchasing List";
-            treeNode6.Name = "PURCHASE ORDER";
-            treeNode6.Text = "Purchase Order";
-            treeNode7.Name = "PURCHASE REQUISITION";
-            treeNode7.Text = "Purchase Reqiusition";
-            treeNode8.Name = "PURCHASE RETURN";
-            treeNode8.Text = "Purchase Return";
-            treeNode9.Name = "parent";
-            treeNode9.Text = "Purchasing";
-            treeNode10.Name = "BOM";
-            treeNode10.Text = "BOM";
-            treeNode11.Name = "BOQ";
-            treeNode11.Text = "BOQ";
-            treeNode12.Name = "parent";
-            treeNode12.Text = "Engineering";
-            treeNode13.Name = "ITEM BRAND";
-            treeNode13.Text = "Item Brand";
-            treeNode14.Name = "ITEM CLASS";
-            treeNode14.Text = "Item Class";
-            treeNode15.Name = "ITEM MATERIAL";
-            treeNode15.Text = "Item Material";
-            treeNode16.Name = "ITEM NAME";
-            treeNode16.Text = "Item Name";
-            treeNode17.Name = "ITEM PUMP COUNT";
-            treeNode17.Text = "Item Pump Count";
-            treeNode18.Name = "ITEM PUMP TYPE";
-            treeNode18.Text = "Item Pump Type";
-            treeNode19.Name = "ITEM TYPE";
-            treeNode19.Text = "Item Type";
-            treeNode20.Name = "UNIT OF MEASURE";
-            treeNode20.Text = "Unit of Measure";
-            treeNode21.Name = "PAYMENT TERMS";
-            treeNode21.Text = "Payment terms";
-            treeNode22.Name = "SOCIAL MEDIA";
-            treeNode22.Text = "Social Media";
-            treeNode23.Name = "ENTITY TYPE";
-            treeNode23.Text = "Entity Type";
-            treeNode24.Name = "INDUSTRIES";
-            treeNode24.Text = "Industries";
-            treeNode25.Name = "POSITION";
-            treeNode25.Text = "Position";
-            treeNode26.Name = "WAREHOUSE USETYPE";
-            treeNode26.Text = "Warehouse Use Type";
-            treeNode27.Name = "WAREHOUSE";
-            treeNode27.Text = "Warehouse";
-            treeNode28.Name = "parent";
-            treeNode28.Text = "Setup";
-            treeNode29.Name = "RECEIVING REPORT";
-            treeNode29.Text = "Receiving Report";
-            treeNode30.Name = "RECEIVING REPORT2";
-            treeNode30.Text = "Receiving Report2";
-            treeNode31.Name = "INVENTORY LOGBOOK";
-            treeNode31.Text = "Inventory Logbook";
-            treeNode32.Name = "INVENTORY TRACKER";
-            treeNode32.Text = "Inventory Tracker";
-            treeNode33.Name = "parent";
-            treeNode33.Text = "Inventory";
+            treeNode3.Name = "BUSINESS PARTNER INFO";
+            treeNode3.Text = "Business Partner Info";
+            treeNode4.Name = "PURCHASING LIST";
+            treeNode4.Text = "Purchasing List";
+            treeNode5.Name = "PURCHASE ORDER";
+            treeNode5.Text = "Purchase Order";
+            treeNode6.Name = "PURCHASE REQUISITION";
+            treeNode6.Text = "Purchase Reqiusition";
+            treeNode7.Name = "PURCHASE RETURN";
+            treeNode7.Text = "Purchase Return";
+            treeNode8.Name = "parent";
+            treeNode8.Text = "Purchasing";
+            treeNode9.Name = "BOM";
+            treeNode9.Text = "BOM";
+            treeNode10.Name = "BOQ";
+            treeNode10.Text = "BOQ";
+            treeNode11.Name = "parent";
+            treeNode11.Text = "Engineering";
+            treeNode12.Name = "ITEM BRAND";
+            treeNode12.Text = "Item Brand";
+            treeNode13.Name = "ITEM CLASS";
+            treeNode13.Text = "Item Class";
+            treeNode14.Name = "ITEM MATERIAL";
+            treeNode14.Text = "Item Material";
+            treeNode15.Name = "ITEM NAME";
+            treeNode15.Text = "Item Name";
+            treeNode16.Name = "ITEM PUMP COUNT";
+            treeNode16.Text = "Item Pump Count";
+            treeNode17.Name = "ITEM PUMP TYPE";
+            treeNode17.Text = "Item Pump Type";
+            treeNode18.Name = "ITEM TYPE";
+            treeNode18.Text = "Item Type";
+            treeNode19.Name = "UNIT OF MEASURE";
+            treeNode19.Text = "Unit of Measure";
+            treeNode20.Name = "PAYMENT TERMS";
+            treeNode20.Text = "Payment terms";
+            treeNode21.Name = "SOCIAL MEDIA";
+            treeNode21.Text = "Social Media";
+            treeNode22.Name = "ENTITY TYPE";
+            treeNode22.Text = "Entity Type";
+            treeNode23.Name = "INDUSTRIES";
+            treeNode23.Text = "Industries";
+            treeNode24.Name = "POSITION";
+            treeNode24.Text = "Position";
+            treeNode25.Name = "WAREHOUSE USETYPE";
+            treeNode25.Text = "Warehouse Use Type";
+            treeNode26.Name = "WAREHOUSE";
+            treeNode26.Text = "Warehouse";
+            treeNode27.Name = "parent";
+            treeNode27.Text = "Setup";
+            treeNode28.Name = "RECEIVING REPORT";
+            treeNode28.Text = "Receiving Report";
+            treeNode29.Name = "RECEIVING REPORT2";
+            treeNode29.Text = "Receiving Report2";
+            treeNode30.Name = "INVENTORY LOGBOOK";
+            treeNode30.Text = "Inventory Logbook";
+            treeNode31.Name = "INVENTORY TRACKER";
+            treeNode31.Text = "Inventory Tracker";
+            treeNode32.Name = "parent";
+            treeNode32.Text = "Inventory";
             this.Sidebar.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2,
             treeNode3,
-            treeNode4,
-            treeNode9,
-            treeNode12,
-            treeNode28,
-            treeNode33});
+            treeNode8,
+            treeNode11,
+            treeNode27,
+            treeNode32});
             this.Sidebar.ShowNodeToolTips = true;
-            this.Sidebar.ShowPlusMinus = false;
             this.Sidebar.Size = new System.Drawing.Size(235, 637);
             this.Sidebar.TabIndex = 0;
             this.Sidebar.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.Sidebar_NodeMouseClick);
@@ -416,6 +425,7 @@ namespace Inventory_SMPC.Pages
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SMPC_FormClosing);
             this.Load += new System.EventHandler(this.SMPC_Load);
             this.MainPanel.ResumeLayout(false);
+            this.container.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -453,5 +463,6 @@ namespace Inventory_SMPC.Pages
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel8;
         private System.Windows.Forms.ToolStripStatusLabel lbl_status;
+        private System.Windows.Forms.Panel container;
     }
 }

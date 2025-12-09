@@ -37,7 +37,7 @@ namespace smpc_inventory_app.Services.Helpers
             {
                 try
                 {
-                    LoaderIndicatorOverlay.ShowOverlay();
+                    //LoaderIndicatorOverlay.ShowOverlay();
                     HttpContent content = null;
                     // If no content is provided, create an empty StringContent with Content-Type set to "application/json"
                     if (content == null && method != HttpMethod.Get)
@@ -94,7 +94,7 @@ namespace smpc_inventory_app.Services.Helpers
                 }
                 finally
                 {
-                    LoaderIndicatorOverlay.HideOverlay();
+                    //LoaderIndicatorOverlay.HideOverlay();
                 }
             }
         }

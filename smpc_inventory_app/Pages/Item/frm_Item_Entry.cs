@@ -243,7 +243,7 @@ namespace smpc_inventory_app.Pages.Item
                 }
                 string pumpTypeIds = string.IsNullOrEmpty(records.additionalspecs[this.selectedRecord].pump_type_compatability_id) ? "" : (records.additionalspecs[this.selectedRecord].pump_type_compatability_id);
 
-                //Getting the List of Ids to match in my getmodal
+                //Getting the List of Ids to match in getmodal
                 currentSelectedPumpTypeIds = pumpTypeIds.Split(',')
                                                     .Where(val => int.TryParse(val, out _))
                                                     .Select(int.Parse)
@@ -260,8 +260,6 @@ namespace smpc_inventory_app.Pages.Item
                     cmb_calibration.SelectedIndex = -1;
                     cmb_calibration.Text = "";
                 }
-
-
                 // Bind Images
 
                 flowLayoutPanel1.Controls.Clear();
@@ -338,10 +336,73 @@ namespace smpc_inventory_app.Pages.Item
             string content = Encoding.UTF8.GetString(data).ToLower();
             return content.Contains("file not found") || content.Contains("<html>");
         }
+        public static Boolean ValidateControlsValues(Panel pnl)
+        {
+            Boolean isError = false;
+            foreach (Control control in pnl.Controls)
+            {
+                // Handle TextBox
+                if (control is TextBox textBox)
+                {
+                    string key = textBox.Name.Replace("txt_", "");
+                    if (string.Equals(textBox.Tag as string, "REQUIRED", StringComparison.OrdinalIgnoreCase)
+                        && string.IsNullOrEmpty(textBox.Text))
+                    {
+                        FlashRed(control);
+                        isError = true;
+                    }
+                    else
+                    {
+                        control.BackColor = Color.White;
+                    }
+                }
+
+                else if (control is ComboBox comboBox)
+                {
+                    if ((string.Equals(comboBox.Tag as string, "DYNAMIC", StringComparison.OrdinalIgnoreCase)
+                        && comboBox.SelectedIndex <= 0 && comboBox.Name != "cmb_volume_unit_of_measure" && comboBox.Name != "cmb_weight_unit_of_measure") ||  comboBox.Name == "cmb_item_tangibility_type" )
+                    {
+                        FlashRed(comboBox);
+                        isError = true;
+                    }
+                    else
+                    {
+                        comboBox.BackColor = Color.White;
+                    }
+                }
+            }
+            return isError;
+        }
+
+        private static void FlashRed(Control control)
+        {
+            Color originalColor = control.BackColor;
+            control.BackColor = Color.Red;
+
+            var timer = new System.Windows.Forms.Timer();
+            timer.Interval = 3000; // 3 seconds
+            timer.Tick += (s, e) =>
+            {
+                control.BackColor = originalColor;
+                timer.Stop();
+                timer.Dispose();
+            };
+            timer.Start();
+        }
+
         private async void btn_save_Click(object sender, EventArgs e)
         {
             ApiResponseModel response = new ApiResponseModel();
             btn_save.Enabled = false;
+
+            bool hasError = ValidateControlsValues(pnl_header) | ValidateControlsValues(pnl_additional_specs);
+
+            if (hasError) // if validation failed
+            {
+                Helpers.ShowDialogMessage("error", "Please fill in all required fields.");
+                btn_save.Enabled = true;
+                return;
+            }
 
             isProgrammaticChange = true;
             if (!CheckIfCalpeda())
@@ -378,10 +439,6 @@ namespace smpc_inventory_app.Pages.Item
             }
             data["additionalspecs"] = GetAdditionalSpecs();
             data["itemimages"] = imageData;
-
-
-            var testData = txt_trade_type.Text;
-
 
             // Determine if this is a new record    
             bool isNewRecord = string.IsNullOrWhiteSpace(txt_id.Text);
@@ -570,7 +627,7 @@ namespace smpc_inventory_app.Pages.Item
                 dgv_template.Columns["title"].ReadOnly = true;
             }
         }
-        private async void btn_close_Click(object sender, EventArgs e)
+        private  void btn_close_Click(object sender, EventArgs e)
         {
             BtnToggle(false);
             FetchItemData();
@@ -618,36 +675,57 @@ namespace smpc_inventory_app.Pages.Item
             cmb_weight_unit_of_measure.SelectedValue = records.additionalspecs[this.selectedRecord].weight_unit_of_measure_id;
             cmb_weight_unit_of_measure.SelectedItem = records.additionalspecs[this.selectedRecord].weight_unit_of_measure_id;
         }
+        private static void AddCmbDefaultVal(DataTable dt)
+        {
+            if (dt == null) return;
+
+            DataRow newRow = dt.NewRow();
+            newRow["id"] = DBNull.Value;
+            newRow["name"] = "-- SELECT --";
+
+            dt.Rows.InsertAt(newRow, 0);
+        }
+        private static void BindCmbValues(ComboBox cmb, DataView dv)
+        {
+            cmb.DataSource = dv;
+            cmb.ValueMember = "id";
+            cmb.DisplayMember = "name";
+            cmb.SelectedIndex = 0;
+        }
+        private static void BindCmbValues(ComboBox cmb, DataTable dt)
+        {
+            cmb.DataSource = dt;
+            cmb.ValueMember = "id";
+            cmb.DisplayMember = "name";
+            cmb.SelectedIndex = 0;
+        }
         private async void FetchClassSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_CLASS);
             CacheData.ItemClass = await serviceSetup.GetAsDatatable();
 
-            cmb_item_class.DataSource = CacheData.ItemClass;
-            cmb_item_class.ValueMember = "id";
-            cmb_item_class.DisplayMember = "name";
-            cmb_item_class.SelectedValue = -1;
+            AddCmbDefaultVal(CacheData.ItemClass);
+
+            BindCmbValues(cmb_item_class, CacheData.ItemClass);
         }
         private async void FetchNameSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_NAME);
             CacheData.ItemName = await serviceSetup.GetAsDatatable();
 
+            AddCmbDefaultVal(CacheData.ItemName);
+
             cmb_item_name.DataSource = CacheData.ItemName;
             cmb_item_name.ValueMember = "id";
             cmb_item_name.DisplayMember = "name";
-            cmb_item_name.SelectedValue = -1;
         }
         private async void FetchBrandSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.BRAND);
             CacheData.ItemBrand = await serviceSetup.GetAsDatatable();
 
-            DataRow newRow = CacheData.ItemBrand.NewRow();
-            newRow["id"] = DBNull.Value;
-            newRow["name"] = "-- Select --";
+            AddCmbDefaultVal(CacheData.ItemBrand);
 
-            CacheData.ItemBrand.Rows.InsertAt(newRow, 0);
             cmb_item_brand.DataSource = CacheData.ItemBrand;
             cmb_item_brand.ValueMember = "id";
             cmb_item_brand.DisplayMember = "name";
@@ -662,23 +740,14 @@ namespace smpc_inventory_app.Pages.Item
             DataView dvUnit = new DataView(originalData);
             DataView dvWeight = new DataView(originalData);
             DataView dvVolume = new DataView(originalData);
-            DataView dvHeight = new DataView(originalData);
-            DataView dvLength = new DataView(originalData);
 
-            cmb_unit_of_measure.DataSource = dvUnit;
-            cmb_unit_of_measure.ValueMember = "id";
-            cmb_unit_of_measure.DisplayMember = "name";
-            cmb_unit_of_measure.SelectedValue = -1;
+            AddCmbDefaultVal(dvUnit.Table);
+            AddCmbDefaultVal(dvWeight.Table);
+            AddCmbDefaultVal(dvVolume.Table);
 
-            cmb_weight_unit_of_measure.DataSource = dvWeight;
-            cmb_weight_unit_of_measure.ValueMember = "id";
-            cmb_weight_unit_of_measure.DisplayMember = "name";
-            cmb_weight_unit_of_measure.SelectedValue = -1;
-
-            cmb_volume_unit_of_measure.DataSource = dvVolume;
-            cmb_volume_unit_of_measure.ValueMember = "id";
-            cmb_volume_unit_of_measure.DisplayMember = "name";
-            cmb_volume_unit_of_measure.SelectedValue = -1;
+            BindCmbValues(cmb_unit_of_measure, dvUnit);
+            BindCmbValues(cmb_weight_unit_of_measure, dvWeight);
+            BindCmbValues(cmb_volume_unit_of_measure, dvVolume);
         }
         private async void FetchItemTradeType()
         {
@@ -690,23 +759,23 @@ namespace smpc_inventory_app.Pages.Item
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_MATERIAL);
             CacheData.Material = await serviceSetup.GetAsDatatable();
 
-            cmb_material.DataSource = CacheData.Material;
-            cmb_material.ValueMember = "id";
-            cmb_material.DisplayMember = "name";
+            AddCmbDefaultVal(CacheData.Material);
+            BindCmbValues(cmb_material, CacheData.Material);
         }
         private async void FetchPumpTypeSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_PUMP_TYPE);
             CacheData.PumpType = await serviceSetup.GetAsDatatable();
+
         }
         private async void FetchPumpCountSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_PUMP_COUNT);
             CacheData.PumpCount = await serviceSetup.GetAsDatatable();
 
-            cmb_pump_count_compatability.DataSource = CacheData.PumpCount;
-            cmb_pump_count_compatability.ValueMember = "id";
-            cmb_pump_count_compatability.DisplayMember = "name";
+            AddCmbDefaultVal(CacheData.PumpCount);
+
+            BindCmbValues(cmb_pump_count_compatability, CacheData.PumpCount);
         }
         private void btn_next_Click(object sender, EventArgs e)
         {
@@ -791,14 +860,12 @@ namespace smpc_inventory_app.Pages.Item
 
             var itemName = cmb_item_name.Text;
             var tradeType = txt_trade_type.Text;
-            var itemCode = txt_item_code.Text;
-            var shortDesc = txt_short_desc.Text;
+            var itemCode = txt_item_code1.Text;
             var statusTangible = cmb_item_tangibility_type.Text;
             Dictionary<string, dynamic> item = new Dictionary<string, dynamic>();
 
             item.Add("item_id", itemId);
             item.Add("item_code", itemCode);
-            item.Add("short_desc", shortDesc);
             item.Add("status_tangible", statusTangible);
             item.Add("status_trade", tradeType);
 
@@ -859,7 +926,7 @@ namespace smpc_inventory_app.Pages.Item
                 dt.Columns.Remove("select");
             }
 
-            modalSetup = new SetupModal("General Name", ENUM_ENDPOINT.UNIT_OF_MEASURMENT, dt);
+            modalSetup = new SetupModal("Unit of Measure", ENUM_ENDPOINT.UNIT_OF_MEASURMENT, dt);
             DialogResult r = modalSetup.ShowDialog();
         }
         private void ResetComboBoxes(params ComboBox[] comboBoxes)
@@ -900,8 +967,9 @@ namespace smpc_inventory_app.Pages.Item
                     dgv_template.Rows.Clear();
                     dt_template = getTemplate();
                     dgv_template.DataSource = dt_template;
+                    dgv_template.Columns["title"].ReadOnly = true;
 
-                    if(cmb_template.Text == "PUMP" || cmb_template.Text == "WATER METER")
+                    if (cmb_template.Text == "PUMP" || cmb_template.Text == "WATER METER")
                     {
                         cmb_calibration.Visible = true;
                         lbl_calibration.Visible = true;
@@ -942,7 +1010,7 @@ namespace smpc_inventory_app.Pages.Item
                 {
                     { "id", "ID" },
                     { "item_name", "ITEM NAME" },
-                    { "short_desc", "SHORT DESCRIPTION" },
+                    { "item_brand", "BRAND" },
                 };
 
             using (SearchModal searchModal = new SearchModal("Search Items", items, columnMappings))
@@ -1462,7 +1530,12 @@ namespace smpc_inventory_app.Pages.Item
             {
                 item_code = "0001";
             }
-            txt_item_code.Text = "I#" + item_code;
+            txt_item_code1.Text = "I#" + item_code;
+        }
+
+        private void txt_item_model_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

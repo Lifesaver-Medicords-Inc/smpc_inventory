@@ -48,7 +48,6 @@ namespace smpc_inventory_app.Pages.Setup
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(478, 72);
             this.panel1.TabIndex = 1;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // txt_search
             // 
@@ -99,6 +98,7 @@ namespace smpc_inventory_app.Pages.Setup
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "SearchModal";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SearchModal";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

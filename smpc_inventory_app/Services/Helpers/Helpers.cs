@@ -1391,6 +1391,6 @@ namespace smpc_app.Services.Helpers
             {
                 grid.Rows.Clear();
             }
-        } 
+        }
     }
 } 

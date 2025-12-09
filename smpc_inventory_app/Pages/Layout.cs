@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using smpc_app.Services.Helpers;
 using smpc_inventory_app.Data;
 using smpc_inventory_app.Pages;
@@ -48,95 +48,68 @@ namespace Inventory_SMPC.Pages
         public SMPC()
         {
             InitializeComponent();
+            tabContainer.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabContainer.SizeMode = TabSizeMode.Fixed;
+            tabContainer.ItemSize = new Size(180, 20);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
-
-        public void showForm(string tabTitle, Control control)
+        public void ShowForm(string tabTitle, Control control)
         {
-            tabCount++;
-            Button closeButton = new Button();
-            closeButton.Text = "X";
-            closeButton.Size = new Size(20, 20);
-            closeButton.Click += removeTab;
-            closeButton.ForeColor = Color.Red;
-
-            TabPage newTab = new TabPage(tabTitle);
-            newTab.Controls.Add(closeButton);
-            closeButton.Location = new Point(newTab.Width, 10); // Adjust position as needed
-
-            control.Dock = DockStyle.Fill;
-
-
-            if (control is smpc_inventory_app.Pages.Purchasing.NewPurchasingList)
+            try
             {
-                smpc_inventory_app.Pages.Purchasing.NewPurchasingList purchasingListControl = (smpc_inventory_app.Pages.Purchasing.NewPurchasingList)control;
-                purchasingListControl.TriggerNewForm += showForm;
+                tabCount++;
 
-            }
+                TabPage newTab = new TabPage(tabTitle);
 
-            //control.Width = this.Width - 235; 
-            tabContainer.Height = this.Height * 2;
-            //control.Height = this.Height;
+                //control.Width = this.Width - 235; 
+                container.Height = this.Height * 2;
+                //control.Height = this.Height;
+                control.Width = this.Width - 570;
+                newTab.Controls.Add(control);
+                newTab.AutoScroll = true;
+                tabContainer.TabPages.Add(newTab);
+                tabContainer.SelectTab(newTab);
 
-            control.Width = this.Width - 600;
-
-            newTab.Controls.Add(control);
-            newTab.AutoScroll = true;
-
-            Console.WriteLine("Parent of control: " + newTab.Parent + ", control: " + control);
-
-            tabContainer.TabPages.Add(newTab);
-            tabContainer.SelectTab(newTab);
-
-        }
-        private void removeTab(object sender, EventArgs e)
-        {
-            int currentIndex = tabContainer.SelectedIndex;
-
-            // Remove the current selected tab
-            if (currentIndex >= 0)
-            {
-                tabContainer.TabPages.RemoveAt(currentIndex);
-
-                // Navigate to the previous tab if it exists, otherwise to the first tab if any
-                if (tabContainer.TabCount > 0)
+                if (control is smpc_inventory_app.Pages.Purchasing.NewPurchasingList purchasingListControl)
                 {
-                    int newIndex = currentIndex - 1;
-                    if (newIndex < 0) newIndex = 0;
-                    tabContainer.SelectedIndex = newIndex;
+                    purchasingListControl.TriggerNewForm += ShowForm;
                 }
             }
+            catch (Exception )
+            {
+                throw;
+            }
+
+
+
+
         }
 
         private void Sidebar_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node.Name.Contains("DASHBOARD") || e.Node.Name.Contains("PURCHASE RETURN") || e.Node.Name.Contains("PURCHASE REQUISITION"))
+            
+            try
             {
-                Helpers.ShowDialogMessage("error", "This module is not available at the moment!");
-                return;
-            }
-            if (!e.Node.Name.Contains("parent"))
-            {
-                RouteServices route = new RouteServices(e.Node.Name);
-                showForm(route.GetTitle(), route.GetForm());
-            }
-            else //pwedeng if (e.Node.Text.toLower().Contains("parent")) //to filter parents nodes
-            {
-                if (e.Node.Nodes.Count > 0)
+                if (e.Node.Name.Contains("DASHBOARD") || e.Node.Name.Contains("PURCHASE RETURN") || e.Node.Name.Contains("PURCHASE REQUISITION"))
                 {
-                    if (e.Node.IsExpanded)
-                    {
-                        e.Node.Collapse();
-                    }
-                    else
-                    {
-                        e.Node.Expand();
-                    }
+                    Helpers.ShowDialogMessage("error", "This module is not available at the moment!");
+                    return;
                 }
+
+                if (!e.Node.Name.Contains("parent"))
+                {
+                    RouteServices route = new RouteServices(e.Node.Name);
+                    ShowForm(route.GetTitle(), route.GetForm());
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
 
@@ -156,7 +129,7 @@ namespace Inventory_SMPC.Pages
             if (!e.Node.Name.Contains("parent"))
             {
                 RouteServices route = new RouteServices(e.Node.Name);
-                showForm(route.GetTitle(), route.GetForm());
+                ShowForm(route.GetTitle(), route.GetForm());
             }
         }
 
@@ -237,14 +210,11 @@ namespace Inventory_SMPC.Pages
                         string customer = row["customer"].ToString();
                         string orderType = row["order_type"].ToString();
 
-
-                        // Try to find the existing card by ID
                         Control existingCard = FindCardById(id);
                         if (orderType == "SO")
                         {
                             if (existingCard != null)
                             {
-                                // Update the existing card
                                 if (existingCard is SalesOrderCard)
                                 {
                                     var card = (SalesOrderCard)existingCard;
@@ -253,7 +223,6 @@ namespace Inventory_SMPC.Pages
                             }
                             else
                             {
-                                // If no card found, create a new one and add it
                                 Control card = new SalesOrderCard(id, orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer);
                                 card.Size = new Size(flowPanelRedBox.ClientSize.Width - flowPanelRedBox.Padding.Horizontal, 150);
                                 card.Margin = new Padding(0, 0, 0, 10);
@@ -266,7 +235,6 @@ namespace Inventory_SMPC.Pages
                         {
                             if (existingCard != null)
                             {
-                                // Update the existing card
                                 if (existingCard is PurchaseRequisitionCard)
                                 {
                                     var card = (PurchaseRequisitionCard)existingCard;
@@ -275,7 +243,7 @@ namespace Inventory_SMPC.Pages
                             }
                             else
                             {
-                                // If no card found, create a new one and add it
+
                                 Control card = new PurchaseRequisitionCard(id, orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer);
                                 card.Size = new Size(flowPanelRedBox.ClientSize.Width - flowPanelRedBox.Padding.Horizontal, 150);
                                 card.Margin = new Padding(0, 0, 0, 10);
@@ -296,10 +264,7 @@ namespace Inventory_SMPC.Pages
         }
         private void SMPC_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //if (ws != null && ws.)
-            //{
-            //    ws.Close();
-            //}
+
         }
         private Control FindCardById(int id)
         {
@@ -326,34 +291,60 @@ namespace Inventory_SMPC.Pages
 
         private void tabContainer_DrawItem(object sender, DrawItemEventArgs e)
         {
-            TabControl tabControl = sender as TabControl;
-            TabPage tabPage = tabControl.TabPages[e.Index];
-            Rectangle tabBounds = tabControl.GetTabRect(e.Index);
+            var tabPage = tabContainer.TabPages[e.Index];
+            var tabRect = tabContainer.GetTabRect(e.Index);
+            bool isSelected = (e.Index == tabContainer.SelectedIndex);
 
-            // Use ellipsis trimming
-            StringFormat stringFlags = new StringFormat();
-            stringFlags.Trimming = StringTrimming.EllipsisCharacter;
-            stringFlags.FormatFlags = StringFormatFlags.NoWrap;
-
-            // Set alignment
-            stringFlags.Alignment = StringAlignment.Near;
-            stringFlags.LineAlignment = StringAlignment.Center;
-
-            // Draw background
-            if (e.State.HasFlag(DrawItemState.Selected))
-            {
-                e.Graphics.FillRectangle(SystemBrushes.ControlLightLight, tabBounds);
-            }
-            else
-            {
-                e.Graphics.FillRectangle(SystemBrushes.Control, tabBounds);
-            }
-
-            // Draw the text with ellipsis
+            // Draw the tab title
+            string title = tabPage.Text;
+            Font font = isSelected ? new Font(e.Font, FontStyle.Bold) : e.Font;
             using (Brush textBrush = new SolidBrush(tabPage.ForeColor))
             {
-                e.Graphics.DrawString(tabPage.Text, e.Font, textBrush, tabBounds, stringFlags);
+                e.Graphics.DrawString(title, font, textBrush, tabRect.X + 2, tabRect.Y + 4);
             }
+
+            // Define close button size and position
+            int closeButtonSize = 16;
+            Rectangle closeButton = new Rectangle(
+                tabRect.Right - closeButtonSize - 5,
+                tabRect.Top + (tabRect.Height - 16) / 2,
+                closeButtonSize,
+                closeButtonSize
+            );
+
+            using (Font closeFont = new Font("Arial", 9, FontStyle.Bold))
+            {
+                StringFormat sf = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center
+                };
+                e.Graphics.DrawString("x", closeFont, Brushes.Black, closeButton, sf);
+            }
+        }
+
+        private void tabContainer_MouseDown(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < tabContainer.TabPages.Count; i++)
+            {
+                Rectangle tabRect = tabContainer.GetTabRect(i);
+                int closeButtonSize = 16;
+                Rectangle closeButton = new Rectangle(
+                    tabRect.Right - closeButtonSize - 5,  // Padding from right
+                    tabRect.Top + (tabRect.Height - 16) / 2,     // Vertically center
+                    closeButtonSize,
+                    closeButtonSize
+                );
+
+                bool isSelected = (i == tabContainer.SelectedIndex);
+                if (isSelected && closeButton.Contains(e.Location))
+                {
+                    TabPage tabToRemove = tabContainer.TabPages[i];
+                    tabContainer.TabPages.Remove(tabToRemove);
+                    break; // 🔁 IMPORTANT: Break right after removing
+                }
+            }
+            return;
         }
     }
 }
