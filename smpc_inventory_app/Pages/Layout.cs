@@ -70,7 +70,7 @@ namespace Inventory_SMPC.Pages
                 //control.Height = this.Height;
                 control.Width = this.Width - 570;
                 newTab.Controls.Add(control);
-                newTab.AutoScroll = true;
+                //newTab.AutoScroll = true;
                 tabContainer.TabPages.Add(newTab);
                 tabContainer.SelectTab(newTab);
 

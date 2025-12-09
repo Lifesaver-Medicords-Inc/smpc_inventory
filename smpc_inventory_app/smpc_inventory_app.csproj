@@ -192,7 +192,9 @@
     <Compile Include="Data\ENUM_TAX_CODE.cs" />
     <Compile Include="Data\ENUM_WARRANTY.cs" />
     <Compile Include="Data\TableContentChanged.cs" />
+    <Compile Include="Intefaces\ISetupService.cs" />
     <Compile Include="Model\CurrentUserModel.cs" />
+    <Compile Include="Model\SetupBaseModel.cs" />
     <Compile Include="Pages\Business_Partner_Info\BpiBranchUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -535,6 +537,12 @@
     <Compile Include="Pages\Setup\frm_item_type_setup.Designer.cs">
       <DependentUpon>frm_item_type_setup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Setup\frm_item_valuation_method_setup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Setup\frm_item_valuation_method_setup.Designer.cs">
+      <DependentUpon>frm_item_valuation_method_setup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Setup\frm_payment_terms_setup.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -606,6 +614,12 @@
     </Compile>
     <Compile Include="Pages\Shared\LoaderIdicatorOverlay.Designer.cs">
       <DependentUpon>LoaderIdicatorOverlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Shared\SetupPageUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Shared\SetupPageUC.Designer.cs">
+      <DependentUpon>SetupPageUC.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\WebSocketForm.cs">
       <SubType>Form</SubType>
@@ -688,6 +702,7 @@
     <Compile Include="Services\Setup\Purchasing\PurchasingRedboxListServices.cs" />
     <Compile Include="Services\Setup\Purchasing\PurchasingList\PurchasingListSupplierServices.cs" />
     <Compile Include="Services\Setup\Sales\ShipServices.cs" />
+    <Compile Include="Services\Setup\SetupService.cs" />
     <Compile Include="Services\Setup\SocialMediaServices.cs" />
     <Compile Include="Services\Setup\Item\UnitOfMeasurementServices.cs" />
     <Compile Include="Services\Setup\Model\Item\BrandModel.cs" />
@@ -879,6 +894,9 @@
     <EmbeddedResource Include="Pages\Setup\frm_item_type_setup.resx">
       <DependentUpon>frm_item_type_setup.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Setup\frm_item_valuation_method_setup.resx">
+      <DependentUpon>frm_item_valuation_method_setup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pages\Setup\frm_payment_terms_setup.resx">
       <DependentUpon>frm_payment_terms_setup.cs</DependentUpon>
     </EmbeddedResource>
@@ -915,6 +933,9 @@
     <EmbeddedResource Include="Pages\Shared\LoaderIdicatorOverlay.resx">
       <DependentUpon>LoaderIdicatorOverlay.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Shared\SetupPageUC.resx">
+      <DependentUpon>SetupPageUC.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pages\WebSocketForm.resx">
       <DependentUpon>WebSocketForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -943,6 +964,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\line-chart.png" />
     <None Include="Resources\spinner.png" />
     <None Include="Resources\word.png" />
     <None Include="Resources\search.png" />

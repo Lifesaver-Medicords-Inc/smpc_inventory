@@ -44,6 +44,7 @@ namespace smpc_inventory_app.Services.Helpers
             { "ITEM PUMP TYPE", new frm_item_pump_type_setup()  },
             { "UNIT OF MEASURE", new frm_unit_of_measure_setup()  },
             { "SOCIAL MEDIA", new frm_social_media_setup() },
+            { "VALUATION METHOD", new frm_item_valuation_method_setup() },
              
             // OTHER SETUP
             { "PAYMENT TERMS", new Inventory_SMPC.Pages.Setup.frm_payment_terms_setup()  },

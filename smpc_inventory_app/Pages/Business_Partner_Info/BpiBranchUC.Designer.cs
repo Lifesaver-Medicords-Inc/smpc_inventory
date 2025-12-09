@@ -29,12 +29,19 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BpiBranchUC));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_new_brach = new System.Windows.Forms.Panel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.GENERAL = new System.Windows.Forms.TabPage();
             this.panel_general = new System.Windows.Forms.Panel();
+            this.cmb_social = new System.Windows.Forms.ComboBox();
+            this.chk_is_main = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
             this.txt_branch_sales_id = new System.Windows.Forms.TextBox();
             this.lbl_general_based_id = new System.Windows.Forms.Label();
@@ -54,7 +61,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_social_links = new System.Windows.Forms.Button();
             this.btn_get_branch = new System.Windows.Forms.Button();
             this.btn_get_entity = new System.Windows.Forms.Button();
-            this.cmb_social = new System.Windows.Forms.ComboBox();
             this.txt_fax_no = new System.Windows.Forms.TextBox();
             this.txt_supplier_code = new System.Windows.Forms.TextBox();
             this.txt_customer_code = new System.Windows.Forms.TextBox();
@@ -76,21 +82,51 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.txt_branch_website = new System.Windows.Forms.TextBox();
             this.CONTACTS = new System.Windows.Forms.TabPage();
             this.dg_contacts = new System.Windows.Forms.DataGridView();
+            this.contacts_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contacts_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.is_default_contact = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.preferences = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ADD_PREF = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.position = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.dataBindingPosition = new System.Windows.Forms.BindingSource(this.components);
+            this.ds_positions = new System.Data.DataSet();
+            this.dataTable1 = new System.Data.DataTable();
+            this.dataColumn1 = new System.Data.DataColumn();
+            this.dataColumn2 = new System.Data.DataColumn();
+            this.dataColumn3 = new System.Data.DataColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.contacts_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.contacts_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contact_notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataBindingContacts = new System.Windows.Forms.BindingSource(this.components);
+            this.ds_contacts = new System.Data.DataSet();
+            this.dataTable2 = new System.Data.DataTable();
+            this.dataColumn4 = new System.Data.DataColumn();
+            this.dataColumn5 = new System.Data.DataColumn();
+            this.dataColumn6 = new System.Data.DataColumn();
+            this.dataColumn7 = new System.Data.DataColumn();
+            this.dataColumn8 = new System.Data.DataColumn();
+            this.dataColumn9 = new System.Data.DataColumn();
+            this.dataColumn10 = new System.Data.DataColumn();
+            this.dataColumn29 = new System.Data.DataColumn();
+            this.dataColumn40 = new System.Data.DataColumn();
+            this.dataColumn49 = new System.Data.DataColumn();
             this.ADDRESS = new System.Windows.Forms.TabPage();
             this.dg_address = new System.Windows.Forms.DataGridView();
             this.address_ids = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address_is_deleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.location = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataBindingAddress = new System.Windows.Forms.BindingSource(this.components);
+            this.ds_address = new System.Data.DataSet();
+            this.dataTable3 = new System.Data.DataTable();
+            this.dataColumn11 = new System.Data.DataColumn();
+            this.dataColumn12 = new System.Data.DataColumn();
+            this.dataColumn13 = new System.Data.DataColumn();
+            this.dataColumn30 = new System.Data.DataColumn();
+            this.dataColumn41 = new System.Data.DataColumn();
             this.FINANCE = new System.Windows.Forms.TabPage();
             this.finance_tabpage_nale = new System.Windows.Forms.Panel();
             this.tabControl_Finance = new System.Windows.Forms.TabControl();
@@ -98,7 +134,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_finance_pending = new System.Windows.Forms.DataGridView();
             this.qoute_ref = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.dataGridView4 = new System.Windows.Forms.DataGridView();
+            this.dg_finance_transactions = new System.Windows.Forms.DataGridView();
             this.finance_trans_so = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.finance_trans_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.finance_trans_po = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -122,26 +158,59 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bpi_item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bpi_item_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.long_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bpi_item_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_graph = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_is_deleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataBindingItems = new System.Windows.Forms.BindingSource(this.components);
+            this.ds_Items = new System.Data.DataSet();
+            this.dataTable4 = new System.Data.DataTable();
+            this.dataColumn14 = new System.Data.DataColumn();
+            this.dataColumn15 = new System.Data.DataColumn();
+            this.dataColumn16 = new System.Data.DataColumn();
+            this.dataColumn17 = new System.Data.DataColumn();
+            this.dataColumn18 = new System.Data.DataColumn();
+            this.dataColumn19 = new System.Data.DataColumn();
+            this.dataColumn22 = new System.Data.DataColumn();
+            this.dataColumn31 = new System.Data.DataColumn();
+            this.dataColumn42 = new System.Data.DataColumn();
+            this.type = new System.Data.DataColumn();
             this.panel_item = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_add_item = new System.Windows.Forms.Button();
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.cmb_item_account = new System.Windows.Forms.ComboBox();
             this.cmb_tax_code = new System.Windows.Forms.ComboBox();
             this.cmb_payment_terms = new System.Windows.Forms.ComboBox();
-            this.button9 = new System.Windows.Forms.Button();
+            this.btn_items_payment_terms = new System.Windows.Forms.Button();
             this.txt_item_tax_code = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.ACCREDITATION = new System.Windows.Forms.TabPage();
             this.dg_accreditations = new System.Windows.Forms.DataGridView();
+            this.date_added = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.file_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.accreditation_added_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_accreditation_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_accreditation_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_accreditation_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.file_path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.accreditation_added_by_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_accreditation_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.databindingAccreditation = new System.Windows.Forms.BindingSource(this.components);
+            this.dsAccreditations = new System.Data.DataSet();
+            this.AccreditationTable = new System.Data.DataTable();
+            this.dataColumn32 = new System.Data.DataColumn();
+            this.dataColumn33 = new System.Data.DataColumn();
+            this.dataColumn34 = new System.Data.DataColumn();
+            this.dataColumn35 = new System.Data.DataColumn();
+            this.dataColumn36 = new System.Data.DataColumn();
+            this.dataColumn37 = new System.Data.DataColumn();
+            this.dataColumn38 = new System.Data.DataColumn();
+            this.dataColumn39 = new System.Data.DataColumn();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel_accreditation = new System.Windows.Forms.Panel();
             this.btn_upload_image = new System.Windows.Forms.Button();
@@ -151,34 +220,80 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.dg_history = new System.Windows.Forms.DataGridView();
+            this.dataBindingFinancePending = new System.Windows.Forms.BindingSource(this.components);
+            this.ds_finance_pending = new System.Data.DataSet();
+            this.dataTable5 = new System.Data.DataTable();
+            this.dataColumn23 = new System.Data.DataColumn();
+            this.dataColumn24 = new System.Data.DataColumn();
+            this.dataColumn25 = new System.Data.DataColumn();
+            this.dataColumn26 = new System.Data.DataColumn();
+            this.dataColumn27 = new System.Data.DataColumn();
+            this.dataColumn28 = new System.Data.DataColumn();
+            this.dataBindingHistory = new System.Windows.Forms.BindingSource(this.components);
+            this.ds_history = new System.Data.DataSet();
+            this.dataTable6 = new System.Data.DataTable();
+            this.dataColumn43 = new System.Data.DataColumn();
+            this.dataColumn45 = new System.Data.DataColumn();
+            this.dataColumn46 = new System.Data.DataColumn();
+            this.dataColumn47 = new System.Data.DataColumn();
+            this.dataColumn48 = new System.Data.DataColumn();
+            this.dataColumn20 = new System.Data.DataColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.actionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.edithistoryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.editbyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.edithistoryidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_new_brach.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.GENERAL.SuspendLayout();
             this.panel_general.SuspendLayout();
             this.CONTACTS.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_contacts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingPosition)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_positions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingContacts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_contacts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable2)).BeginInit();
             this.ADDRESS.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_address)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingAddress)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_address)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable3)).BeginInit();
             this.FINANCE.SuspendLayout();
             this.finance_tabpage_nale.SuspendLayout();
             this.tabControl_Finance.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_finance_pending)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_finance_transactions)).BeginInit();
             this.panel_finance.SuspendLayout();
             this.ITEMS.SuspendLayout();
             this.pnl_new_added_item.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_items)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingItems)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_Items)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable4)).BeginInit();
             this.panel_item.SuspendLayout();
             this.ACCREDITATION.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_accreditations)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.databindingAccreditation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dsAccreditations)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AccreditationTable)).BeginInit();
             this.panel_accreditation.SuspendLayout();
             this.HISTORY.SuspendLayout();
             this.history_panel.SuspendLayout();
             this.tabControl_History.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_history)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingFinancePending)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_finance_pending)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingHistory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_history)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable6)).BeginInit();
             this.SuspendLayout();
             // 
             // pnl_new_brach
@@ -221,6 +336,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // panel_general
             // 
+            this.panel_general.Controls.Add(this.cmb_social);
+            this.panel_general.Controls.Add(this.chk_is_main);
             this.panel_general.Controls.Add(this.label16);
             this.panel_general.Controls.Add(this.txt_branch_sales_id);
             this.panel_general.Controls.Add(this.lbl_general_based_id);
@@ -240,7 +357,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_general.Controls.Add(this.btn_social_links);
             this.panel_general.Controls.Add(this.btn_get_branch);
             this.panel_general.Controls.Add(this.btn_get_entity);
-            this.panel_general.Controls.Add(this.cmb_social);
             this.panel_general.Controls.Add(this.txt_fax_no);
             this.panel_general.Controls.Add(this.txt_supplier_code);
             this.panel_general.Controls.Add(this.txt_customer_code);
@@ -266,6 +382,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_general.Size = new System.Drawing.Size(1189, 517);
             this.panel_general.TabIndex = 0;
             // 
+            // cmb_social
+            // 
+            this.cmb_social.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_social.FormattingEnabled = true;
+            this.cmb_social.Location = new System.Drawing.Point(134, 207);
+            this.cmb_social.Name = "cmb_social";
+            this.cmb_social.Size = new System.Drawing.Size(200, 21);
+            this.cmb_social.TabIndex = 132;
+            this.cmb_social.Tag = "DYNAMIC";
+            // 
+            // chk_is_main
+            // 
+            this.chk_is_main.AutoSize = true;
+            this.chk_is_main.Location = new System.Drawing.Point(920, 57);
+            this.chk_is_main.Name = "chk_is_main";
+            this.chk_is_main.Size = new System.Drawing.Size(86, 17);
+            this.chk_is_main.TabIndex = 48;
+            this.chk_is_main.Text = "Main Branch";
+            this.chk_is_main.UseVisualStyleBackColor = true;
+            // 
             // label16
             // 
             this.label16.AutoSize = true;
@@ -287,38 +423,34 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // lbl_general_based_id
             // 
             this.lbl_general_based_id.AutoSize = true;
-            this.lbl_general_based_id.Location = new System.Drawing.Point(183, 475);
+            this.lbl_general_based_id.Location = new System.Drawing.Point(1019, 23);
             this.lbl_general_based_id.Name = "lbl_general_based_id";
             this.lbl_general_based_id.Size = new System.Drawing.Size(91, 13);
             this.lbl_general_based_id.TabIndex = 45;
             this.lbl_general_based_id.Text = "general_based_id";
-            this.lbl_general_based_id.Visible = false;
             // 
             // txt_general_based_id
             // 
-            this.txt_general_based_id.Location = new System.Drawing.Point(280, 472);
+            this.txt_general_based_id.Location = new System.Drawing.Point(1116, 20);
             this.txt_general_based_id.Name = "txt_general_based_id";
             this.txt_general_based_id.Size = new System.Drawing.Size(54, 20);
             this.txt_general_based_id.TabIndex = 44;
-            this.txt_general_based_id.Visible = false;
             // 
             // lbl_general_id
             // 
             this.lbl_general_id.AutoSize = true;
-            this.lbl_general_id.Location = new System.Drawing.Point(81, 472);
+            this.lbl_general_id.Location = new System.Drawing.Point(917, 20);
             this.lbl_general_id.Name = "lbl_general_id";
             this.lbl_general_id.Size = new System.Drawing.Size(15, 13);
             this.lbl_general_id.TabIndex = 43;
             this.lbl_general_id.Text = "id";
-            this.lbl_general_id.Visible = false;
             // 
             // txt_general_id
             // 
-            this.txt_general_id.Location = new System.Drawing.Point(102, 469);
+            this.txt_general_id.Location = new System.Drawing.Point(938, 17);
             this.txt_general_id.Name = "txt_general_id";
             this.txt_general_id.Size = new System.Drawing.Size(54, 20);
             this.txt_general_id.TabIndex = 42;
-            this.txt_general_id.Visible = false;
             // 
             // txt_affiliated
             // 
@@ -358,7 +490,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // txt_branch_name
             // 
-            this.txt_branch_name.Location = new System.Drawing.Point(134, 16);
+            this.txt_branch_name.Location = new System.Drawing.Point(135, 16);
             this.txt_branch_name.Name = "txt_branch_name";
             this.txt_branch_name.Size = new System.Drawing.Size(200, 20);
             this.txt_branch_name.TabIndex = 37;
@@ -398,6 +530,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_add_entity.Size = new System.Drawing.Size(30, 22);
             this.btn_add_entity.TabIndex = 33;
             this.btn_add_entity.UseVisualStyleBackColor = true;
+            this.btn_add_entity.Click += new System.EventHandler(this.btn_add_entity_Click);
             // 
             // btn_branch_industry
             // 
@@ -409,6 +542,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_branch_industry.Size = new System.Drawing.Size(30, 22);
             this.btn_branch_industry.TabIndex = 32;
             this.btn_branch_industry.UseVisualStyleBackColor = false;
+            this.btn_branch_industry.Click += new System.EventHandler(this.btn_branch_industry_Click);
             // 
             // btn_social_links
             // 
@@ -420,6 +554,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_social_links.Size = new System.Drawing.Size(30, 22);
             this.btn_social_links.TabIndex = 30;
             this.btn_social_links.UseVisualStyleBackColor = false;
+            this.btn_social_links.Click += new System.EventHandler(this.btn_social_links_Click);
             // 
             // btn_get_branch
             // 
@@ -431,6 +566,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_get_branch.TabIndex = 28;
             this.btn_get_branch.Text = "...";
             this.btn_get_branch.UseVisualStyleBackColor = true;
+            this.btn_get_branch.Click += new System.EventHandler(this.btn_get_branch_Click);
             // 
             // btn_get_entity
             // 
@@ -442,16 +578,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_get_entity.TabIndex = 27;
             this.btn_get_entity.Text = "...";
             this.btn_get_entity.UseVisualStyleBackColor = true;
-            // 
-            // cmb_social
-            // 
-            this.cmb_social.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_social.FormattingEnabled = true;
-            this.cmb_social.Location = new System.Drawing.Point(135, 207);
-            this.cmb_social.Name = "cmb_social";
-            this.cmb_social.Size = new System.Drawing.Size(200, 21);
-            this.cmb_social.TabIndex = 23;
-            this.cmb_social.Tag = "DYNAMIC";
+            this.btn_get_entity.Click += new System.EventHandler(this.btn_get_entity_Click);
             // 
             // txt_fax_no
             // 
@@ -464,6 +591,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.txt_supplier_code.Location = new System.Drawing.Point(659, 58);
             this.txt_supplier_code.Name = "txt_supplier_code";
+            this.txt_supplier_code.ReadOnly = true;
             this.txt_supplier_code.Size = new System.Drawing.Size(200, 20);
             this.txt_supplier_code.TabIndex = 21;
             // 
@@ -471,6 +599,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.txt_customer_code.Location = new System.Drawing.Point(659, 37);
             this.txt_customer_code.Name = "txt_customer_code";
+            this.txt_customer_code.ReadOnly = true;
             this.txt_customer_code.Size = new System.Drawing.Size(200, 20);
             this.txt_customer_code.TabIndex = 20;
             // 
@@ -613,6 +742,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.txt_branch_tel_no.Name = "txt_branch_tel_no";
             this.txt_branch_tel_no.Size = new System.Drawing.Size(200, 20);
             this.txt_branch_tel_no.TabIndex = 18;
+            this.txt_branch_tel_no.TextChanged += new System.EventHandler(this.txt_branch_tel_no_TextChanged);
+            this.txt_branch_tel_no.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_branch_tel_no_KeyPress);
             // 
             // txt_branch_website
             // 
@@ -636,35 +767,67 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.dg_contacts.AllowUserToResizeColumns = false;
             this.dg_contacts.AllowUserToResizeRows = false;
+            this.dg_contacts.AutoGenerateColumns = false;
             this.dg_contacts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_contacts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.contacts_id,
+            this.contacts_based_id,
+            this.branch_id,
             this.is_default_contact,
             this.number,
             this.email,
             this.preferences,
             this.ADD_PREF,
+            this.position,
             this.name,
-            this.contacts_id,
-            this.contacts_based_id,
-            this.branch_id,
             this.contact_notes});
+            this.dg_contacts.DataSource = this.dataBindingContacts;
             this.dg_contacts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_contacts.Location = new System.Drawing.Point(3, 3);
             this.dg_contacts.Name = "dg_contacts";
             this.dg_contacts.Size = new System.Drawing.Size(1189, 517);
             this.dg_contacts.TabIndex = 0;
+            this.dg_contacts.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dg_contacts_CellBeginEdit);
+            this.dg_contacts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellClick);
+            this.dg_contacts.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellEndEdit);
+            this.dg_contacts.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dg_contacts_CellValidating);
+            this.dg_contacts.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dg_contacts_DataError);
+            this.dg_contacts.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg_contacts_EditingControlShowing);
+            // 
+            // contacts_id
+            // 
+            this.contacts_id.DataPropertyName = "contacts_id";
+            this.contacts_id.HeaderText = "ID";
+            this.contacts_id.Name = "contacts_id";
+            this.contacts_id.Visible = false;
+            // 
+            // contacts_based_id
+            // 
+            this.contacts_based_id.DataPropertyName = "contacts_based_id";
+            this.contacts_based_id.HeaderText = "BASED ID";
+            this.contacts_based_id.Name = "contacts_based_id";
+            this.contacts_based_id.Visible = false;
+            // 
+            // branch_id
+            // 
+            this.branch_id.DataPropertyName = "branch_id";
+            this.branch_id.HeaderText = "BRANCH ID";
+            this.branch_id.Name = "branch_id";
+            this.branch_id.Visible = false;
             // 
             // is_default_contact
             // 
             this.is_default_contact.DataPropertyName = "is_default_contact";
+            this.is_default_contact.FillWeight = 79.09605F;
             this.is_default_contact.HeaderText = "";
             this.is_default_contact.Name = "is_default_contact";
-            this.is_default_contact.Width = 50;
+            this.is_default_contact.Width = 20;
             // 
             // number
             // 
             this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.number.DataPropertyName = "number";
+            this.number.FillWeight = 103.484F;
             this.number.HeaderText = "NUMBER";
             this.number.Name = "number";
             // 
@@ -672,6 +835,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.email.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.email.DataPropertyName = "email";
+            this.email.FillWeight = 103.484F;
             this.email.HeaderText = "EMAIL";
             this.email.Name = "email";
             // 
@@ -679,6 +843,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.preferences.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.preferences.DataPropertyName = "preferences";
+            this.preferences.FillWeight = 103.484F;
             this.preferences.HeaderText = "PREFERENCE";
             this.preferences.Name = "preferences";
             this.preferences.ReadOnly = true;
@@ -691,40 +856,138 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.ADD_PREF.Name = "ADD_PREF";
             this.ADD_PREF.Width = 20;
             // 
+            // position
+            // 
+            this.position.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.position.DataPropertyName = "position";
+            this.position.DataSource = this.dataBindingPosition;
+            this.position.DisplayMember = "name";
+            this.position.FillWeight = 103.484F;
+            this.position.HeaderText = "POSITION";
+            this.position.Name = "position";
+            this.position.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.position.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.position.ValueMember = "id";
+            // 
+            // dataBindingPosition
+            // 
+            this.dataBindingPosition.DataMember = "Table1";
+            this.dataBindingPosition.DataSource = this.ds_positions;
+            // 
+            // ds_positions
+            // 
+            this.ds_positions.DataSetName = "ds_positions";
+            this.ds_positions.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable1});
+            // 
+            // dataTable1
+            // 
+            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn1,
+            this.dataColumn2,
+            this.dataColumn3});
+            this.dataTable1.TableName = "Table1";
+            // 
+            // dataColumn1
+            // 
+            this.dataColumn1.ColumnName = "id";
+            this.dataColumn1.DataType = typeof(short);
+            // 
+            // dataColumn2
+            // 
+            this.dataColumn2.ColumnName = "code";
+            // 
+            // dataColumn3
+            // 
+            this.dataColumn3.ColumnName = "name";
+            // 
             // name
             // 
             this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.name.DataPropertyName = "name";
+            this.name.FillWeight = 103.484F;
             this.name.HeaderText = "NAME";
             this.name.Name = "name";
-            // 
-            // contacts_id
-            // 
-            this.contacts_id.DataPropertyName = "contacts_id";
-            this.contacts_id.HeaderText = "ID";
-            this.contacts_id.Name = "contacts_id";
-            this.contacts_id.Visible = false;
-            // 
-            // contacts_based_id
-            // 
-            this.contacts_based_id.DataPropertyName = "contacts_based_id";
-            this.contacts_based_id.HeaderText = "BASED_ID";
-            this.contacts_based_id.Name = "contacts_based_id";
-            this.contacts_based_id.Visible = false;
-            // 
-            // branch_id
-            // 
-            this.branch_id.DataPropertyName = "branch_id";
-            this.branch_id.HeaderText = "branch_id";
-            this.branch_id.Name = "branch_id";
-            this.branch_id.Visible = false;
             // 
             // contact_notes
             // 
             this.contact_notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.contact_notes.DataPropertyName = "contact_notes";
+            this.contact_notes.FillWeight = 103.484F;
             this.contact_notes.HeaderText = "NOTES";
             this.contact_notes.Name = "contact_notes";
+            // 
+            // dataBindingContacts
+            // 
+            this.dataBindingContacts.DataMember = "ContactsTbl";
+            this.dataBindingContacts.DataSource = this.ds_contacts;
+            // 
+            // ds_contacts
+            // 
+            this.ds_contacts.DataSetName = "NewDataSet";
+            this.ds_contacts.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable2});
+            // 
+            // dataTable2
+            // 
+            this.dataTable2.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn4,
+            this.dataColumn5,
+            this.dataColumn6,
+            this.dataColumn7,
+            this.dataColumn8,
+            this.dataColumn9,
+            this.dataColumn10,
+            this.dataColumn29,
+            this.dataColumn40,
+            this.dataColumn49});
+            this.dataTable2.TableName = "ContactsTbl";
+            // 
+            // dataColumn4
+            // 
+            this.dataColumn4.ColumnName = "number";
+            // 
+            // dataColumn5
+            // 
+            this.dataColumn5.ColumnName = "email";
+            // 
+            // dataColumn6
+            // 
+            this.dataColumn6.ColumnName = "preferences";
+            // 
+            // dataColumn7
+            // 
+            this.dataColumn7.ColumnName = "name";
+            // 
+            // dataColumn8
+            // 
+            this.dataColumn8.ColumnName = "position";
+            this.dataColumn8.DataType = typeof(short);
+            // 
+            // dataColumn9
+            // 
+            this.dataColumn9.Caption = "ID";
+            this.dataColumn9.ColumnName = "contacts_id";
+            this.dataColumn9.DataType = typeof(short);
+            // 
+            // dataColumn10
+            // 
+            this.dataColumn10.ColumnName = "contacts_based_id";
+            this.dataColumn10.DataType = typeof(short);
+            // 
+            // dataColumn29
+            // 
+            this.dataColumn29.ColumnName = "branch_id";
+            this.dataColumn29.DataType = typeof(ushort);
+            // 
+            // dataColumn40
+            // 
+            this.dataColumn40.ColumnName = "is_default_contact";
+            this.dataColumn40.DataType = typeof(bool);
+            // 
+            // dataColumn49
+            // 
+            this.dataColumn49.ColumnName = "contact_notes";
             // 
             // ADDRESS
             // 
@@ -739,11 +1002,15 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // dg_address
             // 
+            this.dg_address.AutoGenerateColumns = false;
             this.dg_address.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_address.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.address_ids,
+            this.address_based_id,
             this.address_branch_id,
-            this.address_is_deleted});
+            this.address_is_deleted,
+            this.location});
+            this.dg_address.DataSource = this.dataBindingAddress;
             this.dg_address.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_address.Location = new System.Drawing.Point(3, 3);
             this.dg_address.Name = "dg_address";
@@ -756,6 +1023,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.address_ids.HeaderText = "address_ids";
             this.address_ids.Name = "address_ids";
             this.address_ids.Visible = false;
+            // 
+            // address_based_id
+            // 
+            this.address_based_id.DataPropertyName = "address_based_id";
+            this.address_based_id.HeaderText = "address_based_id";
+            this.address_based_id.Name = "address_based_id";
+            this.address_based_id.Visible = false;
             // 
             // address_branch_id
             // 
@@ -770,6 +1044,60 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.address_is_deleted.HeaderText = "address_is_deleted";
             this.address_is_deleted.Name = "address_is_deleted";
             this.address_is_deleted.Visible = false;
+            // 
+            // location
+            // 
+            this.location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.location.DataPropertyName = "location";
+            this.location.HeaderText = "STREET ADDRESS, CITY, STATE";
+            this.location.Name = "location";
+            // 
+            // dataBindingAddress
+            // 
+            this.dataBindingAddress.DataMember = "AddressTbl";
+            this.dataBindingAddress.DataSource = this.ds_address;
+            // 
+            // ds_address
+            // 
+            this.ds_address.DataSetName = "NewDataSet";
+            this.ds_address.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable3});
+            // 
+            // dataTable3
+            // 
+            this.dataTable3.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn11,
+            this.dataColumn12,
+            this.dataColumn13,
+            this.dataColumn30,
+            this.dataColumn41});
+            this.dataTable3.TableName = "AddressTbl";
+            // 
+            // dataColumn11
+            // 
+            this.dataColumn11.ColumnName = "location";
+            // 
+            // dataColumn12
+            // 
+            this.dataColumn12.ColumnName = "address_ids";
+            this.dataColumn12.DataType = typeof(short);
+            // 
+            // dataColumn13
+            // 
+            this.dataColumn13.ColumnName = "address_based_id";
+            this.dataColumn13.DataType = typeof(short);
+            // 
+            // dataColumn30
+            // 
+            this.dataColumn30.Caption = "address_branch_id";
+            this.dataColumn30.ColumnName = "address_branch_id";
+            this.dataColumn30.DataType = typeof(short);
+            // 
+            // dataColumn41
+            // 
+            this.dataColumn41.Caption = "address_is_deleted";
+            this.dataColumn41.ColumnName = "address_is_deleted";
+            this.dataColumn41.DataType = typeof(bool);
             // 
             // FINANCE
             // 
@@ -840,7 +1168,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.dataGridView4);
+            this.tabPage3.Controls.Add(this.dg_finance_transactions);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -849,10 +1177,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage3.Text = "TRANSACTIONS";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // dataGridView4
+            // dg_finance_transactions
             // 
-            this.dataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView4.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dg_finance_transactions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_finance_transactions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.finance_trans_so,
             this.finance_trans_date,
             this.finance_trans_po,
@@ -860,11 +1188,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.finance_trans_si,
             this.finance_trans_or,
             this.finance_trans_or_date});
-            this.dataGridView4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView4.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView4.Name = "dataGridView4";
-            this.dataGridView4.Size = new System.Drawing.Size(1175, 435);
-            this.dataGridView4.TabIndex = 0;
+            this.dg_finance_transactions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dg_finance_transactions.Location = new System.Drawing.Point(3, 3);
+            this.dg_finance_transactions.Name = "dg_finance_transactions";
+            this.dg_finance_transactions.Size = new System.Drawing.Size(1175, 435);
+            this.dg_finance_transactions.TabIndex = 0;
             // 
             // finance_trans_so
             // 
@@ -989,6 +1317,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_finance_payment_terms.Size = new System.Drawing.Size(30, 22);
             this.btn_finance_payment_terms.TabIndex = 30;
             this.btn_finance_payment_terms.UseVisualStyleBackColor = false;
+            this.btn_finance_payment_terms.Click += new System.EventHandler(this.btn_finance_payment_terms_Click);
             // 
             // ITEMS
             // 
@@ -1024,22 +1353,33 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // dg_items
             // 
+            this.dg_items.AutoGenerateColumns = false;
             this.dg_items.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_items.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.item_id,
             this.bpi_item_id,
             this.bpi_item_based_id,
+            this.item_code,
+            this.item_type,
+            this.long_description,
             this.bpi_item_branch_id,
+            this.price,
             this.item_graph,
+            this.notes,
             this.item_is_deleted});
+            this.dg_items.DataSource = this.dataBindingItems;
             this.dg_items.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_items.Location = new System.Drawing.Point(3, 86);
             this.dg_items.Name = "dg_items";
             this.dg_items.Size = new System.Drawing.Size(1189, 434);
             this.dg_items.TabIndex = 7;
+            this.dg_items.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_items_CellClick);
+            this.dg_items.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dg_items_CellPainting);
+            this.dg_items.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dg_items_UserDeletingRow);
             // 
             // item_id
             // 
+            this.item_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_id.DataPropertyName = "item_id";
             this.item_id.HeaderText = "item_id";
             this.item_id.Name = "item_id";
@@ -1047,6 +1387,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // bpi_item_id
             // 
+            this.bpi_item_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.bpi_item_id.DataPropertyName = "bpi_item_id";
             this.bpi_item_id.HeaderText = "BPI ITEM ID";
             this.bpi_item_id.Name = "bpi_item_id";
@@ -1054,10 +1395,42 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // bpi_item_based_id
             // 
+            this.bpi_item_based_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.bpi_item_based_id.DataPropertyName = "bpi_item_based_id";
             this.bpi_item_based_id.HeaderText = "BPI ITEM BASED ID";
             this.bpi_item_based_id.Name = "bpi_item_based_id";
             this.bpi_item_based_id.Visible = false;
+            // 
+            // item_code
+            // 
+            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.item_code.DataPropertyName = "item_code";
+            this.item_code.FillWeight = 28.2083F;
+            this.item_code.HeaderText = "ITEM CODE";
+            this.item_code.MinimumWidth = 30;
+            this.item_code.Name = "item_code";
+            // 
+            // item_type
+            // 
+            this.item_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.item_type.DataPropertyName = "item_type";
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.item_type.DefaultCellStyle = dataGridViewCellStyle1;
+            this.item_type.FillWeight = 37.78341F;
+            this.item_type.HeaderText = "TYPE";
+            this.item_type.MinimumWidth = 30;
+            this.item_type.Name = "item_type";
+            // 
+            // long_description
+            // 
+            this.long_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.long_description.DataPropertyName = "long_description";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.long_description.DefaultCellStyle = dataGridViewCellStyle2;
+            this.long_description.FillWeight = 28.2083F;
+            this.long_description.HeaderText = "DESCRIPTION";
+            this.long_description.MinimumWidth = 30;
+            this.long_description.Name = "long_description";
             // 
             // bpi_item_branch_id
             // 
@@ -1066,18 +1439,37 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.bpi_item_branch_id.Name = "bpi_item_branch_id";
             this.bpi_item_branch_id.Visible = false;
             // 
+            // price
+            // 
+            this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.price.DataPropertyName = "price";
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.price.DefaultCellStyle = dataGridViewCellStyle3;
+            this.price.FillWeight = 28.2083F;
+            this.price.HeaderText = "PRICE";
+            this.price.MinimumWidth = 30;
+            this.price.Name = "price";
+            // 
             // item_graph
             // 
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.NullValue = "GRAPH >>";
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.DarkGray;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle4;
             this.item_graph.HeaderText = "";
-            this.item_graph.MinimumWidth = 70;
+            this.item_graph.MinimumWidth = 40;
             this.item_graph.Name = "item_graph";
             this.item_graph.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.item_graph.Width = 70;
+            this.item_graph.Width = 40;
+            // 
+            // notes
+            // 
+            this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.notes.DataPropertyName = "notes";
+            this.notes.FillWeight = 37.9159F;
+            this.notes.HeaderText = "NOTES";
+            this.notes.MinimumWidth = 30;
+            this.notes.Name = "notes";
             // 
             // item_is_deleted
             // 
@@ -1086,16 +1478,90 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.item_is_deleted.Name = "item_is_deleted";
             this.item_is_deleted.Visible = false;
             // 
+            // dataBindingItems
+            // 
+            this.dataBindingItems.DataMember = "ItemTable";
+            this.dataBindingItems.DataSource = this.ds_Items;
+            // 
+            // ds_Items
+            // 
+            this.ds_Items.DataSetName = "NewDataSet";
+            this.ds_Items.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable4});
+            // 
+            // dataTable4
+            // 
+            this.dataTable4.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn14,
+            this.dataColumn15,
+            this.dataColumn16,
+            this.dataColumn17,
+            this.dataColumn18,
+            this.dataColumn19,
+            this.dataColumn22,
+            this.dataColumn31,
+            this.dataColumn42,
+            this.type});
+            this.dataTable4.TableName = "ItemTable";
+            // 
+            // dataColumn14
+            // 
+            this.dataColumn14.ColumnName = "bpi_item_id";
+            this.dataColumn14.DataType = typeof(short);
+            // 
+            // dataColumn15
+            // 
+            this.dataColumn15.ColumnName = "bpi_item_based_id";
+            this.dataColumn15.DataType = typeof(short);
+            // 
+            // dataColumn16
+            // 
+            this.dataColumn16.ColumnName = "item_code";
+            // 
+            // dataColumn17
+            // 
+            this.dataColumn17.Caption = "long_description";
+            this.dataColumn17.ColumnName = "long_description";
+            // 
+            // dataColumn18
+            // 
+            this.dataColumn18.Caption = "price";
+            this.dataColumn18.ColumnName = "price";
+            // 
+            // dataColumn19
+            // 
+            this.dataColumn19.Caption = "notes";
+            this.dataColumn19.ColumnName = "notes";
+            // 
+            // dataColumn22
+            // 
+            this.dataColumn22.ColumnName = "item_id";
+            // 
+            // dataColumn31
+            // 
+            this.dataColumn31.ColumnName = "bpi_item_branch_id";
+            this.dataColumn31.DataType = typeof(short);
+            // 
+            // dataColumn42
+            // 
+            this.dataColumn42.Caption = "item_is_deleted";
+            this.dataColumn42.ColumnName = "item_is_deleted";
+            this.dataColumn42.DataType = typeof(bool);
+            // 
+            // type
+            // 
+            this.type.ColumnName = "type";
+            // 
             // panel_item
             // 
-            this.panel_item.Controls.Add(this.button1);
+            this.panel_item.Controls.Add(this.btn_add_item);
             this.panel_item.Controls.Add(this.label25);
             this.panel_item.Controls.Add(this.label24);
             this.panel_item.Controls.Add(this.label23);
             this.panel_item.Controls.Add(this.cmb_item_account);
             this.panel_item.Controls.Add(this.cmb_tax_code);
             this.panel_item.Controls.Add(this.cmb_payment_terms);
-            this.panel_item.Controls.Add(this.button9);
+            this.panel_item.Controls.Add(this.btn_items_payment_terms);
             this.panel_item.Controls.Add(this.txt_item_tax_code);
             this.panel_item.Controls.Add(this.label21);
             this.panel_item.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1104,14 +1570,15 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_item.Size = new System.Drawing.Size(1189, 83);
             this.panel_item.TabIndex = 6;
             // 
-            // button1
+            // btn_add_item
             // 
-            this.button1.Location = new System.Drawing.Point(1111, 44);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 37;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_add_item.Location = new System.Drawing.Point(1060, 27);
+            this.btn_add_item.Name = "btn_add_item";
+            this.btn_add_item.Size = new System.Drawing.Size(75, 23);
+            this.btn_add_item.TabIndex = 37;
+            this.btn_add_item.Text = "ADD ITEM";
+            this.btn_add_item.UseVisualStyleBackColor = true;
+            this.btn_add_item.Click += new System.EventHandler(this.btn_add_new_item_Click_1);
             // 
             // label25
             // 
@@ -1142,6 +1609,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // cmb_item_account
             // 
+            this.cmb_item_account.DataSource = this.dataBindingPosition;
             this.cmb_item_account.FormattingEnabled = true;
             this.cmb_item_account.Location = new System.Drawing.Point(552, 24);
             this.cmb_item_account.Name = "cmb_item_account";
@@ -1166,17 +1634,19 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.cmb_payment_terms.Size = new System.Drawing.Size(186, 21);
             this.cmb_payment_terms.TabIndex = 32;
             this.cmb_payment_terms.Tag = "DYNAMIC";
+            this.cmb_payment_terms.Click += new System.EventHandler(this.cmb_payment_terms_Click);
             // 
-            // button9
+            // btn_items_payment_terms
             // 
-            this.button9.BackColor = System.Drawing.Color.Transparent;
-            this.button9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button9.BackgroundImage")));
-            this.button9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button9.Location = new System.Drawing.Point(302, 23);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(30, 22);
-            this.button9.TabIndex = 31;
-            this.button9.UseVisualStyleBackColor = false;
+            this.btn_items_payment_terms.BackColor = System.Drawing.Color.Transparent;
+            this.btn_items_payment_terms.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_items_payment_terms.BackgroundImage")));
+            this.btn_items_payment_terms.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_items_payment_terms.Location = new System.Drawing.Point(302, 23);
+            this.btn_items_payment_terms.Name = "btn_items_payment_terms";
+            this.btn_items_payment_terms.Size = new System.Drawing.Size(30, 22);
+            this.btn_items_payment_terms.TabIndex = 31;
+            this.btn_items_payment_terms.UseVisualStyleBackColor = false;
+            this.btn_items_payment_terms.Click += new System.EventHandler(this.btn_items_payment_terms_Click);
             // 
             // txt_item_tax_code
             // 
@@ -1211,17 +1681,37 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // dg_accreditations
             // 
+            this.dg_accreditations.AutoGenerateColumns = false;
             this.dg_accreditations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_accreditations.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.date_added,
+            this.file_name,
             this.accreditation_added_by,
+            this.bpi_accreditation_id,
+            this.bpi_accreditation_branch_id,
+            this.bpi_accreditation_based_id,
             this.file_path,
-            this.accreditation_added_by_id,
-            this.bpi_accreditation_based_id});
+            this.accreditation_added_by_id});
+            this.dg_accreditations.DataSource = this.databindingAccreditation;
             this.dg_accreditations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_accreditations.Location = new System.Drawing.Point(3, 63);
             this.dg_accreditations.Name = "dg_accreditations";
             this.dg_accreditations.Size = new System.Drawing.Size(1189, 457);
             this.dg_accreditations.TabIndex = 1;
+            // 
+            // date_added
+            // 
+            this.date_added.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.date_added.DataPropertyName = "date_added";
+            this.date_added.HeaderText = "DATE ADDED";
+            this.date_added.Name = "date_added";
+            // 
+            // file_name
+            // 
+            this.file_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.file_name.DataPropertyName = "file_name";
+            this.file_name.HeaderText = "FILE NAME";
+            this.file_name.Name = "file_name";
             // 
             // accreditation_added_by
             // 
@@ -1230,11 +1720,32 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.accreditation_added_by.HeaderText = "ADDED BY";
             this.accreditation_added_by.Name = "accreditation_added_by";
             // 
+            // bpi_accreditation_id
+            // 
+            this.bpi_accreditation_id.DataPropertyName = "bpi_accreditation_id";
+            this.bpi_accreditation_id.HeaderText = "bpi_accreditation_id";
+            this.bpi_accreditation_id.Name = "bpi_accreditation_id";
+            this.bpi_accreditation_id.Visible = false;
+            // 
+            // bpi_accreditation_branch_id
+            // 
+            this.bpi_accreditation_branch_id.DataPropertyName = "bpi_accreditation_branch_id";
+            this.bpi_accreditation_branch_id.HeaderText = "bpi_accreditation_branch_id";
+            this.bpi_accreditation_branch_id.Name = "bpi_accreditation_branch_id";
+            this.bpi_accreditation_branch_id.Visible = false;
+            // 
+            // bpi_accreditation_based_id
+            // 
+            this.bpi_accreditation_based_id.DataPropertyName = "bpi_accreditation_based_id";
+            this.bpi_accreditation_based_id.HeaderText = "bpi_accreditation_based_id";
+            this.bpi_accreditation_based_id.Name = "bpi_accreditation_based_id";
+            this.bpi_accreditation_based_id.Visible = false;
+            // 
             // file_path
             // 
             this.file_path.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.file_path.DataPropertyName = "file_path";
-            this.file_path.HeaderText = "file_path";
+            this.file_path.HeaderText = "FILE PATH";
             this.file_path.Name = "file_path";
             this.file_path.Visible = false;
             // 
@@ -1245,12 +1756,65 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.accreditation_added_by_id.Name = "accreditation_added_by_id";
             this.accreditation_added_by_id.Visible = false;
             // 
-            // bpi_accreditation_based_id
+            // databindingAccreditation
             // 
-            this.bpi_accreditation_based_id.DataPropertyName = "bpi_accreditation_based_id";
-            this.bpi_accreditation_based_id.HeaderText = "bpi_accreditation_based_id";
-            this.bpi_accreditation_based_id.Name = "bpi_accreditation_based_id";
-            this.bpi_accreditation_based_id.Visible = false;
+            this.databindingAccreditation.DataMember = "AccreditationTable";
+            this.databindingAccreditation.DataSource = this.dsAccreditations;
+            // 
+            // dsAccreditations
+            // 
+            this.dsAccreditations.DataSetName = "NewDataSet";
+            this.dsAccreditations.Tables.AddRange(new System.Data.DataTable[] {
+            this.AccreditationTable});
+            // 
+            // AccreditationTable
+            // 
+            this.AccreditationTable.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn32,
+            this.dataColumn33,
+            this.dataColumn34,
+            this.dataColumn35,
+            this.dataColumn36,
+            this.dataColumn37,
+            this.dataColumn38,
+            this.dataColumn39});
+            this.AccreditationTable.TableName = "AccreditationTable";
+            // 
+            // dataColumn32
+            // 
+            this.dataColumn32.ColumnName = "date_added";
+            // 
+            // dataColumn33
+            // 
+            this.dataColumn33.ColumnName = "file_name";
+            // 
+            // dataColumn34
+            // 
+            this.dataColumn34.ColumnName = "accreditation_added_by";
+            // 
+            // dataColumn35
+            // 
+            this.dataColumn35.ColumnName = "bpi_accreditation_id";
+            this.dataColumn35.DataType = typeof(short);
+            // 
+            // dataColumn36
+            // 
+            this.dataColumn36.ColumnName = "bpi_accreditation_branch_id";
+            this.dataColumn36.DataType = typeof(short);
+            // 
+            // dataColumn37
+            // 
+            this.dataColumn37.ColumnName = "accreditation_added_by_id";
+            this.dataColumn37.DataType = typeof(short);
+            // 
+            // dataColumn38
+            // 
+            this.dataColumn38.ColumnName = "file_path";
+            // 
+            // dataColumn39
+            // 
+            this.dataColumn39.ColumnName = "bpi_accreditation_based_id";
+            this.dataColumn39.DataType = typeof(short);
             // 
             // panel2
             // 
@@ -1277,6 +1841,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_upload_image.TabIndex = 0;
             this.btn_upload_image.Text = "Upload File";
             this.btn_upload_image.UseVisualStyleBackColor = true;
+            this.btn_upload_image.Click += new System.EventHandler(this.btn_upload_image_Click);
             // 
             // HISTORY
             // 
@@ -1335,12 +1900,174 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // dg_history
             // 
+            this.dg_history.AutoGenerateColumns = false;
             this.dg_history.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_history.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.dateDataGridViewTextBoxColumn,
+            this.actionsDataGridViewTextBoxColumn,
+            this.edithistoryDataGridViewTextBoxColumn,
+            this.editbyDataGridViewTextBoxColumn,
+            this.edithistoryidDataGridViewTextBoxColumn});
+            this.dg_history.DataSource = this.dataBindingHistory;
             this.dg_history.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_history.Location = new System.Drawing.Point(3, 3);
             this.dg_history.Name = "dg_history";
             this.dg_history.Size = new System.Drawing.Size(1175, 485);
             this.dg_history.TabIndex = 0;
+            // 
+            // dataBindingFinancePending
+            // 
+            this.dataBindingFinancePending.DataMember = "FinancePendingTbl";
+            this.dataBindingFinancePending.DataSource = this.ds_finance_pending;
+            // 
+            // ds_finance_pending
+            // 
+            this.ds_finance_pending.DataSetName = "NewDataSet";
+            this.ds_finance_pending.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable5});
+            // 
+            // dataTable5
+            // 
+            this.dataTable5.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn23,
+            this.dataColumn24,
+            this.dataColumn25,
+            this.dataColumn26,
+            this.dataColumn27,
+            this.dataColumn28});
+            this.dataTable5.TableName = "FinancePendingTbl";
+            // 
+            // dataColumn23
+            // 
+            this.dataColumn23.ColumnName = "customer_id";
+            this.dataColumn23.DataType = typeof(short);
+            // 
+            // dataColumn24
+            // 
+            this.dataColumn24.ColumnName = "date";
+            // 
+            // dataColumn25
+            // 
+            this.dataColumn25.Caption = "qoute_ref";
+            this.dataColumn25.ColumnName = "qoute_ref";
+            // 
+            // dataColumn26
+            // 
+            this.dataColumn26.ColumnName = "total_price";
+            // 
+            // dataColumn27
+            // 
+            this.dataColumn27.ColumnName = "stage";
+            // 
+            // dataColumn28
+            // 
+            this.dataColumn28.ColumnName = "status";
+            // 
+            // dataBindingHistory
+            // 
+            this.dataBindingHistory.DataMember = "Table1";
+            this.dataBindingHistory.DataSource = this.ds_history;
+            // 
+            // ds_history
+            // 
+            this.ds_history.DataSetName = "NewDataSet";
+            this.ds_history.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable6});
+            // 
+            // dataTable6
+            // 
+            this.dataTable6.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn43,
+            this.dataColumn45,
+            this.dataColumn46,
+            this.dataColumn47,
+            this.dataColumn48,
+            this.dataColumn20});
+            this.dataTable6.TableName = "Table1";
+            // 
+            // dataColumn43
+            // 
+            this.dataColumn43.Caption = "branch_id";
+            this.dataColumn43.ColumnName = "branch_id";
+            this.dataColumn43.DataType = typeof(short);
+            // 
+            // dataColumn45
+            // 
+            this.dataColumn45.Caption = "DATE";
+            this.dataColumn45.ColumnName = "date ";
+            // 
+            // dataColumn46
+            // 
+            this.dataColumn46.Caption = "ACTIONS";
+            this.dataColumn46.ColumnName = "actions";
+            // 
+            // dataColumn47
+            // 
+            this.dataColumn47.Caption = "EDIT HISTORY";
+            this.dataColumn47.ColumnName = "edit_history";
+            // 
+            // dataColumn48
+            // 
+            this.dataColumn48.Caption = "EDIT BY";
+            this.dataColumn48.ColumnName = "edit_by";
+            // 
+            // dataColumn20
+            // 
+            this.dataColumn20.ColumnName = "edit_history_id";
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "branch_id";
+            this.dataGridViewTextBoxColumn1.HeaderText = "branch_id";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // Column1
+            // 
+            this.Column1.DataPropertyName = "branch_id";
+            this.Column1.HeaderText = "branch_id";
+            this.Column1.Name = "Column1";
+            this.Column1.Visible = false;
+            // 
+            // dateDataGridViewTextBoxColumn
+            // 
+            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dateDataGridViewTextBoxColumn.DataPropertyName = "date";
+            dataGridViewCellStyle5.Format = "d";
+            dataGridViewCellStyle5.NullValue = null;
+            this.dateDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+            this.dateDataGridViewTextBoxColumn.HeaderText = "DATE";
+            this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
+            // 
+            // actionsDataGridViewTextBoxColumn
+            // 
+            this.actionsDataGridViewTextBoxColumn.DataPropertyName = "actions";
+            this.actionsDataGridViewTextBoxColumn.HeaderText = "actions";
+            this.actionsDataGridViewTextBoxColumn.Name = "actionsDataGridViewTextBoxColumn";
+            this.actionsDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // edithistoryDataGridViewTextBoxColumn
+            // 
+            this.edithistoryDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.edithistoryDataGridViewTextBoxColumn.DataPropertyName = "edit_history";
+            this.edithistoryDataGridViewTextBoxColumn.HeaderText = "EDIT HISTORY";
+            this.edithistoryDataGridViewTextBoxColumn.Name = "edithistoryDataGridViewTextBoxColumn";
+            // 
+            // editbyDataGridViewTextBoxColumn
+            // 
+            this.editbyDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.editbyDataGridViewTextBoxColumn.DataPropertyName = "edit_by";
+            this.editbyDataGridViewTextBoxColumn.HeaderText = "EDITTED BY";
+            this.editbyDataGridViewTextBoxColumn.Name = "editbyDataGridViewTextBoxColumn";
+            // 
+            // edithistoryidDataGridViewTextBoxColumn
+            // 
+            this.edithistoryidDataGridViewTextBoxColumn.DataPropertyName = "edit_history_id";
+            this.edithistoryidDataGridViewTextBoxColumn.HeaderText = "edit_history_id";
+            this.edithistoryidDataGridViewTextBoxColumn.Name = "edithistoryidDataGridViewTextBoxColumn";
+            this.edithistoryidDataGridViewTextBoxColumn.Visible = false;
             // 
             // BpiBranchUC
             // 
@@ -1349,6 +2076,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.Controls.Add(this.pnl_new_brach);
             this.Name = "BpiBranchUC";
             this.Size = new System.Drawing.Size(1203, 549);
+            this.Load += new System.EventHandler(this.BpiBranchUC_Load);
             this.pnl_new_brach.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.GENERAL.ResumeLayout(false);
@@ -1356,8 +2084,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_general.PerformLayout();
             this.CONTACTS.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_contacts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingPosition)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_positions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingContacts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_contacts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable2)).EndInit();
             this.ADDRESS.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_address)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingAddress)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_address)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable3)).EndInit();
             this.FINANCE.ResumeLayout(false);
             this.FINANCE.PerformLayout();
             this.finance_tabpage_nale.ResumeLayout(false);
@@ -1365,22 +2102,34 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_finance_pending)).EndInit();
             this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_finance_transactions)).EndInit();
             this.panel_finance.ResumeLayout(false);
             this.panel_finance.PerformLayout();
             this.ITEMS.ResumeLayout(false);
             this.pnl_new_added_item.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_items)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingItems)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_Items)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable4)).EndInit();
             this.panel_item.ResumeLayout(false);
             this.panel_item.PerformLayout();
             this.ACCREDITATION.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_accreditations)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.databindingAccreditation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dsAccreditations)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AccreditationTable)).EndInit();
             this.panel_accreditation.ResumeLayout(false);
             this.HISTORY.ResumeLayout(false);
             this.history_panel.ResumeLayout(false);
             this.tabControl_History.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_history)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingFinancePending)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_finance_pending)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingHistory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_history)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable6)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1410,7 +2159,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.Button btn_social_links;
         private System.Windows.Forms.Button btn_get_branch;
         private System.Windows.Forms.Button btn_get_entity;
-        private System.Windows.Forms.ComboBox cmb_social;
         private System.Windows.Forms.TextBox txt_fax_no;
         private System.Windows.Forms.TextBox txt_supplier_code;
         private System.Windows.Forms.TextBox txt_customer_code;
@@ -1431,22 +2179,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.TextBox txt_branch_tel_no;
         private System.Windows.Forms.TextBox txt_branch_website;
         private System.Windows.Forms.TabPage CONTACTS;
-        private System.Windows.Forms.DataGridView dg_contacts;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn is_default_contact;
-        private System.Windows.Forms.DataGridViewTextBoxColumn number;
-        private System.Windows.Forms.DataGridViewTextBoxColumn email;
-        private System.Windows.Forms.DataGridViewTextBoxColumn preferences;
-        private System.Windows.Forms.DataGridViewButtonColumn ADD_PREF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn contacts_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn contacts_based_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn branch_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn contact_notes;
         private System.Windows.Forms.TabPage ADDRESS;
         private System.Windows.Forms.DataGridView dg_address;
-        private System.Windows.Forms.DataGridViewTextBoxColumn address_ids;
-        private System.Windows.Forms.DataGridViewTextBoxColumn address_branch_id;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn address_is_deleted;
         private System.Windows.Forms.TabPage FINANCE;
         private System.Windows.Forms.Panel finance_tabpage_nale;
         private System.Windows.Forms.TabControl tabControl_Finance;
@@ -1454,7 +2188,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.DataGridView dg_finance_pending;
         private System.Windows.Forms.DataGridViewTextBoxColumn qoute_ref;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.DataGridView dataGridView4;
+        private System.Windows.Forms.DataGridView dg_finance_transactions;
         private System.Windows.Forms.DataGridViewTextBoxColumn finance_trans_so;
         private System.Windows.Forms.DataGridViewTextBoxColumn finance_trans_date;
         private System.Windows.Forms.DataGridViewTextBoxColumn finance_trans_po;
@@ -1475,29 +2209,19 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.Panel pnl_new_added_item;
         private System.Windows.Forms.Button btn_add_new_item;
         private System.Windows.Forms.DataGridView dg_items;
-        private System.Windows.Forms.DataGridViewTextBoxColumn item_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_based_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_branch_id;
-        private System.Windows.Forms.DataGridViewButtonColumn item_graph;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn item_is_deleted;
         private System.Windows.Forms.Panel panel_item;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_add_item;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.ComboBox cmb_item_account;
         private System.Windows.Forms.ComboBox cmb_tax_code;
         private System.Windows.Forms.ComboBox cmb_payment_terms;
-        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button btn_items_payment_terms;
         private System.Windows.Forms.TextBox txt_item_tax_code;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.TabPage ACCREDITATION;
         private System.Windows.Forms.DataGridView dg_accreditations;
-        private System.Windows.Forms.DataGridViewTextBoxColumn accreditation_added_by;
-        private System.Windows.Forms.DataGridViewTextBoxColumn file_path;
-        private System.Windows.Forms.DataGridViewTextBoxColumn accreditation_added_by_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_accreditation_based_id;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel_accreditation;
         private System.Windows.Forms.Button btn_upload_image;
@@ -1507,5 +2231,119 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.DataGridView dg_history;
+        private System.Data.DataSet ds_positions;
+        private System.Data.DataTable dataTable1;
+        private System.Data.DataColumn dataColumn1;
+        private System.Data.DataColumn dataColumn2;
+        private System.Data.DataColumn dataColumn3;
+        private System.Windows.Forms.BindingSource dataBindingPosition;
+        private System.Data.DataSet ds_contacts;
+        private System.Data.DataTable dataTable2;
+        private System.Data.DataColumn dataColumn4;
+        private System.Data.DataColumn dataColumn5;
+        private System.Data.DataColumn dataColumn6;
+        private System.Data.DataColumn dataColumn7;
+        private System.Data.DataColumn dataColumn8;
+        private System.Data.DataColumn dataColumn9;
+        private System.Data.DataColumn dataColumn10;
+        private System.Data.DataColumn dataColumn29;
+        private System.Data.DataColumn dataColumn40;
+        private System.Data.DataColumn dataColumn49;
+        private System.Windows.Forms.BindingSource dataBindingContacts;
+        private System.Data.DataSet ds_address;
+        private System.Data.DataTable dataTable3;
+        private System.Data.DataColumn dataColumn11;
+        private System.Data.DataColumn dataColumn12;
+        private System.Data.DataColumn dataColumn13;
+        private System.Data.DataColumn dataColumn30;
+        private System.Data.DataColumn dataColumn41;
+        private System.Windows.Forms.BindingSource dataBindingAddress;
+        private System.Data.DataSet ds_Items;
+        private System.Data.DataTable dataTable4;
+        private System.Data.DataColumn dataColumn14;
+        private System.Data.DataColumn dataColumn15;
+        private System.Data.DataColumn dataColumn16;
+        private System.Data.DataColumn dataColumn17;
+        private System.Data.DataColumn dataColumn18;
+        private System.Data.DataColumn dataColumn19;
+        private System.Data.DataColumn dataColumn22;
+        private System.Data.DataColumn dataColumn31;
+        private System.Data.DataColumn dataColumn42;
+        private System.Windows.Forms.BindingSource dataBindingItems;
+        private System.Windows.Forms.BindingSource dataBindingFinancePending;
+        private System.Data.DataSet ds_finance_pending;
+        private System.Data.DataTable dataTable5;
+        private System.Data.DataColumn dataColumn23;
+        private System.Data.DataColumn dataColumn24;
+        private System.Data.DataColumn dataColumn25;
+        private System.Data.DataColumn dataColumn26;
+        private System.Data.DataColumn dataColumn27;
+        private System.Data.DataColumn dataColumn28;
+        private System.Windows.Forms.BindingSource databindingAccreditation;
+        private System.Data.DataSet dsAccreditations;
+        private System.Data.DataTable AccreditationTable;
+        private System.Data.DataColumn dataColumn32;
+        private System.Data.DataColumn dataColumn33;
+        private System.Data.DataColumn dataColumn34;
+        private System.Data.DataColumn dataColumn35;
+        private System.Data.DataColumn dataColumn36;
+        private System.Data.DataColumn dataColumn37;
+        private System.Data.DataColumn dataColumn38;
+        private System.Data.DataColumn dataColumn39;
+        private System.Data.DataColumn type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn item_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_based_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn item_code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn item_type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn long_description;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_branch_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn price;
+        private System.Windows.Forms.DataGridViewButtonColumn item_graph;
+        private System.Windows.Forms.DataGridViewTextBoxColumn notes;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn item_is_deleted;
+        private System.Windows.Forms.DataGridViewTextBoxColumn date_added;
+        private System.Windows.Forms.DataGridViewTextBoxColumn file_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn accreditation_added_by;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_accreditation_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_accreditation_branch_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_accreditation_based_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn file_path;
+        private System.Windows.Forms.DataGridViewTextBoxColumn accreditation_added_by_id;
+        private System.Windows.Forms.BindingSource dataBindingHistory;
+        private System.Data.DataSet ds_history;
+        private System.Data.DataTable dataTable6;
+        private System.Data.DataColumn dataColumn43;
+        private System.Data.DataColumn dataColumn45;
+        private System.Data.DataColumn dataColumn46;
+        private System.Data.DataColumn dataColumn47;
+        private System.Data.DataColumn dataColumn48;
+        private System.Windows.Forms.DataGridViewTextBoxColumn contacts_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn contacts_based_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn branch_id;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn is_default_contact;
+        private System.Windows.Forms.DataGridViewTextBoxColumn number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn email;
+        private System.Windows.Forms.DataGridViewTextBoxColumn preferences;
+        private System.Windows.Forms.DataGridViewButtonColumn ADD_PREF;
+        private System.Windows.Forms.DataGridViewComboBoxColumn position;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn contact_notes;
+        private System.Windows.Forms.DataGridView dg_contacts;
+        private System.Windows.Forms.CheckBox chk_is_main;
+        private System.Windows.Forms.DataGridViewTextBoxColumn address_ids;
+        private System.Windows.Forms.DataGridViewTextBoxColumn address_based_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn address_branch_id;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn address_is_deleted;
+        private System.Windows.Forms.DataGridViewTextBoxColumn location;
+        private System.Windows.Forms.ComboBox cmb_social;
+        private System.Data.DataColumn dataColumn20;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn actionsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn edithistoryDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn editbyDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn edithistoryidDataGridViewTextBoxColumn;
     }
 }

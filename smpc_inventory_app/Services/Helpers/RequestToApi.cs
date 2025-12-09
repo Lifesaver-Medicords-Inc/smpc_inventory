@@ -120,6 +120,11 @@ namespace smpc_inventory_app.Services.Helpers
             string jsonContent = JsonConvert.SerializeObject(data);
             return await SendRequestAsync(url, HttpMethod.Put, jsonContent);
         }
+        static internal async Task<T> Put(string url, List<Dictionary<string, object>> data)
+        {
+            string jsonContent = JsonConvert.SerializeObject(data);
+            return await SendRequestAsync(url, HttpMethod.Put, jsonContent);
+        }
         // GET Method
         public static async Task<T> Get(string url)
         {

@@ -1061,13 +1061,13 @@ namespace smpc_app.Services.Helpers
                             // Check if the control is a Combobox
                             if (control is ComboBox comboBox)
                             {
-                                Console.WriteLine(comboBox.Name);
+                                Console.WriteLine($"This is a  combobox: {comboBox.Name} ");
                                 string key = comboBox.Name.Replace("cmb_", "") + "_id";
 
                                 if (comboBox.Tag == "DYNAMIC")
                                 {
 
-                                    //Console.WriteLine(comboBox.Name);
+                                    Console.WriteLine("DYNAMICS:", comboBox.Name);
                                     comboBox.SelectedValue = (string)dt.Rows[selectedIndex][key].ToString();
                                 }
                                 // Check multiple values

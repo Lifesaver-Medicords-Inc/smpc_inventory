@@ -61,7 +61,8 @@ namespace Inventory_SMPC.Pages
             System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Position");
             System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Warehouse Use Type");
             System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Warehouse");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Setup", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Valuation Methods");
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Setup", new System.Windows.Forms.TreeNode[] {
             treeNode12,
             treeNode13,
             treeNode14,
@@ -76,16 +77,17 @@ namespace Inventory_SMPC.Pages
             treeNode23,
             treeNode24,
             treeNode25,
-            treeNode26});
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Receiving Report");
-            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Receiving Report2");
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Inventory Logbook");
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Inventory Tracker");
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
-            treeNode28,
+            treeNode26,
+            treeNode27});
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Receiving Report");
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Receiving Report2");
+            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Inventory Logbook");
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Inventory Tracker");
+            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
             treeNode29,
             treeNode30,
-            treeNode31});
+            treeNode31,
+            treeNode32});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SMPC));
             this.MainPanel = new System.Windows.Forms.Panel();
             this.container = new System.Windows.Forms.Panel();
@@ -283,26 +285,28 @@ namespace Inventory_SMPC.Pages
             treeNode25.Text = "Warehouse Use Type";
             treeNode26.Name = "WAREHOUSE";
             treeNode26.Text = "Warehouse";
-            treeNode27.Name = "parent";
-            treeNode27.Text = "Setup";
-            treeNode28.Name = "RECEIVING REPORT";
-            treeNode28.Text = "Receiving Report";
-            treeNode29.Name = "RECEIVING REPORT2";
-            treeNode29.Text = "Receiving Report2";
-            treeNode30.Name = "INVENTORY LOGBOOK";
-            treeNode30.Text = "Inventory Logbook";
-            treeNode31.Name = "INVENTORY TRACKER";
-            treeNode31.Text = "Inventory Tracker";
-            treeNode32.Name = "parent";
-            treeNode32.Text = "Inventory";
+            treeNode27.Name = "VALUATION METHOD";
+            treeNode27.Text = "Valuation Methods";
+            treeNode28.Name = "parent";
+            treeNode28.Text = "Setup";
+            treeNode29.Name = "RECEIVING REPORT";
+            treeNode29.Text = "Receiving Report";
+            treeNode30.Name = "RECEIVING REPORT2";
+            treeNode30.Text = "Receiving Report2";
+            treeNode31.Name = "INVENTORY LOGBOOK";
+            treeNode31.Text = "Inventory Logbook";
+            treeNode32.Name = "INVENTORY TRACKER";
+            treeNode32.Text = "Inventory Tracker";
+            treeNode33.Name = "parent";
+            treeNode33.Text = "Inventory";
             this.Sidebar.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2,
             treeNode3,
             treeNode8,
             treeNode11,
-            treeNode27,
-            treeNode32});
+            treeNode28,
+            treeNode33});
             this.Sidebar.ShowNodeToolTips = true;
             this.Sidebar.Size = new System.Drawing.Size(235, 637);
             this.Sidebar.TabIndex = 0;

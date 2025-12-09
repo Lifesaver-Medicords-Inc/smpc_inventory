@@ -21,12 +21,20 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info.Bpi_Modal
         private void btn_create_Click(object sender, EventArgs e)
         {
             title = txt_title.Text;
+
+            // check branch name if exist
+
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
         public string GetTitle()
         {
             return title;
+        }
+        public void SetTitle(string value)
+        {
+            txt_title.Text = value;
         }
 
     }

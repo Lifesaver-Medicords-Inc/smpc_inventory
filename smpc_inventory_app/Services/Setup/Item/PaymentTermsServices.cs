@@ -17,9 +17,9 @@ namespace smpc_inventory_app.Services.Setup.Item
         public static async Task<DataTable> GetAsDatatable()
         {
             var response = await RequestToApi<ApiResponseModel<List<PaymentTerms>>>.Get(ENUM_ENDPOINT.PAYMENT_TERMS);
-            DataTable itemBrands = JsonHelper.ToDataTable(response.Data);
+            DataTable paymentTerms = JsonHelper.ToDataTable(response.Data);
 
-            return itemBrands;
+            return paymentTerms;
         }
 
         public static async Task<ApiResponseModel> Insert(Dictionary<string, dynamic> data)
