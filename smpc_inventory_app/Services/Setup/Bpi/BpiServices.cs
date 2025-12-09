@@ -38,11 +38,24 @@ namespace smpc_inventory_app.Services.Setup.Bpi
             return responseData;
         }
 
+        public static async Task<bool> UpdateMainBranch(List<Dictionary<string, dynamic>> data)
+        {
+            var response = await RequestToApi<ApiResponseModel<dynamic>>.Put(ENUM_ENDPOINT.BPIMain, data);
+            bool responseData = response.Success;
+            return responseData;
+        }
         public static async Task<ApiResponseModel<dynamic>> Insert(Dictionary<string, dynamic> data)
         {
             var response = await RequestToApi<ApiResponseModel<dynamic>>.Post(ENUM_ENDPOINT.BPI, data);
             //   bool responseData = response.Success;
   
+            return response;
+        }
+        public static async Task<ApiResponseModel<dynamic>> InsertNewBPI(Dictionary<string, dynamic> data)
+        {
+            var response = await RequestToApi<ApiResponseModel<dynamic>>.Post(ENUM_ENDPOINT.CreateBPI, data);
+            bool responseData = response.Success;
+
             return response;
         }
 

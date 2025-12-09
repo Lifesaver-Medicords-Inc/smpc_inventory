@@ -51,49 +51,40 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         List<int> currentSelectedBranchIndustryIds = new List<int>();
         List<int> currentSelectedEntityIds = new List<int>();
         int selectedRecord = 0;
-        int groupCount = 0;
+        int groupCount = 0; 
         TabPage tabItemPages;
         TabPage tabFinancePages;
         ApiResponseModel response;
+        string parentId;
+        string SalesId; 
+
         string CanvassForm;
         List<string> selectedPreferenceNames = new List<string>();
+
+        private int prevBranchTabIndex = -1;
+        private int rightClickedTabIndex = -1;
+        private BpiBranchUC currentBranchUC;
+        private const int DebounceDelay = 300;
         public BusinessPartnerInfo(string canvassForm)
         {
             this.CanvassForm = canvassForm;
             InitializeComponent();
             Helpers.Placeholder.SetPlaceholder(txt_main_tel_no, "XXX-XXX-XXX-XXX");
             Helpers.Placeholder.SetPlaceholder(txt_main_tel_no, "09XX-XXX-XXXX / (0XX) XXXX-XXXX");
-            Helpers.Placeholder.SetPlaceholder(txt_branch_tel_no, "09XX-XXX-XXXX / (0XX) XXXX-XXXX");
-            tabItemPages = tabControl2.TabPages["ITEMS"];
-            tabFinancePages = tabControl2.TabPages["FINANCE"];
+            //Helpers.Placeholder.SetPlaceholder(txt_branch_tel_no, "09XX-XXX-XXXX / (0XX) XXXX-XXXX");
+            //tabItemPages = tabControl2.TabPages["ITEMS"];
+            //tabFinancePages = tabControl2.TabPages["FINANCE"];
 
-            if (CanvassForm != "")
-            {
-                ShowCanvassTabPage();
-            }
+            debounceTimer.Interval = DebounceDelay;
+            debounceTimer.Tick += debounceTimer_Tick;
+            //if (CanvassForm != "")
+            //{
+            //    ShowCanvassTabPage();
+            //}
 
-        }
-        public void HideButton()
-        {
-            btn_add_new_item.Visible = false;
-        }
-        private void ShowCanvassTabPage()
-        {
-            string[] tabPageList = { "FINANCE", "ACCREDITATION", "HISTORY" };
-            foreach (TabPage tabPage in tabControl2.TabPages)
-
-            {
-
-
-                if (tabPageList.Contains(tabPage.Text))
-                {
-                    RemoveTabPages(tabPage);
-                }
-            }
         }
         private void BusinessPartnerInfo_Load(object sender, EventArgs e)
         {
-
             GetBpiUser();
             GetIndustriesSetup();
 
@@ -107,6 +98,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             GetBpi();
             BtnToogle(false);
         }
+        
+
+        public void HideButton()
+        {
+            btn_add_new_item.Visible = false;
+        }
+        //private void ShowCanvassTabPage()
+        //{
+        //    string[] tabPageList = { "FINANCE", "ACCREDITATION", "HISTORY" };
+        //    foreach (TabPage tabPage in tabControl2.TabPages)
+
+        //    {
+
+
+        //        if (tabPageList.Contains(tabPage.Text))
+        //        {
+        //            RemoveTabPages(tabPage);
+        //        }
+        //    }
+        //}
 
         private async void GetBpiUser()
         {
@@ -171,7 +182,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             cmb_item_account.ValueMember = "id";
             cmb_item_account.DisplayMember = "code";
         }
-
+        
 
         private async void GetEntityCount()
         {
@@ -193,7 +204,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             CacheData.Positions = await serviceSetup.GetAsDatatable();
 
             DataRow newRow = CacheData.Positions.NewRow();
-            newRow["id"] = DBNull.Value;
+            newRow["id"] = 0;
             newRow["name"] = "--Select--";
 
             CacheData.Positions.Rows.InsertAt(newRow, 0);
@@ -227,11 +238,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
 
         }
+
         private async void GetBpi()
         {
             var response = await RequestToApi<ApiResponseModel<Bpi_Class>>.Get(ENUM_ENDPOINT.BPI);
             records = response.Data;
 
+            // Convert all API objects to DataTables
             bpi = JsonHelper.ToDataTable(records.bpi);
             general = JsonHelper.ToDataTable(records.general);
             contacts = JsonHelper.ToDataTable(records.contacts);
@@ -241,6 +254,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             finance_pending = JsonHelper.ToDataTable(records.finance_pending);
             accreditations = JsonHelper.ToDataTable(records.accreditations);
             history = JsonHelper.ToDataTable(records.history);
+
             if (records.bpi.Count != 0 && records.general.Count != 0 && records.contacts.Count != 0 && records.address.Count != 0)
             {
 
@@ -250,8 +264,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
 
                 btn_add_page.Enabled = false;
-                RemoveTabPages(tabItemPages);
-                RemoveTabPages(tabFinancePages);
+                //RemoveTabPages(tabItemPages);
+                //RemoveTabPages(tabFinancePages);
 
                 Button dynamicButton = new Button();
 
@@ -261,22 +275,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 dynamicButton.BackColor = Color.LightBlue;
 
             }
-
         }
 
         private void GetAllBpiChild()
         {
-            //Fetch Bpi Contacts
+            //Fetch Bpi Contacts 
             DataView dataViewContact = new DataView(contacts);
 
             if (dataViewContact.Count != 0)
             {
                 dataViewContact.RowFilter = "contacts_based_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
 
+                if (dataViewContact.Count == 0)
+                {
+                    MessageBox.Show("No contacts found.");
+                    return;
+                }
+
                 DataRowView filteredRow = null;
                 if (dataViewContact.Count > 0)
                 {
-
                     filteredRow = dataViewContact[0];
                     string filteredBasedId = filteredRow["branch_id"].ToString();
 
@@ -307,6 +325,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 //   var sampleTest = bpi.Rows[this.selectedRecord]["id"].ToString();
                 dataViewAddress.RowFilter = "address_based_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
 
+                if (dataViewAddress.Count == 0)
+                {
+                    MessageBox.Show("No address found.");
+                    return;
+                }
+
                 DataRowView filteredRow = dataViewAddress[0];
                 string filteredBasedId = filteredRow["address_branch_id"].ToString();
                 string addressBasedId = filteredRow["address_based_id"].ToString();
@@ -316,11 +340,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 dataBindingAddress.DataSource = filteredAddress;
             }
 
-            //Fetch Bpi Address
+            //Fetch Bpi Items
             DataView dataViewItems = new DataView(items);
             if (dataViewItems.Count != 0)
             {
                 dataViewItems.RowFilter = "bpi_item_based_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
+
+                if (dataViewItems.Count == 0)
+                {
+                    MessageBox.Show("No bpi items found.");
+                    return;
+                }
 
                 DataRowView filteredRow = null;
                 if (dataViewItems.Count > 0)
@@ -342,9 +372,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 dataViewFinancePending.RowFilter = "customer_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
 
+                if (dataViewFinancePending.Count == 0)
+                {
+                    MessageBox.Show("No finance pending found.");
+                    return;
+                }
+
                 DataRowView filteredRow = null;
                 if (dataViewFinancePending.Count > 0)
                 {
+
+
                     filteredRow = dataViewFinancePending[0];
                     string filteredBranchId = filteredRow["finance_pending_branch_id"].ToString();
                     string financeCustomerId = filteredRow["customer_id"].ToString();
@@ -360,6 +398,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 dataViewAccreditation.RowFilter = "bpi_accreditation_based_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
 
+                if (dataViewAccreditation.Count == 0)
+                {
+                    MessageBox.Show("No accreditations found.");
+                    return;
+                }
+
                 DataRowView filteredRow = null;
                 if (dataViewAccreditation.Count > 0)
                 {
@@ -374,10 +418,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 databindingAccreditation.DataSource = filteredItems;
             }
 
+            //Fetch BPI History
             DataView dataViewHistory = new DataView(history);
             if (dataViewHistory.Count != 0)
             {
                 dataViewHistory.RowFilter = "based_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
+
+                if (dataViewHistory.Count == 0)
+                {
+                    MessageBox.Show("No History found.");
+                    return;
+                }
 
                 DataRowView filteredRow = null;
                 if (dataViewHistory.Count > 0)
@@ -397,69 +448,70 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
-        private void GetAllBpiBranch(DataTable data)
-        {
-            var fetchBranch = data;
+        //private void GetAllBpiBranch(DataTable data)
+        //{
+        //    var fetchBranch = data;
 
-            //var buttonsToRemove = flowLayout_panel.Controls
-            //    .OfType<Button>()
-            //    .Where(ctrl => !data.AsEnumerable().Any(row => row["branch_name"].ToString() == ctrl.Text))
-            //    .ToList();
+        //    //var buttonsToRemove = flowLayout_panel.Controls
+        //    //    .OfType<Button>()
+        //    //    .Where(ctrl => !data.AsEnumerable().Any(row => row["branch_name"].ToString() == ctrl.Text))
+        //    //    .ToList();
 
-            //// Remove buttons safely
-            //foreach (var btn in buttonsToRemove)
-            //{
-            //    flowLayout_panel.Controls.Remove(btn);
-            //    btn.Dispose();
-            //}
+        //    //// Remove buttons safely
+        //    //foreach (var btn in buttonsToRemove)
+        //    //{
+        //    //    flowLayout_panel.Controls.Remove(btn);
+        //    //    btn.Dispose();
+        //    //}
 
-            foreach (var btn in flowLayout_panel.Controls.OfType<Button>().ToList())
-            {
-                flowLayout_panel.Controls.Remove(btn);
-                btn.Dispose();
-            }
+        //    foreach (var btn in flowLayout_panel.Controls.OfType<Button>().ToList())
+        //    {
+        //        flowLayout_panel.Controls.Remove(btn);
+        //        btn.Dispose();
+        //    }
 
-            foreach (DataRow row in data.Rows)
-            {
-                string branchName = row["branch_name"].ToString();
-                var salesName = bpi.Rows[this.selectedRecord]["sales_id"].ToString();
-                //    var matchSelectedSaless = Users.FirstOrDefault(salesUser => salesUser.employee_id == bpi.Rows[this.selectedRecord]["sales_id"].ToString());
+        //    foreach (DataRow row in data.Rows)
+        //    {
+        //        string branchName = row["branch_name"].ToString();
+        //        var salesName = bpi.Rows[this.selectedRecord]["sales_id"].ToString();
+        //        //    var matchSelectedSaless = Users.FirstOrDefault(salesUser => salesUser.employee_id == bpi.Rows[this.selectedRecord]["sales_id"].ToString());
 
-                var salesOwner = CacheData.CurrentUser.employee_id == row["branch_sales_id"].ToString();
-                var matchSelectedSales = Users.FirstOrDefault(salesUser => salesUser.employee_id == row["branch_sales_id"].ToString());
-                string selectedSalesNames = "";
-                if (matchSelectedSales != null)
-                {
-                    selectedSalesNames = $"({matchSelectedSales.first_name.Substring(0, 1).ToUpper()}. {matchSelectedSales.last_name})";
-                    //selectedSalesNames = txt_sales_id.Text;
-                }
-                string selectedSalesName = salesOwner ? txt_sales_id.Text : selectedSalesNames;
+        //        var salesOwner = CacheData.CurrentUser.employee_id == row["branch_sales_id"].ToString();
+        //        var matchSelectedSales = Users.FirstOrDefault(salesUser => salesUser.employee_id == row["branch_sales_id"].ToString());
+        //        string selectedSalesNames = "";
+        //        if (matchSelectedSales != null)
+        //        {
+        //            selectedSalesNames = $"({matchSelectedSales.first_name.Substring(0, 1).ToUpper()}. {matchSelectedSales.last_name})";
+        //            //selectedSalesNames = txt_sales_id.Text;
+        //        }
+        //        string selectedSalesName = salesOwner ? txt_sales_id.Text : selectedSalesNames;
 
-                Button dynamicButton = new Button
-                {
-                    Text = branchName,
-                    Size = new Size(100, 50),
-                    BackColor = Color.LightBlue,
-                    Tag = row,
-                    //    Enabled = selectedSalesName != ""
-                };
-                ToolTip toolTip = new ToolTip();
-                toolTip.SetToolTip(dynamicButton, selectedSalesName);
+        //        Button dynamicButton = new Button
+        //        {
+        //            Text = branchName,
+        //            Size = new Size(100, 50),
+        //            BackColor = Color.LightBlue,
+        //            Tag = row,
+        //            //    Enabled = selectedSalesName != ""
+        //        };
+        //        ToolTip toolTip = new ToolTip();
+        //        toolTip.SetToolTip(dynamicButton, selectedSalesName);
 
 
-                if (salesOwner)
-                {
-                    dynamicButton.Click += DynamicButton_Clicks; // Attach the click event
-                }
-                flowLayout_panel.Controls.Add(dynamicButton);
+        //        if (salesOwner)
+        //        {
+        //            dynamicButton.Click += DynamicButton_Clicks; // Attach the click event
+        //        }
+        //        flowLayout_panel.Controls.Add(dynamicButton);
 
-            }
+        //    }
 
-        }
+        //}
 
         private bool GetSelectedSales()
         {
-            bool isSalesOwner = CacheData.CurrentUser.employee_id == bpi.Rows[this.selectedRecord]["sales_id"].ToString();
+            SalesId = bpi.Rows[this.selectedRecord]["sales_id"].ToString();
+            bool isSalesOwner = CacheData.CurrentUser.employee_id == SalesId;
             return isSalesOwner;
         }
         public void GetFilteredTabIds(DataTable table, string filterColumn, string filterValue, string column1, string column2, out int basedId, out int id)
@@ -481,7 +533,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             int.TryParse(tabView[0][column1].ToString(), out basedId);
             int.TryParse(tabView[0][column2].ToString(), out id);
         }
-
+        // Bind General 
         private void BindBpiRecords(bool isBind = false)
         {
 
@@ -490,7 +542,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 var isSelectedSales = GetSelectedSales();
                 BpiBranchToggle(isSelectedSales);
                 BindDataToPanel();
-                GetAllBpiChild();
+                //GetAllBpiChild();
 
                 // For List of Industry, General Entity and General Branch Names
 
@@ -501,9 +553,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 // Show Item pages
 
-                bool isItemShow = ToogleItemPages(txt_entity_type.Text);
+                //bool isItemShow = ToogleItemPages(txt_entity_type.Text);
 
-                GetPaymentItemTerms(isItemShow);
+                //GetPaymentItemTerms(isItemShow);
                 ShowTypeOfEntity(txt_entity_type.Text);
 
 
@@ -546,24 +598,25 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                                            .Select(int.Parse)
                                            .ToList();
 
+                // Filter BPI General Child using general_based_id
                 DataView dataViewGeneral = new DataView(general);
                 if (dataViewGeneral.Count != 0)
                 {
                     dataViewGeneral.RowFilter = "general_based_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
-
+                    // hide txt and lbl for main branch name
                     txt_branch_name.Visible = dataViewGeneral.Count > 1;
                     lbl_branch_name.Visible = dataViewGeneral.Count > 1;
                 }
 
                 DataTable filteredGeneral = dataViewGeneral.ToTable();
-
+                GenerateBpiBranchTabs(filteredGeneral);
+                
 
                 Panel[] pnlGeneralPanel = { panel_general };
                 txt_branch_name.Visible = false;
                 lbl_branch_name.Visible = false;
                 Helpers.BindControls(pnlGeneralPanel, filteredGeneral);
-                GetAllBpiBranch(filteredGeneral);
-
+                //GetAllBpiBranch(filteredGeneral);
 
             }
             else
@@ -577,8 +630,70 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 this.finance_pending.Rows.Clear();
             }
         }
+        private void GenerateBpiBranchTabs(DataTable filteredGeneral)
+        {
+            EnsureDefaultTabExists();
 
+            TabPage defaultTab = tab_dynamic.TabPages["tab_add_new_branch"];
 
+            // Remove all dynamic tabs EXCEPT default tab
+            for (int i = tab_dynamic.TabPages.Count - 1; i >= 0; i--)
+            {
+                if (tab_dynamic.TabPages[i] != defaultTab)
+                    tab_dynamic.TabPages.RemoveAt(i);
+            }
+
+            DataRow mainRow = filteredGeneral.AsEnumerable()
+                .FirstOrDefault(r => Convert.ToBoolean(r["is_main"]));
+
+            if (mainRow != null)
+                AddBranchTabBeforeDefault(mainRow, defaultTab);
+
+            foreach (DataRow row in filteredGeneral.Rows)
+            {
+                if (row == mainRow) continue;
+                AddBranchTabBeforeDefault(row, defaultTab);
+            }
+
+            tab_dynamic.SelectedIndex = 0;
+        }
+        private void AddBranchTabBeforeDefault(DataRow row, TabPage defaultTab)
+        {
+            string branchName = row["branch_name"].ToString();
+            string generalId = row["general_id"].ToString();
+            bool mainBranch = Convert.ToBoolean(row["is_main"]);
+
+            BpiBranchUC branchUC = new BpiBranchUC(parentId: generalId, salesId: SalesId, tabTitle: branchName, canvassForm: "", isExisting: true);
+            branchUC.Dock = DockStyle.Fill;
+
+            TabPage tab = new TabPage(branchName);
+
+            tab.Tag = new
+            {
+                GeneralId = generalId,
+                IsMain = mainBranch,
+                BranchName = branchName,
+                IsNew = generalId == null,
+            };
+
+            tab.Controls.Add(branchUC);
+
+            int index = tab_dynamic.TabPages.IndexOf(defaultTab);
+            tab_dynamic.TabPages.Insert(index, tab);
+        }
+        private void EnsureDefaultTabExists()
+        {
+            // Check if already created
+            TabPage existing = tab_dynamic.TabPages["tab_add_new_branch"];
+            if (existing != null)
+                return;
+
+            // Create only once
+            TabPage tab = new TabPage("+");
+            tab.Name = "tab_add_new_branch";
+
+            tab_dynamic.TabPages.Add(tab);
+        }
         private void BindDataToPanel()
         {
             Panel[] pnlList = { panel_header_records };
@@ -664,19 +779,19 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
 
         }
-
+        // toggle which branch to show??
         private void BpiBranchToggle(bool isVisible = true)
         {
 
             panel_general.Visible = isVisible;
             pnl_new_added_item.Visible = isVisible;
-            panel_accreditation.Visible = isVisible;
+            //panel_accreditation.Visible = isVisible;
             panel_item.Visible = isVisible;
             panel_finance.Visible = isVisible;
             dg_contacts.Visible = isVisible;
             dg_address.Visible = isVisible;
             dg_items.Visible = isVisible;
-            dg_accreditations.Visible = isVisible;
+            //dg_accreditations.Visible = isVisible;
             tabControl_Finance.Visible = isVisible;
         }
 
@@ -730,25 +845,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
-        private void BtnBindData()
-        {
-            general.Rows.Add(0, 0, 0);
-            DataRow lastRow = general.Rows[general.Rows.Count - 1]; // Get last 
-            Button newDynamicButton = new Button();
+        //private void BtnBindData()
+        //{
+        //    general.Rows.Add(0, 0, 0);
+        //    DataRow lastRow = general.Rows[general.Rows.Count - 1]; // Get last 
+        //    Button newDynamicButton = new Button();
 
-            newDynamicButton.Text = "MAIN";
-            newDynamicButton.Size = new Size(100, 50);
-            newDynamicButton.Location = new Point(50, 50);
-            newDynamicButton.BackColor = Color.LightBlue;
+        //    newDynamicButton.Text = "MAIN";
+        //    newDynamicButton.Size = new Size(100, 50);
+        //    newDynamicButton.Location = new Point(50, 50);
+        //    newDynamicButton.BackColor = Color.LightBlue;
 
-            newDynamicButton.Tag = general;
+        //    newDynamicButton.Tag = general;
 
 
-            newDynamicButton.Click += DynamicButton_Clicks;
+        //    newDynamicButton.Click += DynamicButton_Clicks;
 
-            flowLayout_panel.Controls.Add(newDynamicButton);
 
-        }
+        //    //flowLayout_panel.Controls.Add(newDynamicButton);
+
+        //}
 
         private void BtnToogle(bool isEdit)
         {
@@ -759,6 +875,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             btn_next.Visible = !isEdit;
             btn_edit.Visible = !isEdit;
             btn_print.Visible = !isEdit;
+            btn_revise.Visible = !isEdit;
 
             btn_add_page.Enabled = isEdit;
             btn_cancel.Visible = isEdit;
@@ -773,7 +890,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             dg_contacts.Enabled = isEdit;
             dg_address.Enabled = isEdit;
             dg_items.Enabled = isEdit;
-            dg_accreditations.Enabled = isEdit;
+            //dg_accreditations.Enabled = isEdit;
 
         }
 
@@ -1017,26 +1134,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             dg_contacts.Enabled = isEnabled;
             dg_address.Enabled = isEnabled;
             dg_items.Enabled = isEnabled;
-            dg_accreditations.Enabled = isEnabled;
+            //dg_accreditations.Enabled = isEnabled;
         }
 
 
-        private void ShowTabPages(TabPage tabpage)
-        {
-            if (!tabControl2.TabPages.Contains(tabpage))
-            {
-                if (tabpage.Equals("ITEMS"))
-                {
-                    tabControl2.TabPages.Insert(4, tabpage);
+        //private void ShowTabPages(TabPage tabpage)
+        //{
+        //    if (!tabControl2.TabPages.Contains(tabpage))
+        //    {
+        //        if (tabpage.Equals("ITEMS"))
+        //        {
+        //            tabControl2.TabPages.Insert(4, tabpage);
 
-                }
-                else
-                {
-                    tabControl2.TabPages.Insert(3, tabpage);
+        //        }
+        //        else
+        //        {
+        //            tabControl2.TabPages.Insert(3, tabpage);
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         private void ShowTypeOfEntity(string txt)
         {
@@ -1070,55 +1187,55 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
-        private void RemoveTabPages(TabPage tabpage)
-        {
-            if (tabControl2.TabPages.Contains(tabpage))
-            {
-                tabControl2.TabPages.Remove(tabpage);
-            }
-        }
+        //private void RemoveTabPages(TabPage tabpage)
+        //{
+        //    if (tabControl2.TabPages.Contains(tabpage))
+        //    {
+        //        tabControl2.TabPages.Remove(tabpage);
+        //    }
+        //}
 
 
 
-        private bool ToogleItemPages(string text)
-        {
-            bool item = false;
-            string[] valuesToCheck = { "SUPPLIER", "CUSTOMER" };
-            var viewData = String.Join("", text);
-            bool containsBoth = valuesToCheck.All(value => viewData.Contains(value));
-            if (containsBoth)
-            {
-                ShowTabPages(tabItemPages);
-                item = true;
-            }
-            else if (text.Contains("SUPPLIER"))
-            {
-                ShowTabPages(tabItemPages);
-                RemoveTabPages(tabFinancePages);
-                item = true;
-            }
-            else if (text.Contains("AFFILIATED"))
-            {
-                RemoveTabPages(tabItemPages);
-                RemoveTabPages(tabFinancePages);
-                item = false;
-            }
+        //private bool ToogleItemPages(string text)
+        //{
+        //    bool item = false;
+        //    string[] valuesToCheck = { "SUPPLIER", "CUSTOMER" };
+        //    var viewData = String.Join("", text);
+        //    bool containsBoth = valuesToCheck.All(value => viewData.Contains(value));
+        //    if (containsBoth)
+        //    {
+        //        ShowTabPages(tabItemPages);
+        //        item = true;
+        //    }
+        //    else if (text.Contains("SUPPLIER"))
+        //    {
+        //        ShowTabPages(tabItemPages);
+        //        RemoveTabPages(tabFinancePages);
+        //        item = true;
+        //    }
+        //    else if (text.Contains("AFFILIATED"))
+        //    {
+        //        RemoveTabPages(tabItemPages);
+        //        RemoveTabPages(tabFinancePages);
+        //        item = false;
+        //    }
 
-            else if (text.Contains("NON-AFFILIATED"))
-            {
-                RemoveTabPages(tabItemPages);
-                RemoveTabPages(tabFinancePages);
-                item = false;
-            }
-            else
-            {
+        //    else if (text.Contains("NON-AFFILIATED"))
+        //    {
+        //        RemoveTabPages(tabItemPages);
+        //        RemoveTabPages(tabFinancePages);
+        //        item = false;
+        //    }
+        //    else
+        //    {
 
-                ShowTabPages(tabFinancePages);
-                RemoveTabPages(tabItemPages);
-                item = false;
-            }
-            return item;
-        }
+        //        ShowTabPages(tabFinancePages);
+        //        RemoveTabPages(tabItemPages);
+        //        item = false;
+        //    }
+        //    return item;
+        //}
 
 
 
@@ -1315,62 +1432,62 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
 
 
-        private List<BpiAccreditation> SaveAccreditations(bool isUpdate)
-        {
-            var dataSource = Helpers.ConvertDataGridViewToDataTable(dg_accreditations);
-            List<BpiAccreditation> listAccreditation = new List<BpiAccreditation>();
+        //private List<BpiAccreditation> SaveAccreditations(bool isUpdate)
+        //{
+        //    var dataSource = Helpers.ConvertDataGridViewToDataTable(dg_accreditations);
+        //    List<BpiAccreditation> listAccreditation = new List<BpiAccreditation>();
 
-            BpiAccreditation accreditations = null;
-            int bpi_accreditation_id = 0;
-            int branch_id = 0;
-            int bpi_accreditation_based_id = 0;
+        //    BpiAccreditation accreditations = null;
+        //    int bpi_accreditation_id = 0;
+        //    int branch_id = 0;
+        //    int bpi_accreditation_based_id = 0;
 
-            string file_path;
-            foreach (DataRow row in dataSource.Rows)
-            {
+        //    string file_path;
+        //    foreach (DataRow row in dataSource.Rows)
+        //    {
 
-                if (isUpdate)
-                {
+        //        if (isUpdate)
+        //        {
 
-                    if (row.IsNull("bpi_accreditation_id") || string.IsNullOrWhiteSpace(row["bpi_accreditation_id"].ToString()) || row.IsNull("bpi_accreditation_branch_id") || string.IsNullOrWhiteSpace(row["bpi_accreditation_branch_id"].ToString()))
-                    {
-                        bpi_accreditation_id = 0;
-                        branch_id = 0;
-                        bpi_accreditation_based_id = 0;
-                    }
-                    else
-                    {
-                        bpi_accreditation_id = int.Parse(row["bpi_accreditation_id"].ToString());
-                        bpi_accreditation_based_id = int.Parse(row["bpi_accreditation_based_id"].ToString());
-                        branch_id = int.Parse(row["bpi_accreditation_branch_id"].ToString());
+        //            if (row.IsNull("bpi_accreditation_id") || string.IsNullOrWhiteSpace(row["bpi_accreditation_id"].ToString()) || row.IsNull("bpi_accreditation_branch_id") || string.IsNullOrWhiteSpace(row["bpi_accreditation_branch_id"].ToString()))
+        //            {
+        //                bpi_accreditation_id = 0;
+        //                branch_id = 0;
+        //                bpi_accreditation_based_id = 0;
+        //            }
+        //            else
+        //            {
+        //                bpi_accreditation_id = int.Parse(row["bpi_accreditation_id"].ToString());
+        //                bpi_accreditation_based_id = int.Parse(row["bpi_accreditation_based_id"].ToString());
+        //                branch_id = int.Parse(row["bpi_accreditation_branch_id"].ToString());
 
-                    }
+        //            }
 
-                }
+        //        }
 
-                string addedBy = row["accreditation_added_by"].ToString();
-                string date_added = row["date_added"].ToString();
-                if (!row["file_path"].ToString().StartsWith("./"))
-                {
-                    file_path = ConvertImageToBase64(row["file_path"].ToString());
-                }
-                else
-                {
-                    file_path = row["file_path"].ToString();
-                }
+        //        string addedBy = row["accreditation_added_by"].ToString();
+        //        string date_added = row["date_added"].ToString();
+        //        if (!row["file_path"].ToString().StartsWith("./"))
+        //        {
+        //            file_path = ConvertImageToBase64(row["file_path"].ToString());
+        //        }
+        //        else
+        //        {
+        //            file_path = row["file_path"].ToString();
+        //        }
 
-                string file_name = row["file_name"].ToString();
+        //        string file_name = row["file_name"].ToString();
 
-                //  int accreditation_added_by_id = int.Parse(row["accreditation_added_by_id"].ToString());
-                accreditations = new BpiAccreditation(bpi_accreditation_id, branch_id, date_added, file_path, bpi_accreditation_based_id, file_name, addedBy);
-                listAccreditation.Add(accreditations);
+        //        //  int accreditation_added_by_id = int.Parse(row["accreditation_added_by_id"].ToString());
+        //        accreditations = new BpiAccreditation(bpi_accreditation_id, branch_id, date_added, file_path, bpi_accreditation_based_id, file_name, addedBy);
+        //        listAccreditation.Add(accreditations);
 
-            }
+        //    }
 
-            return listAccreditation;
+        //    return listAccreditation;
 
 
-        }
+        //}
 
         private string ConvertImageToBase64(string imagePath)
         {
@@ -1449,7 +1566,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             var Contacts = SaveContacts(true);
 
-            var Accreditations = SaveAccreditations(true);
+            //var Accreditations = SaveAccreditations(true);
             var Address = SaveAddress(true);
             var Items = SaveItems(true);
 
@@ -1492,16 +1609,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 is_deleted = c.item_is_deleted
             }).ToList();
 
-            var modifiedAccreditations = Accreditations.Select(c => new
-            {
-                id = c.bpi_accreditation_id,
-                based_id = c.bpi_accreditation_based_id,
-                branch_id = c.bpi_accreditation_branch_id,
-                date_added = c.date_added,
-                file_name = c.file_name,
-                file_path = c.file_path,
-                accreditation_added_by = c.accreditation_added_by,
-            }).ToList();
+            //var modifiedAccreditations = Accreditations.Select(c => new
+            //{
+            //    id = c.bpi_accreditation_id,
+            //    based_id = c.bpi_accreditation_based_id,
+            //    branch_id = c.bpi_accreditation_branch_id,
+            //    date_added = c.date_added,
+            //    file_name = c.file_name,
+            //    file_path = c.file_path,
+            //    accreditation_added_by = c.accreditation_added_by,
+            //}).ToList();
 
             //   Bpi["sales_id"] = CacheData.CurrentUser.employee_id;
             Generals["social_id"] = int.Parse(Generals["social_id"].ToString());
@@ -1541,7 +1658,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             Bpi.Add("general", Generals);
             Bpi.Add("contacts", modifiedContact);
             Bpi.Add("address", modifiedAddress);
-            Bpi.Add("accreditations", modifiedAccreditations);
+            //Bpi.Add("accreditations", modifiedAccreditations);
 
             bool response = await BpiServices.Update(Bpi);
 
@@ -1557,14 +1674,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         private void ResetData(bool isIncluded)
         {
-
-            // panel_general.Visible = true;
-
             BpiBranchToggle();
-
-
-
-
             BtnToogle(true);
             btn_add.Visible = true;
             btn_save.Visible = true;
@@ -1582,18 +1692,18 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
 
             }
-            cmb_social.SelectedIndex = 0;
-            cmb_payment_terms.DataSource = CacheData.PaymentTerms;
-            cmb_finance_payment_terms.DataSource = CacheData.PaymentTerms;
-            cmb_finance_account.DataSource = CacheData.PaymentTerms;
+            //cmb_social.SelectedIndex = 0;
+            //cmb_payment_terms.DataSource = CacheData.PaymentTerms;
+            //cmb_finance_payment_terms.DataSource = CacheData.PaymentTerms;
+            //cmb_finance_account.DataSource = CacheData.PaymentTerms;
 
 
-            cmb_tax_code.DataSource = ENUM_TAX_CODE.LIST();
-            cmb_tax_code.DisplayMember = "title";
-            cmb_tax_code.Text = "VAT";
-            cmb_payment_terms.Text = "COD";
-            cmb_finance_payment_terms.Text = "COD";
-            cmb_finance_account.Text = "COD";
+            //cmb_tax_code.DataSource = ENUM_TAX_CODE.LIST();
+            //cmb_tax_code.DisplayMember = "title";
+            //cmb_tax_code.Text = "VAT";
+            //cmb_payment_terms.Text = "COD";
+            //cmb_finance_payment_terms.Text = "COD";
+            //cmb_finance_account.Text = "COD";
 
             if (txt_entity_type.Text.Contains("Supplier"))
             {
@@ -1625,8 +1735,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             RemoveSelectedDataTable(CacheData.Industries);
             RemoveSelectedDataTable(CacheData.BranchIndustries);
             RemoveSelectedDataTable(CacheData.Entity);
-            RemoveTabPages(tabItemPages);
-            RemoveTabPages(tabFinancePages);
+            //RemoveTabPages(tabItemPages);
+            //RemoveTabPages(tabFinancePages);
 
             ToogleCustomerAndSupplier(true);
             ShowAffiliatedAndNon(false);
@@ -1675,19 +1785,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             RemoveSelectedDataTable(CacheData.Industries);
             RemoveSelectedDataTable(CacheData.BranchIndustries);
             RemoveSelectedDataTable(CacheData.Entity);
-            RemoveTabPages(tabItemPages);
-            RemoveTabPages(tabFinancePages);
+            //RemoveTabPages(tabItemPages);
+            //RemoveTabPages(tabFinancePages);
 
             ToogleCustomerAndSupplier(true);
             ShowAffiliatedAndNon(false);
         }
 
         private void btn_new_Click(object sender, EventArgs e)
-        {
+        {   
+            AddMainBranch("MAIN");
+            
             ResetData(true);
             txt_branch_industry.Tag = "MULTI";
             txt_entity_type.Tag = "MULTI";
-            flowLayout_panel.Controls.Clear();
+            //flowLayout_panel.Controls.Clear();
             txt_sales_id.Text = $"({CacheData.CurrentUser.first_name.Substring(0, 1).ToUpper()}. {CacheData.CurrentUser.last_name})";
             txt_branch_sales_id.Text = CacheData.CurrentUser.employee_id;
             Panel[] pnlList = { panel_header_records };
@@ -1697,7 +1809,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             if (Bpi["id"] == "")
             {
 
-                BtnBindData();
+                //BtnBindData();
 
                 txt_branch_name.Visible = false;
                 lbl_branch_name.Visible = false;
@@ -1707,9 +1819,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 txt_branch_name.Visible = true;
                 lbl_branch_name.Visible = true;
             }
-
-
-
         }
 
 
@@ -1842,16 +1951,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                     {
                         DocumentCodeIncrementor("BOTH");
                         ToogleCustomerAndSupplier(true);
-                        ShowTabPages(tabItemPages);
-                        ShowTabPages(tabFinancePages);
+                        //ShowTabPages(tabItemPages);
+                        //ShowTabPages(tabFinancePages);
                     }
                     else if (txt_entity_type.Text.Contains(ENUM_ENTITY_TYPE.Supplier))
                     {
                         DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Supplier);
                         ToogleCustomerAndSupplier(true);
                         ShowAffiliatedAndNon(false);
-                        ShowTabPages(tabItemPages);
-                        RemoveTabPages(tabFinancePages);
+                        //ShowTabPages(tabItemPages);
+                        //RemoveTabPages(tabFinancePages);
 
                         txt_customer_code.Enabled = false;
 
@@ -1865,8 +1974,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                         DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Non_Affiliated);
                         ToogleEntityField(true);
                         ToogleCustomerAndSupplier(false);
-                        RemoveTabPages(tabFinancePages);
-                        RemoveTabPages(tabItemPages);
+                        //RemoveTabPages(tabFinancePages);
+                        //RemoveTabPages(tabItemPages);
 
                     }
                     else if (txt_entity_type.Text.Contains(ENUM_ENTITY_TYPE.Affiliated))
@@ -1875,15 +1984,15 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                         DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Affiliated);
                         ToogleEntityField(false);
                         ToogleCustomerAndSupplier(false);
-                        RemoveTabPages(tabFinancePages);
+                        //RemoveTabPages(tabFinancePages);
                     }
                     else
                     {
                         DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Customer);
                         ShowAffiliatedAndNon(false);
-                        ShowTabPages(tabFinancePages);
+                        //ShowTabPages(tabFinancePages);
                         ToogleCustomerAndSupplier(true);
-                        RemoveTabPages(tabItemPages);
+                        //RemoveTabPages(tabItemPages);
                         txt_supplier_code.Enabled = false;
                         btn_finance_payment_terms.Visible = CacheData.CurrentUser.position_id.Equals("Web Developer"); // Parameter is ready for manager position only
 
@@ -2010,17 +2119,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             modalSetup.ShowDialog();
         }
 
-        private void cmb_found_us_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txt_customer_code_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
         private bool AddBpiIdentificationType(Dictionary<string, dynamic> records, out string bpiMesssages)
         {
 
@@ -2081,19 +2179,23 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             generalMessage = string.Empty;
 
-            string entityType = txt_entity_type.Text;
-            string branchIndustries = txt_branch_industry.Text;
-            string branchTelNo = txt_branch_tel_no.Text;
-            if (string.IsNullOrEmpty(entityType) || string.IsNullOrEmpty(branchIndustries))
+            // Retrieve values safely using TryGetValue
+            records.TryGetValue("entity_type_id", out var entityType);
+            records.TryGetValue("branch_industry_id", out var branchIndustries);
+            records.TryGetValue("branch_tel_no", out var branchTelNo);
+
+            if (entityType == null || string.IsNullOrEmpty(branchIndustries?.ToString()))
             {
-                generalMessage += "Entity Type and Branch Industries is required \n";
+                generalMessage += "Entity Type and Branch Industries are required \n";
                 return false;
             }
-            else if (!Regex.IsMatch(branchTelNo, REGEXPATTERN))
+
+            if (!string.IsNullOrEmpty(branchTelNo?.ToString()) && !Regex.IsMatch(branchTelNo.ToString(), REGEXPATTERN))
             {
-                generalMessage += "Branch Tel No. is Invalid \n";
+                generalMessage += "Branch Tel No. is invalid \n";
                 return false;
             }
+
             return true;
 
 
@@ -2220,7 +2322,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
 
             var Finance = Helpers.GetControlsValues(panel_finance);
-            var Accreditations = SaveAccreditations(false);
+            //var Accreditations = SaveAccreditations(false);
 
             if (txt_entity_type.Text.Contains(ENUM_ENTITY_TYPE.Supplier))
             {
@@ -2236,7 +2338,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             Bpi.Add("general", Generals);
             Bpi.Add("contacts", Contacts);
             Bpi.Add("address", Address);
-            Bpi.Add("accreditations", Accreditations);
+            //Bpi.Add("accreditations", Accreditations);
             RemoveAllId(Bpi, Generals, Finance);
 
             var response = await BpiServices.Insert(Bpi);
@@ -2278,7 +2380,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 }
 
                 DataTable filteredGeneral = dataViewGeneral.ToTable();
-                GetAllBpiBranch(filteredGeneral);
+                //GetAllBpiBranch(filteredGeneral);
 
                 btn_new.Visible = true;
                 btn_search.Visible = true;
@@ -2390,11 +2492,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
-        private void txt_entity_type_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
 
@@ -2434,42 +2531,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 }
             }
-        }
-
-        private void dataGridView1_CellBorderStyleChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dataBindingPosition_CurrentChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tabPage1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dataBindingContacts_CurrentChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button9_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void cmb_item_payment_terms_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dataGridView5_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
 
         private void dg_items_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -2556,27 +2617,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         //    }
         //}
 
-        private void dg_items_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
 
-
-
-        }
-
-        private void dg_items_CellLeave(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dg_items_RowLeave(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void cmb_tax_code_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -2598,7 +2639,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             // Add the button to the form
             dynamicButton.Click += DynamicButton_Clicks;
-            flowLayout_panel.Controls.Add(dynamicButton);
+            //flowLayout_panel.Controls.Add(dynamicButton);
 
             Panel[] pnlGeneralPanel = { panel_general };
 
@@ -2659,8 +2700,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void dg_contacts_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-
-
             var row = dg_contacts.Rows[e.RowIndex];
             var contactCell = row.Cells[1];
             var nameCell = row.Cells[2];
@@ -2719,7 +2758,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 // You may also add optional email format validation here
                 nameCell.Style.ForeColor = Color.Black;
             }
-
         }
 
         private void cmb_finance_payment_terms_SelectedIndexChanged(object sender, EventArgs e)
@@ -2737,72 +2775,72 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
-        private void dataGridView7_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
-            {
+        //private void dataGridView7_CellClick(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+        //    {
 
-                if (dg_accreditations.Columns[e.ColumnIndex].Name == "btn_upload")
-                {
+        //        if (dg_accreditations.Columns[e.ColumnIndex].Name == "btn_upload")
+        //        {
 
-                    MessageBox.Show("Hi");
-                    // openFileDialog1
-                    using (OpenFileDialog openFileDialog = new OpenFileDialog())
-                    {
-                        openFileDialog.InitialDirectory = "c:\\";
-                        openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png, *.bmp)|*.jpg;*.jpeg;*.png;*.bmp";
-                        openFileDialog.FilterIndex = 1;
-                        openFileDialog.RestoreDirectory = true;
+        //            MessageBox.Show("Hi");
+        //            // openFileDialog1
+        //            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        //            {
+        //                openFileDialog.InitialDirectory = "c:\\";
+        //                openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png, *.bmp)|*.jpg;*.jpeg;*.png;*.bmp";
+        //                openFileDialog.FilterIndex = 1;
+        //                openFileDialog.RestoreDirectory = true;
 
-                        if (openFileDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            // Get the path of specified file
-                            string filePath = openFileDialog.FileName;
-                            string fileName = Path.GetFileName(filePath);
-                            DateTime now = DateTime.Now;
+        //                if (openFileDialog.ShowDialog() == DialogResult.OK)
+        //                {
+        //                    // Get the path of specified file
+        //                    string filePath = openFileDialog.FileName;
+        //                    string fileName = Path.GetFileName(filePath);
+        //                    DateTime now = DateTime.Now;
 
-                            this.dg_accreditations.Rows[e.RowIndex].Cells[0].Value = now.ToString("yyyy-MM-dd HH:mm:ss");
-                            this.dg_accreditations.Rows[e.RowIndex].Cells[1].Value = fileName;
-                            this.dg_accreditations.Rows[e.RowIndex].Cells[3].Value = "JEROME OBOGNE ";
-                        }
-                    }
+        //                    this.dg_accreditations.Rows[e.RowIndex].Cells[0].Value = now.ToString("yyyy-MM-dd HH:mm:ss");
+        //                    this.dg_accreditations.Rows[e.RowIndex].Cells[1].Value = fileName;
+        //                    this.dg_accreditations.Rows[e.RowIndex].Cells[3].Value = "JEROME OBOGNE ";
+        //                }
+        //            }
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         private void dg_accreditations_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
 
-        private void btn_upload_image_Click(object sender, EventArgs e)
-        {
-            var userAdded = txt_sales_id.Text;
-            DateTime now = DateTime.Now;
-            var dataSource = Helpers.ConvertDataGridViewToDataTable(dg_accreditations);
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.RestoreDirectory = true;
-                openFileDialog.Multiselect = true;
+        //private void btn_upload_image_Click(object sender, EventArgs e)
+        //{
+        //    var userAdded = txt_sales_id.Text;
+        //    DateTime now = DateTime.Now;
+        //    var dataSource = Helpers.ConvertDataGridViewToDataTable(dg_accreditations);
+        //    using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        //    {
+        //        openFileDialog.InitialDirectory = "c:\\";
+        //        openFileDialog.RestoreDirectory = true;
+        //        openFileDialog.Multiselect = true;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
+        //        if (openFileDialog.ShowDialog() == DialogResult.OK)
+        //        {
 
-                    foreach (string files in openFileDialog.FileNames)
-                    {
+        //            foreach (string files in openFileDialog.FileNames)
+        //            {
 
-                        string fileName = Path.GetFileName(files);
+        //                string fileName = Path.GetFileName(files);
 
-                        dataSource.Rows.Add(now, fileName, userAdded, files);
-                        databindingAccreditation.DataSource = dataSource;
-                    }
-                }
-            }
+        //                dataSource.Rows.Add(now, fileName, userAdded, files);
+        //                databindingAccreditation.DataSource = dataSource;
+        //            }
+        //        }
+        //    }
 
 
-        }
+        //}
 
         private void btn_cancel_Click(object sender, EventArgs e)
         {
@@ -2837,7 +2875,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             itemModal.OnAddItem += AddNewBpiItem;
             itemModal.StartPosition = FormStartPosition.CenterParent;
             itemModal.ShowDialog();
-
         }
         public void AddNewBpiItem(Dictionary<string, dynamic> value)
         {
@@ -2971,16 +3008,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 }
 
             }
-        }
-
-        private void panel_item_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void txt_branch_website_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void txt_main_tel_no_KeyPress(object sender, KeyPressEventArgs e)
@@ -3230,11 +3257,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
         }
 
-        private void dg_contacts_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private void dg_contacts_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
 
@@ -3293,6 +3315,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private bool isUpdatingText = false;
         private bool isUpdatingTin = false;
+        
 
         //static private void remove_system_thirty_two(String path, EventArgs delete)
         //{
@@ -3498,8 +3521,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             groupCount++;
             Button dynamicButton = CreateGroupButton(lastRow, groupCount);
             dynamicButton.Click += DynamicButton_Clicks;
-            flowLayout_panel.Controls.Add(dynamicButton);
-            HighlightAndDisableAllButtons(dynamicButton);
+            //flowLayout_panel.Controls.Add(dynamicButton);
+            //HighlightAndDisableAllButtons(dynamicButton);
 
             Panel[] pnlGeneralPanel = { panel_general };
 
@@ -3536,48 +3559,41 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 Tag = row
             };
         }
-        private void HighlightAndDisableAllButtons(Button selectedButton)
-        {
-            foreach (Control ctrl in flowLayout_panel.Controls)
-            {
-                if (ctrl is Button btn)
-                {
-                    bool isNewButton = btn == selectedButton;
+        //private void HighlightAndDisableAllButtons(Button selectedButton)
+        //{
+        //    foreach (Control ctrl in flowLayout_panel.Controls)
+        //    {
+        //        if (ctrl is Button btn)
+        //        {
+        //            bool isNewButton = btn == selectedButton;
 
-                    // Disable ALL buttons (makes them unclickable)
-                    btn.Enabled = false;
+        //            // Disable ALL buttons (makes them unclickable)
+        //            btn.Enabled = false;
 
-                    // Highlight the newly added button
-                    if (isNewButton)
-                    {
-                        btn.BackColor = Color.DodgerBlue;
-                        btn.ForeColor = Color.White;
-                        btn.FlatAppearance.BorderSize = 2;
-                    }
-                    else
-                    {
-                        // Other buttons use a dim style
-                        btn.BackColor = Color.LightGray;
-                        btn.ForeColor = Color.Black;
-                        btn.FlatAppearance.BorderSize = 1;
-                    }
-                }
-            }
-        }
-
-
-        private void dg_contacts_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
-        {
-        }
+        //            // Highlight the newly added button
+        //            if (isNewButton)
+        //            {
+        //                btn.BackColor = Color.DodgerBlue;
+        //                btn.ForeColor = Color.White;
+        //                btn.FlatAppearance.BorderSize = 2;
+        //            }
+        //            else
+        //            {
+        //                // Other buttons use a dim style
+        //                btn.BackColor = Color.LightGray;
+        //                btn.ForeColor = Color.Black;
+        //                btn.FlatAppearance.BorderSize = 1;
+        //            }
+        //        }
+        //    }
+        //}
 
         private void btn_finance_payment_terms_Click(object sender, EventArgs e)
         {
-
             bool showSelectColumn = true;
 
             SetupModal finance_modal = new SetupModal("Payment Terms Setup", ENUM_ENDPOINT.PAYMENT_TERMS, CacheData.PaymentTerms, showSelectColumn);
             DialogResult r = finance_modal.ShowDialog();
-
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -3610,10 +3626,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             string contactMessage = "";
             string addressMessage = "";
 
+
+            var bpiUC = tab_dynamic.SelectedTab.Controls.OfType<BpiBranchUC>().FirstOrDefault();
+
+            if (bpiUC == null)
+            {
+                MessageBox.Show("Tab not found.");
+                return;
+            }
+            // Force dgv endedit
+            bpiUC.CommitEdits();
+
             var Bpi = Helpers.GetControlsValues(panel_header_records);
-            var Generals = Helpers.GetControlsValues(panel_general);
-            var Contacts = SaveContacts(false);
-            var Address = SaveAddress(false);
+            var Generals = bpiUC.GetGeneralData();
+            var Contacts = bpiUC.GetContactData(false);
+            var Address = bpiUC.GetAdressData(false);
+
+            // Get Data in parent
+            //var Generals = Helpers.GetControlsValues(panel_general);
+            //var Contacts = SaveContacts(false);
+            //var Address = SaveAddress(false);
 
             bool isBpiValidated = AddBpiIdentificationType(Bpi, out bpiGeneralMessage);
             bool isGeneralValidated = GeneralValidations(Generals, out generalMessage);
@@ -3636,9 +3668,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
 
 
-
+            // Set parent id to 0
             if (Bpi["id"] == 0)
             {
+                // reuse bpi name as branch name
                 Generals["branch_name"] = Bpi["name"];
                 Generals["branch_industry_id"] = Bpi["industries_id"];
             }
@@ -3656,13 +3689,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             Generals["social_id"] = social_id;
 
-
-            var Finance = Helpers.GetControlsValues(panel_finance);
-            var Accreditations = SaveAccreditations(false);
+            var Finance = bpiUC.GetFinanceData();
+            var Accreditations = bpiUC.GetAccreditationData(false);
+            //var Finance = Helpers.GetControlsValues(panel_finance);
+            //var Accreditations = SaveAccreditations(false);
 
             if (txt_entity_type.Text.Contains(ENUM_ENTITY_TYPE.Supplier))
             {
-                var Items = SaveItems(false);
+                var Items = bpiUC.GetItemsData(false);
                 Bpi.Add("items", Items);
             }
 
@@ -3716,13 +3750,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 }
 
                 DataTable filteredGeneral = dataViewGeneral.ToTable();
-                GetAllBpiBranch(filteredGeneral);
+                //GetAllBpiBranch(filteredGeneral);
 
-                btn_new.Visible = true;
-                btn_search.Visible = true;
-                btn_prev.Visible = true;
-                btn_next.Visible = true;
-                btn_edit.Visible = true;
+                //btn_new.Visible = true;
+                //btn_search.Visible = true;
+                //btn_prev.Visible = true;
+                //btn_next.Visible = true;
+                //btn_edit.Visible = true;
+                //btn_save.Visible = false;
+                //btn_cancel.Visible = false;
+                BtnToogle(false);
                 EnableDisabledChildPanel(false);
 
             }
@@ -3734,6 +3771,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private async void btn_revise_Click(object sender, EventArgs e)
         {
+
             int generalBasedId = 0, generalId = 0;
             int financeBasedId, financeId,
                 financePaymentTerms = 0,
@@ -3742,20 +3780,31 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             string selectedId = bpi.Rows[this.selectedRecord]["id"].ToString();
 
+
+            var bpiUC = tab_dynamic.SelectedTab.Controls.OfType<BpiBranchUC>().FirstOrDefault();
+
+            if (bpiUC == null)
+            {
+                MessageBox.Show("Tab not found.");
+                return;
+            }
+            // Force dgv endedit
+            bpiUC.CommitEdits();
+
             //GetFilteredTabIds(general,"general_based_id", selectedId, "general_based_id","general_id",out generalBasedId, out generalId);
             GetFilteredTabIds(finance, "finance_based_id", selectedId, "finance_based_id", "finance_id", out financeBasedId, out financeId);
 
 
 
-            DataView dataViewFinance = new DataView(finance);
-            if (dataViewFinance.Count != 0)
-            {
-                dataViewFinance.RowFilter = "finance_based_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
-                financePaymentTerms = int.Parse(dataViewFinance[0]["finance_payment_terms_id"].ToString());
-                financeAccountId = int.Parse(dataViewFinance[0]["finance_account_id"].ToString());
-                financeBranchId = int.Parse(dataViewFinance[0]["finance_branch_id"].ToString());
+            //DataView dataViewFinance = new DataView(finance);
+            //if (dataViewFinance.Count != 0)
+            //{
+            //    dataViewFinance.RowFilter = "finance_based_id = '" + bpi.Rows[this.selectedRecord]["id"].ToString() + "'";
+            //    financePaymentTerms = int.Parse(dataViewFinance[0]["finance_payment_terms_id"].ToString());
+            //    financeAccountId = int.Parse(dataViewFinance[0]["finance_account_id"].ToString());
+            //    financeBranchId = int.Parse(dataViewFinance[0]["finance_branch_id"].ToString());
 
-            }
+            //}
 
             if (currentSelectedEntityIds.Count != 0 && currentSelectedIndustryIds.Count != 0 && currentSelectedBranchIndustryIds.Count != 0)
             {
@@ -3767,14 +3816,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
 
             var Bpi = Helpers.GetControlsValues(panel_header_records);
-            var Generals = Helpers.GetControlsValues(panel_general);
+            var Generals = bpiUC.GetGeneralData();
+            var Contacts = bpiUC.GetContactData(true);
+            var Accreditations = bpiUC.GetAccreditationData(true);
+            var Address = bpiUC.GetAdressData(true);
+            var Items = bpiUC.GetItemsData(true);
 
-
-            var Contacts = SaveContacts(true);
-
-            var Accreditations = SaveAccreditations(true);
-            var Address = SaveAddress(true);
-            var Items = SaveItems(true);
+            //var Generals = Helpers.GetControlsValues(panel_general);
+            //var Contacts = SaveContacts(true);
+            //var Accreditations = SaveAccreditations(true);
+            //var Address = SaveAddress(true);
+            //var Items = SaveItems(true);
 
             dg_contacts.EndEdit();
             dg_contacts.CommitEdit(DataGridViewDataErrorContexts.Commit);
@@ -3848,9 +3900,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 Bpi.Add("items", modifiedItems);
             }
-            else if (txt_entity_type.Text.Contains("CUSTOMER"))
+            if (txt_entity_type.Text.Contains("CUSTOMER"))
             {
-                var Finance = Helpers.GetControlsValues(panel_finance);
+                var Finance = bpiUC.GetFinanceData();
                 Finance["finance_id"] = financeId;
                 Finance["finance_based_id"] = financeBasedId;
                 Finance["finance_branch_id"] = financeBranchId;
@@ -3872,14 +3924,18 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
 
                 MessageBox.Show("Bpi record updated succesfully.", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                BtnToogle(false);
+
+                GetBpi();
             }
             else
             {
                 MessageBox.Show("Bpi record update failed.", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
 
-        private void btn_close_Click(object sender, EventArgs e)
+        private  void btn_close_Click(object sender, EventArgs e)
         {
             // var Accreditations = SaveAccreditations(false); ;
             BtnToogle(false);
@@ -3895,41 +3951,370 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         
         private void button2_Click(object sender, EventArgs e)
         {
-            var lastIndex = this.tabControl1.TabCount - 1;
-            string tabs = string.Empty;
-            AddNewBranchModal modal = new AddNewBranchModal();
-            DialogResult r = modal.ShowDialog();
+           
+            //var lastIndex = this.tabControl1.TabCount - 1;
+            //string tabs = string.Empty;
+            //AddNewBranchModal modal = new AddNewBranchModal();
+            //DialogResult r = modal.ShowDialog();
 
-            if (r == DialogResult.OK)
+            //if (r == DialogResult.OK)
+            //{
+            //    tabs = modal.GetTitle();
+            //}
+
+            //if (string.IsNullOrWhiteSpace(tabs))
+            //{
+            //    MessageBox.Show("Cannot save tab without a name please type again.");
+            //    return;
+            //}
+
+            //var newTabPage = new TabPage(tabs);
+
+
+
+            //BpiBranchUC myControl = new BpiBranchUC(tabTitle: tabs, salesId: SalesId, parentId: parentId, canvassForm:"", isExisting: true)
+            //{
+            //    Dock = DockStyle.Fill,
+            //    BackColor = Color.White
+
+            //};
+
+            //newTabPage.Controls.Add(myControl);
+            //this.tabControl1.TabPages.Insert(lastIndex, newTabPage);
+            //this.tabControl1.SelectedIndex = lastIndex;
+
+        }
+        // Add new tab for new branches
+        private void tab_dynamic_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Right click events
+            if (e.Button == MouseButtons.Right)
             {
-                tabs = modal.GetTitle();
+                for (int i = 0; i < tab_dynamic.TabCount; i++)
+                {
+                    Rectangle rect = tab_dynamic.GetTabRect(i);
+                    if (rect.Contains(e.Location))
+                    {
+                        rightClickedTabIndex = i;
+
+                        TabPage clickedTab = tab_dynamic.TabPages[i];
+
+                        if (clickedTab.Name == "tab_add_new_branch")
+                            return;
+
+                        // Read IsMain from Tag
+                        bool isMain = false;
+                        bool isNew = false;
+
+
+                        if (clickedTab.Tag != null)
+                        {
+                            dynamic tag = clickedTab.Tag;
+                            isMain = tag.IsMain;
+                            isNew = tag.IsNew;
+                        }
+
+                        if (isNew)
+                        {
+                            // Unsaved branch → disable all
+                            menu_set_as_main.Enabled = false;
+                            menu_create_as_bpi.Enabled = false;
+                            menu_delete.Enabled = false;
+                        }
+                        else
+                        {
+                            // Saved branch
+                            if (isMain)
+                            {
+                                // Already main → Disable main option
+                                menu_set_as_main.Enabled = false;
+
+                                // Optional: disable deletion? (depends on your rules)
+                                menu_create_as_bpi.Enabled = false;
+                                menu_delete.Enabled = true;
+                            }
+                            else
+                            {
+                                // Normal saved branch
+                                menu_set_as_main.Enabled = true;
+                                menu_create_as_bpi.Enabled = true;
+                                menu_delete.Enabled = true;
+                            }
+                        }
+
+                        // Show context menu
+                        tabContextMenu.Show(tab_dynamic, e.Location);
+                        return;
+                    }
+                }
             }
 
-            if (string.IsNullOrWhiteSpace(tabs))
-            {
-                MessageBox.Show("Cannot save tab without a name please type again.");
+            // Left click events
+            if (e.Button != MouseButtons.Left)
                 return;
+
+            prevBranchTabIndex = tab_dynamic.SelectedIndex;
+
+            for (int i = 0; i < tab_dynamic.TabCount; i++)
+            {
+                Rectangle tabRect = tab_dynamic.GetTabRect(i);
+
+                if (tabRect.Contains(e.Location))
+                {
+                    TabPage clicked = tab_dynamic.TabPages[i];
+
+                    if (clicked.Name == "tab_add_new_branch")
+                    {
+                        AddNewBranchModal modal = new AddNewBranchModal();
+                        var result = modal.ShowDialog();
+
+                        if (result != DialogResult.OK)
+                        {
+                            tab_dynamic.SelectedIndex = prevBranchTabIndex - 1;
+                            return;
+                        }
+
+                        string tabTitle = modal.GetTitle();
+                        if (string.IsNullOrWhiteSpace(tabTitle))
+                        {
+                            MessageBox.Show("Please enter a name.");
+                            tab_dynamic.SelectedIndex = prevBranchTabIndex;
+                            return;
+                        }
+
+                        TabPage newTab = new TabPage(tabTitle)
+                        {
+                            Name = tabTitle.Replace(" ", "_")
+                        };
+
+                        // set for main branch
+                        var uc = new BpiBranchUC(parentId: "0", salesId: SalesId, tabTitle: tabTitle, canvassForm: "", isExisting: false)
+                        {
+                            Dock = DockStyle.Fill,
+                            BackColor = Color.White
+                        };
+                        
+
+                        newTab.Tag = new
+                        {
+                            IsMain = false,
+                            IsNew = true,
+                        };
+
+                        newTab.Controls.Add(uc);
+
+                        int addIndex = tab_dynamic.TabPages.IndexOfKey("tab_add_new_branch");
+                        tab_dynamic.TabPages.Insert(addIndex, newTab);
+
+                        tab_dynamic.SelectedTab = newTab;
+                        return;
+                    }
+
+                    tab_dynamic.SelectedIndex = i;
+                    
+                    return;
+                }
             }
+        }
+        // Add default tab for main branch
+        private void AddMainBranch(string tabTitle)
+        {
+            TabPage mainTab = new TabPage(tabTitle);
+            tab_dynamic.TabPages.Clear();
 
-            var newTabPage = new TabPage(tabs);
-
-            // Create an instance of your UserControl
-            BpiBranchUC myControl = new BpiBranchUC
+            currentBranchUC = new BpiBranchUC(parentId: parentId, salesId: SalesId, tabTitle: tabTitle, canvassForm: "", isExisting: false)
             {
                 Dock = DockStyle.Fill,
                 BackColor = Color.White
-
             };
 
-            // Add the UserControl to the new tab
-            newTabPage.Controls.Add(myControl);
+            currentBranchUC.SetMainBranch(true);
 
-            // Insert the new TabPage into the TabControl
-            this.tabControl1.TabPages.Insert(lastIndex, newTabPage);
+            mainTab.Controls.Add(currentBranchUC);
+            tab_dynamic.TabPages.Insert(0, mainTab);
+            tab_dynamic.SelectedIndex = 0;
 
-            // Select the new tab
-            this.tabControl1.SelectedIndex = lastIndex;
+            // pass data to uc
+            //currentBranchUC.UserId = txt_sales_id.Text;
+            //currentBranchUC.isUpdate = false;
+        }
+
+        private void cmb_name_TextChanged(object sender, EventArgs e)
+        {
+            debounceTimer.Stop();
+            debounceTimer.Start();
+        }
+
+        private void debounceTimer_Tick(object sender, EventArgs e)
+        {
+            debounceTimer.Stop();
+            
+            if (currentBranchUC != null)
+            {
+                currentBranchUC.SetBranchName(cmb_name.Text);
+
+                if (currentBranchUC.Parent is TabPage parentTab)
+                    parentTab.Text = string.IsNullOrWhiteSpace(cmb_name.Text) ? "MAIN" : cmb_name.Text;
+            }
+        }
+
+        private void tab_dynamic_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
+        private void tabContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            switch (e.ClickedItem.Name)
+            {
+                case "menu_rename":
+                    RenameSelectedMenu();
+                    break;
+
+                case "menu_set_as_main":
+                    SetAsMainSelectedMenu();
+                    break;
+
+                case "menu_create_as_bpi":
+                    CreateAsBPI();
+                    break;
+            }
+        }
+
+        private void RenameSelectedMenu()
+        {
+            if (rightClickedTabIndex < 0 ||
+                rightClickedTabIndex >= tab_dynamic.TabPages.Count)
+                return;
+
+            var tab = tab_dynamic.TabPages[rightClickedTabIndex];
+
+            AddNewBranchModal modal = new AddNewBranchModal();
+
+            // Get current tab name
+            modal.SetTitle(tab.Text);
+
+            var result = modal.ShowDialog();
+
+            if (result != DialogResult.OK)
+                return;
+
+            string newTabName = modal.GetTitle();
+
+            if (!string.IsNullOrWhiteSpace(newTabName))
+            {
+                tab.Text = newTabName;
+                tab.Name = newTabName.Replace(" ", "_");
+            }
+        }
+        private async void SetAsMainSelectedMenu()
+        {
+            if (rightClickedTabIndex < 0 || rightClickedTabIndex >= tab_dynamic.TabCount)
+                return;
+
+            
+
+            TabPage selectedTab = tab_dynamic.TabPages[rightClickedTabIndex];
+
+            // Get selected tag details
+            dynamic selectedTag = selectedTab.Tag;
+            string selectedGeneralId = selectedTag.GeneralId;
+
+            // Find the current main branch
+            TabPage currentMainTab = null;
+            foreach (TabPage tab in tab_dynamic.TabPages)
+            {
+                if (tab.Tag != null)
+                {
+                    dynamic tag = tab.Tag;
+                    if (tag.IsMain)
+                    {
+                        currentMainTab = tab;
+                        break;
+                    }
+                }
+            }
+
+            string currentMainGeneralId = null;
+            if (currentMainTab != null)
+            {
+                dynamic currentMainTag = currentMainTab.Tag;
+                currentMainGeneralId = currentMainTag.GeneralId;
+            }
+
+            List<Dictionary<string, dynamic>> data = new List<Dictionary<string, dynamic>>();
+
+            // Set as main
+            var newMainData = new Dictionary<string, dynamic>
+            {
+                { "id", Convert.ToInt32(selectedGeneralId) },
+                { "is_main", true }
+            };
+            data.Add(newMainData);
+
+            // Unset main as branch
+            if (!string.IsNullOrEmpty(currentMainGeneralId) && currentMainGeneralId != selectedGeneralId)
+            {
+                var currentMainData = new Dictionary<string, dynamic>
+                {
+                    { "id", Convert.ToInt32(currentMainGeneralId) },
+                    { "is_main", false }
+                };
+                data.Add(currentMainData);
+            }
+
+            bool response = await BpiServices.UpdateMainBranch(data);
+
+            if (response)
+            {
+                MessageBox.Show("Main Branch updated successfully.");
+                GetBpi();
+
+            }
+            else
+            {
+                MessageBox.Show("Main Branch update failed.");
+            }
+        }
+        private async void CreateAsBPI()
+        {
+            var bpiUC = tab_dynamic.SelectedTab.Controls.OfType<BpiBranchUC>().FirstOrDefault();
+            var Generals = bpiUC.GetGeneralData();
+
+            if (bpiUC == null)
+                return;
+
+
+            foreach (var key in Generals.Keys)
+            {
+                Console.WriteLine(key);
+            }
+
+            var newParent = new Dictionary<string, dynamic>
+            {
+                { "name", Generals["branch_name"].ToString() },
+                { "sales_id", Generals["branch_sales_id"].ToString() },  // corrected key
+                { "main_website", Generals["branch_website"].ToString() },
+                { "tin", "000-000-000-00000" },
+                { "main_tel_no", Generals["branch_tel_no"].ToString() },
+                { "general_id", Convert.ToInt32(Generals["general_id"]) },
+                { "general_based_id", Convert.ToInt32(Generals["general_based_id"]) },
+            };
+
+            var response = await BpiServices.InsertNewBPI(newParent);
+
+            if (response.Success)
+            {
+                MessageBox.Show("BPI created successfully");
+                GetBpi();
+            }
+            else
+            {
+                MessageBox.Show("BPI creation failed");
+                return;
+            }
+
+
+        }
+
     }
 }

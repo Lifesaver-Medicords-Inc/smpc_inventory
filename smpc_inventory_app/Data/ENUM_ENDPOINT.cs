@@ -20,6 +20,7 @@ namespace smpc_inventory_app.Data
         public static string ITEM_MATERIAL = setupItem + "material";
         public static string ITEM_PUMP_COUNT = setupItem + "pump_count";
         public static string ITEM_PUMP_TYPE= setupItem + "pump_type";
+        public static string VALUATIONMETHOD = setupItem + "valuation_method";
         public static string UNIT_OF_MEASURMENT = "/setup/unit_measurement";
         public static string PAYMENT_TERMS  = "/setup/payment_terms";
         public static string ENTITY = "/setup/entity";
@@ -78,6 +79,8 @@ namespace smpc_inventory_app.Data
         public static string BPI = "/bpi";
         public static string BpiItemList = "/bpi/list";
         public static string BpiEntity = "/bpi/entity";
+        public static string CreateBPI = "/bpi/createbpi";
+        public static string BPIMain = "/bpi/main";
 
         //PURCHASING
         public static string PURCHASING = "/purchasing";

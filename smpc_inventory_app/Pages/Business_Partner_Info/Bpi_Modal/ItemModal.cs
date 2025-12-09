@@ -41,25 +41,19 @@ namespace smpc_sales_app.Pages
         {
             if (e.RowIndex >= 0)
             {
-                
-             
-
-                int item_id = int.Parse(dg_ItemList.Rows[e.RowIndex].Cells[1].Value.ToString());
-                string short_desc = dg_ItemList.Rows[e.RowIndex].Cells[2].Value.ToString();
-                string item_code = dg_ItemList.Rows[e.RowIndex].Cells[3].Value.ToString();
-                string status_trade = dg_ItemList.Rows[e.RowIndex].Cells[7].Value.ToString();
-                string status_tangible = dg_ItemList.Rows[e.RowIndex].Cells[8].Value.ToString();
-                float item_price = float.Parse(dg_ItemList.Rows[e.RowIndex].Cells[9].Value.ToString());
+                int item_id = int.Parse(dg_ItemList.Rows[e.RowIndex].Cells["id"].Value.ToString());
+                string item_type = dg_ItemList.Rows[e.RowIndex].Cells["item_type"].Value.ToString();
+                string item_code = dg_ItemList.Rows[e.RowIndex].Cells["item_code"].Value.ToString();
+                string long_description = dg_ItemList.Rows[e.RowIndex].Cells["long_description"].Value.ToString();
+                float item_price = float.Parse(dg_ItemList.Rows[e.RowIndex].Cells["item_price"].Value.ToString());
 
 
 
                 Dictionary<string, dynamic> data = new Dictionary<string, dynamic>();
                 data.Add("item_id", item_id);
+                data.Add("item_type", item_type);
                 data.Add("item_code", item_code);
-                data.Add("short_desc", short_desc);
-                data.Add("status_trade", status_trade);
-                data.Add("status_tangible", status_tangible);
-
+                data.Add("long_description", long_description);
                 data.Add("item_price", item_price);
 
 

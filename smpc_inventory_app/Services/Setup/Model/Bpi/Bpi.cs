@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace smpc_inventory_app.Services.Setup.Model.Bpi
 {
-    class Bpi
+    public class Bpi
     {
 
         public int id { get; set; }
@@ -29,40 +30,30 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
 
     }
 
-    class BpiGeneral
+    public class BpiGeneral
     {
 
         public int general_id { get; set; }
-
         public int general_based_id { get; set; }
         public string branch_sales_id { get; set; }
         public int social_id { get; set; }
         public string branch_name { get; set; }
-
-
+        public bool is_main { get; set; }
         public string transaction_type { get; set; }
-
         public string class_name { get; set; }
-
         public string branch_tel_no { get; set; }
         public string branch_website { get; set; }
         public string customer_code { get; set; }
         public string supplier_code { get; set; }
-
         public string fax_no { get; set; }
         public string notes { get; set; }
         public string entity_ids { get; set; }
         public string entity_names { get; set; }
-
-
         public string branch_industry_names { get; set; }
         public string branch_industry_ids { get; set; }
-
-
-
     }
 
-    class BpiContacts
+    public class BpiContacts
     {
 
         public int contacts_id { get; set; }
@@ -92,7 +83,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
 
     }
 
-    class BpiAddress
+    public class BpiAddress
     {
         public int address_ids { get; set; }
         public int address_based_id { get; set; }
@@ -110,7 +101,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         }
 
     }
-    class BpiFinance
+    public class BpiFinance
     {
         public int finance_id { get; set; }
         public int finance_based_id { get; set; }
@@ -120,7 +111,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
 
     }
 
-    class BpiFinancePending
+    public class BpiFinancePending
     {
         public int customer_id { get; set; }
         public int finance_pending_branch_id { get; set; }
@@ -131,7 +122,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         public string status { get; set; }
 
     }
-    class BpiAccreditation
+    public class BpiAccreditation
     {
         public int bpi_accreditation_id { get; set; }
         public int bpi_accreditation_based_id { get; set; }
@@ -154,7 +145,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
 
     }
 
-    class BpiItems
+    public class BpiItems
     {
         public int bpi_item_id { get; set; }
         public int bpi_item_branch_id { get; set; }
@@ -191,7 +182,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
 
     // For List and Singe Class
 
-    class Bpi_Class
+    public class Bpi_Class
     {
         public List<Bpi> bpi { get; set; }
         public List<BpiGeneral> general { get; set; }
@@ -206,11 +197,10 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
     }
 
 
-    class BpiHistory
+    public class BpiHistory
     {
-        public int based_id { get; set; }
         public int branch_id { get; set; }
-        public string at_date { get; set; }
+        public string date { get; set; }
         public string actions { get; set; }
         public string edit_by { get; set; }
         public string edit_history { get; set; }
@@ -287,6 +277,21 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
 
         }
 
+    }
+    public class BpiBranchDetails
+    {
+        public class BpiDataSet
+        {
+            public DataTable Bpi { get; set; }
+            public DataTable General { get; set; }
+            public DataTable Contacts { get; set; }
+            public DataTable Address { get; set; }
+            public DataTable Items { get; set; }
+            public DataTable Finance { get; set; }
+            public DataTable FinancePending { get; set; }
+            public DataTable Accreditations { get; set; }
+            public DataTable History { get; set; }
+        }
     }
 
 }
