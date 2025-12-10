@@ -321,7 +321,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                     DateTime parsedDate;
                     return DateTime.TryParseExact(
                         item.date,
-                        "dd/MM/yyyy",
+                        "MM/dd/yyyy",
                         System.Globalization.CultureInfo.InvariantCulture,
                         System.Globalization.DateTimeStyles.None,
                         out parsedDate
@@ -529,7 +529,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                 {
                     if (DateTime.TryParseExact(
                             i.date,
-                            "dd/MM/yyyy",
+                            "MM/dd/yyyy",
                             System.Globalization.CultureInfo.InvariantCulture,
                             System.Globalization.DateTimeStyles.None,
                             out DateTime parsedDate))
@@ -673,7 +673,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                     {
                         if (DateTime.TryParseExact(
                                 i.date,
-                                "dd/MM/yyyy",
+                                "MM/dd/yyyy",
                                 System.Globalization.CultureInfo.InvariantCulture,
                                 System.Globalization.DateTimeStyles.None,
                                 out DateTime parsedDate))
@@ -1033,10 +1033,10 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                                      .Where(x => !string.IsNullOrWhiteSpace(x))
                                      .Distinct()),
                                 Daily = g
-                                    .Where(x => DateTime.TryParseExact(x.date, "dd/MM/yyyy",
+                                    .Where(x => DateTime.TryParseExact(x.date, "MM/dd/yyyy",
                                         System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None, out _))
-                                    .GroupBy(x => DateTime.ParseExact(x.date, "dd/MM/yyyy",
+                                    .GroupBy(x => DateTime.ParseExact(x.date, "MM/dd/yyyy",
                                         System.Globalization.CultureInfo.InvariantCulture).Day)
                                     .ToDictionary(
                                         dayGroup => dayGroup.Key,
@@ -1066,10 +1066,10 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                                      .Where(x => !string.IsNullOrWhiteSpace(x))
                                      .Distinct()),
                                 Daily = g
-                                    .Where(x => DateTime.TryParseExact(x.date, "dd/MM/yyyy",
+                                    .Where(x => DateTime.TryParseExact(x.date, "MM/dd/yyyy",
                                         System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None, out _))
-                                    .GroupBy(x => DateTime.ParseExact(x.date, "dd/MM/yyyy",
+                                    .GroupBy(x => DateTime.ParseExact(x.date, "MM/dd/yyyy",
                                         System.Globalization.CultureInfo.InvariantCulture).Day)
                                     .ToDictionary(
                                         dayGroup => dayGroup.Key,
@@ -1103,10 +1103,10 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                                      .Where(x => !string.IsNullOrWhiteSpace(x))
                                      .Distinct()),
                                 Daily = g
-                                    .Where(x => DateTime.TryParseExact(x.date, "dd/MM/yyyy",
+                                    .Where(x => DateTime.TryParseExact(x.date, "MM/dd/yyyy",
                                         System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None, out _))
-                                    .GroupBy(x => DateTime.ParseExact(x.date, "dd/MM/yyyy",
+                                    .GroupBy(x => DateTime.ParseExact(x.date, "MM/dd/yyyy",
                                         System.Globalization.CultureInfo.InvariantCulture).Day)
                                     .ToDictionary(
                                         dayGroup => dayGroup.Key,
@@ -1135,10 +1135,10 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                                      .Where(x => !string.IsNullOrWhiteSpace(x))
                                      .Distinct()),
                                 Daily = g
-                                    .Where(x => DateTime.TryParseExact(x.date, "dd/MM/yyyy",
+                                    .Where(x => DateTime.TryParseExact(x.date, "MM/dd/yyyy",
                                         System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None, out _))
-                                    .GroupBy(x => DateTime.ParseExact(x.date, "dd/MM/yyyy",
+                                    .GroupBy(x => DateTime.ParseExact(x.date, "MM/dd/yyyy",
                                         System.Globalization.CultureInfo.InvariantCulture).Day)
                                     .ToDictionary(
                                         dayGroup => dayGroup.Key,
@@ -1206,7 +1206,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                 {
                     bool hasTransactions = data.Any(x =>
                     {
-                        if (DateTime.TryParseExact(x.date, "dd/MM/yyyy",
+                        if (DateTime.TryParseExact(x.date, "MM/dd/yyyy",
                             System.Globalization.CultureInfo.InvariantCulture,
                             System.Globalization.DateTimeStyles.None,
                             out DateTime d))
@@ -1295,7 +1295,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                                     .Where(x =>
                                         x.item_id == group.ItemId &&
                                         x.location?.StartsWith(group.Zone) == true &&
-                                        DateTime.TryParseExact(x.date, "dd/MM/yyyy",
+                                        DateTime.TryParseExact(x.date, "MM/dd/yyyy",
                                             System.Globalization.CultureInfo.InvariantCulture,
                                             System.Globalization.DateTimeStyles.None,
                                             out DateTime d) &&
@@ -1332,7 +1332,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
                                             // Use exact format with day first
                                             if (DateTime.TryParseExact(
                                                     d.ToString().Trim(),
-                                                    new[] { "dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy", "d-M-yyyy" },
+                                                    new[] { "MM/dd/yyyy", "M/d/yyyy", "MM-dd-yyyy", "M-d-yyyy" },
                                                     System.Globalization.CultureInfo.InvariantCulture,
                                                     System.Globalization.DateTimeStyles.None,
                                                     out parsedDate))
