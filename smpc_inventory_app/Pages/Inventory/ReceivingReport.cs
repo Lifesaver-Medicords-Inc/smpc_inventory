@@ -112,6 +112,8 @@ namespace smpc_inventory_app.Pages.Inventory
 
             txt_date_received.ReadOnly = !isVisible;
             cmb_warehouse_name.Enabled = true;
+
+            pnl_main.Enabled = isVisible;
         }
 
         private void ClearDGVs()
@@ -136,16 +138,27 @@ namespace smpc_inventory_app.Pages.Inventory
                 dgv_main.Columns["serial_number"].ReadOnly = !isEdit;
         }
 
-        private void btn_edit_Click(object sender, EventArgs e)
+        private async void btn_edit_Click(object sender, EventArgs e)
         {
             _isNewMode = false;
             _suppressWarehouseBinding = false;
             _isEditing = true;
             ToggleButtons(true);
             SetEditableColumns(true);
+
+            if (!string.IsNullOrWhiteSpace(cmb_warehouse_name.Text))
+            {
+                var selected = _warehouseData.warehouse_name
+                    .FirstOrDefault(w => w.name == cmb_warehouse_name.Text);
+
+                if (selected != null)
+                {
+                    await LoadWarehouseAreasAsync(selected.id);
+                }
+            }
         }
 
-        private void btn_new_Click(object sender, EventArgs e)
+        private async void btn_new_Click(object sender, EventArgs e)
         {
             _isEditing = true;
             cmb_ref_doc.SelectedIndex = -1;
@@ -164,6 +177,19 @@ namespace smpc_inventory_app.Pages.Inventory
             Helpers.ResetControls(pnl_main);
             cmb_ref_doc.SelectedIndex = -1;
             cmb_warehouse_name.SelectedIndex = -1;
+
+            if (!string.IsNullOrWhiteSpace(cmb_warehouse_name.Text))
+            {
+                var selected = _warehouseData.warehouse_name
+                    .FirstOrDefault(w => w.name == cmb_warehouse_name.Text);
+
+                if (selected != null)
+                {
+                    await LoadWarehouseAreasAsync(selected.id);
+
+                    RefreshAllRowCombos();
+                }
+            }
         }
 
         private async void btn_close_Click(object sender, EventArgs e)
@@ -173,6 +199,7 @@ namespace smpc_inventory_app.Pages.Inventory
             SetEditableColumns(false);
             cmb_ref_doc.DropDownStyle = ComboBoxStyle.DropDown;
             await LoadReceivingReports();
+            HideAllRowCombos();
         }
 
         private async Task DisableEditMode()
@@ -718,8 +745,6 @@ namespace smpc_inventory_app.Pages.Inventory
                 .Where(b => !string.IsNullOrWhiteSpace(b))
                 .Distinct()
                 .ToList();
-
-            RefreshAllRowCombos();
         }
 
         private async Task LoadReceivingReports()
@@ -801,17 +826,6 @@ namespace smpc_inventory_app.Pages.Inventory
             else
             {
                 cmb_ref_doc.Text = current.ref_doc;
-            }
-
-            if (!string.IsNullOrWhiteSpace(cmb_warehouse_name.Text))
-            {
-                var selected = _warehouseData.warehouse_name
-                    .FirstOrDefault(w => w.name == cmb_warehouse_name.Text);
-
-                if (selected != null)
-                {
-                    await LoadWarehouseAreasAsync(selected.id);
-                }
             }
 
             //Bind child details (grids)

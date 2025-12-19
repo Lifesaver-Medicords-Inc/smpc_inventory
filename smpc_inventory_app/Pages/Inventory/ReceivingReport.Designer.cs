@@ -257,6 +257,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.pnl_main.Controls.Add(this.txt_doc);
             this.pnl_main.Controls.Add(this.supplierlbl);
             this.pnl_main.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnl_main.Enabled = false;
             this.pnl_main.Location = new System.Drawing.Point(0, 88);
             this.pnl_main.Name = "pnl_main";
             this.pnl_main.Size = new System.Drawing.Size(1285, 132);
@@ -265,7 +266,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // cmb_ref_doc
             // 
             this.cmb_ref_doc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmb_ref_doc.BackColor = System.Drawing.Color.White;
+            this.cmb_ref_doc.BackColor = System.Drawing.SystemColors.Window;
             this.cmb_ref_doc.Enabled = false;
             this.cmb_ref_doc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmb_ref_doc.FormattingEnabled = true;
@@ -281,7 +282,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // txt_address
             // 
-            this.txt_address.BackColor = System.Drawing.Color.White;
+            this.txt_address.BackColor = System.Drawing.SystemColors.Window;
             this.txt_address.Location = new System.Drawing.Point(140, 99);
             this.txt_address.Name = "txt_address";
             this.txt_address.ReadOnly = true;
@@ -291,7 +292,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // cmb_warehouse_name
             // 
-            this.cmb_warehouse_name.BackColor = System.Drawing.Color.White;
+            this.cmb_warehouse_name.BackColor = System.Drawing.SystemColors.Window;
             this.cmb_warehouse_name.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_warehouse_name.Enabled = false;
             this.cmb_warehouse_name.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -374,7 +375,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // txt_prepared_by
             // 
             this.txt_prepared_by.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_prepared_by.BackColor = System.Drawing.Color.White;
+            this.txt_prepared_by.BackColor = System.Drawing.SystemColors.Window;
             this.txt_prepared_by.Location = new System.Drawing.Point(1048, 77);
             this.txt_prepared_by.Name = "txt_prepared_by";
             this.txt_prepared_by.ReadOnly = true;
@@ -428,7 +429,8 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // txt_supplier_code
             // 
-            this.txt_supplier_code.BackColor = System.Drawing.Color.White;
+            this.txt_supplier_code.BackColor = System.Drawing.SystemColors.Window;
+            this.txt_supplier_code.Enabled = false;
             this.txt_supplier_code.Location = new System.Drawing.Point(140, 32);
             this.txt_supplier_code.Name = "txt_supplier_code";
             this.txt_supplier_code.ReadOnly = true;
@@ -447,7 +449,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // txt_date_received
             // 
-            this.txt_date_received.BackColor = System.Drawing.Color.White;
+            this.txt_date_received.BackColor = System.Drawing.SystemColors.Window;
             this.txt_date_received.Location = new System.Drawing.Point(140, 54);
             this.txt_date_received.Name = "txt_date_received";
             this.txt_date_received.ReadOnly = true;
@@ -475,7 +477,8 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // txt_supplier_name
             // 
-            this.txt_supplier_name.BackColor = System.Drawing.Color.White;
+            this.txt_supplier_name.BackColor = System.Drawing.SystemColors.Window;
+            this.txt_supplier_name.Enabled = false;
             this.txt_supplier_name.Location = new System.Drawing.Point(140, 10);
             this.txt_supplier_name.Name = "txt_supplier_name";
             this.txt_supplier_name.ReadOnly = true;
@@ -486,7 +489,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // txt_doc
             // 
             this.txt_doc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_doc.BackColor = System.Drawing.Color.White;
+            this.txt_doc.BackColor = System.Drawing.SystemColors.Window;
             this.txt_doc.Location = new System.Drawing.Point(1048, 10);
             this.txt_doc.Name = "txt_doc";
             this.txt_doc.ReadOnly = true;
@@ -888,6 +891,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.Controls.Add(this.pnl_main);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.pnl_head);
+            this.Enabled = false;
             this.Name = "ReceivingReport";
             this.Size = new System.Drawing.Size(1285, 615);
             this.Load += new System.EventHandler(this.ReceivingReport_Load);
