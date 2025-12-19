@@ -891,7 +891,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.Controls.Add(this.pnl_main);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.pnl_head);
-            this.Enabled = false;
             this.Name = "ReceivingReport";
             this.Size = new System.Drawing.Size(1285, 615);
             this.Load += new System.EventHandler(this.ReceivingReport_Load);
