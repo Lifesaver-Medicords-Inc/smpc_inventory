@@ -44,6 +44,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.btn_next = new System.Windows.Forms.ToolStripButton();
             this.btn_prev = new System.Windows.Forms.ToolStripButton();
             this.pnl_main = new System.Windows.Forms.Panel();
+            this.dtp_date_received = new System.Windows.Forms.DateTimePicker();
             this.cmb_ref_doc = new System.Windows.Forms.ComboBox();
             this.txt_address = new System.Windows.Forms.TextBox();
             this.cmb_warehouse_name = new System.Windows.Forms.ComboBox();
@@ -60,7 +61,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.ref_doclbl = new System.Windows.Forms.Label();
             this.txt_supplier_code = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txt_date_received = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.suppliercodelbl = new System.Windows.Forms.Label();
             this.txt_supplier_name = new System.Windows.Forms.TextBox();
@@ -234,6 +234,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // pnl_main
             // 
+            this.pnl_main.Controls.Add(this.dtp_date_received);
             this.pnl_main.Controls.Add(this.cmb_ref_doc);
             this.pnl_main.Controls.Add(this.txt_address);
             this.pnl_main.Controls.Add(this.cmb_warehouse_name);
@@ -250,7 +251,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.pnl_main.Controls.Add(this.ref_doclbl);
             this.pnl_main.Controls.Add(this.txt_supplier_code);
             this.pnl_main.Controls.Add(this.label4);
-            this.pnl_main.Controls.Add(this.txt_date_received);
             this.pnl_main.Controls.Add(this.label3);
             this.pnl_main.Controls.Add(this.suppliercodelbl);
             this.pnl_main.Controls.Add(this.txt_supplier_name);
@@ -262,6 +262,15 @@ namespace smpc_inventory_app.Pages.Inventory
             this.pnl_main.Name = "pnl_main";
             this.pnl_main.Size = new System.Drawing.Size(1285, 132);
             this.pnl_main.TabIndex = 28;
+            // 
+            // dtp_date_received
+            // 
+            this.dtp_date_received.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtp_date_received.Location = new System.Drawing.Point(140, 53);
+            this.dtp_date_received.Name = "dtp_date_received";
+            this.dtp_date_received.Size = new System.Drawing.Size(200, 20);
+            this.dtp_date_received.TabIndex = 97;
+            this.dtp_date_received.Tag = "REQUIRED";
             // 
             // cmb_ref_doc
             // 
@@ -283,6 +292,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // txt_address
             // 
             this.txt_address.BackColor = System.Drawing.SystemColors.Window;
+            this.txt_address.Enabled = false;
             this.txt_address.Location = new System.Drawing.Point(140, 99);
             this.txt_address.Name = "txt_address";
             this.txt_address.ReadOnly = true;
@@ -306,6 +316,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.cmb_warehouse_name.TabStop = false;
             this.cmb_warehouse_name.Tag = "REQUIRED";
             this.cmb_warehouse_name.SelectedIndexChanged += new System.EventHandler(this.cmb_warehouse_name_SelectedIndexChanged);
+            this.cmb_warehouse_name.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_warehouse_name_KeyDown);
             // 
             // label1
             // 
@@ -376,6 +387,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             this.txt_prepared_by.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_prepared_by.BackColor = System.Drawing.SystemColors.Window;
+            this.txt_prepared_by.Enabled = false;
             this.txt_prepared_by.Location = new System.Drawing.Point(1048, 77);
             this.txt_prepared_by.Name = "txt_prepared_by";
             this.txt_prepared_by.ReadOnly = true;
@@ -447,16 +459,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.label4.TabIndex = 25;
             this.label4.Text = "ADDRESS";
             // 
-            // txt_date_received
-            // 
-            this.txt_date_received.BackColor = System.Drawing.SystemColors.Window;
-            this.txt_date_received.Location = new System.Drawing.Point(140, 54);
-            this.txt_date_received.Name = "txt_date_received";
-            this.txt_date_received.ReadOnly = true;
-            this.txt_date_received.Size = new System.Drawing.Size(200, 20);
-            this.txt_date_received.TabIndex = 3;
-            this.txt_date_received.Tag = "";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -490,6 +492,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             this.txt_doc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_doc.BackColor = System.Drawing.SystemColors.Window;
+            this.txt_doc.Enabled = false;
             this.txt_doc.Location = new System.Drawing.Point(1048, 10);
             this.txt_doc.Name = "txt_doc";
             this.txt_doc.ReadOnly = true;
@@ -595,7 +598,6 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.number.DataPropertyName = "number";
-            this.number.Frozen = true;
             this.number.HeaderText = "#";
             this.number.Name = "number";
             this.number.ReadOnly = true;
@@ -792,7 +794,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             this.btnUpload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnUpload.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.btnUpload.Location = new System.Drawing.Point(552, 231);
+            this.btnUpload.Location = new System.Drawing.Point(552, 207);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(75, 23);
             this.btnUpload.TabIndex = 3;
@@ -947,7 +949,6 @@ namespace smpc_inventory_app.Pages.Inventory
         private System.Windows.Forms.Label ref_doclbl;
         private System.Windows.Forms.TextBox txt_supplier_code;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txt_date_received;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label suppliercodelbl;
         private System.Windows.Forms.TextBox txt_supplier_name;
@@ -976,6 +977,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private System.Windows.Forms.ContextMenuStrip treeViewContextMenu;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ContextMenuStrip renameFileItem;
+        private System.Windows.Forms.DateTimePicker dtp_date_received;
         private System.Windows.Forms.DataGridViewTextBoxColumn number;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn pod_id;

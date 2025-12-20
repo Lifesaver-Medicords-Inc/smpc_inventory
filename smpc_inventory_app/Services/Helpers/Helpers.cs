@@ -599,11 +599,19 @@ namespace smpc_app.Services.Helpers
         {
             foreach (Control control in pnl.Controls)
             {
-                // Check if the control is a TextBox
+                // Reset TextBox
                 if (control is TextBox textBox)
                 {
-                    // Reset the TextBox's text
-                    textBox.Text = "";
+                    textBox.Text = string.Empty;
+                }
+                // Reset DateTimePicker to current date
+                else if (control is DateTimePicker datePicker)
+                {
+                    datePicker.Value = DateTime.Now;   // or DateTime.Today
+                }
+                else if (control is ComboBox combobox)
+                {
+                    combobox.SelectedIndex = -1;
                 }
             }
         }
@@ -1122,17 +1130,19 @@ namespace smpc_app.Services.Helpers
                             // Check if the control is a DATETIME PICKER
                             if (control is DateTimePicker dateTimePicker)
                             {
-                                string key = dateTimePicker.Name.Replace("dtp_", "");
-                                string val = String.Format("'{0}'", dateTimePicker.Value);
-                                object valueFromDataTable = dt.Rows[selectedIndex][column_name];
+                                if (selectedIndex < 0 || selectedIndex >= dt.Rows.Count)
+                                    return;
 
-                                if (valueFromDataTable != DBNull.Value && valueFromDataTable is DateTime dateTimeValue)
+                                object rawValue = dt.Rows[selectedIndex][column_name];
+
+                                if (rawValue != DBNull.Value &&
+                                    DateTime.TryParse(rawValue.ToString(), out DateTime parsedDate))
                                 {
-                                    dateTimePicker.Value = dateTimeValue;
+                                    dateTimePicker.Value = parsedDate;
                                 }
                                 else
                                 {
-                                    dateTimePicker.Value = DateTime.Now;
+                                    dateTimePicker.Value = DateTime.Now; // or MinDate if you prefer
                                 }
                             }
                             // Check if the control is a NUMERIC

@@ -109,8 +109,6 @@ namespace smpc_inventory_app.Pages.Inventory
             btn_delete.Visible = !isVisible;
             btn_prev.Visible = !isVisible;
             btn_next.Visible = !isVisible;
-
-            txt_date_received.ReadOnly = !isVisible;
             cmb_warehouse_name.Enabled = true;
 
             pnl_main.Enabled = isVisible;
@@ -332,20 +330,11 @@ namespace smpc_inventory_app.Pages.Inventory
                 }
             }
 
-            // If empty, set current date automatically
-            if (string.IsNullOrWhiteSpace(txt_date_received.Text))
+            if (dtp_date_received.Value.Date < DateTime.Now.Date)
             {
-                txt_date_received.Text = DateTime.Now.ToString("MM/dd/yyyy");
-            }
-            else
-            {
-                // Only validate if user actually entered something
-                DateTime parsedDate;
-                if (!DateTime.TryParseExact(txt_date_received.Text, "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsedDate))
-                {
-                    Helpers.ShowDialogMessage("error", "Invalid Date format. Please use MM/dd/yyyy (e.g. 09/23/2025).");
-                    return;
-                }
+                Helpers.ShowDialogMessage("error", "Issue Date cannot be earlier than today.");
+                dtp_date_received.Focus();
+                return;
             }
 
             // Try parsing supplier_id
@@ -372,7 +361,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 purchase_order_id = purchaseOrderId,
                 warehouse_name = cmb_warehouse_name.Text,
                 ref_doc = cmb_ref_doc.Text,
-                date_received = txt_date_received.Text,
+                date_received = dtp_date_received.Text,
                 prepared_by = txt_prepared_by.Text,
                 address = txt_address.Text,
                 warehouse_id = warehouseId
@@ -642,6 +631,19 @@ namespace smpc_inventory_app.Pages.Inventory
                 // Clear grids too
                 dgv_main.DataSource = null;
             }
+
+            if (!string.IsNullOrWhiteSpace(cmb_warehouse_name.Text))
+            {
+                var selected = _warehouseData.warehouse_name
+                    .FirstOrDefault(w => w.name == cmb_warehouse_name.Text);
+
+                if (selected != null)
+                {
+                    await LoadWarehouseAreasAsync(selected.id);
+                }
+            }
+
+            ClearAllBinLocations();
         }
 
         private async Task LoadWarehouse()
@@ -702,6 +704,8 @@ namespace smpc_inventory_app.Pages.Inventory
             {
                 txt_address.Text = string.Empty;
             }
+
+            ClearAllBinLocations();
         }
 
         private async Task LoadWarehouseAreasAsync(int warehouseId)
@@ -781,7 +785,7 @@ namespace smpc_inventory_app.Pages.Inventory
             }
         }
 
-        private async void ShowCurrentRecord()
+        private void ShowCurrentRecord()
         {
             _suppressRefDocBinding = true;
             _suppressWarehouseBinding = true;
@@ -1841,7 +1845,7 @@ namespace smpc_inventory_app.Pages.Inventory
 
         private void OnRowComboKeyDown(int rowIndex, ComboBox combo, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Back)
+            if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
             {
                 //CLEAR displayed text
                 combo.Text = "";
@@ -1998,6 +2002,42 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             foreach (var kvp in rowComboBoxes)
                 kvp.Value.Visible = false;
+        }
+
+        private void ClearAllBinLocations()
+        {
+            // Remove all row comboboxes
+            foreach (var cb in rowComboBoxes.Values)
+            {
+                if (dgv_main.Controls.Contains(cb))
+                    dgv_main.Controls.Remove(cb);
+            }
+
+            rowComboBoxes.Clear();
+
+            // Clear all bin_location cells
+            foreach (DataGridViewRow row in dgv_main.Rows)
+            {
+                if (!row.IsNewRow)
+                    row.Cells["bin_location"].Value = "";
+            }
+
+            HideAllRowCombos();
+        }
+
+        private void cmb_warehouse_name_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
+            {
+                cmb_warehouse_name.SelectedIndex = -1;
+                cmb_warehouse_name.Text = "";
+                txt_address.Text = "";
+
+                RefreshAllRowCombos();
+                HideAllRowCombos();
+
+                e.Handled = true;
+            }
         }
     }
 }
