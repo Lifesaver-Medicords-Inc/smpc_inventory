@@ -435,8 +435,7 @@ namespace smpc_inventory_app.Pages.Inventory
                     }
                     else
                     {
-                        // Fallback to last record if new one was added and ID wasn’t in previous list
-                        _currentRRIndex = _receivingReports.Count - 1;
+                        _currentRRIndex = 0;
                     }
 
                     ShowCurrentRecord();
@@ -1809,12 +1808,12 @@ namespace smpc_inventory_app.Pages.Inventory
                 if (_zone != null && _zone.Count > 0)
                     cb.Items.AddRange(_zone.ToArray());
 
-                // Use SelectedIndexChanged for cascading
-                cb.SelectedIndexChanged += (s, e) =>
+                cb.SelectionChangeCommitted += (s, e) =>
                 {
                     if (!_isProgrammaticChange)
-                        OnRowComboSelected(rowIndex, cb, e);
+                        OnRowComboCommitted(rowIndex, cb);
                 };
+
                 cb.KeyDown += (s, e) => OnRowComboKeyDown(rowIndex, cb, e);
 
                 rowComboBoxes[rowIndex] = cb;
@@ -1887,140 +1886,123 @@ namespace smpc_inventory_app.Pages.Inventory
             }
         }
 
-        private void OnRowComboSelected(int rowIndex, ComboBox combo, EventArgs e)
+        private void OnRowComboCommitted(int rowIndex, ComboBox combo)
         {
-            var cell = dgv_main.Rows[rowIndex].Cells["bin_location"];
-            // Load tag state
-            CascadingTag tag = combo.Tag as CascadingTag ?? new CascadingTag();
-            string selected = combo.SelectedItem?.ToString() ?? combo.Text;
+            if (!rowTextBoxes.ContainsKey(rowIndex))
+                return;
 
-            // Zone → Area
+            var cell = dgv_main.Rows[rowIndex].Cells["bin_location"];
+            var textBox = rowTextBoxes[rowIndex];
+
+            string selected = combo.SelectedItem?.ToString();
+
+            // ❗ Do NOT cascade if nothing is selected
+            if (string.IsNullOrWhiteSpace(selected))
+                return;
+
+            CascadingTag tag = combo.Tag as CascadingTag ?? new CascadingTag();
+
+            // ---------------- ZONE → AREA ----------------
             if (_zone.Contains(selected))
             {
-                combo.Items.Clear();
-                var areas = _warehouseAreas
-                    .Where(w => w.zone == selected)
-                    .Select(w => w.area)
-                    .Distinct()
-                    .ToList();
-
-                var cleaned = areas
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Distinct()
-                    .ToArray();
-
-                combo.Items.AddRange(cleaned);
-                if (areas.Any(a => !string.IsNullOrWhiteSpace(a)))
-                    combo.DroppedDown = true;
-
                 tag.Zone = selected;
                 tag.Area = tag.Rack = tag.Level = tag.Bin = "";
+
+                CommitValue(rowIndex, tag);
+                LoadNext(combo, _warehouseAreas
+                    .Where(w => w.zone == selected)
+                    .Select(w => w.area));
             }
-            // Area → Rack
+            // ---------------- AREA → RACK ----------------
             else if (_area.Contains(selected))
             {
-                combo.Items.Clear();
-                var racks = _warehouseAreas
-                    .Where(w => w.zone == tag.Zone && w.area == selected)
-                    .Select(w => w.rack)
-                    .Distinct()
-                    .ToList();
-
-                var cleaned = racks
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Distinct()
-                    .ToArray();
-
-                combo.Items.AddRange(cleaned);
-                if (racks.Any(r => !string.IsNullOrWhiteSpace(r)))
-                    combo.DroppedDown = true;
-
                 tag.Area = selected;
                 tag.Rack = tag.Level = tag.Bin = "";
+
+                CommitValue(rowIndex, tag);
+                LoadNext(combo, _warehouseAreas
+                    .Where(w => w.zone == tag.Zone && w.area == selected)
+                    .Select(w => w.rack));
             }
-            // Rack → Level
+            // ---------------- RACK → LEVEL ----------------
             else if (_rack.Contains(selected))
             {
-                combo.Items.Clear();
-                var levels = _warehouseAreas
-                    .Where(w => w.zone == tag.Zone && w.area == tag.Area && w.rack == selected)
-                    .Select(w => w.level)
-                    .Distinct()
-                    .ToList();
-
-                var cleaned = levels
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Distinct()
-                    .ToArray();
-
-                combo.Items.AddRange(cleaned);
-                if (levels.Any(l => !string.IsNullOrWhiteSpace(l)))
-                    combo.DroppedDown = true;
-
                 tag.Rack = selected;
                 tag.Level = tag.Bin = "";
+
+                CommitValue(rowIndex, tag);
+                LoadNext(combo, _warehouseAreas
+                    .Where(w => w.zone == tag.Zone &&
+                                w.area == tag.Area &&
+                                w.rack == selected)
+                    .Select(w => w.level));
             }
-            // Level → Bin (generate numbers 1..max IF bins exist)
+            // ---------------- LEVEL → BIN ----------------
             else if (_level.Contains(selected))
             {
-                combo.Items.Clear();
+                tag.Level = selected;
+                tag.Bin = "";
 
-                // Get bin values for this zone/area/rack/level
-                var binStrings = _warehouseAreas
+                CommitValue(rowIndex, tag);
+
+                var bins = _warehouseAreas
                     .Where(w => w.zone == tag.Zone &&
                                 w.area == tag.Area &&
                                 w.rack == tag.Rack &&
                                 w.level == selected)
                     .Select(w => w.bins)
-                    .Where(b => !string.IsNullOrWhiteSpace(b))
-                    .Distinct()
+                    .Where(b => int.TryParse(b, out _))
+                    .Select(int.Parse)
                     .ToList();
 
-                // Parse valid numbers
-                var binNumbers = new List<int>();
-                foreach (var b in binStrings)
-                {
-                    if (int.TryParse(b, out int binNum))
-                        binNumbers.Add(binNum);
-                }
+                if (bins.Count == 0)
+                    return;
 
-                //Nothing found? -> leave combo completely empty
-                if (binNumbers.Count == 0)
-                {
-                    tag.Level = selected;
-                    tag.Bin = "";
-                    return;   // do not open dropdown
-                }
-
-                //Found bins -> generate 1..max
-                int maxBin = binNumbers.Max();
-
-                var binList = Enumerable.Range(1, maxBin)
-                                        .Select(n => n.ToString())
-                                        .ToArray();
-
-                combo.Items.AddRange(binList);
+                combo.Items.Clear();
+                combo.Items.AddRange(
+                    Enumerable.Range(1, bins.Max()).Select(n => n.ToString()).ToArray()
+                );
                 combo.DroppedDown = true;
-
-                tag.Level = selected;
-                tag.Bin = "";
             }
-            // Bin selected → final path
+            // ---------------- BIN (FINAL) ----------------
             else if (_bins.Contains(selected))
             {
                 tag.Bin = selected;
+                CommitValue(rowIndex, tag);
             }
 
-            // Update tag
             combo.Tag = tag;
+        }
 
-            // Write current partial/full path to bin_location
-            string path = $"{tag.Zone}-{tag.Area}-{tag.Rack}-{tag.Level}-{tag.Bin}".Trim('-').Replace("--", "-");
-            cell.Value = path;
+        private void CommitValue(int rowIndex, CascadingTag tag)
+        {
+            string path = $"{tag.Zone}-{tag.Area}-{tag.Rack}-{tag.Level}-{tag.Bin}"
+                            .Trim('-')
+                            .Replace("--", "-");
 
-            // Update overlay TextBox
+            dgv_main.Rows[rowIndex].Cells["bin_location"].Value = path;
+
             if (rowTextBoxes.ContainsKey(rowIndex))
                 rowTextBoxes[rowIndex].Text = path;
+        }
+
+        private void LoadNext(ComboBox combo, IEnumerable<string> values)
+        {
+            var cleaned = values
+                .Where(v => !string.IsNullOrWhiteSpace(v))
+                .Distinct()
+                .ToArray();
+
+            combo.Items.Clear();
+
+            if (cleaned.Length == 0)
+                return;
+
+            combo.Items.AddRange(cleaned);
+            combo.BeginInvoke(new Action(() =>
+            {
+                combo.DroppedDown = true;
+            }));
         }
 
         private void HideAllRowCombos()
