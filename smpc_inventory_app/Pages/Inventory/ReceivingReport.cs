@@ -37,14 +37,15 @@ namespace smpc_inventory_app.Pages.Inventory
         private List<string> _rack;
         private List<string> _level;
         private List<string> _bins;
-        private List<string> _location_code;
         private readonly string receivingReportPath = Settings.Default.RECEIVINGREPORTPATH;
         private TreeNode selectedNode;
         private Dictionary<int, ComboBox> rowComboBoxes = new Dictionary<int, ComboBox>();
+        private Dictionary<int, TextBox> rowTextBoxes = new Dictionary<int, TextBox>();
+        private bool _isProgrammaticChange = false;
 
         private readonly string[] systemFolders =
         {
-            "DELIVERY RECEIPT",
+            "DELIVERY RECEIPT",        
             "ITEM PICTURES"
         };
 
@@ -63,6 +64,8 @@ namespace smpc_inventory_app.Pages.Inventory
             public string Rack { get; set; }
             public string Level { get; set; }
             public string Bin { get; set; }
+
+            public Stack<string> SelectionHistory { get; set; } = new Stack<string>();
         }
 
         public ReceivingReport()
@@ -136,27 +139,16 @@ namespace smpc_inventory_app.Pages.Inventory
                 dgv_main.Columns["serial_number"].ReadOnly = !isEdit;
         }
 
-        private async void btn_edit_Click(object sender, EventArgs e)
+        private void btn_edit_Click(object sender, EventArgs e)
         {
             _isNewMode = false;
             _suppressWarehouseBinding = false;
             _isEditing = true;
             ToggleButtons(true);
             SetEditableColumns(true);
-
-            if (!string.IsNullOrWhiteSpace(cmb_warehouse_name.Text))
-            {
-                var selected = _warehouseData.warehouse_name
-                    .FirstOrDefault(w => w.name == cmb_warehouse_name.Text);
-
-                if (selected != null)
-                {
-                    await LoadWarehouseAreasAsync(selected.id);
-                }
-            }
         }
 
-        private async void btn_new_Click(object sender, EventArgs e)
+        private void btn_new_Click(object sender, EventArgs e)
         {
             _isEditing = true;
             cmb_ref_doc.SelectedIndex = -1;
@@ -175,19 +167,6 @@ namespace smpc_inventory_app.Pages.Inventory
             Helpers.ResetControls(pnl_main);
             cmb_ref_doc.SelectedIndex = -1;
             cmb_warehouse_name.SelectedIndex = -1;
-
-            if (!string.IsNullOrWhiteSpace(cmb_warehouse_name.Text))
-            {
-                var selected = _warehouseData.warehouse_name
-                    .FirstOrDefault(w => w.name == cmb_warehouse_name.Text);
-
-                if (selected != null)
-                {
-                    await LoadWarehouseAreasAsync(selected.id);
-
-                    RefreshAllRowCombos();
-                }
-            }
         }
 
         private async void btn_close_Click(object sender, EventArgs e)
@@ -330,9 +309,9 @@ namespace smpc_inventory_app.Pages.Inventory
                 }
             }
 
-            if (dtp_date_received.Value.Date < DateTime.Now.Date)
+            if (dtp_date_received.Value.Date > DateTime.Now.Date)
             {
-                Helpers.ShowDialogMessage("error", "Issue Date cannot be earlier than today.");
+                Helpers.ShowDialogMessage("error", "Date Received cannot be later than today.");
                 dtp_date_received.Focus();
                 return;
             }
@@ -548,6 +527,17 @@ namespace smpc_inventory_app.Pages.Inventory
                 await LoadPODoc();
                 await LoadWarehouse();
                 await LoadReceivingReports();
+
+                if (!string.IsNullOrWhiteSpace(cmb_warehouse_name.Text))
+                {
+                    var selected = _warehouseData.warehouse_name
+                        .FirstOrDefault(w => w.name == cmb_warehouse_name.Text);
+
+                    if (selected != null)
+                    {
+                        await LoadWarehouseAreasAsync(selected.id);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -740,12 +730,6 @@ namespace smpc_inventory_app.Pages.Inventory
 
             _bins = _warehouseAreas
                 .Select(x => x.bins)
-                .Where(b => !string.IsNullOrWhiteSpace(b))
-                .Distinct()
-                .ToList();
-
-            _location_code = _warehouseAreas
-                .Select(x => x.location_code)
                 .Where(b => !string.IsNullOrWhiteSpace(b))
                 .Distinct()
                 .ToList();
@@ -947,7 +931,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // Suppress the default exception error
             e.ThrowException = false;
         }
-        
+
         //File managing
         private void panel1_Resize(object sender, EventArgs e)
         {
@@ -1679,7 +1663,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private bool IsSystemFolder(TreeNode node)
         {
             // Check if this is one of the predefined system folders
-            string[] systemFolders = {"DELIVERY RECEIPT", "ITEM PICTURES" };
+            string[] systemFolders = { "DELIVERY RECEIPT", "ITEM PICTURES" };
             return systemFolders.Contains(node.Text);
         }
 
@@ -1770,6 +1754,14 @@ namespace smpc_inventory_app.Pages.Inventory
 
             rowComboBoxes.Clear();
 
+            // Remove all dynamically created TextBoxes
+            foreach (var tb in rowTextBoxes.Values)
+            {
+                if (dgv_main.Controls.Contains(tb))
+                    dgv_main.Controls.Remove(tb);
+            }
+            rowTextBoxes.Clear();
+
             // Clear bin_location column because warehouse changed
             foreach (DataGridViewRow row in dgv_main.Rows)
             {
@@ -1814,33 +1806,59 @@ namespace smpc_inventory_app.Pages.Inventory
                 cb.AutoCompleteMode = AutoCompleteMode.None;
                 cb.AutoCompleteSource = AutoCompleteSource.None;
 
-                // Initially fill ComboBox with zones
                 if (_zone != null && _zone.Count > 0)
                     cb.Items.AddRange(_zone.ToArray());
 
-                // Event handler for selection
-                cb.SelectedIndexChanged += (s, e) => OnRowComboSelected(rowIndex, cb, e);
+                // Use SelectedIndexChanged for cascading
+                cb.SelectedIndexChanged += (s, e) =>
+                {
+                    if (!_isProgrammaticChange)
+                        OnRowComboSelected(rowIndex, cb, e);
+                };
                 cb.KeyDown += (s, e) => OnRowComboKeyDown(rowIndex, cb, e);
 
                 rowComboBoxes[rowIndex] = cb;
                 dgv_main.Controls.Add(cb);
+
+                // Create overlay TextBox
+                TextBox tb = new TextBox();
+                tb.ReadOnly = true;
+                tb.BackColor = Color.White;
+                tb.BorderStyle = BorderStyle.FixedSingle;
+                tb.Visible = false;
+                tb.KeyDown += (s, e) => OnRowComboKeyDown(rowIndex, cb, e);
+                dgv_main.Controls.Add(tb);
+
+                rowTextBoxes[rowIndex] = tb;
             }
 
             ComboBox combo = rowComboBoxes[rowIndex];
+            TextBox textBox = rowTextBoxes[rowIndex];
 
-            // Position it
+            // Position
             Rectangle rect = dgv_main.GetCellDisplayRectangle(colIndex, rowIndex, true);
             combo.SetBounds(rect.X, rect.Y, rect.Width, rect.Height);
 
-            // Preload existing value
+            int tbWidth = rect.Width - 17;
+            textBox.SetBounds(rect.X, rect.Y, tbWidth, rect.Height);
+
             var cell = dgv_main.Rows[rowIndex].Cells[colIndex];
+
+            // Preload existing value
+            _isProgrammaticChange = true;
             combo.Text = cell.Value?.ToString() ?? "";
+            _isProgrammaticChange = false;
+
+            textBox.Text = combo.Text;
 
             HideAllRowCombos();
             combo.Visible = true;
             combo.BringToFront();
             combo.Focus();
             combo.DroppedDown = true;
+
+            textBox.Visible = true;
+            textBox.BringToFront();
         }
 
         private void OnRowComboKeyDown(int rowIndex, ComboBox combo, KeyEventArgs e)
@@ -1860,6 +1878,11 @@ namespace smpc_inventory_app.Pages.Inventory
                 //Clear bin_location cell
                 dgv_main.Rows[rowIndex].Cells["bin_location"].Value = "";
 
+                if (rowTextBoxes.ContainsKey(rowIndex))
+                {
+                    rowTextBoxes[rowIndex].Text = "";
+                }
+
                 e.SuppressKeyPress = true; // prevent default deletion sound
             }
         }
@@ -1867,11 +1890,9 @@ namespace smpc_inventory_app.Pages.Inventory
         private void OnRowComboSelected(int rowIndex, ComboBox combo, EventArgs e)
         {
             var cell = dgv_main.Rows[rowIndex].Cells["bin_location"];
-
             // Load tag state
             CascadingTag tag = combo.Tag as CascadingTag ?? new CascadingTag();
-
-            string selected = combo.Text;
+            string selected = combo.SelectedItem?.ToString() ?? combo.Text;
 
             // Zone → Area
             if (_zone.Contains(selected))
@@ -1996,11 +2017,18 @@ namespace smpc_inventory_app.Pages.Inventory
             // Write current partial/full path to bin_location
             string path = $"{tag.Zone}-{tag.Area}-{tag.Rack}-{tag.Level}-{tag.Bin}".Trim('-').Replace("--", "-");
             cell.Value = path;
+
+            // Update overlay TextBox
+            if (rowTextBoxes.ContainsKey(rowIndex))
+                rowTextBoxes[rowIndex].Text = path;
         }
 
         private void HideAllRowCombos()
         {
             foreach (var kvp in rowComboBoxes)
+                kvp.Value.Visible = false;
+
+            foreach (var kvp in rowTextBoxes)
                 kvp.Value.Visible = false;
         }
 

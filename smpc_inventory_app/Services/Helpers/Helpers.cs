@@ -957,20 +957,23 @@ namespace smpc_app.Services.Helpers
             throw new NotImplementedException();
         }
 
-        public static Boolean ValidateControlsValues(Panel pnl)
+        public static bool ValidateControlsValues(Panel pnl)
         {
-            Boolean isError = false;
+            bool isError = false;
+
             foreach (Control control in pnl.Controls)
             {
                 // Handle TextBox
                 if (control is TextBox textBox)
                 {
-                    string key = textBox.Name.Replace("txt_", "");
                     if (string.Equals(textBox.Tag as string, "REQUIRED", StringComparison.OrdinalIgnoreCase)
                         && string.IsNullOrEmpty(textBox.Text))
                     {
                         FlashRed(control);
                         isError = true;
+
+                        // Log the control name
+                        Console.WriteLine($"Validation error: TextBox '{textBox.Name}' is required.");
                     }
                     else
                     {
@@ -979,14 +982,16 @@ namespace smpc_app.Services.Helpers
                 }
 
                 // Handle ComboBox
-                //comboboxes should be dropdown list and flatsyle flat
                 else if (control is ComboBox comboBox)
                 {
                     if (string.Equals(comboBox.Tag as string, "REQUIRED", StringComparison.OrdinalIgnoreCase)
-                        && comboBox.SelectedIndex < 0)   //correct check for DropDownList
+                        && string.IsNullOrWhiteSpace(comboBox.Text)) 
                     {
                         FlashRed(comboBox);
                         isError = true;
+
+                        // Log the control name
+                        Console.WriteLine($"Validation error: ComboBox '{comboBox.Name}' is required.");
                     }
                     else
                     {
@@ -994,6 +999,7 @@ namespace smpc_app.Services.Helpers
                     }
                 }
             }
+
             return isError;
         }
 
