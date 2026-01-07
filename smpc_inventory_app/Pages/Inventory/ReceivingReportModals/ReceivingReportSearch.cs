@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using smpc_app.Services.Helpers;
 using smpc_inventory_app.Services.Setup.Inventory;
+using smpc_inventory_app.Services.Setup.Model.Purchasing;
 
 namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
 {
@@ -17,40 +18,22 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         public string SelectedRRId { get; private set; } = null;
         private string placeHolderText = "Receiving Report Search...";
         private DataTable rrTable;
+        private ReceivingReportList2 ReceivingReport;
 
         public ReceivingReportSearch()
         {
             InitializeComponent();
             InitializeSearchBox();
             dgv_rr_search.AutoGenerateColumns = false;
+
+            // Center the modal relative to its parent form
+            this.StartPosition = FormStartPosition.CenterParent;
         }
 
         private void InitializeSearchBox()
         {
             txt_search = Helpers.CreateSearchBox(placeHolderText, txt_search_TextChanged);
             this.Controls.Add(txt_search);
-        }
-
-        private async void ReceivingReportSearch_Load(object sender, EventArgs e)
-        {
-            await LoadReceivingReports();
-        }
-
-        private async Task LoadReceivingReports()
-        {
-            rrTable = await ReceivingReportService.GetRRRecordsAsDataTable();
-
-            DataTable reversedTable = rrTable.AsEnumerable().Reverse().CopyToDataTable();
-
-            if (reversedTable.Rows.Count > 0)
-            {
-                dgv_rr_search.DataSource = reversedTable;
-            }
-            else
-            {
-                dgv_rr_search.DataSource = null;
-                MessageBox.Show("No receiving reports found.");
-            }
         }
 
         private void txt_search_TextChanged(object sender, EventArgs e)
@@ -71,23 +54,58 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             }
         }
 
+        private async void ReceivingReportSearch_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                Helpers.Loading.ShowLoading(dgv_rr_search, "Fetching data...");
+                await LoadReceivingReports();
+            }
+            catch (Exception ex)
+            {
+                Helpers.ShowDialogMessage("error", $"Failed to load: {ex.Message}");
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(dgv_rr_search);
+            }
+        }
+
+        private async Task LoadReceivingReports()
+        {
+            ReceivingReport = await ReceivingReportService.GetRRRecords();
+
+            ReceivingReport.receiving_report.Reverse();
+
+            rrTable = Helpers.ToDataTable(ReceivingReport.receiving_report);
+
+            if (rrTable.Rows.Count > 0)
+            {
+                dgv_rr_search.DataSource = rrTable;
+            }
+            else
+            {
+                dgv_rr_search.DataSource = null;
+                MessageBox.Show("No receiving reports found.");
+            }
+        }
+
         private void dgv_rr_search_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0) // make sure it's not the header row
+            if (e.RowIndex < 0)
+                return;
+
+            var row = dgv_rr_search.Rows[e.RowIndex];
+
+            // Always get the id value from the row, regardless of which column was clicked
+            var idValue = row.Cells["id"].Value;
+
+            if (idValue != null)
             {
-                // Always get the id value from the row, regardless of which column was clicked
-                var idValue = dgv_rr_search.Rows[e.RowIndex].Cells["id"].Value;
+                SelectedRRId = idValue.ToString();
 
-                if (idValue != null)
-                {
-                    SelectedRRId = idValue.ToString();
-
-                    // Log to console
-                    Console.WriteLine($"Selected RR Id: {SelectedRRId}");
-
-                    this.DialogResult = DialogResult.OK; // close the modal with OK
-                    this.Close();
-                }
+                this.DialogResult = DialogResult.OK; // close the modal with OK
+                this.Close();
             }
         }
     }
