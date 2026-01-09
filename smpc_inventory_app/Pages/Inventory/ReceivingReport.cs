@@ -42,6 +42,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private Dictionary<int, ComboBox> rowComboBoxes = new Dictionary<int, ComboBox>();
         private Dictionary<int, TextBox> rowTextBoxes = new Dictionary<int, TextBox>();
         private bool _isProgrammaticChange = false;
+        bool hasAtLeastOneReceivedQty = false;
 
         private readonly string[] systemFolders =
         {
@@ -112,9 +113,12 @@ namespace smpc_inventory_app.Pages.Inventory
             btn_delete.Visible = !isVisible;
             btn_prev.Visible = !isVisible;
             btn_next.Visible = !isVisible;
-            cmb_warehouse_name.Enabled = true;
 
-            pnl_main.Enabled = isVisible;
+            if(_isEditing && cmb_ref_doc.SelectedIndex != -1)
+            {
+                dtp_date_received.Enabled = true;
+                cmb_warehouse_name.Enabled = true;
+            }
         }
 
         private void ClearDGVs()
@@ -185,8 +189,10 @@ namespace smpc_inventory_app.Pages.Inventory
             _suppressWarehouseBinding = true;
             ToggleButtons(false);
             cmb_ref_doc.Enabled = false;
-            cmb_warehouse_name.Enabled = false;
             await LoadReceivingReports();
+
+            dtp_date_received.Enabled = false;
+            cmb_warehouse_name.Enabled = false;
         }
 
         private async void btn_search_Click(object sender, EventArgs e)
@@ -275,18 +281,17 @@ namespace smpc_inventory_app.Pages.Inventory
                 int rejectedQty = int.TryParse(row.Cells["rejected_qty"]?.Value?.ToString(), out rejectedQty) ? rejectedQty : 0;
                 int totalQty = receivedQty + rejectedQty;
 
-                // Required: received qty
-                if (receivedQty == 0 && string.IsNullOrWhiteSpace(row.Cells["received_qty"]?.Value?.ToString()))
+                // Track if at least one row has received qty
+                if (receivedQty > 0)
                 {
-                    Helpers.ShowDialogMessage("error", "Received quantity is required.");
-                    return;
-                }
+                    hasAtLeastOneReceivedQty = true;
 
-                // Required: bin location
-                if (string.IsNullOrWhiteSpace(row.Cells["bin_location"]?.Value?.ToString()))
-                {
-                    Helpers.ShowDialogMessage("error", "Bin location is required.");
-                    return;
+                    // Bin location is REQUIRED only if received qty exists
+                    if (string.IsNullOrWhiteSpace(row.Cells["bin_location"]?.Value?.ToString()))
+                    {
+                        Helpers.ShowDialogMessage("error", "Bin location is required for received items.");
+                        return;
+                    }
                 }
 
                 if (totalQty > orderedQty)
@@ -301,6 +306,12 @@ namespace smpc_inventory_app.Pages.Inventory
                     Helpers.ShowDialogMessage("error", "Reason for rejection is required.");
                     return;
                 }
+            }
+
+            if (!hasAtLeastOneReceivedQty)
+            {
+                Helpers.ShowDialogMessage("error", "At least one item must have a received quantity.");
+                return;
             }
 
             if (dtp_date_received.Value.Date > DateTime.Now.Date)
@@ -627,6 +638,9 @@ namespace smpc_inventory_app.Pages.Inventory
             }
 
             ClearAllBinLocations();
+
+            dtp_date_received.Enabled = true;
+            cmb_warehouse_name.Enabled = true;
         }
 
         private async Task LoadWarehouse()
@@ -2041,6 +2055,21 @@ namespace smpc_inventory_app.Pages.Inventory
                 HideAllRowCombos();
 
                 e.Handled = true;
+            }
+        }
+
+        private void cmb_ref_doc_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
+            {
+                cmb_ref_doc.SelectedIndex = -1;
+                cmb_ref_doc.Text = "";
+                e.Handled = true;
+
+                dtp_date_received.Enabled = false;
+                cmb_warehouse_name.Enabled = false;
+                txt_supplier_code.Text = "";
+                txt_prepared_by.Text = "";
             }
         }
     }
