@@ -273,6 +273,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 int orderedQty = int.TryParse(row.Cells["ordered_qty"]?.Value?.ToString(), out orderedQty) ? orderedQty : 0;
                 int receivedQty = int.TryParse(row.Cells["received_qty"]?.Value?.ToString(), out receivedQty) ? receivedQty : 0;
                 int rejectedQty = int.TryParse(row.Cells["rejected_qty"]?.Value?.ToString(), out rejectedQty) ? rejectedQty : 0;
+                int totalQty = receivedQty + rejectedQty;
 
                 // Required: received qty
                 if (receivedQty == 0 && string.IsNullOrWhiteSpace(row.Cells["received_qty"]?.Value?.ToString()))
@@ -288,16 +289,9 @@ namespace smpc_inventory_app.Pages.Inventory
                     return;
                 }
 
-                // Validation for rejected qty
-                if (rejectedQty > receivedQty)
+                if (totalQty > orderedQty)
                 {
-                    Helpers.ShowDialogMessage("error", "Rejected quantity cannot be greater than received quantity.");
-                    return;
-                }
-
-                if (receivedQty > orderedQty)
-                {
-                    Helpers.ShowDialogMessage("error", "Received quantity cannot be greater than ordered quantity.");
+                    Helpers.ShowDialogMessage("error", "Total quantity (received + rejected) cannot be greater than ordered quantity.");
                     return;
                 }
 
