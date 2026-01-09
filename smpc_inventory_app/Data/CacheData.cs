@@ -19,6 +19,7 @@ namespace smpc_inventory_app.Data
         public static DataTable Material { get; set; } = new DataTable();
         public static DataTable PumpCount { get; set; } = new DataTable();
         public static DataTable PumpType { get; set; } = new DataTable();
+        public static DataTable ValuationMethod { get; set; } = new DataTable();
         public static DataTable UnitOfMeasurement { get; set; } = new DataTable();
         public static DataTable ItemModel { get; set; } = new DataTable();
         public static DataTable SocialMedia { get; set; } = new DataTable();

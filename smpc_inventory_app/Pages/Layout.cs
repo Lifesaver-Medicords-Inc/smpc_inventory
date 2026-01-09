@@ -330,8 +330,8 @@ namespace Inventory_SMPC.Pages
                 Rectangle tabRect = tabContainer.GetTabRect(i);
                 int closeButtonSize = 16;
                 Rectangle closeButton = new Rectangle(
-                    tabRect.Right - closeButtonSize - 5,  // Padding from right
-                    tabRect.Top + (tabRect.Height - 16) / 2,     // Vertically center
+                    tabRect.Right - closeButtonSize - 5,  
+                    tabRect.Top + (tabRect.Height - 16) / 2,
                     closeButtonSize,
                     closeButtonSize
                 );
@@ -341,7 +341,7 @@ namespace Inventory_SMPC.Pages
                 {
                     TabPage tabToRemove = tabContainer.TabPages[i];
                     tabContainer.TabPages.Remove(tabToRemove);
-                    break; // 🔁 IMPORTANT: Break right after removing
+                    break; 
                 }
             }
             return;

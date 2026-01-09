@@ -48,6 +48,19 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
             this.label7 = new System.Windows.Forms.Label();
             this.txt_item_code = new System.Windows.Forms.TextBox();
             this.dgv_guiding_price = new System.Windows.Forms.DataGridView();
+            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.last_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.last_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.second_last_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.second_last_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.third_last_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.third_last_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lowest_1yr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lowest_1yr_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lowest_3yr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lowest_3yr_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lowest_alltime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lowest_alltime_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bindingSourceGuidingPrice = new System.Windows.Forms.BindingSource(this.components);
             this.dataSetCanvassSheet = new System.Data.DataSet();
             this.dataTable3 = new System.Data.DataTable();
@@ -121,23 +134,6 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
             this.label3 = new System.Windows.Forms.Label();
             this.pnl_canvass = new System.Windows.Forms.Panel();
             this.dgv_canvass = new System.Windows.Forms.DataGridView();
-            this.bindingSourceCanvassSheet = new System.Windows.Forms.BindingSource(this.components);
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.btn_add_supplier = new System.Windows.Forms.Button();
-            this.bindingSourcePaymentTerms = new System.Windows.Forms.BindingSource(this.components);
-            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.last_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.last_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.second_last_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.second_last_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.third_last_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.third_last_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lowest_1yr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lowest_1yr_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lowest_3yr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lowest_3yr_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lowest_alltime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lowest_alltime_supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_name = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -153,6 +149,10 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
             this.price_validity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.payment_terms = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.lead_time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bindingSourceCanvassSheet = new System.Windows.Forms.BindingSource(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btn_add_supplier = new System.Windows.Forms.Button();
+            this.bindingSourcePaymentTerms = new System.Windows.Forms.BindingSource(this.components);
             this.pnl_head.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_guiding_price)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceGuidingPrice)).BeginInit();
@@ -241,6 +241,124 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
             this.dgv_guiding_price.ReadOnly = true;
             this.dgv_guiding_price.Size = new System.Drawing.Size(520, 47);
             this.dgv_guiding_price.TabIndex = 84;
+            // 
+            // item_id
+            // 
+            this.item_id.DataPropertyName = "item_id";
+            this.item_id.HeaderText = "item_id";
+            this.item_id.Name = "item_id";
+            this.item_id.ReadOnly = true;
+            this.item_id.Visible = false;
+            // 
+            // last_price
+            // 
+            this.last_price.DataPropertyName = "last_price";
+            dataGridViewCellStyle1.Format = "C2";
+            dataGridViewCellStyle1.NullValue = "-";
+            this.last_price.DefaultCellStyle = dataGridViewCellStyle1;
+            this.last_price.HeaderText = "LAST";
+            this.last_price.Name = "last_price";
+            this.last_price.ReadOnly = true;
+            // 
+            // last_supplier_name
+            // 
+            this.last_supplier_name.DataPropertyName = "last_supplier_name";
+            this.last_supplier_name.HeaderText = "last_supplier_name";
+            this.last_supplier_name.Name = "last_supplier_name";
+            this.last_supplier_name.ReadOnly = true;
+            this.last_supplier_name.Visible = false;
+            // 
+            // second_last_price
+            // 
+            this.second_last_price.DataPropertyName = "second_last_price";
+            dataGridViewCellStyle2.Format = "C2";
+            dataGridViewCellStyle2.NullValue = "-";
+            this.second_last_price.DefaultCellStyle = dataGridViewCellStyle2;
+            this.second_last_price.HeaderText = "2";
+            this.second_last_price.Name = "second_last_price";
+            this.second_last_price.ReadOnly = true;
+            // 
+            // second_last_supplier_name
+            // 
+            this.second_last_supplier_name.DataPropertyName = "second_last_supplier_name";
+            this.second_last_supplier_name.HeaderText = "second_last_supplier_name";
+            this.second_last_supplier_name.Name = "second_last_supplier_name";
+            this.second_last_supplier_name.ReadOnly = true;
+            this.second_last_supplier_name.Visible = false;
+            // 
+            // third_last_price
+            // 
+            this.third_last_price.DataPropertyName = "third_last_price";
+            dataGridViewCellStyle3.Format = "C2";
+            dataGridViewCellStyle3.NullValue = "-";
+            this.third_last_price.DefaultCellStyle = dataGridViewCellStyle3;
+            this.third_last_price.HeaderText = "3";
+            this.third_last_price.Name = "third_last_price";
+            this.third_last_price.ReadOnly = true;
+            // 
+            // third_last_supplier_name
+            // 
+            this.third_last_supplier_name.DataPropertyName = "third_last_supplier_name";
+            dataGridViewCellStyle4.NullValue = "-";
+            this.third_last_supplier_name.DefaultCellStyle = dataGridViewCellStyle4;
+            this.third_last_supplier_name.HeaderText = "third_last_supplier_name";
+            this.third_last_supplier_name.Name = "third_last_supplier_name";
+            this.third_last_supplier_name.ReadOnly = true;
+            this.third_last_supplier_name.Visible = false;
+            // 
+            // lowest_1yr
+            // 
+            this.lowest_1yr.DataPropertyName = "lowest_1yr";
+            dataGridViewCellStyle5.Format = "C2";
+            dataGridViewCellStyle5.NullValue = "-";
+            this.lowest_1yr.DefaultCellStyle = dataGridViewCellStyle5;
+            this.lowest_1yr.HeaderText = "1 YR";
+            this.lowest_1yr.Name = "lowest_1yr";
+            this.lowest_1yr.ReadOnly = true;
+            // 
+            // lowest_1yr_supplier_name
+            // 
+            this.lowest_1yr_supplier_name.DataPropertyName = "lowest_1yr_supplier_name";
+            this.lowest_1yr_supplier_name.HeaderText = "lowest_1yr_supplier_name";
+            this.lowest_1yr_supplier_name.Name = "lowest_1yr_supplier_name";
+            this.lowest_1yr_supplier_name.ReadOnly = true;
+            this.lowest_1yr_supplier_name.Visible = false;
+            // 
+            // lowest_3yr
+            // 
+            this.lowest_3yr.DataPropertyName = "lowest_3yr";
+            dataGridViewCellStyle6.Format = "C2";
+            dataGridViewCellStyle6.NullValue = "-";
+            this.lowest_3yr.DefaultCellStyle = dataGridViewCellStyle6;
+            this.lowest_3yr.HeaderText = "3 YR";
+            this.lowest_3yr.Name = "lowest_3yr";
+            this.lowest_3yr.ReadOnly = true;
+            // 
+            // lowest_3yr_supplier_name
+            // 
+            this.lowest_3yr_supplier_name.DataPropertyName = "lowest_3yr_supplier_name";
+            this.lowest_3yr_supplier_name.HeaderText = "lowest_3yr_supplier_name";
+            this.lowest_3yr_supplier_name.Name = "lowest_3yr_supplier_name";
+            this.lowest_3yr_supplier_name.ReadOnly = true;
+            this.lowest_3yr_supplier_name.Visible = false;
+            // 
+            // lowest_alltime
+            // 
+            this.lowest_alltime.DataPropertyName = "lowest_alltime";
+            dataGridViewCellStyle7.Format = "C2";
+            dataGridViewCellStyle7.NullValue = "-";
+            this.lowest_alltime.DefaultCellStyle = dataGridViewCellStyle7;
+            this.lowest_alltime.HeaderText = "ALL TIME";
+            this.lowest_alltime.Name = "lowest_alltime";
+            this.lowest_alltime.ReadOnly = true;
+            // 
+            // lowest_alltime_supplier_name
+            // 
+            this.lowest_alltime_supplier_name.DataPropertyName = "lowest_alltime_supplier_name";
+            this.lowest_alltime_supplier_name.HeaderText = "lowest_alltime_supplier_name";
+            this.lowest_alltime_supplier_name.Name = "lowest_alltime_supplier_name";
+            this.lowest_alltime_supplier_name.ReadOnly = true;
+            this.lowest_alltime_supplier_name.Visible = false;
             // 
             // bindingSourceGuidingPrice
             // 
@@ -720,154 +838,8 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
             this.dgv_canvass.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_canvass_CellClick);
             this.dgv_canvass.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_canvass_CellEndEdit);
             this.dgv_canvass.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_canvass_DataError);
+            this.dgv_canvass.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgv_canvass_EditingControlShowing);
             this.dgv_canvass.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgv_canvass_KeyDown);
-            // 
-            // bindingSourceCanvassSheet
-            // 
-            this.bindingSourceCanvassSheet.DataMember = "tbl_canvass_sheet";
-            this.bindingSourceCanvassSheet.DataSource = this.dataSetCanvassSheet;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.btn_add_supplier);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 351);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1233, 40);
-            this.panel2.TabIndex = 3;
-            // 
-            // btn_add_supplier
-            // 
-            this.btn_add_supplier.Location = new System.Drawing.Point(34, 8);
-            this.btn_add_supplier.Name = "btn_add_supplier";
-            this.btn_add_supplier.Size = new System.Drawing.Size(117, 23);
-            this.btn_add_supplier.TabIndex = 2;
-            this.btn_add_supplier.Text = "ADD SUPPLIER";
-            this.btn_add_supplier.UseVisualStyleBackColor = true;
-            this.btn_add_supplier.Click += new System.EventHandler(this.btn_add_supplier_Click);
-            // 
-            // bindingSourcePaymentTerms
-            // 
-            this.bindingSourcePaymentTerms.DataMember = "tbl_payment_terms";
-            this.bindingSourcePaymentTerms.DataSource = this.dataSetCanvassSheet;
-            // 
-            // item_id
-            // 
-            this.item_id.DataPropertyName = "item_id";
-            this.item_id.HeaderText = "item_id";
-            this.item_id.Name = "item_id";
-            this.item_id.ReadOnly = true;
-            this.item_id.Visible = false;
-            // 
-            // last_price
-            // 
-            this.last_price.DataPropertyName = "last_price";
-            dataGridViewCellStyle1.Format = "C2";
-            dataGridViewCellStyle1.NullValue = "-";
-            this.last_price.DefaultCellStyle = dataGridViewCellStyle1;
-            this.last_price.HeaderText = "LAST";
-            this.last_price.Name = "last_price";
-            this.last_price.ReadOnly = true;
-            // 
-            // last_supplier_name
-            // 
-            this.last_supplier_name.DataPropertyName = "last_supplier_name";
-            this.last_supplier_name.HeaderText = "last_supplier_name";
-            this.last_supplier_name.Name = "last_supplier_name";
-            this.last_supplier_name.ReadOnly = true;
-            this.last_supplier_name.Visible = false;
-            // 
-            // second_last_price
-            // 
-            this.second_last_price.DataPropertyName = "second_last_price";
-            dataGridViewCellStyle2.Format = "C2";
-            dataGridViewCellStyle2.NullValue = "-";
-            this.second_last_price.DefaultCellStyle = dataGridViewCellStyle2;
-            this.second_last_price.HeaderText = "2";
-            this.second_last_price.Name = "second_last_price";
-            this.second_last_price.ReadOnly = true;
-            // 
-            // second_last_supplier_name
-            // 
-            this.second_last_supplier_name.DataPropertyName = "second_last_supplier_name";
-            this.second_last_supplier_name.HeaderText = "second_last_supplier_name";
-            this.second_last_supplier_name.Name = "second_last_supplier_name";
-            this.second_last_supplier_name.ReadOnly = true;
-            this.second_last_supplier_name.Visible = false;
-            // 
-            // third_last_price
-            // 
-            this.third_last_price.DataPropertyName = "third_last_price";
-            dataGridViewCellStyle3.Format = "C2";
-            dataGridViewCellStyle3.NullValue = "-";
-            this.third_last_price.DefaultCellStyle = dataGridViewCellStyle3;
-            this.third_last_price.HeaderText = "3";
-            this.third_last_price.Name = "third_last_price";
-            this.third_last_price.ReadOnly = true;
-            // 
-            // third_last_supplier_name
-            // 
-            this.third_last_supplier_name.DataPropertyName = "third_last_supplier_name";
-            dataGridViewCellStyle4.NullValue = "-";
-            this.third_last_supplier_name.DefaultCellStyle = dataGridViewCellStyle4;
-            this.third_last_supplier_name.HeaderText = "third_last_supplier_name";
-            this.third_last_supplier_name.Name = "third_last_supplier_name";
-            this.third_last_supplier_name.ReadOnly = true;
-            this.third_last_supplier_name.Visible = false;
-            // 
-            // lowest_1yr
-            // 
-            this.lowest_1yr.DataPropertyName = "lowest_1yr";
-            dataGridViewCellStyle5.Format = "C2";
-            dataGridViewCellStyle5.NullValue = "-";
-            this.lowest_1yr.DefaultCellStyle = dataGridViewCellStyle5;
-            this.lowest_1yr.HeaderText = "1 YR";
-            this.lowest_1yr.Name = "lowest_1yr";
-            this.lowest_1yr.ReadOnly = true;
-            // 
-            // lowest_1yr_supplier_name
-            // 
-            this.lowest_1yr_supplier_name.DataPropertyName = "lowest_1yr_supplier_name";
-            this.lowest_1yr_supplier_name.HeaderText = "lowest_1yr_supplier_name";
-            this.lowest_1yr_supplier_name.Name = "lowest_1yr_supplier_name";
-            this.lowest_1yr_supplier_name.ReadOnly = true;
-            this.lowest_1yr_supplier_name.Visible = false;
-            // 
-            // lowest_3yr
-            // 
-            this.lowest_3yr.DataPropertyName = "lowest_3yr";
-            dataGridViewCellStyle6.Format = "C2";
-            dataGridViewCellStyle6.NullValue = "-";
-            this.lowest_3yr.DefaultCellStyle = dataGridViewCellStyle6;
-            this.lowest_3yr.HeaderText = "3 YR";
-            this.lowest_3yr.Name = "lowest_3yr";
-            this.lowest_3yr.ReadOnly = true;
-            // 
-            // lowest_3yr_supplier_name
-            // 
-            this.lowest_3yr_supplier_name.DataPropertyName = "lowest_3yr_supplier_name";
-            this.lowest_3yr_supplier_name.HeaderText = "lowest_3yr_supplier_name";
-            this.lowest_3yr_supplier_name.Name = "lowest_3yr_supplier_name";
-            this.lowest_3yr_supplier_name.ReadOnly = true;
-            this.lowest_3yr_supplier_name.Visible = false;
-            // 
-            // lowest_alltime
-            // 
-            this.lowest_alltime.DataPropertyName = "lowest_alltime";
-            dataGridViewCellStyle7.Format = "C2";
-            dataGridViewCellStyle7.NullValue = "-";
-            this.lowest_alltime.DefaultCellStyle = dataGridViewCellStyle7;
-            this.lowest_alltime.HeaderText = "ALL TIME";
-            this.lowest_alltime.Name = "lowest_alltime";
-            this.lowest_alltime.ReadOnly = true;
-            // 
-            // lowest_alltime_supplier_name
-            // 
-            this.lowest_alltime_supplier_name.DataPropertyName = "lowest_alltime_supplier_name";
-            this.lowest_alltime_supplier_name.HeaderText = "lowest_alltime_supplier_name";
-            this.lowest_alltime_supplier_name.Name = "lowest_alltime_supplier_name";
-            this.lowest_alltime_supplier_name.ReadOnly = true;
-            this.lowest_alltime_supplier_name.Visible = false;
             // 
             // id
             // 
@@ -1018,6 +990,35 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
             this.lead_time.FillWeight = 90.81365F;
             this.lead_time.HeaderText = "LEAD TIME";
             this.lead_time.Name = "lead_time";
+            // 
+            // bindingSourceCanvassSheet
+            // 
+            this.bindingSourceCanvassSheet.DataMember = "tbl_canvass_sheet";
+            this.bindingSourceCanvassSheet.DataSource = this.dataSetCanvassSheet;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.btn_add_supplier);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 351);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1233, 40);
+            this.panel2.TabIndex = 3;
+            // 
+            // btn_add_supplier
+            // 
+            this.btn_add_supplier.Location = new System.Drawing.Point(34, 8);
+            this.btn_add_supplier.Name = "btn_add_supplier";
+            this.btn_add_supplier.Size = new System.Drawing.Size(117, 23);
+            this.btn_add_supplier.TabIndex = 2;
+            this.btn_add_supplier.Text = "ADD SUPPLIER";
+            this.btn_add_supplier.UseVisualStyleBackColor = true;
+            this.btn_add_supplier.Click += new System.EventHandler(this.btn_add_supplier_Click);
+            // 
+            // bindingSourcePaymentTerms
+            // 
+            this.bindingSourcePaymentTerms.DataMember = "tbl_payment_terms";
+            this.bindingSourcePaymentTerms.DataSource = this.dataSetCanvassSheet;
             // 
             // PRPurchaseItemCard
             // 

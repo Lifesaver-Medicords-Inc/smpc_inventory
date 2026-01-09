@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using smpc_inventory_app.Services.Setup.Model.Purchasing;
 
 namespace smpc_inventory_app.Services.Setup.Purchasing
 {
@@ -15,7 +16,7 @@ namespace smpc_inventory_app.Services.Setup.Purchasing
         public static async Task<DataTable> GetAsDataTable()
         {
 
-            var response = await RequestToApi<ApiResponseModel<List<PurchaseOrder>>>.Get(Data.ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);
+            var response = await RequestToApi<ApiResponseModel<List<PurchaseOrderModel>>>.Get(Data.ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);
 
             DataTable purchaseOrder = JsonHelper.ToDataTable(response.Data);
 
@@ -23,9 +24,9 @@ namespace smpc_inventory_app.Services.Setup.Purchasing
 
         }
 
-        public static async Task<PurchaseOrder[]> GetName()
+        public static async Task<PurchaseOrderModel[]> GetName()
         {
-            var response = await RequestToApi<ApiResponseModel<PurchaseOrder[]>>.Get(Data.ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);;
+            var response = await RequestToApi<ApiResponseModel<PurchaseOrderModel[]>>.Get(Data.ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);;
             
             var purchaseOrder = response.Data;
 
@@ -65,7 +66,7 @@ namespace smpc_inventory_app.Services.Setup.Purchasing
 
         public static async Task<bool> Delete(Dictionary<string, dynamic> data)
         {
-            var response = await RequestToApi<ApiResponseModel<PurchaseOrder>>.Delete(Data.ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER, data);
+            var response = await RequestToApi<ApiResponseModel<PurchaseOrderModel>>.Delete(Data.ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER, data);
             bool isSuccess = response.Success;
             return isSuccess;
         }

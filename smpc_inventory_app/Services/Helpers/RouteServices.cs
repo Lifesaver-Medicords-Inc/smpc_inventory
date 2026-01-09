@@ -32,7 +32,7 @@ namespace smpc_inventory_app.Services.Helpers
 
             { "CANVASS SHEET", new CanvassSheet()},
             { "PURCHASING LIST", new NewPurchasingList() },
-            { "PURCHASE ORDER", new PurchaseOrder()},
+            { "PURCHASE ORDER", new frm_PurchaseOrder()},
             //{ "PURCHASE REQUISITION", new PurchaseRequisition() },
 
             { "ITEM BRAND", new frm_item_brand_setup()  },

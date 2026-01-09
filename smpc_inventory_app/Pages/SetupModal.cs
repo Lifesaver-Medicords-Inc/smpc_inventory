@@ -88,6 +88,8 @@ namespace smpc_inventory_app.Pages
 
         private void dg_setup_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1) return;
+
             Panel[] pnlList = { panel_records };
             DataTable dt = Helpers.ConvertDataGridViewToDataTable(dg_setup);
             Helpers.BindControls(pnlList, dt, e.RowIndex);

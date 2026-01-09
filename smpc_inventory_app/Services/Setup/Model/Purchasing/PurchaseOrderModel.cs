@@ -84,5 +84,10 @@ namespace smpc_inventory_app.Services.Setup.Model.Purchasing
         public List<PurchaseOrderModel> purchaseorder { get; set; }
         public List<PurchaseOrderDetailsModel> purchaseorderdetails { get; set; }
     }
+    class PurchaseOrderPrintModel
+    {
+        public PurchaseOrderModel poDoc { get; set; }
+        public List<PurchaseOrderDetailsModel> poDocDetails { get; set; }
+    }
 
 }

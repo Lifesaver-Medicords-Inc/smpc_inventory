@@ -36,6 +36,8 @@ namespace smpc_inventory_app.Services.Setup.Model.Item
         public List<ItemImageModel> itemimages { get; set; }
         public List<ItemPurchasingModel> itempurchasing { get; set; }
         public List<ItemSalesModel> itemsales { get; set; }
+        public List<ItemInventoryModel> iteminventory { get; set; }
+        public List<ItemAvailableInvModel> itemavailableinv { get; set; }
         public List<ItemProductionModel> itemproduction { get; set; }
 
 

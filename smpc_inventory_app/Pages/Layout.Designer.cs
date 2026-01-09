@@ -324,9 +324,9 @@ namespace Inventory_SMPC.Pages
             this.toolStripStatusLabel7,
             this.lbl_department,
             this.toolStripStatusLabel4,
+            this.toolStripStatusLabel8,
             this.toolStripStatusLabel5,
             this.lbl_date_time,
-            this.toolStripStatusLabel8,
             this.lbl_status});
             this.statusStrip1.Location = new System.Drawing.Point(0, 615);
             this.statusStrip1.Name = "statusStrip1";

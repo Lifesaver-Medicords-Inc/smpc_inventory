@@ -1,7 +1,7 @@
 ﻿
 namespace smpc_inventory_app.Pages.Purchasing
 {
-    partial class PurchaseOrder
+    partial class frm_PurchaseOrder
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,11 +30,11 @@ namespace smpc_inventory_app.Pages.Purchasing
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PurchaseOrder));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_PurchaseOrder));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_header = new System.Windows.Forms.Panel();
             this.txt_id = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
@@ -96,8 +96,25 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.lbl_vat = new System.Windows.Forms.Label();
             this.txt_net_of_vat = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnl_body = new System.Windows.Forms.Panel();
             this.dgv_item = new System.Windows.Forms.DataGridView();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.req_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.order_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.unit_of_measure = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.unit_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.discount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.discounted_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.total_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.order_detail_ids = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.qtys = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.allocated_qtys = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.details = new System.Windows.Forms.DataGridViewButtonColumn();
             this.bindingSourcePurchaseOrder = new System.Windows.Forms.BindingSource(this.components);
             this.ds_purchase_order = new System.Data.DataSet();
             this.tbl_purchase_order = new System.Data.DataTable();
@@ -118,34 +135,16 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.dataColumn15 = new System.Data.DataColumn();
             this.dataColumn16 = new System.Data.DataColumn();
             this.dataColumn17 = new System.Data.DataColumn();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.req_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.order_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.unit_of_measure = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.unit_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.discount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.discounted_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.total_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.order_detail_ids = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.qtys = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.allocated_qtys = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.details = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.printDialog1 = new System.Windows.Forms.PrintDialog();
             this.pnl_header.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnl_page_title.SuspendLayout();
             this.pnl_footer.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnl_body.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_item)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePurchaseOrder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ds_purchase_order)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbl_purchase_order)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // pnl_header
@@ -217,6 +216,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             // 
             // cmb_status
             // 
+            this.cmb_status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_status.FormattingEnabled = true;
             this.cmb_status.Location = new System.Drawing.Point(1012, 101);
             this.cmb_status.Name = "cmb_status";
@@ -229,6 +229,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.txt_order_type.Name = "txt_order_type";
             this.txt_order_type.Size = new System.Drawing.Size(200, 20);
             this.txt_order_type.TabIndex = 99;
+            this.txt_order_type.Visible = false;
             // 
             // label15
             // 
@@ -238,6 +239,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.label15.Size = new System.Drawing.Size(80, 13);
             this.label15.TabIndex = 98;
             this.label15.Text = "ORDER TYPE:";
+            this.label15.Visible = false;
             // 
             // txt_main_tel_no
             // 
@@ -245,6 +247,8 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.txt_main_tel_no.Name = "txt_main_tel_no";
             this.txt_main_tel_no.Size = new System.Drawing.Size(200, 20);
             this.txt_main_tel_no.TabIndex = 97;
+            this.txt_main_tel_no.TextChanged += new System.EventHandler(this.txt_main_tel_no_TextChanged);
+            this.txt_main_tel_no.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_main_tel_no_KeyPress);
             // 
             // dtp_date
             // 
@@ -309,9 +313,9 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(864, 23);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(134, 13);
+            this.label16.Size = new System.Drawing.Size(132, 13);
             this.label16.TabIndex = 85;
-            this.label16.Text = "REFERENCE/DOC NO/S:";
+            this.label16.Text = "REFERENCE DOC NO/S:";
             // 
             // txt_bill_to
             // 
@@ -556,9 +560,9 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_edit,
             this.btn_save,
             this.btn_cancel,
+            this.btn_prev,
             this.btn_close,
             this.btn_print,
-            this.btn_prev,
             this.btn_next});
             this.toolStrip1.Location = new System.Drawing.Point(0, 29);
             this.toolStrip1.Name = "toolStrip1";
@@ -621,6 +625,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_print.Name = "btn_print";
             this.btn_print.Size = new System.Drawing.Size(52, 22);
             this.btn_print.Text = "Print";
+            this.btn_print.Click += new System.EventHandler(this.btn_print_Click);
             // 
             // btn_prev
             // 
@@ -745,15 +750,14 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.label18.TabIndex = 74;
             this.label18.Text = "NET OF VAT:";
             // 
-            // panel1
+            // pnl_body
             // 
-            this.panel1.Controls.Add(this.dgv_item);
-            this.panel1.Controls.Add(this.dataGridView1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 307);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1235, 443);
-            this.panel1.TabIndex = 14;
+            this.pnl_body.Controls.Add(this.dgv_item);
+            this.pnl_body.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnl_body.Location = new System.Drawing.Point(0, 307);
+            this.pnl_body.Name = "pnl_body";
+            this.pnl_body.Size = new System.Drawing.Size(1235, 443);
+            this.pnl_body.TabIndex = 14;
             // 
             // dgv_item
             // 
@@ -788,6 +792,146 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.dgv_item.TabIndex = 1;
             this.dgv_item.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_item_CellClick);
             this.dgv_item.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.s);
+            // 
+            // id
+            // 
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "id";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            this.id.Visible = false;
+            // 
+            // based_id
+            // 
+            this.based_id.DataPropertyName = "based_id";
+            this.based_id.HeaderText = "based_id";
+            this.based_id.Name = "based_id";
+            this.based_id.ReadOnly = true;
+            this.based_id.Visible = false;
+            // 
+            // item_id
+            // 
+            this.item_id.DataPropertyName = "item_id";
+            this.item_id.HeaderText = "item_id";
+            this.item_id.Name = "item_id";
+            this.item_id.ReadOnly = true;
+            this.item_id.Visible = false;
+            // 
+            // item_code
+            // 
+            this.item_code.DataPropertyName = "item_code";
+            this.item_code.HeaderText = "ITEM CODE";
+            this.item_code.Name = "item_code";
+            this.item_code.ReadOnly = true;
+            // 
+            // item_name
+            // 
+            this.item_name.DataPropertyName = "item_name";
+            this.item_name.HeaderText = "ITEM NAME";
+            this.item_name.Name = "item_name";
+            this.item_name.ReadOnly = true;
+            this.item_name.Visible = false;
+            // 
+            // item_description
+            // 
+            this.item_description.DataPropertyName = "item_description";
+            this.item_description.HeaderText = "ITEM DESCRIPTION";
+            this.item_description.Name = "item_description";
+            this.item_description.ReadOnly = true;
+            // 
+            // req_qty
+            // 
+            this.req_qty.DataPropertyName = "req_qty";
+            this.req_qty.HeaderText = "PURCHASE REQ";
+            this.req_qty.Name = "req_qty";
+            this.req_qty.ReadOnly = true;
+            // 
+            // order_qty
+            // 
+            this.order_qty.DataPropertyName = "order_qty";
+            this.order_qty.HeaderText = "ORDER QTY";
+            this.order_qty.Name = "order_qty";
+            this.order_qty.ReadOnly = true;
+            // 
+            // unit_of_measure
+            // 
+            this.unit_of_measure.DataPropertyName = "unit_of_measure";
+            this.unit_of_measure.HeaderText = "UOM";
+            this.unit_of_measure.Name = "unit_of_measure";
+            this.unit_of_measure.ReadOnly = true;
+            // 
+            // unit_price
+            // 
+            this.unit_price.DataPropertyName = "unit_price";
+            dataGridViewCellStyle5.Format = "C2";
+            dataGridViewCellStyle5.NullValue = null;
+            this.unit_price.DefaultCellStyle = dataGridViewCellStyle5;
+            this.unit_price.HeaderText = "UNIT PRICE";
+            this.unit_price.Name = "unit_price";
+            this.unit_price.ReadOnly = true;
+            // 
+            // discount
+            // 
+            this.discount.DataPropertyName = "discount";
+            this.discount.HeaderText = "DISCOUNT %";
+            this.discount.Name = "discount";
+            this.discount.ReadOnly = true;
+            // 
+            // discounted_price
+            // 
+            this.discounted_price.DataPropertyName = "discounted_price";
+            dataGridViewCellStyle6.Format = "C2";
+            dataGridViewCellStyle6.NullValue = null;
+            this.discounted_price.DefaultCellStyle = dataGridViewCellStyle6;
+            this.discounted_price.HeaderText = "DISCOUNTED PRICE";
+            this.discounted_price.Name = "discounted_price";
+            this.discounted_price.ReadOnly = true;
+            // 
+            // total_price
+            // 
+            this.total_price.DataPropertyName = "total_price";
+            dataGridViewCellStyle7.Format = "C2";
+            dataGridViewCellStyle7.NullValue = null;
+            this.total_price.DefaultCellStyle = dataGridViewCellStyle7;
+            this.total_price.HeaderText = "TOTAL PRICE";
+            this.total_price.Name = "total_price";
+            this.total_price.ReadOnly = true;
+            // 
+            // order_detail_ids
+            // 
+            this.order_detail_ids.DataPropertyName = "order_detail_ids";
+            this.order_detail_ids.HeaderText = "order_detail_ids";
+            this.order_detail_ids.Name = "order_detail_ids";
+            this.order_detail_ids.ReadOnly = true;
+            this.order_detail_ids.Visible = false;
+            // 
+            // qtys
+            // 
+            this.qtys.DataPropertyName = "qtys";
+            this.qtys.HeaderText = "qtys";
+            this.qtys.Name = "qtys";
+            this.qtys.ReadOnly = true;
+            this.qtys.Visible = false;
+            // 
+            // allocated_qtys
+            // 
+            this.allocated_qtys.DataPropertyName = "allocated_qtys";
+            this.allocated_qtys.HeaderText = "allocated_qtys";
+            this.allocated_qtys.Name = "allocated_qtys";
+            this.allocated_qtys.ReadOnly = true;
+            this.allocated_qtys.Visible = false;
+            // 
+            // details
+            // 
+            this.details.DataPropertyName = "details";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.NullValue = ">>";
+            this.details.DefaultCellStyle = dataGridViewCellStyle8;
+            this.details.HeaderText = "VIEW DETAILS";
+            this.details.Name = "details";
+            this.details.ReadOnly = true;
+            this.details.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.details.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // bindingSourcePurchaseOrder
             // 
@@ -890,165 +1034,20 @@ namespace smpc_inventory_app.Pages.Purchasing
             // 
             this.dataColumn17.ColumnName = "item_description";
             // 
-            // dataGridView1
+            // printDialog1
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(1235, 443);
-            this.dataGridView1.TabIndex = 0;
+            this.printDialog1.UseEXDialog = true;
             // 
-            // id
-            // 
-            this.id.DataPropertyName = "id";
-            this.id.HeaderText = "id";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            this.id.Visible = false;
-            // 
-            // based_id
-            // 
-            this.based_id.DataPropertyName = "based_id";
-            this.based_id.HeaderText = "based_id";
-            this.based_id.Name = "based_id";
-            this.based_id.ReadOnly = true;
-            this.based_id.Visible = false;
-            // 
-            // item_id
-            // 
-            this.item_id.DataPropertyName = "item_id";
-            this.item_id.HeaderText = "item_id";
-            this.item_id.Name = "item_id";
-            this.item_id.ReadOnly = true;
-            this.item_id.Visible = false;
-            // 
-            // item_code
-            // 
-            this.item_code.DataPropertyName = "item_code";
-            this.item_code.HeaderText = "ITEM CODE";
-            this.item_code.Name = "item_code";
-            this.item_code.ReadOnly = true;
-            // 
-            // item_name
-            // 
-            this.item_name.DataPropertyName = "item_name";
-            this.item_name.HeaderText = "ITEM NAME";
-            this.item_name.Name = "item_name";
-            this.item_name.ReadOnly = true;
-            this.item_name.Visible = false;
-            // 
-            // item_description
-            // 
-            this.item_description.DataPropertyName = "item_description";
-            this.item_description.HeaderText = "ITEM DESCRIPTION";
-            this.item_description.Name = "item_description";
-            this.item_description.ReadOnly = true;
-            // 
-            // req_qty
-            // 
-            this.req_qty.DataPropertyName = "req_qty";
-            this.req_qty.HeaderText = "PURCHASE REQ";
-            this.req_qty.Name = "req_qty";
-            this.req_qty.ReadOnly = true;
-            // 
-            // order_qty
-            // 
-            this.order_qty.DataPropertyName = "order_qty";
-            this.order_qty.HeaderText = "ORDER QTY";
-            this.order_qty.Name = "order_qty";
-            this.order_qty.ReadOnly = true;
-            // 
-            // unit_of_measure
-            // 
-            this.unit_of_measure.DataPropertyName = "unit_of_measure";
-            this.unit_of_measure.HeaderText = "UOM";
-            this.unit_of_measure.Name = "unit_of_measure";
-            this.unit_of_measure.ReadOnly = true;
-            // 
-            // unit_price
-            // 
-            this.unit_price.DataPropertyName = "unit_price";
-            dataGridViewCellStyle1.Format = "C2";
-            dataGridViewCellStyle1.NullValue = null;
-            this.unit_price.DefaultCellStyle = dataGridViewCellStyle1;
-            this.unit_price.HeaderText = "UNIT PRICE";
-            this.unit_price.Name = "unit_price";
-            this.unit_price.ReadOnly = true;
-            // 
-            // discount
-            // 
-            this.discount.DataPropertyName = "discount";
-            this.discount.HeaderText = "DISCOUNT %";
-            this.discount.Name = "discount";
-            this.discount.ReadOnly = true;
-            // 
-            // discounted_price
-            // 
-            this.discounted_price.DataPropertyName = "discounted_price";
-            dataGridViewCellStyle2.Format = "C2";
-            dataGridViewCellStyle2.NullValue = null;
-            this.discounted_price.DefaultCellStyle = dataGridViewCellStyle2;
-            this.discounted_price.HeaderText = "DISCOUNTED PRICE";
-            this.discounted_price.Name = "discounted_price";
-            this.discounted_price.ReadOnly = true;
-            // 
-            // total_price
-            // 
-            this.total_price.DataPropertyName = "total_price";
-            dataGridViewCellStyle3.Format = "C2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.total_price.DefaultCellStyle = dataGridViewCellStyle3;
-            this.total_price.HeaderText = "TOTAL PRICE";
-            this.total_price.Name = "total_price";
-            this.total_price.ReadOnly = true;
-            // 
-            // order_detail_ids
-            // 
-            this.order_detail_ids.DataPropertyName = "order_detail_ids";
-            this.order_detail_ids.HeaderText = "order_detail_ids";
-            this.order_detail_ids.Name = "order_detail_ids";
-            this.order_detail_ids.ReadOnly = true;
-            this.order_detail_ids.Visible = false;
-            // 
-            // qtys
-            // 
-            this.qtys.DataPropertyName = "qtys";
-            this.qtys.HeaderText = "qtys";
-            this.qtys.Name = "qtys";
-            this.qtys.ReadOnly = true;
-            this.qtys.Visible = false;
-            // 
-            // allocated_qtys
-            // 
-            this.allocated_qtys.DataPropertyName = "allocated_qtys";
-            this.allocated_qtys.HeaderText = "allocated_qtys";
-            this.allocated_qtys.Name = "allocated_qtys";
-            this.allocated_qtys.ReadOnly = true;
-            this.allocated_qtys.Visible = false;
-            // 
-            // details
-            // 
-            this.details.DataPropertyName = "details";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.NullValue = ">>";
-            this.details.DefaultCellStyle = dataGridViewCellStyle4;
-            this.details.HeaderText = "VIEW DETAILS";
-            this.details.Name = "details";
-            this.details.ReadOnly = true;
-            this.details.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.details.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // PurchaseOrder
+            // frm_PurchaseOrder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.pnl_footer);
+            this.Controls.Add(this.pnl_body);
             this.Controls.Add(this.pnl_header);
+            this.Controls.Add(this.pnl_footer);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.pnl_page_title);
-            this.Name = "PurchaseOrder";
+            this.Name = "frm_PurchaseOrder";
             this.Size = new System.Drawing.Size(1235, 900);
             this.Load += new System.EventHandler(this.PurchaseOrder_Load);
             this.pnl_header.ResumeLayout(false);
@@ -1059,12 +1058,11 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.pnl_page_title.PerformLayout();
             this.pnl_footer.ResumeLayout(false);
             this.pnl_footer.PerformLayout();
-            this.panel1.ResumeLayout(false);
+            this.pnl_body.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_item)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePurchaseOrder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ds_purchase_order)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbl_purchase_order)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1113,8 +1111,7 @@ namespace smpc_inventory_app.Pages.Purchasing
         private System.Windows.Forms.TextBox txt_tax_code_percent;
         private System.Windows.Forms.TextBox txt_ref_doc_no;
         private System.Windows.Forms.Panel pnl_footer;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Panel pnl_body;
         private System.Windows.Forms.TextBox txt_total_amount_due;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox txt_remarks;
@@ -1173,5 +1170,6 @@ namespace smpc_inventory_app.Pages.Purchasing
         private System.Windows.Forms.DataGridViewTextBoxColumn qtys;
         private System.Windows.Forms.DataGridViewTextBoxColumn allocated_qtys;
         private System.Windows.Forms.DataGridViewButtonColumn details;
+        private System.Windows.Forms.PrintDialog printDialog1;
     }
 }

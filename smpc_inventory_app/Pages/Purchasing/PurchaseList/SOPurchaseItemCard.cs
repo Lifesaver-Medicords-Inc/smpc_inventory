@@ -243,7 +243,7 @@ namespace smpc_inventory_app.Pages.Purchasing
 
         }
         // ACTIONS
-        private void ComputeDgv(DataGridViewRow row)
+        private void ComputeDgv1(DataGridViewRow row)
         {
 
             try
@@ -293,6 +293,46 @@ namespace smpc_inventory_app.Pages.Purchasing
                 MessageBox.Show("Error computing discount/net price: " + ex.Message);
             }
         }
+        private void ComputeDgv(DataGridViewRow row)
+        {
+            try
+            {
+                decimal currentListPrice = TryParseDecimal(row.Cells["current_list_price"].Value) ?? 0;
+                string discountText = row.Cells["discount"].Value?.ToString() ?? "";
+                decimal netPrice = currentListPrice;
+
+                if (!string.IsNullOrWhiteSpace(discountText) && discountText != "0")
+                {
+                    string[] discounts = discountText.Split('/');
+                    decimal totalDiscountAmount = 0;
+                    decimal remainingPrice = currentListPrice;
+
+                    foreach (string discount in discounts)
+                    {
+                        if (decimal.TryParse(discount, out decimal dVal))
+                        {
+                            // Calculate discount amount for this step
+                            decimal discountAmount = remainingPrice * (dVal / 100m);
+                            totalDiscountAmount += discountAmount;
+                            remainingPrice -= discountAmount;
+                        }
+                    }
+
+                    netPrice = currentListPrice - totalDiscountAmount;
+                }
+
+                // Allow negative net price (do not clamp)
+                // Format the cell to 2 decimal places
+                row.Cells["net_price"].Value = netPrice;
+                row.Cells["net_price"].Style.Format = "N2";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error computing discount/net price: " + ex.Message);
+            }
+        }
+
+      
         private void DisplayTrend()
         {
             dgv_canvass.CellFormatting += (s, e) =>
@@ -915,5 +955,40 @@ namespace smpc_inventory_app.Pages.Purchasing
         {
 
         }
+
+        private void dgv_canvass_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (dgv_canvass.CurrentCell.ColumnIndex == dgv_canvass.Columns["discount"].Index)
+            {
+                TextBox tb = e.Control as TextBox;
+                if (tb != null)
+                {
+                    tb.KeyPress -= DiscountColumn_KeyPress; 
+                    tb.KeyPress += DiscountColumn_KeyPress;
+                }
+            }
+        }
+        private void DiscountColumn_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Allow control keys like Backspace, Delete
+            if (char.IsControl(e.KeyChar))
+                return;
+
+            // Block letters
+            if (char.IsLetter(e.KeyChar))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Allow numbers, symbols, punctuation, whitespace
+            if (char.IsDigit(e.KeyChar) || char.IsSymbol(e.KeyChar) || char.IsPunctuation(e.KeyChar) || char.IsWhiteSpace(e.KeyChar))
+                return;
+
+            // Block everything else
+            e.Handled = true;
+        }
+
+
     }
 }

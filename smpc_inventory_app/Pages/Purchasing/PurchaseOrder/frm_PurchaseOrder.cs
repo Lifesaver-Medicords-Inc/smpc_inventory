@@ -14,10 +14,16 @@ using smpc_inventory_app.Pages.Purchasing.Modal;
 using smpc_inventory_app.Services.Setup.Model.Item;
 using smpc_inventory_app.Pages.Setup;
 using Inventory_SMPC.Pages;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using smpc_inventory_app.Pages.Shared;
+using smpc_inventory_app.Pages.Purchasing;
+using smpc_inventory_app.Printing;
+using smpc_inventory_app.Printing.Core;
 
 namespace smpc_inventory_app.Pages.Purchasing
 {
-    public partial class PurchaseOrder : UserControl
+    public partial class frm_PurchaseOrder : UserControl
     {
         PurchaseOrdersWithDetails records;
         int selectedRecord = 0;
@@ -27,7 +33,7 @@ namespace smpc_inventory_app.Pages.Purchasing
         DataTable updatedpurchaseorder;
         DataTable purchaseorderdetails;
         DataTable activePO;
-        string position = CacheData.CurrentUser.position_id;
+        string position = CacheData.CurrentUser.position.name;
 
 
         string ReferenceOrderNos;
@@ -52,7 +58,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             public string Status { get; set; }
             public string OrderType { get; set; }
         }
-        public PurchaseOrder()
+        public frm_PurchaseOrder()
         {
             InitializeComponent();
         }
@@ -64,8 +70,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             {
                 btn_edit.Enabled = false;
             }
-
-
         }
         private async void FetchExistingPurchaseOrders()
         {
@@ -469,25 +473,30 @@ namespace smpc_inventory_app.Pages.Purchasing
 
         private void btn_edit_Click(object sender, EventArgs e)
         {
-            BtnToggle(true);
-            SetControlsEditable(cmb_ship_type, txt_deliver_to, txt_deliver_via, txt_bill_to, txt_remarks);
-            SetControlsEditable(cmb_status);
-            LoadStatusOptions(cmb_status.Text);
-
             if (position == "Chief Operation Officer" || position == "Chief Business Development Officer")
             {
+                BtnToggle(true);
                 SetControlsEditable(cmb_status);
-                cmb_status.Focus();
                 LoadStatusOptions(cmb_status.Text);
+                cmb_status.Focus();
+                return;
             }
-            else if (position == "Purchasing Officer")
+
+            if (position == "Purchasing Officer")
             {
-                SetControlsEditable(cmb_ship_type, txt_deliver_to, txt_deliver_via, txt_bill_to, txt_remarks);
+                BtnToggle(true);
+                SetControlsEditable(
+                    cmb_ship_type,
+                    txt_deliver_to,
+                    txt_deliver_via,
+                    txt_bill_to,
+                    txt_remarks,
+                    cmb_address,
+                    cmb_payment_terms
+                );
+                return;
             }
-            else
-            {
-                MessageBox.Show($"{position} not allowed to edit");
-            }
+            MessageBox.Show("Your current role does not grant permission to modify this document.", "Permission Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         private void btn_cancel_Click(object sender, EventArgs e)
         {
@@ -550,7 +559,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             FetchExistingPurchaseOrders();
         }
 
-        private async void btn_save_Click(object sender, EventArgs e)
+        private void btn_save_Click(object sender, EventArgs e)
         {
             BtnToggle(false);
             btn_save.Enabled = false;
@@ -568,14 +577,8 @@ namespace smpc_inventory_app.Pages.Purchasing
                 btn_save.Enabled = true;
             }
         }
-        private async void SavePurchaseorder()
+        private (Dictionary<string, dynamic>, bool) GetPurchaseOrder()
         {
-            // 1. Fetch latest purchase orders
-            var newresponse = await RequestToApi<ApiResponseModel<PurchaseOrdersWithDetails>>.Get(ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);
-            records = newresponse.Data;
-            updatedpurchaseorder = JsonHelper.ToDataTable(records.purchaseorder);
-
-            // 2. Collect order header values
             var order = Helpers.GetControlsValues(new[] { pnl_header, pnl_footer });
 
             if (order.ContainsKey("doc_no") && order["doc_no"] is string docNo)
@@ -593,7 +596,10 @@ namespace smpc_inventory_app.Pages.Purchasing
                 order["doc_no"] = DocNoGenerator();
             }
 
-            // 3. Extract order detail rows
+            return (order, isNewRecord) ;
+        }
+        private (List<Dictionary<string, dynamic>>, List<Dictionary<string, dynamic>>, string) GetPurchaseOrderDetails()
+        {
             var orderDetails = Helpers.ConvertDataGridViewToDataTable(dgv_item);
             var orderRow = new List<Dictionary<string, dynamic>>();
             var statusUpdateRow = new List<Dictionary<string, dynamic>>();
@@ -636,6 +642,21 @@ namespace smpc_inventory_app.Pages.Purchasing
                     }
                 }
             }
+            return (orderRow, statusUpdateRow, orderType);
+        }
+        private async void SavePurchaseorder()
+        {
+            // 1. Fetch latest purchase orders
+            var newresponse = await RequestToApi<ApiResponseModel<PurchaseOrdersWithDetails>>.Get(ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);
+            records = newresponse.Data;
+            updatedpurchaseorder = JsonHelper.ToDataTable(records.purchaseorder);
+
+            // 2. Collect order header values
+
+            var (order, isNewRecord) = GetPurchaseOrder();
+
+            // 3. Extract order detail rows
+            var (orderRow, statusUpdateRow, orderType) = GetPurchaseOrderDetails();
 
             // 4. Validate order type
             if (orderType != "SO" && orderType != "PR")
@@ -694,6 +715,131 @@ namespace smpc_inventory_app.Pages.Purchasing
 
         }
 
+        private void txt_main_tel_no_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            string input = txt_main_tel_no.Text;
+            if (input.Length > 12 && input.Contains("-"))
+            {
 
+                txt_main_tel_no.Text = input.Trim().Replace(" ", "").Replace("-", "");
+                // Put cursor at the end of text
+                txt_main_tel_no.SelectionStart = txt_main_tel_no.Text.Length;
+                txt_main_tel_no.SelectionLength = 0;
+            }
+            // Allow control keys (e.g., Backspace)
+            if (char.IsControl(e.KeyChar))
+                return;
+
+            // Allow only digits
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '-' && e.KeyChar != '(' && e.KeyChar != ')')
+            {
+                e.Handled = true;
+                return;
+            }
+
+            TextBox tb = sender as TextBox;
+            if (tb != null && tb.TextLength >= 13)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txt_main_tel_no_TextChanged(object sender, EventArgs e)
+        {
+            //    string input = txt_main_tel_no.Text.Trim().Replace(" ","");
+            string originalText = txt_main_tel_no.Text;
+            string cleanedInput = Regex.Replace(originalText, @"[\s\-\(\)]", ""); // remove formatting
+
+
+            txt_main_tel_no.ForeColor = Color.Black; // Reset to default
+
+            if (IsValidMobileNumber(cleanedInput))
+            {
+                txt_main_tel_no.Text = FormatMobileNumber(cleanedInput);
+            }
+            else if (IsValidLandlineNumber(cleanedInput))
+            {
+                txt_main_tel_no.Text = FormatLandlineNumber(cleanedInput);
+            }
+            else
+            {
+                //  e.Cancel = true;
+                //    txt_main_tel_no.Text = Regex.Replace(txt_main_tel_no.Text, @"[\s\-\(\)]", "");
+
+                txt_main_tel_no.Text = originalText; // keep what user typed
+                txt_main_tel_no.SelectionStart = originalText.Length;
+                txt_main_tel_no.ForeColor = Color.Firebrick;
+
+            }
+        }
+        private readonly string[] PhAreaCodes = new string[]
+        {
+            // Philippine area codes
+            "02", "32", "33", "34", "35", "36", "38", "42", "43", "44", "45",
+            "46", "47", "48", "49", "82", "83", "84", "85", "86", "87", "88", "89"
+        };
+
+        private bool IsValidMobileNumber(string number)
+        {
+
+            return number.Length == 11 && (number.StartsWith("09") || number.StartsWith("08"));
+        }
+
+        private bool IsValidLandlineNumber(string number)
+        {
+            if (number.Length != 10)
+                return false;
+
+            foreach (var code in PhAreaCodes)
+            {
+                if (number.StartsWith(code))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private string FormatMobileNumber(string number)
+        {
+            // 09XX-XXX-XXXX
+            return string.Format("{0}-{1}-{2}",
+                number.Substring(0, 4), number.Substring(4, 3), number.Substring(7, 4));
+        }
+
+        private string FormatLandlineNumber(string number)
+        {
+            return string.Format("({0}) {1}-{2}",
+                number.Substring(0, 2), number.Substring(2, 4), number.Substring(6, 4));
+        }
+
+        private async void btn_print_Click(object sender, EventArgs e)
+        {
+            //if (cmb_status.Text != "APPROVED") return;
+
+            if (string.IsNullOrWhiteSpace(txt_id.Text))
+            {
+                MessageBox.Show("No Purchase Order selected.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int poId;
+            if (!int.TryParse(txt_id.Text, out poId))
+            {
+                MessageBox.Show("Invalid Purchase Order ID.");
+                return;
+            }
+
+            var provider = new PurchaseOrderReportProvider(poId);
+
+            await provider.InitializeAsync();   // ✅ allowed now
+
+            using (var preview = new PrintPreview(provider))
+            {
+                preview.ShowDialog();
+            }
+
+
+        }
     }
 }

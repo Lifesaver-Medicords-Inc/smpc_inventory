@@ -158,7 +158,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bpi_item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bpi_item_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_code = new System.Windows.Forms.DataGridViewButtonColumn();
             this.item_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.long_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bpi_item_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -220,15 +220,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.dg_history = new System.Windows.Forms.DataGridView();
-            this.dataBindingFinancePending = new System.Windows.Forms.BindingSource(this.components);
-            this.ds_finance_pending = new System.Data.DataSet();
-            this.dataTable5 = new System.Data.DataTable();
-            this.dataColumn23 = new System.Data.DataColumn();
-            this.dataColumn24 = new System.Data.DataColumn();
-            this.dataColumn25 = new System.Data.DataColumn();
-            this.dataColumn26 = new System.Data.DataColumn();
-            this.dataColumn27 = new System.Data.DataColumn();
-            this.dataColumn28 = new System.Data.DataColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.actionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.edithistoryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.editbyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.edithistoryidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataBindingHistory = new System.Windows.Forms.BindingSource(this.components);
             this.ds_history = new System.Data.DataSet();
             this.dataTable6 = new System.Data.DataTable();
@@ -238,13 +234,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataColumn47 = new System.Data.DataColumn();
             this.dataColumn48 = new System.Data.DataColumn();
             this.dataColumn20 = new System.Data.DataColumn();
+            this.dataBindingFinancePending = new System.Windows.Forms.BindingSource(this.components);
+            this.ds_finance_pending = new System.Data.DataSet();
+            this.dataTable5 = new System.Data.DataTable();
+            this.dataColumn23 = new System.Data.DataColumn();
+            this.dataColumn24 = new System.Data.DataColumn();
+            this.dataColumn25 = new System.Data.DataColumn();
+            this.dataColumn26 = new System.Data.DataColumn();
+            this.dataColumn27 = new System.Data.DataColumn();
+            this.dataColumn28 = new System.Data.DataColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.actionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.edithistoryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.editbyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.edithistoryidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_new_brach.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.GENERAL.SuspendLayout();
@@ -288,12 +287,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabControl_History.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_history)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataBindingFinancePending)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ds_finance_pending)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataTable5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataBindingHistory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ds_history)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingFinancePending)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_finance_pending)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable5)).BeginInit();
             this.SuspendLayout();
             // 
             // pnl_new_brach
@@ -791,6 +790,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_contacts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellClick);
             this.dg_contacts.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellEndEdit);
             this.dg_contacts.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dg_contacts_CellValidating);
+            this.dg_contacts.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_contacts_DataBindingComplete);
             this.dg_contacts.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dg_contacts_DataError);
             this.dg_contacts.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg_contacts_EditingControlShowing);
             // 
@@ -1016,6 +1016,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_address.Name = "dg_address";
             this.dg_address.Size = new System.Drawing.Size(1189, 517);
             this.dg_address.TabIndex = 0;
+            this.dg_address.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_address_DataBindingComplete);
             // 
             // address_ids
             // 
@@ -1193,6 +1194,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_finance_transactions.Name = "dg_finance_transactions";
             this.dg_finance_transactions.Size = new System.Drawing.Size(1175, 435);
             this.dg_finance_transactions.TabIndex = 0;
+            this.dg_finance_transactions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_finance_transactions_DataBindingComplete);
             // 
             // finance_trans_so
             // 
@@ -1375,6 +1377,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_items.TabIndex = 7;
             this.dg_items.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_items_CellClick);
             this.dg_items.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dg_items_CellPainting);
+            this.dg_items.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_items_DataBindingComplete);
             this.dg_items.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dg_items_UserDeletingRow);
             // 
             // item_id
@@ -1389,7 +1392,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.bpi_item_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.bpi_item_id.DataPropertyName = "bpi_item_id";
-            this.bpi_item_id.HeaderText = "BPI ITEM ID";
+            this.bpi_item_id.HeaderText = "bpi_item_id";
             this.bpi_item_id.Name = "bpi_item_id";
             this.bpi_item_id.Visible = false;
             // 
@@ -1397,7 +1400,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.bpi_item_based_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.bpi_item_based_id.DataPropertyName = "bpi_item_based_id";
-            this.bpi_item_based_id.HeaderText = "BPI ITEM BASED ID";
+            this.bpi_item_based_id.HeaderText = "bpi_item_based_id";
             this.bpi_item_based_id.Name = "bpi_item_based_id";
             this.bpi_item_based_id.Visible = false;
             // 
@@ -1405,17 +1408,22 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_code.DataPropertyName = "item_code";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = "SELECT";
+            this.item_code.DefaultCellStyle = dataGridViewCellStyle1;
             this.item_code.FillWeight = 28.2083F;
             this.item_code.HeaderText = "ITEM CODE";
             this.item_code.MinimumWidth = 30;
             this.item_code.Name = "item_code";
+            this.item_code.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.item_code.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // item_type
             // 
             this.item_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_type.DataPropertyName = "item_type";
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.item_type.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.item_type.DefaultCellStyle = dataGridViewCellStyle2;
             this.item_type.FillWeight = 37.78341F;
             this.item_type.HeaderText = "TYPE";
             this.item_type.MinimumWidth = 30;
@@ -1425,8 +1433,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.long_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.long_description.DataPropertyName = "long_description";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.long_description.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.long_description.DefaultCellStyle = dataGridViewCellStyle3;
             this.long_description.FillWeight = 28.2083F;
             this.long_description.HeaderText = "DESCRIPTION";
             this.long_description.MinimumWidth = 30;
@@ -1443,8 +1451,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.price.DataPropertyName = "price";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.price.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.price.DefaultCellStyle = dataGridViewCellStyle4;
             this.price.FillWeight = 28.2083F;
             this.price.HeaderText = "PRICE";
             this.price.MinimumWidth = 30;
@@ -1452,10 +1460,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // item_graph
             // 
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.DarkGray;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DarkGray;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle5;
             this.item_graph.HeaderText = "";
             this.item_graph.MinimumWidth = 40;
             this.item_graph.Name = "item_graph";
@@ -1698,6 +1706,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_accreditations.Name = "dg_accreditations";
             this.dg_accreditations.Size = new System.Drawing.Size(1189, 457);
             this.dg_accreditations.TabIndex = 1;
+            this.dg_accreditations.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_accreditations_DataBindingComplete);
             // 
             // date_added
             // 
@@ -1904,7 +1913,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_history.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_history.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
-            this.dateDataGridViewTextBoxColumn,
             this.actionsDataGridViewTextBoxColumn,
             this.edithistoryDataGridViewTextBoxColumn,
             this.editbyDataGridViewTextBoxColumn,
@@ -1915,54 +1923,42 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_history.Name = "dg_history";
             this.dg_history.Size = new System.Drawing.Size(1175, 485);
             this.dg_history.TabIndex = 0;
+            this.dg_history.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_history_DataBindingComplete);
             // 
-            // dataBindingFinancePending
+            // Column1
             // 
-            this.dataBindingFinancePending.DataMember = "FinancePendingTbl";
-            this.dataBindingFinancePending.DataSource = this.ds_finance_pending;
+            this.Column1.DataPropertyName = "branch_id";
+            this.Column1.HeaderText = "branch_id";
+            this.Column1.Name = "Column1";
+            this.Column1.Visible = false;
             // 
-            // ds_finance_pending
+            // actionsDataGridViewTextBoxColumn
             // 
-            this.ds_finance_pending.DataSetName = "NewDataSet";
-            this.ds_finance_pending.Tables.AddRange(new System.Data.DataTable[] {
-            this.dataTable5});
+            this.actionsDataGridViewTextBoxColumn.DataPropertyName = "actions";
+            this.actionsDataGridViewTextBoxColumn.HeaderText = "actions";
+            this.actionsDataGridViewTextBoxColumn.Name = "actionsDataGridViewTextBoxColumn";
+            this.actionsDataGridViewTextBoxColumn.Visible = false;
             // 
-            // dataTable5
+            // edithistoryDataGridViewTextBoxColumn
             // 
-            this.dataTable5.Columns.AddRange(new System.Data.DataColumn[] {
-            this.dataColumn23,
-            this.dataColumn24,
-            this.dataColumn25,
-            this.dataColumn26,
-            this.dataColumn27,
-            this.dataColumn28});
-            this.dataTable5.TableName = "FinancePendingTbl";
+            this.edithistoryDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.edithistoryDataGridViewTextBoxColumn.DataPropertyName = "edit_history";
+            this.edithistoryDataGridViewTextBoxColumn.HeaderText = "EDIT HISTORY";
+            this.edithistoryDataGridViewTextBoxColumn.Name = "edithistoryDataGridViewTextBoxColumn";
             // 
-            // dataColumn23
+            // editbyDataGridViewTextBoxColumn
             // 
-            this.dataColumn23.ColumnName = "customer_id";
-            this.dataColumn23.DataType = typeof(short);
+            this.editbyDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.editbyDataGridViewTextBoxColumn.DataPropertyName = "edit_by";
+            this.editbyDataGridViewTextBoxColumn.HeaderText = "EDITTED BY";
+            this.editbyDataGridViewTextBoxColumn.Name = "editbyDataGridViewTextBoxColumn";
             // 
-            // dataColumn24
+            // edithistoryidDataGridViewTextBoxColumn
             // 
-            this.dataColumn24.ColumnName = "date";
-            // 
-            // dataColumn25
-            // 
-            this.dataColumn25.Caption = "qoute_ref";
-            this.dataColumn25.ColumnName = "qoute_ref";
-            // 
-            // dataColumn26
-            // 
-            this.dataColumn26.ColumnName = "total_price";
-            // 
-            // dataColumn27
-            // 
-            this.dataColumn27.ColumnName = "stage";
-            // 
-            // dataColumn28
-            // 
-            this.dataColumn28.ColumnName = "status";
+            this.edithistoryidDataGridViewTextBoxColumn.DataPropertyName = "edit_history_id";
+            this.edithistoryidDataGridViewTextBoxColumn.HeaderText = "edit_history_id";
+            this.edithistoryidDataGridViewTextBoxColumn.Name = "edithistoryidDataGridViewTextBoxColumn";
+            this.edithistoryidDataGridViewTextBoxColumn.Visible = false;
             // 
             // dataBindingHistory
             // 
@@ -2016,6 +2012,54 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.dataColumn20.ColumnName = "edit_history_id";
             // 
+            // dataBindingFinancePending
+            // 
+            this.dataBindingFinancePending.DataMember = "FinancePendingTbl";
+            this.dataBindingFinancePending.DataSource = this.ds_finance_pending;
+            // 
+            // ds_finance_pending
+            // 
+            this.ds_finance_pending.DataSetName = "NewDataSet";
+            this.ds_finance_pending.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable5});
+            // 
+            // dataTable5
+            // 
+            this.dataTable5.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn23,
+            this.dataColumn24,
+            this.dataColumn25,
+            this.dataColumn26,
+            this.dataColumn27,
+            this.dataColumn28});
+            this.dataTable5.TableName = "FinancePendingTbl";
+            // 
+            // dataColumn23
+            // 
+            this.dataColumn23.ColumnName = "customer_id";
+            this.dataColumn23.DataType = typeof(short);
+            // 
+            // dataColumn24
+            // 
+            this.dataColumn24.ColumnName = "date";
+            // 
+            // dataColumn25
+            // 
+            this.dataColumn25.Caption = "qoute_ref";
+            this.dataColumn25.ColumnName = "qoute_ref";
+            // 
+            // dataColumn26
+            // 
+            this.dataColumn26.ColumnName = "total_price";
+            // 
+            // dataColumn27
+            // 
+            this.dataColumn27.ColumnName = "stage";
+            // 
+            // dataColumn28
+            // 
+            this.dataColumn28.ColumnName = "status";
+            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -2023,51 +2067,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataGridViewTextBoxColumn1.HeaderText = "branch_id";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.Visible = false;
-            // 
-            // Column1
-            // 
-            this.Column1.DataPropertyName = "branch_id";
-            this.Column1.HeaderText = "branch_id";
-            this.Column1.Name = "Column1";
-            this.Column1.Visible = false;
-            // 
-            // dateDataGridViewTextBoxColumn
-            // 
-            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dateDataGridViewTextBoxColumn.DataPropertyName = "date";
-            dataGridViewCellStyle5.Format = "d";
-            dataGridViewCellStyle5.NullValue = null;
-            this.dateDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
-            this.dateDataGridViewTextBoxColumn.HeaderText = "DATE";
-            this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
-            // 
-            // actionsDataGridViewTextBoxColumn
-            // 
-            this.actionsDataGridViewTextBoxColumn.DataPropertyName = "actions";
-            this.actionsDataGridViewTextBoxColumn.HeaderText = "actions";
-            this.actionsDataGridViewTextBoxColumn.Name = "actionsDataGridViewTextBoxColumn";
-            this.actionsDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // edithistoryDataGridViewTextBoxColumn
-            // 
-            this.edithistoryDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.edithistoryDataGridViewTextBoxColumn.DataPropertyName = "edit_history";
-            this.edithistoryDataGridViewTextBoxColumn.HeaderText = "EDIT HISTORY";
-            this.edithistoryDataGridViewTextBoxColumn.Name = "edithistoryDataGridViewTextBoxColumn";
-            // 
-            // editbyDataGridViewTextBoxColumn
-            // 
-            this.editbyDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.editbyDataGridViewTextBoxColumn.DataPropertyName = "edit_by";
-            this.editbyDataGridViewTextBoxColumn.HeaderText = "EDITTED BY";
-            this.editbyDataGridViewTextBoxColumn.Name = "editbyDataGridViewTextBoxColumn";
-            // 
-            // edithistoryidDataGridViewTextBoxColumn
-            // 
-            this.edithistoryidDataGridViewTextBoxColumn.DataPropertyName = "edit_history_id";
-            this.edithistoryidDataGridViewTextBoxColumn.HeaderText = "edit_history_id";
-            this.edithistoryidDataGridViewTextBoxColumn.Name = "edithistoryidDataGridViewTextBoxColumn";
-            this.edithistoryidDataGridViewTextBoxColumn.Visible = false;
             // 
             // BpiBranchUC
             // 
@@ -2124,12 +2123,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabControl_History.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_history)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataBindingFinancePending)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ds_finance_pending)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataTable5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataBindingHistory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ds_history)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataBindingFinancePending)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_finance_pending)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable5)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2291,17 +2290,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Data.DataColumn dataColumn38;
         private System.Data.DataColumn dataColumn39;
         private System.Data.DataColumn type;
-        private System.Windows.Forms.DataGridViewTextBoxColumn item_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_based_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn item_code;
-        private System.Windows.Forms.DataGridViewTextBoxColumn item_type;
-        private System.Windows.Forms.DataGridViewTextBoxColumn long_description;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_branch_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn price;
-        private System.Windows.Forms.DataGridViewButtonColumn item_graph;
-        private System.Windows.Forms.DataGridViewTextBoxColumn notes;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn item_is_deleted;
         private System.Windows.Forms.DataGridViewTextBoxColumn date_added;
         private System.Windows.Forms.DataGridViewTextBoxColumn file_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn accreditation_added_by;
@@ -2345,5 +2333,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.DataGridViewTextBoxColumn edithistoryDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn editbyDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn edithistoryidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn item_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_based_id;
+        private System.Windows.Forms.DataGridViewButtonColumn item_code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn item_type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn long_description;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bpi_item_branch_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn price;
+        private System.Windows.Forms.DataGridViewButtonColumn item_graph;
+        private System.Windows.Forms.DataGridViewTextBoxColumn notes;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn item_is_deleted;
     }
 }

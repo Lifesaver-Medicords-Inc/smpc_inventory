@@ -41,7 +41,7 @@ namespace smpc_inventory_app.Pages.Purchasing
         // Define an event bassed on delegate
         public event TriggerNewFormDelegate TriggerNewForm;
 
-        private async void btn_create_order_po_Click(object sender, EventArgs e)
+        private void btn_create_order_po_Click(object sender, EventArgs e)
         {
            
         }
@@ -250,7 +250,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             }
 
             // 6. Process supplier allocation using updated selectedItems
-            var supplierMap = new Dictionary<int, List<PurchaseOrder.PurchaseOrderItem>>();
+            var supplierMap = new Dictionary<int, List<frm_PurchaseOrder.PurchaseOrderItem>>();
 
             foreach (var item in selectedItems)
             {
@@ -332,9 +332,9 @@ namespace smpc_inventory_app.Pages.Purchasing
                     remainingQty -= actuallyAllocated;
 
                     if (!supplierMap.ContainsKey(supplier.supplier_id))
-                        supplierMap[supplier.supplier_id] = new List<PurchaseOrder.PurchaseOrderItem>();
+                        supplierMap[supplier.supplier_id] = new List<frm_PurchaseOrder.PurchaseOrderItem>();
 
-                    supplierMap[supplier.supplier_id].Add(new PurchaseOrder.PurchaseOrderItem
+                    supplierMap[supplier.supplier_id].Add(new frm_PurchaseOrder.PurchaseOrderItem
                     {
                         SupplierId = supplier.supplier_id,
                         OrderNo = string.Join(",", allocatableOrderNos),
@@ -368,7 +368,7 @@ namespace smpc_inventory_app.Pages.Purchasing
                 int supplierId = kvp.Key;
                 var items = kvp.Value;
 
-                var purchaseOrderPage = new PurchaseOrder();
+                var purchaseOrderPage = new frm_PurchaseOrder();
                 purchaseOrderPage.LoadSelectedOrders(items);
 
                 var item = items.FirstOrDefault();
@@ -550,7 +550,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             }
 
             // 6. Process supplier allocation using updated selectedItems
-            var supplierMap = new Dictionary<int, List<PurchaseOrder.PurchaseOrderItem>>();
+            var supplierMap = new Dictionary<int, List<frm_PurchaseOrder.PurchaseOrderItem>>();
 
             foreach (var item in selectedItems)
             {
@@ -653,9 +653,9 @@ namespace smpc_inventory_app.Pages.Purchasing
                     }
 
                     if (!supplierMap.ContainsKey(supplier.supplier_id))
-                        supplierMap[supplier.supplier_id] = new List<PurchaseOrder.PurchaseOrderItem>();
+                        supplierMap[supplier.supplier_id] = new List<frm_PurchaseOrder.PurchaseOrderItem>();
 
-                    supplierMap[supplier.supplier_id].Add(new PurchaseOrder.PurchaseOrderItem
+                    supplierMap[supplier.supplier_id].Add(new frm_PurchaseOrder.PurchaseOrderItem
                     {
                         SupplierId = supplier.supplier_id,
                         OrderNo = string.Join(",", allocatableOrderNos),
@@ -689,7 +689,7 @@ namespace smpc_inventory_app.Pages.Purchasing
                 int supplierId = kvp.Key;
                 var items = kvp.Value;
 
-                var purchaseOrderPage = new PurchaseOrder();
+                var purchaseOrderPage = new frm_PurchaseOrder();
                 purchaseOrderPage.LoadSelectedOrders(items);
 
                 var item = items.FirstOrDefault();

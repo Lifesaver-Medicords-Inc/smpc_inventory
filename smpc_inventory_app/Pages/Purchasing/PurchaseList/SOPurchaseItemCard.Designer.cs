@@ -131,15 +131,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.bindingSourceSupplier = new System.Windows.Forms.BindingSource(this.components);
             this.pnl_canvass = new System.Windows.Forms.Panel();
             this.dgv_canvass = new System.Windows.Forms.DataGridView();
-            this.bindingSourceCanvassSheet = new System.Windows.Forms.BindingSource(this.components);
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.btn_add_supplier = new System.Windows.Forms.Button();
-            this.bindingSourcePaymentTerms = new System.Windows.Forms.BindingSource(this.components);
-            this.dataSetPaymentTerms = new System.Data.DataSet();
-            this.dataTable1 = new System.Data.DataTable();
-            this.dataColumn1 = new System.Data.DataColumn();
-            this.dataColumn2 = new System.Data.DataColumn();
-            this.dataColumn3 = new System.Data.DataColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_name = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -155,6 +146,15 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.price_validity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.payment_terms = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.leadtimeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bindingSourceCanvassSheet = new System.Windows.Forms.BindingSource(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btn_add_supplier = new System.Windows.Forms.Button();
+            this.bindingSourcePaymentTerms = new System.Windows.Forms.BindingSource(this.components);
+            this.dataSetPaymentTerms = new System.Data.DataSet();
+            this.dataTable1 = new System.Data.DataTable();
+            this.dataColumn1 = new System.Data.DataColumn();
+            this.dataColumn2 = new System.Data.DataColumn();
+            this.dataColumn3 = new System.Data.DataColumn();
             this.pnl_head.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_guiding_price)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceGuidingPrice)).BeginInit();
@@ -824,63 +824,8 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.dgv_canvass.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_canvass_CellEndEdit);
             this.dgv_canvass.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgv_canvass_CellValidating);
             this.dgv_canvass.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_canvass_DataError);
+            this.dgv_canvass.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgv_canvass_EditingControlShowing);
             this.dgv_canvass.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgv_canvass_KeyDown);
-            // 
-            // bindingSourceCanvassSheet
-            // 
-            this.bindingSourceCanvassSheet.DataMember = "tbl_canvass_sheet";
-            this.bindingSourceCanvassSheet.DataSource = this.dataSet1;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.btn_add_supplier);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 353);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1235, 40);
-            this.panel2.TabIndex = 3;
-            // 
-            // btn_add_supplier
-            // 
-            this.btn_add_supplier.Location = new System.Drawing.Point(34, 8);
-            this.btn_add_supplier.Name = "btn_add_supplier";
-            this.btn_add_supplier.Size = new System.Drawing.Size(117, 23);
-            this.btn_add_supplier.TabIndex = 2;
-            this.btn_add_supplier.Text = "ADD SUPPLIER";
-            this.btn_add_supplier.UseVisualStyleBackColor = true;
-            this.btn_add_supplier.Click += new System.EventHandler(this.btn_add_supplier_Click);
-            // 
-            // bindingSourcePaymentTerms
-            // 
-            this.bindingSourcePaymentTerms.DataMember = "Table1";
-            this.bindingSourcePaymentTerms.DataSource = this.dataSetPaymentTerms;
-            // 
-            // dataSetPaymentTerms
-            // 
-            this.dataSetPaymentTerms.DataSetName = "NewDataSet";
-            this.dataSetPaymentTerms.Tables.AddRange(new System.Data.DataTable[] {
-            this.dataTable1});
-            // 
-            // dataTable1
-            // 
-            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
-            this.dataColumn1,
-            this.dataColumn2,
-            this.dataColumn3});
-            this.dataTable1.TableName = "Table1";
-            // 
-            // dataColumn1
-            // 
-            this.dataColumn1.ColumnName = "id";
-            this.dataColumn1.DataType = typeof(short);
-            // 
-            // dataColumn2
-            // 
-            this.dataColumn2.ColumnName = "code";
-            // 
-            // dataColumn3
-            // 
-            this.dataColumn3.ColumnName = "name";
             // 
             // id
             // 
@@ -1019,6 +964,62 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.leadtimeDataGridViewTextBoxColumn1.DataPropertyName = "lead_time";
             this.leadtimeDataGridViewTextBoxColumn1.HeaderText = "LEAD TIME";
             this.leadtimeDataGridViewTextBoxColumn1.Name = "leadtimeDataGridViewTextBoxColumn1";
+            // 
+            // bindingSourceCanvassSheet
+            // 
+            this.bindingSourceCanvassSheet.DataMember = "tbl_canvass_sheet";
+            this.bindingSourceCanvassSheet.DataSource = this.dataSet1;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.btn_add_supplier);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 353);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1235, 40);
+            this.panel2.TabIndex = 3;
+            // 
+            // btn_add_supplier
+            // 
+            this.btn_add_supplier.Location = new System.Drawing.Point(34, 8);
+            this.btn_add_supplier.Name = "btn_add_supplier";
+            this.btn_add_supplier.Size = new System.Drawing.Size(117, 23);
+            this.btn_add_supplier.TabIndex = 2;
+            this.btn_add_supplier.Text = "ADD SUPPLIER";
+            this.btn_add_supplier.UseVisualStyleBackColor = true;
+            this.btn_add_supplier.Click += new System.EventHandler(this.btn_add_supplier_Click);
+            // 
+            // bindingSourcePaymentTerms
+            // 
+            this.bindingSourcePaymentTerms.DataMember = "Table1";
+            this.bindingSourcePaymentTerms.DataSource = this.dataSetPaymentTerms;
+            // 
+            // dataSetPaymentTerms
+            // 
+            this.dataSetPaymentTerms.DataSetName = "NewDataSet";
+            this.dataSetPaymentTerms.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable1});
+            // 
+            // dataTable1
+            // 
+            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn1,
+            this.dataColumn2,
+            this.dataColumn3});
+            this.dataTable1.TableName = "Table1";
+            // 
+            // dataColumn1
+            // 
+            this.dataColumn1.ColumnName = "id";
+            this.dataColumn1.DataType = typeof(short);
+            // 
+            // dataColumn2
+            // 
+            this.dataColumn2.ColumnName = "code";
+            // 
+            // dataColumn3
+            // 
+            this.dataColumn3.ColumnName = "name";
             // 
             // SOPurchaseItemCard
             // 

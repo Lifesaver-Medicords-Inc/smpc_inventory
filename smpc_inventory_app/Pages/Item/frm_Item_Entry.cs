@@ -23,17 +23,21 @@ using System.Threading;
 using ApiResponseModel = smpc_inventory_app.Services.Setup.ApiResponseModel;
 using System.Net.Http;
 using smpc_invemtory_app.Pages.Shared;
+using smpc_inventory_app.Services.Setup.Inventory;
+using smpc_inventory_app.Services.Setup.Model.Warehouse;
+using smpc_inventory_app.Properties;
 
 namespace smpc_inventory_app.Pages.Item
 {
     public partial class frm_Item_Entry : UserControl
     {
 
-        public delegate void getBpiAddedItem(Dictionary<string,dynamic> value);
+        public delegate void getBpiAddedItem(Dictionary<string, dynamic> value);
 
         public event getBpiAddedItem OnItem;
 
         private CancellationTokenSource _imageLoadCts;
+        
         GeneralSetupServices serviceSetup;
         SetupModal modalSetup;
         TradeTypeSelectionModal tradetypemodal = new TradeTypeSelectionModal();
@@ -44,8 +48,13 @@ namespace smpc_inventory_app.Pages.Item
         DataTable itemsales;
         DataTable itemproduction;
         DataTable itemimages;
+        DataTable iteminventory;
+        DataTable itemavailableinv;
         DataTable dt_template;
         SetupSelectionModal modalSelection;
+        private WarehouseList _warehouseData;
+        DataTable warehouseName;
+        DataTable warehouseArea;
 
         Items records;
         int selectedRecord = 0;
@@ -62,13 +71,61 @@ namespace smpc_inventory_app.Pages.Item
         private List<Dictionary<string, object>> replaceBase64Images = new List<Dictionary<string, object>>();
         private List<int> temporaryImageIds = new List<int>();
         private Dictionary<int, Bitmap> removedImages = new Dictionary<int, Bitmap>();
-
+        private List<WarehouseAreaModel> _availableUseTypes;
         private int tempImageIdCounter = -1;
+        private List<string> _zone;
+        private List<string> _area;
+        private List<string> _rack;
+        private List<string> _level;
+        private List<string> _bins;
+        private bool _isCascading;
+        private const string BACK_ITEM = "← Back";
+        private readonly string itemEntryPath = Settings.Default.ITEMENTRYPATH;
+        private TreeNode selectedNode;
+        private readonly string[] systemFolders =
+        {
+            "CERTIFICATIONS",
+            "TECHNICAL DATA SHEETS",
+            "BROCHURES",
+            "POST PRODUCTION REPORT"
+        };
+
+
+        private class CascadingTag
+        {
+            public string Zone { get; set; }
+            public string Area { get; set; }
+            public string Rack { get; set; }
+            public string Level { get; set; }
+            public string Bin { get; set; }
+        }
 
         public frm_Item_Entry()
         {
             InitializeComponent();
 
+            LoadDirectory(ITEM_TV, itemEntryPath);
+
+            // Create ImageList
+            ImageList imageList = new ImageList();
+            imageList.Images.Add("folder", Properties.Resources.FolderIcon);
+            imageList.Images.Add("pdf", Properties.Resources.pdf);
+            imageList.Images.Add("word", Properties.Resources.word);
+            imageList.Images.Add("excel", Properties.Resources.excel);
+            imageList.Images.Add("image", Properties.Resources.img);
+            imageList.Images.Add("file", Properties.Resources.file);
+
+            // Assign to TreeView
+            ITEM_TV.ImageList = imageList;
+            ITEM_LV.SmallImageList = imageList;
+
+            // Enable drag and drop for ListView
+            ITEM_LV.AllowDrop = true;
+            ITEM_LV.DragEnter += ITEM_LV_DragEnter;
+            ITEM_LV.DragDrop += ITEM_LV_DragDrop;
+
+            InitializeListViewContextMenu();
+            InitializeContextMenu();
         }
         public void HideButton()
         {
@@ -79,7 +136,7 @@ namespace smpc_inventory_app.Pages.Item
             try
             {
                 BtnToggle(false);
-                FetchClassSetup(); 
+                FetchClassSetup();
                 FetchNameSetup();
                 FetchBrandSetup();
                 FetchUOMSetup();
@@ -87,6 +144,8 @@ namespace smpc_inventory_app.Pages.Item
                 FetchMaterialSetup();
                 FetchPumpTypeSetup();
                 FetchPumpCountSetup();
+                FetchWarehouse();
+                FetchValuationMethodSetup();
                 FetchItemData();
             }
             catch (Exception ex)
@@ -119,6 +178,8 @@ namespace smpc_inventory_app.Pages.Item
                 ItemImages = JsonHelper.ToDataTable(records.itemimages),
                 ItemPurchasing = JsonHelper.ToDataTable(records.itempurchasing),
                 ItemSales = JsonHelper.ToDataTable(records.itemsales),
+                ItemInventory = JsonHelper.ToDataTable(records.iteminventory),
+                ItemAvailableInv = JsonHelper.ToDataTable(records.itemavailableinv),
                 ItemProduction = JsonHelper.ToDataTable(records.itemproduction)
             });
 
@@ -128,6 +189,8 @@ namespace smpc_inventory_app.Pages.Item
             itemimages = tables.ItemImages;
             itempurchasing = tables.ItemPurchasing;
             itemsales = tables.ItemSales;
+            iteminventory = tables.ItemInventory;
+            itemavailableinv = tables.ItemAvailableInv;
             itemproduction = tables.ItemProduction;
 
             if (records.items.Count != 0)
@@ -146,13 +209,21 @@ namespace smpc_inventory_app.Pages.Item
         {
             if (isBind)
             {
+                if (items == null)
+                {
+                    MessageBox.Show("No records found.");
+                    return;
+                }
+
                 GetCMBValues();
                 lbl_filename.Visible = false;
-                // Bind UI panels
-                Panel[] pnlItem = { pnl_header };
-                Panel[] pnlAdditionalSpecs = { pnl_additional_specs };
-                Panel[] pnlItemSales = { pnl_item_sales_price };
-                Panel[] pnlItemImages = { pnl_item_image };
+
+
+                // Bind parent panels
+                // ---- Items ----
+                Panel[] pnlItem = { pnl_header, pnl_sales };
+
+               
 
                 Helpers.BindControls(pnlItem, items, this.selectedRecord);
                 foreach (var pnl in pnlItem)
@@ -168,11 +239,13 @@ namespace smpc_inventory_app.Pages.Item
                         }
                     }
                 }
-                Helpers.BindControls(pnlItemSales, items, this.selectedRecord);
-                Helpers.BindControls(pnlAdditionalSpecs, additionalspecs, this.selectedRecord);
-                Helpers.BindControls(pnlItemImages, itemimages, this.selectedRecord);
 
                 int currentItemId = Convert.ToInt32(items.Rows[selectedRecord]["id"]);
+
+                BindDataToComboBox(currentItemId);
+                BindDataToPanel(currentItemId);
+                BindDataToFlowLayoutPanel(currentItemId);
+                BindDataToDataGridView();
 
                 txt_trade_type.Text = string.IsNullOrEmpty(records.items[this.selectedRecord].trade_type_names) ? "" : (records.items[this.selectedRecord].trade_type_names);
                 txt_pump_type_compatability.Text = string.IsNullOrEmpty(records.additionalspecs[this.selectedRecord].pump_type_compatability_names) ? "" : (records.additionalspecs[this.selectedRecord].pump_type_compatability_names);
@@ -180,54 +253,31 @@ namespace smpc_inventory_app.Pages.Item
                 //Check Item Type Before Binding
                 ToggleItemPages(txt_trade_type.Text, cmb_item_tangibility_type.Text);
 
-                FetchItemDataGridViewChild();
+                // Bind data to dgv using data binding source
 
                 string tradeTypes = string.IsNullOrEmpty(records.items[this.selectedRecord].trade_type_id) ? "" : (records.items[this.selectedRecord].trade_type_id);
 
-                //Getting the List of Ids to match in my getmodal
+                //Getting the List of Ids to match in getmodal
                 currentSelectedTradeTypeIds = tradeTypes.Split(',')
                                                     .Where(val => int.TryParse(val, out _))
                                                     .Select(int.Parse)
                                                     .ToList();
                 txt_trade_type.Tag = currentSelectedTradeTypeIds;
+                
+                // REMOVED TXT NOT BEING USED 
+                //var matchingItemSpec = records.itemspecs.FirstOrDefault(spec => spec.based_id == currentItemId);
 
-                var matchingItemSpec = records.itemspecs.FirstOrDefault(spec => spec.based_id == currentItemId);
+                //if (matchingItemSpec != null)
+                //{
+                //    txt_item_specs_id.Text = matchingItemSpec.id.ToString();
+                //    txt_item_specs_based_id.Text = matchingItemSpec.based_id.ToString();
+                //}
+                //else
+                //{
+                //    ClearTextBoxes(txt_item_specs_id, txt_item_specs_based_id);
+                //}
 
-                if (matchingItemSpec != null)
-                {
-                    txt_item_specs_id.Text = matchingItemSpec.id.ToString();
-                    txt_item_specs_based_id.Text = matchingItemSpec.based_id.ToString();
-                }
-                else
-                {
-                    ClearTextBoxes(txt_item_specs_id, txt_item_specs_based_id);
-                }
-
-                // Bind ItemSpecs 
-                if (items.Rows.Count > 0)
-                {
-                    DataView dataView = new DataView(itemspecs)
-                    {
-                        RowFilter = $"based_id = '{currentItemId}'"
-                    };
-                    dgv_template.DataSource = dataView;
-
-                    HideColumns(dgv_template, "id", "based_id", "template", "manufacturer_origin");
-
-                    cmb_template.SelectedItem = dataView.Count > 0 ? dataView[0]["template"].ToString() : null;
-                    txt_manufacturer_origin.Text = dataView.Count > 0 ? dataView[0]["manufacturer_origin"].ToString() : null;
-
-                    if (cmb_template.Text == "PUMP" || cmb_template.Text == "WATER METER")
-                    {
-                        cmb_calibration.Visible = true;
-                        lbl_calibration.Visible = true;
-                    }
-                    else
-                    {
-                        cmb_calibration.Visible = false;
-                        lbl_calibration.Visible = false;
-                    }
-                }
+               
 
                 var matchingAdditionalSpec = records.additionalspecs.FirstOrDefault(spec => spec.based_id == currentItemId);
 
@@ -250,76 +300,36 @@ namespace smpc_inventory_app.Pages.Item
                                                     .ToList();
                 txt_pump_type_compatability.Tag = currentSelectedPumpTypeIds;
                 // Setting default value 
-                if (matchingAdditionalSpec.connection_type == "" || string.IsNullOrEmpty(matchingAdditionalSpec.connection_type))
+                if (string.IsNullOrEmpty(matchingAdditionalSpec?.connection_type))
                 {
                     cmb_connection_type.SelectedIndex = -1;
                     cmb_connection_type.Text = "";
                 }
-                if (matchingAdditionalSpec.calibration == "" || string.IsNullOrEmpty(matchingAdditionalSpec.calibration))
+                if (string.IsNullOrEmpty(matchingAdditionalSpec?.calibration))
                 {
                     cmb_calibration.SelectedIndex = -1;
                     cmb_calibration.Text = "";
                 }
-                // Bind Images
 
-                flowLayoutPanel1.Controls.Clear();
-                img_preview.Image = null;
+                
+                // Bind Inventory
+                //var matchingInventory = records.iteminventory.FirstOrDefault(spec => spec.based_id == currentItemId);
 
-                var filteredImages = records.itemimages.Where(image => image.based_id == currentItemId).ToList();
+                //if (matchingInventory != null)
+                //{
+                //    txt_item_inventory_id.Text = matchingInventory.id.ToString();
+                //    txt_item_specs_based_id.Text = matchingInventory.based_id.ToString();
 
-                if (filteredImages.Any())
-                {
-                    txt_item_image_id.Text = filteredImages.First().id.ToString();
-                    txt_item_image_based_id.Text = filteredImages.First().based_id.ToString();
-                }
-                else
-                {
-                    ClearTextBoxes(txt_item_image_id, txt_item_image_based_id);
-                }
-
-                foreach (var imageRecord in filteredImages)
-                {
-                    if (!string.IsNullOrEmpty(imageRecord.image))
-                    {
-                        string imageUrl = imageRecord.image.Trim();
-                        imageUrl = imageUrl.StartsWith("http")
-                            ? imageUrl
-                            : "http://localhost:3000/api/vfile/" + imageUrl;
-
-                        // placeholder first
-                        PictureBox placeholder = CreatePictureBox(Properties.Resources.spinner, imageUrl, imageRecord.id, imageRecord.filename);
-                        flowLayoutPanel1.Controls.Add(placeholder);
-
-                        // async download
-                        _ = Task.Run(async () =>
-                        {
-                            try
-                            {
-                                using (HttpClient http = new HttpClient())
-                                {
-                                    byte[] data = await http.GetByteArrayAsync(imageUrl);
-                                    using (MemoryStream ms = new MemoryStream(data))
-                                    {
-                                        Image img = Image.FromStream(ms);
-                                        placeholder.Invoke((MethodInvoker)(() =>
-                                        {
-                                            placeholder.Image = img;
-                                        }));
-                                    }
-                                }
-                            }
-                            catch
-                            {
-                                object v = placeholder.Invoke((MethodInvoker)(() =>
-                                {
-                                    placeholder.Image = Properties.Resources.no_pictures;
-                                }));
-                            }
-                        });
-
-                    }
-                }
-
+                //    if (string.IsNullOrEmpty(matchingInventory?.storage_type))
+                //    {
+                //        cmb_storage_type.SelectedIndex = -1;
+                //        cmb_storage_type.Text = "";
+                //    }
+                //}
+                //else
+                //{
+                //    ClearTextBoxes(txt_item_inventory_id, txt_item_inventory_based_id);
+                //}
             }
             else
             {
@@ -329,12 +339,227 @@ namespace smpc_inventory_app.Pages.Item
                 this.itemimages.Rows.Clear();
                 this.itempurchasing.Rows.Clear();
                 this.itemsales.Rows.Clear();
+                this.iteminventory.Rows.Clear();
             }
         }
-        private bool IsTextResponse(byte[] data)
+        private void BindDataToPanel(int currentItemId)
         {
-            string content = Encoding.UTF8.GetString(data).ToLower();
-            return content.Contains("file not found") || content.Contains("<html>");
+            if (currentItemId <= 0)
+                return;
+ 
+            Panel[] pnlAdditionalSpecs = { pnl_additional_specs };
+            Panel[] pnlItemImages = { pnl_item_image };
+            Panel[] pnlInventoryPanel = { splitContainer1.Panel1 };
+
+            // ---- Item Specs ----
+            if (items.Rows.Count > 0)
+            {
+                DataView dataView = new DataView(itemspecs)
+                {
+                    RowFilter = $"based_id = '{currentItemId}'"
+                };
+                dgv_template.DataSource = dataView;
+
+                HideColumns(dgv_template, "id", "based_id", "template", "manufacturer_origin");
+
+                cmb_template.SelectedItem = dataView.Count > 0 ? dataView[0]["template"].ToString() : null;
+                txt_manufacturer_origin.Text = dataView.Count > 0 ? dataView[0]["manufacturer_origin"].ToString() : null;
+
+                bool showCalibration = cmb_template.Text == "PUMP" || cmb_template.Text == "WATER METER";
+                cmb_calibration.Visible = showCalibration;
+                lbl_calibration.Visible = showCalibration;
+            }
+
+            // ---- Additional Specs ----
+            DataView dvAdditionalSpecs = new DataView(additionalspecs)
+            {
+                RowFilter = $"based_id = {currentItemId}"
+            };
+
+            if (dvAdditionalSpecs.Count > 0)
+            {
+                DataTable additionalSpecsTable = dvAdditionalSpecs.ToTable();
+                additionalSpecsTable.Columns["id"].ColumnName = "txt_additional_specs_id";
+                additionalSpecsTable.Columns["based_id"].ColumnName = "txt_additional_specs_based_id";
+
+                Helpers.BindControls(pnlAdditionalSpecs, additionalSpecsTable);
+            }
+            else
+            {
+                Helpers.ResetControls(pnl_additional_specs);
+            }
+
+            // ---- Item Images ----
+            DataView dvImage = new DataView(itemimages)
+            {
+                RowFilter = $"based_id = {currentItemId}"
+            };
+
+            if (dvImage.Count > 0)
+            {
+                DataTable imageTable = dvImage.ToTable();
+                imageTable.Columns["id"].ColumnName = "item_image_id";
+                imageTable.Columns["based_id"].ColumnName = "item_image_based_id";
+
+                Helpers.BindControls(pnlItemImages, imageTable);
+            }
+            else
+            {
+                Helpers.ResetControls(pnl_item_image);
+            }
+
+            // ---- Inventory ----
+            DataView dvInventory = new DataView(iteminventory)
+            {
+                RowFilter = $"based_id = {currentItemId}"
+            };
+
+            if (dvInventory.Count > 0)
+            {
+                DataTable inventoryTable = dvInventory.ToTable();
+                inventoryTable.Columns["id"].ColumnName = "item_inventory_id";
+                inventoryTable.Columns["based_id"].ColumnName = "item_inventory_based_id";
+
+                Helpers.BindControls(pnlInventoryPanel, inventoryTable);
+            }
+            else
+            {
+                Helpers.ResetControls(splitContainer1.Panel1);
+            }
+        }
+
+        private void BindDataToComboBox(int currentItemId)
+        {
+            if (currentItemId <= 0)
+                return;
+
+
+            // Additional Specs
+            SetComboBoxValue(additionalspecs, "based_id", currentItemId, cmb_material, "material_id");
+            SetComboBoxValue(additionalspecs, "based_id", currentItemId, cmb_pump_count_compatability, "pump_count_compatability_id");
+            SetComboBoxValue(additionalspecs, "based_id", currentItemId, cmb_volume_unit_of_measure, "volume_unit_of_measure_id");
+            SetComboBoxValue(additionalspecs, "based_id", currentItemId, cmb_weight_unit_of_measure, "weight_unit_of_measure_id");
+
+            // Inventory Tab
+            SetComboBoxValue(iteminventory, "based_id", currentItemId, cmb_warehouse, "warehouse_id");
+            SetComboBoxValue(iteminventory, "based_id", currentItemId, cmb_valuation_method, "valuation_method_id");
+        }
+        private void BindDataToDataGridView()
+        {
+            List<DataGridView> DgvList = new List<DataGridView>()
+            {
+                dgv_sales,
+                dgv_purchasing,
+                dgv_canvass_sheet,
+                dgv_available_inventory,
+                dgv_released_stock,
+                dgv_bom,
+                dgv_production_request
+            };
+
+            DisbleAutoColumnGeneration(DgvList);
+
+            
+
+            //Fetch Additional Specs
+            DataView dataViewAdditionalSpecs = new DataView(additionalspecs);
+            if (dataViewAdditionalSpecs.Count != 0)
+            {
+                dataViewAdditionalSpecs.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
+            }
+            //Fetch Item Purchasing
+            DataView dataViewPurchasing = new DataView(itempurchasing);
+
+            if (dataViewPurchasing.Count != 0)
+            {
+                dataViewPurchasing.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
+                bindingSourcePurchasing.DataSource = dataViewPurchasing;
+            }
+
+            //Fetch Item Sales
+            DataView dataViewSales = new DataView(itemsales);
+            if (dataViewSales.Count != 0)
+            {
+                dataViewSales.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
+                bindingSourceSales.DataSource = dataViewSales;
+            }
+
+            // Fetch Item Available Inventory
+            DataView dataViewAvailableInv = new DataView(itemavailableinv);
+            if (dataViewAvailableInv.Count != 0)
+            {
+                dataViewAvailableInv.RowFilter = "item_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
+                bindingSourceInventory.DataSource = dataViewAvailableInv;
+            }
+
+            //Fetch Item Production
+            DataView dataViewProduction = new DataView(itemproduction);
+            if (dataViewProduction.Count != 0)
+            {
+                dataViewProduction.RowFilter = "item_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
+                bindingSourceProduction.DataSource = dataViewProduction;
+            }
+        }
+        private void BindDataToFlowLayoutPanel(int currentItemId)
+        {
+            // Bind Images
+            flowLayoutPanel1.Controls.Clear();
+            img_preview.Image = null;
+
+            var filteredImages = records.itemimages.Where(image => image.based_id == currentItemId).ToList();
+
+            if (filteredImages.Any())
+            {
+                txt_item_image_id.Text = filteredImages.First().id.ToString();
+                txt_item_image_based_id.Text = filteredImages.First().based_id.ToString();
+            }
+            else
+            {
+                ClearTextBoxes(txt_item_image_id, txt_item_image_based_id);
+            }
+
+            foreach (var imageRecord in filteredImages)
+            {
+                if (!string.IsNullOrEmpty(imageRecord.image))
+                {
+                    string imageUrl = imageRecord.image.Trim();
+                    imageUrl = imageUrl.StartsWith("http")
+                        ? imageUrl
+                        : "http://localhost:3000/api/vfile/" + imageUrl;
+
+                    // placeholder first
+                    PictureBox placeholder = CreatePictureBox(Properties.Resources.spinner, imageUrl, imageRecord.id, imageRecord.filename);
+                    flowLayoutPanel1.Controls.Add(placeholder);
+
+                    // async download
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            using (HttpClient http = new HttpClient())
+                            {
+                                byte[] data = await http.GetByteArrayAsync(imageUrl);
+                                using (MemoryStream ms = new MemoryStream(data))
+                                {
+                                    Image img = Image.FromStream(ms);
+                                    placeholder.Invoke((MethodInvoker)(() =>
+                                    {
+                                        placeholder.Image = img;
+                                    }));
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            object v = placeholder.Invoke((MethodInvoker)(() =>
+                            {
+                                placeholder.Image = Properties.Resources.no_pictures;
+                            }));
+                        }
+                    });
+
+                }
+            }
         }
         public static Boolean ValidateControlsValues(Panel pnl)
         {
@@ -360,10 +585,13 @@ namespace smpc_inventory_app.Pages.Item
                 else if (control is ComboBox comboBox)
                 {
                     if ((string.Equals(comboBox.Tag as string, "DYNAMIC", StringComparison.OrdinalIgnoreCase)
-                        && comboBox.SelectedIndex <= 0 && comboBox.Name != "cmb_volume_unit_of_measure" && comboBox.Name != "cmb_weight_unit_of_measure") ||  comboBox.Name == "cmb_item_tangibility_type" )
+                        && comboBox.SelectedIndex <= 0 && comboBox.Name != "cmb_volume_unit_of_measure" && comboBox.Name != "cmb_weight_unit_of_measure"))
                     {
                         FlashRed(comboBox);
                         isError = true;
+
+                        string field = comboBox.AccessibleName ?? comboBox.Name;
+                        MessageBox.Show($"{field} is required.", "Validation Error");
                     }
                     else
                     {
@@ -373,7 +601,6 @@ namespace smpc_inventory_app.Pages.Item
             }
             return isError;
         }
-
         private static void FlashRed(Control control)
         {
             Color originalColor = control.BackColor;
@@ -408,7 +635,7 @@ namespace smpc_inventory_app.Pages.Item
             if (!CheckIfCalpeda())
             {
                 return;
-            }  
+            }
 
             if (currentSelectedTradeTypeIds.Count != 0 && txt_id.Text != "")
             {
@@ -439,6 +666,7 @@ namespace smpc_inventory_app.Pages.Item
             }
             data["additionalspecs"] = GetAdditionalSpecs();
             data["itemimages"] = imageData;
+            data["iteminventory"] = GetItemInventory();
 
             // Determine if this is a new record    
             bool isNewRecord = string.IsNullOrWhiteSpace(txt_id.Text);
@@ -470,7 +698,7 @@ namespace smpc_inventory_app.Pages.Item
 
             Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
 
-            
+
             if (response.Success)
             {
                 var itemResponse = response.Data["id"];
@@ -565,6 +793,17 @@ namespace smpc_inventory_app.Pages.Item
 
             return additionalspecs;
         }
+        private Dictionary<string, object> GetItemInventory()
+        {
+            var iteminventory = Helpers.GetControlsValues(splitContainer1.Panel1);
+            iteminventory["maximum_inventory"] = float.TryParse(iteminventory["maximum_inventory"]?.ToString(), out float max) ? max : 0f;
+            iteminventory["minimum_inventory"] = float.TryParse(iteminventory["minimum_inventory"]?.ToString(), out float min) ? min : 0f;
+
+            iteminventory["id"] = uint.TryParse(txt_item_inventory_id.Text, out uint inventoryId) ? inventoryId : 0;
+            iteminventory["based_id"] = uint.TryParse(txt_item_inventory_based_id.Text, out uint inventoryBasedId) ? inventoryBasedId : 0;
+
+            return iteminventory;
+        }
 
         private void btn_new_Click(object sender, EventArgs e)
         {
@@ -573,10 +812,10 @@ namespace smpc_inventory_app.Pages.Item
                 pnl_additional_specs,
                 pnl_item_specs, pnl_header,
                 pnl_item_image,
-                pnl_item_sales_price
+                pnl_item_sales_price,
+                splitContainer1.Panel1
             );
 
-            //isProgrammaticChange = false;
             ResetComboBoxes(
                 cmb_template,
                 cmb_item_name,
@@ -589,10 +828,13 @@ namespace smpc_inventory_app.Pages.Item
                 cmb_pump_count_compatability,
                 cmb_volume_unit_of_measure,
                 cmb_weight_unit_of_measure,
-                cmb_calibration
+                cmb_calibration,
+                cmb_warehouse,
+                cmb_storage_type,
+                cmb_valuation_method
             );
 
-            chk_is_stop_selling.Checked = false;
+            ResetCheckboxes(chk_is_stop_selling, chk_special_item);
 
             if (dgv_template.Columns["title"] != null)
             {
@@ -609,10 +851,8 @@ namespace smpc_inventory_app.Pages.Item
             RemoveSelectedDataTable(CacheData.ItemType);
             ItemModelGenerator();
 
-            dg_purchasing.DataSource = null;
+            dgv_purchasing.DataSource = null;
             dgv_sales.DataSource = null;
-
-            //isProgrammaticChange = false;
         }
         private void btn_edit_Click(object sender, EventArgs e)
         {
@@ -627,7 +867,7 @@ namespace smpc_inventory_app.Pages.Item
                 dgv_template.Columns["title"].ReadOnly = true;
             }
         }
-        private  void btn_close_Click(object sender, EventArgs e)
+        private void btn_close_Click(object sender, EventArgs e)
         {
             BtnToggle(false);
             FetchItemData();
@@ -644,6 +884,61 @@ namespace smpc_inventory_app.Pages.Item
             imageData.Remove("replaceimages");
 
         }
+
+        private void SetComboBoxValue( DataTable table, string filterColumn, int filterValue, ComboBox combo, string valueColumn)
+        {
+            // Helper: select "-- SELECT --" if it exists
+            void SelectDefault()
+            {
+                if (combo.Items.Count > 0 &&
+                    combo.Items[0] is DataRowView drv &&
+                    drv[combo.DisplayMember]?.ToString() == "-- SELECT --")
+                {
+                    combo.SelectedIndex = 0;
+                }
+                else
+                {
+                    combo.SelectedIndex = -1;
+                }
+            }
+
+            // Find matching row
+            var row = table.AsEnumerable()
+                           .FirstOrDefault(r => Convert.ToInt32(r[filterColumn]) == filterValue);
+
+            // No row or NULL value → default
+            if (row == null || row.IsNull(valueColumn))
+            {
+                SelectDefault();
+                return;
+            }
+
+            int value = row.Field<int>(valueColumn);
+
+            // Value is 0 → default
+            if (value == 0)
+            {
+                SelectDefault();
+                return;
+            }
+
+            // Check if value exists in ComboBox datasource
+            bool exists = combo.Items
+                .OfType<DataRowView>()
+                .Any(drv =>
+                    drv[combo.ValueMember] != DBNull.Value &&
+                    Convert.ToInt32(drv[combo.ValueMember]) == value);
+
+            if (exists)
+            {
+                combo.SelectedValue = value;
+            }
+            else
+            {
+                SelectDefault();
+            }
+        }
+
         private void GetCMBValues()
         {
             // Items
@@ -662,18 +957,8 @@ namespace smpc_inventory_app.Pages.Item
             cmb_item_class.SelectedValue = records.items[this.selectedRecord].item_class_id;
             cmb_item_class.SelectedItem = records.items[this.selectedRecord].item_class_id;
 
-            // Additional Specs
-            cmb_material.SelectedValue = records.additionalspecs[this.selectedRecord].material_id;
-            cmb_material.SelectedItem = records.additionalspecs[this.selectedRecord].material_id;
+            
 
-            cmb_pump_count_compatability.SelectedValue = records.additionalspecs[this.selectedRecord].pump_count_compatability_id;
-            cmb_pump_count_compatability.SelectedItem = records.additionalspecs[this.selectedRecord].pump_count_compatability_id;
-
-            cmb_volume_unit_of_measure.SelectedValue = records.additionalspecs[this.selectedRecord].volume_unit_of_measure_id;
-            cmb_volume_unit_of_measure.SelectedItem = records.additionalspecs[this.selectedRecord].volume_unit_of_measure_id;
-
-            cmb_weight_unit_of_measure.SelectedValue = records.additionalspecs[this.selectedRecord].weight_unit_of_measure_id;
-            cmb_weight_unit_of_measure.SelectedItem = records.additionalspecs[this.selectedRecord].weight_unit_of_measure_id;
         }
         private static void AddCmbDefaultVal(DataTable dt)
         {
@@ -737,9 +1022,9 @@ namespace smpc_inventory_app.Pages.Item
 
             CacheData.UnitOfMeasurement = originalData;
 
-            DataView dvUnit = new DataView(originalData);
-            DataView dvWeight = new DataView(originalData);
-            DataView dvVolume = new DataView(originalData);
+            DataView dvUnit = new DataView(originalData.Copy());
+            DataView dvWeight = new DataView(originalData.Copy());
+            DataView dvVolume = new DataView(originalData.Copy());
 
             AddCmbDefaultVal(dvUnit.Table);
             AddCmbDefaultVal(dvWeight.Table);
@@ -748,7 +1033,7 @@ namespace smpc_inventory_app.Pages.Item
             BindCmbValues(cmb_unit_of_measure, dvUnit);
             BindCmbValues(cmb_weight_unit_of_measure, dvWeight);
             BindCmbValues(cmb_volume_unit_of_measure, dvVolume);
-        }
+        } 
         private async void FetchItemTradeType()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_TYPE);
@@ -776,6 +1061,256 @@ namespace smpc_inventory_app.Pages.Item
             AddCmbDefaultVal(CacheData.PumpCount);
 
             BindCmbValues(cmb_pump_count_compatability, CacheData.PumpCount);
+        }
+        private async void FetchValuationMethodSetup()
+        {
+            serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.VALUATIONMETHOD);
+            CacheData.ValuationMethod = await serviceSetup.GetAsDatatable();
+
+            AddCmbDefaultVal(CacheData.ValuationMethod);
+
+            BindCmbValues(cmb_valuation_method, CacheData.ValuationMethod);
+        }
+        private async void FetchWarehouse()
+        {
+            _warehouseData = await ReceivingReportService.GetWarehouseDetails();
+
+            // Convert the list to DataTable for binding
+            warehouseName = JsonHelper.ToDataTable(_warehouseData.warehouse_name);
+            warehouseArea = JsonHelper.ToDataTable(_warehouseData.warehouse_area);
+
+            LoadActiveWarehouseName();
+        }
+
+        private void LoadActiveWarehouseName()
+        {
+            if (warehouseName != null && warehouseName.Rows.Count > 0)
+            {
+                // Filter active warehouses if needed
+                // var activeWarehouses = warehouseName.AsEnumerable()
+                //     .Where(r => !r.Field<bool>("is_inactive"))
+                //     .CopyToDataTable();
+
+                cmb_warehouse.DisplayMember = "name";
+                cmb_warehouse.ValueMember = "id";
+
+                cmb_warehouse.DataSource = warehouseName;
+                cmb_warehouse.SelectedIndex = -1;
+            }
+            else
+            {
+                cmb_warehouse.DataSource = null;
+                cmb_warehouse.Text = "No warehouse";
+            }
+        }
+
+        private void SetLocationItems(ComboBox combo, IEnumerable<string> items)
+        {
+            combo.Items.Clear();
+            combo.Items.Add(BACK_ITEM);
+            combo.Items.AddRange(items.ToArray());
+            combo.DroppedDown = true;
+        }
+
+        private void GoBackOneLevel(ComboBox combo, CascadingTag tag)
+        {
+            if (!string.IsNullOrEmpty(tag.Bin))
+            {
+                tag.Bin = "";
+                LoadBins(combo, tag);
+            }
+            else if (!string.IsNullOrEmpty(tag.Level))
+            {
+                tag.Level = "";
+                LoadLevels(combo, tag);
+            }
+            else if (!string.IsNullOrEmpty(tag.Rack))
+            {
+                tag.Rack = "";
+                LoadRacks(combo, tag);
+            }
+            else if (!string.IsNullOrEmpty(tag.Area))
+            {
+                tag.Area = "";
+                LoadAreas(combo, tag);
+            }
+            else if (!string.IsNullOrEmpty(tag.Zone))
+            {
+                tag.Zone = "";
+                LoadZones(combo);
+            }
+        }
+        private void LoadZones(ComboBox combo)
+        {
+            int warehouseId = Convert.ToInt32(cmb_warehouse.SelectedValue);
+
+            var zones = warehouseArea.AsEnumerable()
+                .Where(r => r.Field<int>("warehouse_name_id") == warehouseId)
+                .Select(r => r.Field<string>("zone"))
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct();
+
+            SetLocationItems(combo, zones);
+        }
+        private void LoadAreas(ComboBox combo, CascadingTag tag)
+        {
+            int warehouseId = Convert.ToInt32(cmb_warehouse.SelectedValue);
+
+            var areas = warehouseArea.AsEnumerable()
+                .Where(r =>
+                    r.Field<int>("warehouse_name_id") == warehouseId &&
+                    r.Field<string>("zone") == tag.Zone)
+                .Select(r => r.Field<string>("area"))
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct();
+
+            SetLocationItems(combo, areas);
+        }
+        private void LoadRacks(ComboBox combo, CascadingTag tag)
+        {
+            int warehouseId = Convert.ToInt32(cmb_warehouse.SelectedValue);
+
+            var racks = warehouseArea.AsEnumerable()
+                .Where(r =>
+                    r.Field<int>("warehouse_name_id") == warehouseId &&
+                    r.Field<string>("zone") == tag.Zone &&
+                    r.Field<string>("area") == tag.Area)
+                .Select(r => r.Field<string>("rack"))
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct();
+
+            SetLocationItems(combo, racks);
+        }
+        private void LoadLevels(ComboBox combo, CascadingTag tag)
+        {
+            int warehouseId = Convert.ToInt32(cmb_warehouse.SelectedValue);
+
+            var levels = warehouseArea.AsEnumerable()
+                .Where(r =>
+                    r.Field<int>("warehouse_name_id") == warehouseId &&
+                    r.Field<string>("zone") == tag.Zone &&
+                    r.Field<string>("area") == tag.Area &&
+                    r.Field<string>("rack") == tag.Rack)
+                .Select(r => r.Field<string>("level"))
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct();
+
+            SetLocationItems(combo, levels);
+        }
+        private void LoadBins(ComboBox combo, CascadingTag tag)
+        {
+            int warehouseId = Convert.ToInt32(cmb_warehouse.SelectedValue);
+
+            var bins = warehouseArea.AsEnumerable()
+                .Where(r =>
+                    r.Field<int>("warehouse_name_id") == warehouseId &&
+                    r.Field<string>("zone") == tag.Zone &&
+                    r.Field<string>("area") == tag.Area &&
+                    r.Field<string>("rack") == tag.Rack &&
+                    r.Field<string>("level") == tag.Level)
+                .Select(r => r.Field<string>("bins"))
+                .Where(b => int.TryParse(b, out _))
+                .Select(int.Parse)
+                .Distinct()
+                .OrderBy(n => n)
+                .Select(n => n.ToString());
+
+            SetLocationItems(combo, bins);
+        }
+
+        private void cmb_warehouse_name_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if (cmb_warehouse.SelectedValue == null)
+                return;
+
+
+            int warehouseId = Convert.ToInt32(cmb_warehouse.SelectedValue);
+
+            cmb_default_zone.Items.Clear();
+            cmb_default_zone.Text = "";
+            cmb_default_zone.Tag = new CascadingTag();
+
+            var zones = warehouseArea.AsEnumerable()
+                .Where(r => r.Field<int>("warehouse_name_id") == warehouseId)
+                .Select(r => r.Field<string>("zone"))
+                .Where(z => !string.IsNullOrWhiteSpace(z))
+                .Distinct()
+                .ToArray();
+
+            cmb_default_zone.Items.AddRange(zones);
+            txt_default_bin_location.Text = "";
+        }
+        private void UpdatePath(CascadingTag tag)
+        {
+            txt_default_bin_location.Text =
+                $"{tag.Zone}-{tag.Area}-{tag.Rack}-{tag.Level}-{tag.Bin}"
+                .Trim('-')
+                .Replace("--", "-");
+        }
+        private void cmb_default_zone_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           
+            if (_isCascading)
+                return;
+
+            _isCascading = true;
+
+            try
+            {
+                ComboBox combo = (ComboBox)sender;
+                CascadingTag tag = combo.Tag as CascadingTag ?? new CascadingTag();
+                string selected = combo.Text;
+
+                if (cmb_warehouse.SelectedValue == null)
+                    return;
+
+                // 🔙 BACK handling (MUST be first)
+                if (selected == BACK_ITEM)
+                {
+                    GoBackOneLevel(combo, tag);
+                    combo.Tag = tag;
+                    UpdatePath(tag);
+                    return;
+                }
+
+                // Zone → Area
+                if (string.IsNullOrEmpty(tag.Zone))
+                {
+                    tag.Zone = selected;
+                    LoadAreas(combo, tag);
+                }
+                // Area → Rack
+                else if (string.IsNullOrEmpty(tag.Area))
+                {
+                    tag.Area = selected;
+                    LoadRacks(combo, tag);
+                }
+                // Rack → Level
+                else if (string.IsNullOrEmpty(tag.Rack))
+                {
+                    tag.Rack = selected;
+                    LoadLevels(combo, tag);
+                }
+                // Level → Bin
+                else if (string.IsNullOrEmpty(tag.Level))
+                {
+                    tag.Level = selected;
+                    LoadBins(combo, tag);
+                }
+                // Bin selected (final)
+                else
+                {
+                    tag.Bin = selected;
+                }
+
+                combo.Tag = tag;
+                UpdatePath(tag);
+            }
+            finally
+            {
+                _isCascading = false;
+            }
         }
         private void btn_next_Click(object sender, EventArgs e)
         {
@@ -849,6 +1384,17 @@ namespace smpc_inventory_app.Pages.Item
             modalSetup = new SetupModal("Material", ENUM_ENDPOINT.ITEM_MATERIAL, dt);
             DialogResult r = modalSetup.ShowDialog();
         }
+        private void btn_add_valuation_method_Click(object sender, EventArgs e)
+        {
+            DataTable dt = CacheData.ValuationMethod.Copy();
+            if (dt.Columns["select"] != null)
+            {
+                dt.Columns.Remove("select");
+            }
+
+            modalSetup = new SetupModal("Valuation Method", ENUM_ENDPOINT.VALUATIONMETHOD, dt);
+            DialogResult r = modalSetup.ShowDialog();
+        }
         public string BpiItem(string value)
         {
             string item_recieve = value.Substring(0, 1).ToUpper();
@@ -860,7 +1406,7 @@ namespace smpc_inventory_app.Pages.Item
 
             var itemName = cmb_item_name.Text;
             var tradeType = txt_trade_type.Text;
-            var itemCode = txt_item_code1.Text;
+            var itemCode = txt_item_code.Text;
             var statusTangible = cmb_item_tangibility_type.Text;
             Dictionary<string, dynamic> item = new Dictionary<string, dynamic>();
 
@@ -933,7 +1479,22 @@ namespace smpc_inventory_app.Pages.Item
         {
             foreach (var comboBox in comboBoxes)
             {
-                comboBox.SelectedIndex = 0;
+                if (comboBox.Name == "cmb_warehouse_name")
+                {
+                    comboBox.SelectedIndex = -1;
+                }
+                else
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+                    
+            }
+        }
+        private void ResetCheckboxes(params CheckBox[] checkboxes)
+        {
+            foreach (var checkBox in checkboxes)
+            {
+                checkBox.Checked = false;
             }
         }
         private void ResetPanels(params Panel[] panels)
@@ -982,6 +1543,7 @@ namespace smpc_inventory_app.Pages.Item
                 }
             }
         }
+      
         private void ClearTextBoxes(params TextBox[] textBoxes)
         {
             foreach (var textBox in textBoxes)
@@ -1035,39 +1597,14 @@ namespace smpc_inventory_app.Pages.Item
         {
             ToggleItemPages(txt_trade_type.Text, cmb_item_tangibility_type.Text);
         }
-        private void FetchItemDataGridViewChild()
+        private void DisbleAutoColumnGeneration(List<DataGridView> dgvs)
         {
-            //Fetch Additional Specs
-            DataView dataViewAdditionalSpecs = new DataView(additionalspecs);
-            if (dataViewAdditionalSpecs.Count != 0)
+            foreach (var dgv in dgvs)
             {
-                dataViewAdditionalSpecs.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-            }
-            //Fetch Item Purchasing
-            DataView dataViewPurchasing = new DataView(itempurchasing);
-
-            if (dataViewPurchasing.Count != 0)
-            {
-                dataViewPurchasing.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-                bindingSourcePurchasing.DataSource = dataViewPurchasing;
-            }
-
-            //Fetch Item Sales
-            DataView dataViewSales = new DataView(itemsales);
-            if (dataViewSales.Count != 0)
-            {
-                dataViewSales.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-                bindingSourceSales.DataSource = dataViewSales;
-            }
-
-            //Fetch Item Production
-            DataView dataViewProduction = new DataView(itemproduction);
-            if (dataViewProduction.Count != 0)
-            {
-                dataViewProduction.RowFilter = "item_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-                bindingSourceProduction.DataSource = dataViewProduction;
+                dgv.AutoGenerateColumns = false;
             }
         }
+        
         private void btn_add_supplier_Click(object sender, EventArgs e)
         {
             BusnessPartnerInfoModal modal = new BusnessPartnerInfoModal();
@@ -1161,7 +1698,7 @@ namespace smpc_inventory_app.Pages.Item
                             img_preview.SizeMode = PictureBoxSizeMode.Zoom;
 
                             string base64String = ConvertImageToBase64(image, ImageFormat.Jpeg);
-                            
+
                             if (!string.IsNullOrEmpty(base64String))
                             {
                                 if (imageId < 0)
@@ -1297,7 +1834,7 @@ namespace smpc_inventory_app.Pages.Item
                 Tag = new ImageTag { Id = imageId, Path = filePath, Filename = fileName }
 
             };
-            
+
             pictureBox.Click += PictureBox_Clicked;
             return pictureBox;
         }
@@ -1348,6 +1885,7 @@ namespace smpc_inventory_app.Pages.Item
             btn_close.Visible = isEdit;
             pnl_header.Enabled = isEdit;
             pnl_item_specs.Enabled = isEdit;
+            pnl_inventory.Enabled = isEdit;
             pnl_additional_specs.Enabled = isEdit;
             btn_upload_image.Enabled = isEdit;
             btn_replace_image.Enabled = isEdit;
@@ -1530,12 +2068,820 @@ namespace smpc_inventory_app.Pages.Item
             {
                 item_code = "0001";
             }
-            txt_item_code1.Text = "I#" + item_code;
+            txt_item_code.Text = "I#" + item_code;
         }
 
-        private void txt_item_model_TextChanged(object sender, EventArgs e)
+        private void txt_minimum_inventory_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
 
+        private void txt_maximum_inventory_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void cmb_default_zone_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Back)
+            {
+                cmb_default_zone.Text = "";
+                cmb_default_zone.Items.Clear();
+                cmb_default_zone.Items.AddRange(_zone.ToArray());
+
+                cmb_default_zone.Tag = new CascadingTag();
+                cmb_default_zone.Text = "";
+
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void cmb_default_zone_DropDown(object sender, EventArgs e)
+        {
+            if (cmb_warehouse.SelectedIndex == -1)
+            {
+                cmb_default_zone.Items.Clear();
+                cmb_default_zone.Text = string.Empty;
+
+                MessageBox.Show("Select Warehouse first.");
+                ((ComboBox)sender).DroppedDown = false;
+            }
+        }
+
+        private void txt_default_bin_location_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Back)
+            {
+                MessageBox.Show("Backspace pressed!");
+                // You can also cancel it if needed
+                // e.SuppressKeyPress = true;
+            }
+        }
+
+        private void LoadDirectory(TreeView treeView, string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // Ensure ACTIVE and BENCHED exist with subfolders
+            CreateSubDirectories(directoryPath);
+
+            // Clear tree view and add root
+            treeView.Nodes.Clear();
+            treeView.ImageKey = "folder";
+            treeView.SelectedImageKey = "folder";
+
+            TreeNode rootNode = new TreeNode(directoryPath)
+            {
+                Tag = directoryPath,
+                ImageKey = "folder",
+                SelectedImageKey = "folder"
+            };
+            treeView.Nodes.Add(rootNode);
+
+            // Add ACTIVE and BENCHED with subfolders
+            LoadManualSubDirectories(directoryPath, rootNode);
+
+            rootNode.ExpandAll();
+        }
+        private void CreateSubDirectories(string directoryPath)
+        {
+            string certificationsDir = Path.Combine(directoryPath, "CERTIFICATIONS");
+            string technicalDataSheetsDir = Path.Combine(directoryPath, "TECHNICAL DATA SHEETS");
+            string brochuresDir = Path.Combine(directoryPath, "BROCHURES");
+            string postProductionReportDir = Path.Combine(directoryPath, "POST PRODUCTION REPORT");
+
+            if (!Directory.Exists(certificationsDir)) Directory.CreateDirectory(certificationsDir);
+            if (!Directory.Exists(technicalDataSheetsDir)) Directory.CreateDirectory(technicalDataSheetsDir);
+            if (!Directory.Exists(brochuresDir)) Directory.CreateDirectory(brochuresDir);
+            if (!Directory.Exists(postProductionReportDir)) Directory.CreateDirectory(postProductionReportDir);
+        }
+
+        private void LoadManualSubDirectories(string path, TreeNode parentNode)
+        {
+            string currentItemId = txt_id.Text;
+            string itemSuffix = $"_RR{currentItemId}";
+
+            foreach (var category in new[] { "CERTIFICATIONS", "TECHNICAL DATA SHEETS", "BROCHURES", "POST PRODUCTION REPORT" })
+            {
+                string categoryPath = Path.Combine(path, category);
+                TreeNode categoryNode = new TreeNode(category)
+                {
+                    Tag = categoryPath,
+                    ImageKey = "folder",
+                    SelectedImageKey = "folder"
+                };
+                parentNode.Nodes.Add(categoryNode);
+
+                foreach (var subFolder in Directory.GetDirectories(categoryPath))
+                {
+                    string folderName = Path.GetFileName(subFolder);
+
+                    // Always show system folders
+                    if (systemFolders.Contains(folderName))
+                    {
+                        TreeNode sysNode = new TreeNode(folderName)
+                        {
+                            Tag = subFolder,
+                            ImageKey = "folder",
+                            SelectedImageKey = "folder"
+                        };
+                        categoryNode.Nodes.Add(sysNode);
+
+                        // Use recursive loader
+                        LoadSubDirectoriesRecursive(sysNode, subFolder, itemSuffix);
+
+                        continue;
+                    }
+
+                    if (!string.IsNullOrEmpty(currentItemId) && !folderName.EndsWith(itemSuffix, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    TreeNode subNode = new TreeNode(folderName)
+                    {
+                        Tag = subFolder,
+                        ImageKey = "folder",
+                        SelectedImageKey = "folder"
+                    };
+                    categoryNode.Nodes.Add(subNode);
+                }
+            }
+        }
+
+        private void LoadSubDirectoriesRecursive(TreeNode parentNode, string parentPath, string itemSuffix)
+        {
+            foreach (var dir in Directory.GetDirectories(parentPath))
+            {
+                string folderName = Path.GetFileName(dir);
+
+                if (!string.IsNullOrEmpty(itemSuffix) &&
+                    !folderName.EndsWith(itemSuffix, StringComparison.OrdinalIgnoreCase) &&
+                    !systemFolders.Contains(folderName)) // system folders always show
+                {
+                    continue;
+                }
+
+                TreeNode newNode = new TreeNode(folderName)
+                {
+                    Tag = dir,
+                    ImageKey = "folder",
+                    SelectedImageKey = "folder"
+                };
+
+                parentNode.Nodes.Add(newNode);
+
+                //Recursive call to load subfolders inside this folder
+                LoadSubDirectoriesRecursive(newNode, dir, itemSuffix);
+            }
+        }
+
+        // Drag and drop event handlers
+        private void ITEM_LV_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void ITEM_LV_DragDrop(object sender, DragEventArgs e)
+        {
+            if (ITEM_TV.SelectedNode == null)
+            {
+                MessageBox.Show("Please select a folder first to upload files.", "Info",
+                               MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            string targetFolder = ITEM_TV.SelectedNode.Tag?.ToString();
+
+            if (!string.IsNullOrEmpty(targetFolder) && Directory.Exists(targetFolder))
+            {
+                UploadFiles(files, targetFolder);
+            }
+        }
+
+        private void InitializeListViewContextMenu()
+        {
+            ContextMenuStrip lvContextMenu = new ContextMenuStrip();
+
+            ToolStripMenuItem renameFileItem = new ToolStripMenuItem("Rename File");
+            renameFileItem.Click += RenameFileItem_Click;
+
+            ToolStripMenuItem deleteFileItem = new ToolStripMenuItem("Delete File");
+            deleteFileItem.Click += DeleteFileItem_Click;
+
+            lvContextMenu.Items.Add(renameFileItem);
+            lvContextMenu.Items.Add(deleteFileItem);
+
+            ITEM_LV.ContextMenuStrip = lvContextMenu;
+        }
+
+        private void DeleteFileItem_Click(object sender, EventArgs e)
+        {
+            if (ITEM_LV.SelectedItems.Count == 0 || ITEM_LV.SelectedItems[0].Text == "No files found")
+                return;
+
+            string currentFile = Path.Combine(GetCurrentDirectory(), ITEM_LV.SelectedItems[0].Text);
+
+            if (!File.Exists(currentFile)) return;
+
+            var result = MessageBox.Show($"Are you sure you want to delete the file '{Path.GetFileName(currentFile)}'?",
+                                         "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    File.Delete(currentFile);
+
+                    // Refresh the ListView
+                    LoadFiles(GetCurrentDirectory());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error deleting file: {ex.Message}", "Error",
+                                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private string GetCurrentDirectory()
+        {
+            if (ITEM_TV.SelectedNode != null)
+            {
+                return ITEM_TV.SelectedNode.Tag?.ToString() ?? string.Empty;
+            }
+            return string.Empty;
+        }
+
+        // InputDialog class for getting user input
+        private class InputDialog : Form
+        {
+            private TextBox textBox;
+            private Button okButton;
+            private Button cancelButton;
+
+            public string InputText => textBox.Text;
+
+            public InputDialog(string title, string prompt, string defaultValue = "")
+            {
+                InitializeComponents(title, prompt, defaultValue);
+            }
+
+            private void InitializeComponents(string title, string prompt, string defaultValue)
+            {
+                this.Text = title;
+                this.Size = new Size(300, 150);
+                this.FormBorderStyle = FormBorderStyle.FixedDialog;
+                this.StartPosition = FormStartPosition.CenterParent;
+                this.MaximizeBox = false;
+                this.MinimizeBox = false;
+
+                Label promptLabel = new Label
+                {
+                    Text = prompt,
+                    Location = new Point(10, 10),
+                    Size = new Size(260, 20)
+                };
+
+                textBox = new TextBox
+                {
+                    Text = defaultValue,
+                    Location = new Point(10, 40),
+                    Size = new Size(260, 20)
+                };
+
+                okButton = new Button
+                {
+                    Text = "OK",
+                    DialogResult = DialogResult.OK,
+                    Location = new Point(100, 70),
+                    Size = new Size(75, 25)
+                };
+
+                cancelButton = new Button
+                {
+                    Text = "Cancel",
+                    DialogResult = DialogResult.Cancel,
+                    Location = new Point(180, 70),
+                    Size = new Size(75, 25)
+                };
+
+                this.Controls.Add(promptLabel);
+                this.Controls.Add(textBox);
+                this.Controls.Add(okButton);
+                this.Controls.Add(cancelButton);
+
+                this.AcceptButton = okButton;
+                this.CancelButton = cancelButton;
+            }
+        }
+
+        private void RenameFileItem_Click(object sender, EventArgs e)
+        {
+            if (ITEM_LV.SelectedItems.Count == 0 || ITEM_LV.SelectedItems[0].Text == "No files found")
+                return;
+
+            string currentFile = Path.Combine(GetCurrentDirectory(), ITEM_LV.SelectedItems[0].Text);
+
+            if (!File.Exists(currentFile)) return;
+
+            string currentFileName = Path.GetFileName(currentFile);
+            string nameWithoutExt = Path.GetFileNameWithoutExtension(currentFileName);
+            string extension = Path.GetExtension(currentFileName);
+
+            string itemCode = txt_item_code.Text;
+            string itemSuffix = $"_{itemCode}"; // Display item code
+
+            if (!nameWithoutExt.EndsWith(itemSuffix, StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("This file is not associated with the current Item and cannot be renamed.",
+                                "Rename Not Allowed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string nameWithoutSuffix = nameWithoutExt.Substring(0, nameWithoutExt.Length - itemSuffix.Length);
+
+            using (var dialog = new InputDialog("Rename File", "Enter new file name:", nameWithoutSuffix))
+            {
+                if (dialog.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.InputText))
+                {
+                    string newFileNameWithoutSuffix = dialog.InputText.Trim();
+                    string newFileName = $"{newFileNameWithoutSuffix}{itemSuffix}{extension}"; 
+                    string newFilePath = Path.Combine(GetCurrentDirectory(), newFileName);
+
+                    try
+                    {
+                        File.Move(currentFile, newFilePath);
+
+                        // Refresh the ListView
+                        LoadFiles(GetCurrentDirectory());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error renaming file: {ex.Message}", "Error",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void UploadFiles(string[] files, string targetFolder)
+        {
+            try
+            {
+                int successCount = 0;
+                int errorCount = 0;
+                string itemCode = txt_item_code.Text;
+
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        if (File.Exists(file))
+                        {
+                            string originalFileName = Path.GetFileName(file);
+                            string nameWithoutExt = Path.GetFileNameWithoutExtension(originalFileName);
+                            string extension = Path.GetExtension(originalFileName);
+
+                            string newFileName = $"{nameWithoutExt}{itemCode}{extension}";
+
+                            string destinationPath = Path.Combine(targetFolder, newFileName);
+
+                            // If file exists, ask to overwrite or rename
+                            if (File.Exists(destinationPath))
+                            {
+                                var result = MessageBox.Show($"File '{newFileName}' already exists. Overwrite?",
+                                                           "File Exists",
+                                                           MessageBoxButtons.YesNoCancel,
+                                                           MessageBoxIcon.Question);
+
+                                if (result == DialogResult.No)
+                                {
+                                    // Add timestamp to filename
+                                    newFileName = $"{nameWithoutExt}_{DateTime.Now:yyyyMMddHHmmss}_{itemCode}{extension}";
+                                    destinationPath = Path.Combine(targetFolder, newFileName);
+                                }
+                                else if (result == DialogResult.Cancel)
+                                {
+                                    continue;
+                                }
+                            }
+
+                            File.Copy(file, destinationPath, true);
+                            successCount++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        errorCount++;
+                        Console.WriteLine($"Error uploading {file}: {ex.Message}");
+                    }
+                }
+
+                // Refresh the file list
+                LoadFiles(targetFolder);
+
+                MessageBox.Show($"Files uploaded successfully: {successCount}\nFailed: {errorCount}",
+                              "Upload Complete",
+                              MessageBoxButtons.OK,
+                              successCount > 0 ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error uploading files: {ex.Message}", "Error",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LoadFiles(string path)
+        {
+            try
+            {
+                ITEM_LV.Items.Clear();
+
+                // Configure ListView for better appearance
+                ITEM_LV.View = View.Details;
+                ITEM_LV.FullRowSelect = true;
+                ITEM_LV.GridLines = false;
+                ITEM_LV.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+
+                // Ensure columns exist and are properly sized
+                if (ITEM_LV.Columns.Count == 0)
+                {
+                    ITEM_LV.Columns.Add("File Name", 250);
+                    ITEM_LV.Columns.Add("Size", 80);
+                    ITEM_LV.Columns.Add("Modified", 120);
+                    ITEM_LV.Columns.Add("Type", 100);
+                }
+
+                if (Directory.Exists(path))
+                {
+                    // Get all files and sort by name
+                    var files = Directory.GetFiles(path)
+                                        .OrderBy(f => Path.GetFileName(f))
+                                        .ToArray();
+
+                    string currentItemCode = txt_item_code.Text;
+                    string rrSuffix = $"_{currentItemCode}"; 
+
+                    foreach (var file in files)
+                    {
+                        FileInfo fi = new FileInfo(file);
+                        string fileName = fi.Name;
+                        string nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
+
+                        if (!string.IsNullOrEmpty(currentItemCode) &&
+                            !nameWithoutExt.EndsWith(rrSuffix, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        ListViewItem item = new ListViewItem(fileName);
+
+                        // Format file size with appropriate units
+                        string fileSize = FormatFileSize(fi.Length);
+
+                        // Format date in a more readable format
+                        string modifiedDate = fi.LastWriteTime.ToString("MMM dd, yyyy hh:mm tt");
+
+                        // Get file type/extension
+                        string fileType = fi.Extension.ToUpper().TrimStart('.');
+                        if (string.IsNullOrEmpty(fileType)) fileType = "File";
+
+                        item.SubItems.Add(fileSize);
+                        item.SubItems.Add(modifiedDate);
+                        item.SubItems.Add(fileType);
+
+                        // Set appropriate icon based on file type
+                        SetFileIcon(item, fi.Extension);
+
+                        ITEM_LV.Items.Add(item);
+                    }
+
+                    // Show message if no files found
+                    if (ITEM_LV.Items.Count == 0)
+                    {
+                        ListViewItem emptyItem = new ListViewItem("No files found");
+                        emptyItem.SubItems.Add("");
+                        emptyItem.SubItems.Add("");
+                        emptyItem.SubItems.Add("");
+                        ITEM_LV.Items.Add(emptyItem);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading files: {ex.Message}", "Error",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string FormatFileSize(long bytes)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB" };
+            int order = 0;
+            double len = bytes;
+
+            while (len >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                len = len / 1024;
+            }
+
+            return $"{len:0.##} {sizes[order]}";
+        }
+
+        private void SetFileIcon(ListViewItem item, string extension)
+        {
+            // You can expand this method to set different icons based on file type
+            // For now, using a simple approach - you might want to use ImageList with icons
+
+            switch (extension.ToLower())
+            {
+                case ".pdf":
+                    item.ImageKey = "pdf";
+                    break;
+                case ".doc":
+                case ".docx":
+                    item.ImageKey = "word";
+                    break;
+                case ".xls":
+                case ".xlsx":
+                    item.ImageKey = "excel";
+                    break;
+                case ".jpg":
+                case ".jpeg":
+                case ".png":
+                case ".gif":
+                    item.ImageKey = "image";
+                    break;
+                default:
+                    item.ImageKey = "file";
+                    break;
+            }
+        }
+
+        private void InitializeContextMenu()
+        {
+            // Create context menu items
+            ToolStripMenuItem addFolderItem = new ToolStripMenuItem("Add Folder");
+            ToolStripMenuItem renameItem = new ToolStripMenuItem("Rename");
+            ToolStripMenuItem deleteItem = new ToolStripMenuItem("Delete");
+            ToolStripSeparator separator = new ToolStripSeparator();
+
+            // Add click events
+            addFolderItem.Click += AddFolderItem_Click;
+            renameItem.Click += RenameItem_Click;
+            deleteItem.Click += DeleteItem_Click;
+
+            // Add items to context menu
+            treeViewContextMenu.Items.AddRange(new ToolStripItem[] {
+                addFolderItem,
+                separator,
+                renameItem,
+                deleteItem
+            });
+
+            // Assign context menu to TreeView
+            ITEM_TV.ContextMenuStrip = treeViewContextMenu;
+        }
+
+        private void AddFolderItem_Click(object sender, EventArgs e)
+        {
+            if (selectedNode == null) return;
+
+            string parentPath = selectedNode.Tag?.ToString();
+            if (string.IsNullOrEmpty(parentPath)) return;
+
+            using (var dialog = new InputDialog("Add New Folder", "Enter folder name:"))
+            {
+                if (dialog.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.InputText))
+                {
+                    string newFolderName = dialog.InputText.Trim();
+
+                    string itemCode = txt_item_code.Text;
+                    newFolderName = $"{newFolderName}_{itemCode}"; 
+
+                    string newFolderPath = Path.Combine(parentPath, newFolderName);
+
+                    try
+                    {
+                        Directory.CreateDirectory(newFolderPath);
+
+                        TreeNode newNode = new TreeNode(newFolderName)
+                        {
+                            Tag = newFolderPath,
+                            ImageKey = "folder",
+                            SelectedImageKey = "folder"
+                        };
+                        selectedNode.Nodes.Add(newNode);
+                        selectedNode.Expand();
+
+                        ITEM_TV.SelectedNode = newNode;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error creating folder: {ex.Message}", "Error",
+                                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void RenameItem_Click(object sender, EventArgs e)
+        {
+            if (selectedNode == null || selectedNode.Parent == null) return;
+
+            string currentPath = selectedNode.Tag?.ToString();
+            if (string.IsNullOrEmpty(currentPath)) return;
+
+            string currentFolderName = Path.GetFileName(currentPath);
+
+            string currentItemCode = txt_item_code.Text;
+            string itemSuffix = $"_{currentItemCode}"; 
+
+            // If folder doesn't have suffix, do not allow renaming
+            if (!currentFolderName.EndsWith(itemSuffix, StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("This folder is not associated with the current Item and cannot be renamed.",
+                                "Rename Not Allowed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Ask user for new name (excluding suffix)
+            string nameWithoutSuffix = currentFolderName.Substring(0, currentFolderName.Length - itemSuffix.Length);
+
+            using (var dialog = new InputDialog("Rename Folder", "Enter new folder name:", nameWithoutSuffix))
+            {
+                if (dialog.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.InputText))
+                {
+                    string newFolderNameWithoutSuffix = dialog.InputText.Trim();
+                    string newFolderName = $"{newFolderNameWithoutSuffix}{itemSuffix}"; // Changed from {rrPrefix}{newFolderNameWithoutPrefix}
+
+                    string parentDirectory = Path.GetDirectoryName(currentPath);
+                    string newFolderPath = Path.Combine(parentDirectory, newFolderName);
+
+                    try
+                    {
+                        // Rename directory
+                        Directory.Move(currentPath, newFolderPath);
+
+                        // Update TreeView
+                        selectedNode.Text = newFolderName;
+                        selectedNode.Tag = newFolderPath;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error renaming folder: {ex.Message}", "Error",
+                                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void DeleteItem_Click(object sender, EventArgs e)
+        {
+            if (selectedNode == null || selectedNode.Parent == null) return;
+
+            string folderPath = selectedNode.Tag?.ToString();
+            if (string.IsNullOrEmpty(folderPath)) return;
+
+            var result = MessageBox.Show($"Are you sure you want to delete the folder '{selectedNode.Text}'?",
+                                       "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    // Delete directory (recursively)
+                    Directory.Delete(folderPath, true);
+
+                    // Remove from TreeView
+                    selectedNode.Remove();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error deleting folder: {ex.Message}", "Error",
+                                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void ITEM_TV_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            // Check if the node has children (means it's a parent node)
+            if (e.Node.Nodes.Count > 0)
+            {
+                // Parent node → show panel
+                pnl_Receiving.Visible = true;
+            }
+            else
+            {
+                // Child node → hide panel
+                pnl_Receiving.Visible = false;
+            }
+
+            string path = GetFullPath(e.Node);
+            LoadFiles(path);
+        }
+
+        private string GetFullPath(TreeNode node)
+        {
+            if (node.Parent == null) return node.Text;
+            return Path.Combine(GetFullPath(node.Parent), node.Text);
+        }
+
+        private bool IsSystemFolder(TreeNode node)
+        {
+            // Check if this is one of the predefined system folders
+            string[] systemFolders = { "DELIVERY RECEIPT", "ITEM PICTURES" };
+            return systemFolders.Contains(node.Text);
+        }
+
+        private void ITEM_TV_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Select the node under the mouse pointer
+                selectedNode = ITEM_TV.GetNodeAt(e.X, e.Y);
+                if (selectedNode != null)
+                {
+                    ITEM_TV.SelectedNode = selectedNode;
+
+                    // Enable/disable menu items based on node type
+                    bool isRoot = selectedNode.Parent == null;
+                    bool isCategory = selectedNode.Text == "ACTIVE" || selectedNode.Text == "BENCHED";
+                    bool isSystemFolder = IsSystemFolder(selectedNode);
+
+                    treeViewContextMenu.Items[0].Enabled = !isRoot; // Add Folder
+                    treeViewContextMenu.Items[2].Enabled = !isRoot && !isCategory && !isSystemFolder; // Rename
+                    treeViewContextMenu.Items[3].Enabled = !isRoot && !isCategory && !isSystemFolder; // Delete
+                }
+            }
+        }
+
+        private void ITEM_TV_DoubleClick(object sender, EventArgs e)
+        {
+            if (ITEM_LV.SelectedItems.Count > 0 && ITEM_LV.SelectedItems[0].Text != "No files found")
+            {
+                string selectedFile = Path.Combine(GetCurrentDirectory(), ITEM_LV.SelectedItems[0].Text);
+                try
+                {
+                    System.Diagnostics.Process.Start(selectedFile);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error opening file: {ex.Message}", "Error",
+                                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void ITEM_LV_MouseEnter(object sender, EventArgs e)
+        {
+            if (ITEM_TV.SelectedNode != null)
+            {
+                toolTip1.SetToolTip(ITEM_LV, "Drag and drop files here to upload to the selected folder");
+            }
+            else
+            {
+                toolTip1.SetToolTip(ITEM_LV, "Select a folder first to upload files");
+            }
+        }
+
+        private void btnUpload_Click(object sender, EventArgs e)
+        {
+            if (ITEM_TV.SelectedNode == null)
+            {
+                MessageBox.Show("Please select a folder first to upload files.", "Info",
+                               MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Multiselect = true;
+                openFileDialog.Title = "Select files to upload";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string targetFolder = ITEM_TV.SelectedNode.Tag?.ToString();
+                    if (!string.IsNullOrEmpty(targetFolder) && Directory.Exists(targetFolder))
+                    {
+                        UploadFiles(openFileDialog.FileNames, targetFolder);
+                    }
+                }
+            }
         }
     }
 }

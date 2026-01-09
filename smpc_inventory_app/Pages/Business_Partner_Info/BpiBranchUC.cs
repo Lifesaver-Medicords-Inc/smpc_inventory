@@ -18,6 +18,7 @@ using smpc_sales_app.Pages;
 using System.IO;
 using smpc_inventory_app.Pages.Business_Partner_Info.Bpi_Modal;
 using smpc_inventory_app.Model;
+using System.Diagnostics;
 
 namespace smpc_inventory_app.Pages.Business_Partner_Info
 {
@@ -331,6 +332,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         private void BindDataToTable()
         {
+            List<DataGridView> DgvList = new List<DataGridView>()
+            {
+                dg_contacts,
+                dg_address,
+                dg_finance_pending,
+                dg_items,
+                dg_accreditations,
+                dg_history
+            };
+
+            DisbleAutoColumnGeneration(DgvList);
             string parentId = ParentId;
 
             // ---- Contacts ----
@@ -351,8 +363,15 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 int positionValue = Convert.ToInt32(contactRow["position"]);
             }
-
+            Debug.WriteLine($"Before binding: {dg_contacts.AutoGenerateColumns}");
+            
             dataBindingContacts.DataSource = filteredContacts;
+            Debug.WriteLine($"After binding: {dg_contacts.AutoGenerateColumns}");
+
+            foreach (DataGridViewColumn col in dg_contacts.Columns)
+            {
+                Debug.WriteLine($"{col.Index} | Name={col.Name} | DataProperty={col.DataPropertyName} | Visible={col.Visible}");
+            }
 
             // ---- Address ----
             var addressView = new DataView(address)
@@ -1994,6 +2013,78 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // Make sure the panel is visible
             lblOwnedByOtherSales.Visible = true;
         }
+        private void DisbleAutoColumnGeneration(List<DataGridView> dgvs)
+        {
+            foreach (var dgv in dgvs)
+            {
+                dgv.AutoGenerateColumns = false;
+            }
+        }
 
+        
+        private void HideSystemColumns(DataGridView dgv, string tab)
+        {
+            string[] hidden = GetHiddenColumns(tab);
+
+            foreach (DataGridViewColumn col in dgv.Columns)
+            {
+                if (!string.IsNullOrEmpty(col.DataPropertyName))
+                    col.Visible = !hidden.Contains(col.DataPropertyName);
+            }
+        }
+
+        private string[] GetHiddenColumns(string tab)
+        {
+            if (tab == "contacts")
+                return new[] { "contacts_id", "contacts_based_id", "branch_id" };
+
+            if (tab == "address")
+                return new[] { "address_ids", "address_based_id", "address_branch_id", "address_is_deleted" };
+
+            if (tab == "items")
+                return new[] { "item_id", "bpi_item_id", "bpi_item_based_id", "bpi_item_branch_id", "item_is_deleted" };
+
+            if (tab == "accreditation")
+                return new[]
+                {
+                    "bpi_accreditation_id",
+                    "bpi_accreditation_based_id",
+                    "bpi_accreditation_branch_id",
+                    "accreditation_added_by_id"
+                };
+            if (tab == "history")
+                return new[] { "edit_history_id", "branch_id", "actions" };
+
+            // default
+            return new string[0];
+        }
+        private void dg_contacts_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            HideSystemColumns((DataGridView)sender, "contacts");
+        }
+        private void dg_address_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            HideSystemColumns((DataGridView)sender, "address");
+        }
+
+        private void dg_finance_transactions_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            //HideSystemColumns((DataGridView)sender, "items");
+        }
+
+        private void dg_accreditations_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            HideSystemColumns((DataGridView)sender, "accreditation");
+        }
+
+        private void dg_items_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            HideSystemColumns((DataGridView)sender, "items");
+        }
+
+        private void dg_history_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            HideSystemColumns((DataGridView)sender, "history");
+        }
     }
 }

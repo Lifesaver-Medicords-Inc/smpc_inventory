@@ -102,6 +102,24 @@
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.16.0.18925.20022\lib\net40\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Design, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.314.76\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.WebView2.Core, Version=1.0.3537.50, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.WebView2.1.0.3537.50\lib\net462\Microsoft.Web.WebView2.Core.dll</HintPath>
     </Reference>
@@ -435,11 +453,18 @@
     <Compile Include="Pages\Purchasing\PurchaseList\SOPurchaseItemCard.Designer.cs">
       <DependentUpon>SOPurchaseItemCard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Purchasing\PurchaseOrder\PurchaseOrder.cs">
+    <Compile Include="Pages\Purchasing\PurchaseOrder\frm_PurchaseOrder.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Pages\Purchasing\PurchaseOrder\PurchaseOrder.Designer.cs">
-      <DependentUpon>PurchaseOrder.cs</DependentUpon>
+    <Compile Include="Pages\Purchasing\PurchaseOrder\frm_PurchaseOrder.Designer.cs">
+      <DependentUpon>frm_PurchaseOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseOrder\PrintPreviewForm.cs" />
+    <Compile Include="Pages\Purchasing\PurchaseOrder\PurchasingPrintModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseOrder\PurchasingPrintModal.Designer.cs">
+      <DependentUpon>PurchasingPrintModal.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Purchasing\Redbox\PurchaseRequisitionCard.cs">
       <SubType>UserControl</SubType>
@@ -609,11 +634,29 @@
     <Compile Include="Pages\Setup\TradeTypeSelectionModal.Designer.cs">
       <DependentUpon>TradeTypeSelectionModal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Shared\AttachmentUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Shared\AttachmentUC.Designer.cs">
+      <DependentUpon>AttachmentUC.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Shared\LoaderIdicatorOverlay.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Pages\Shared\LoaderIdicatorOverlay.Designer.cs">
       <DependentUpon>LoaderIdicatorOverlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Shared\PrintDocumentUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Shared\PrintDocumentUC.Designer.cs">
+      <DependentUpon>PrintDocumentUC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Shared\PrintPreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Shared\PrintPreview.Designer.cs">
+      <DependentUpon>PrintPreview.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Shared\SetupPageUC.cs">
       <SubType>UserControl</SubType>
@@ -627,6 +670,10 @@
     <Compile Include="Pages\WebSocketForm.Designer.cs">
       <DependentUpon>WebSocketForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Printing\Core\BasePrintableDocument .cs" />
+    <Compile Include="Printing\Core\IPrintableDocument.cs" />
+    <Compile Include="Printing\Core\IReportProvider.cs" />
+    <Compile Include="Printing\PurchaseOrderReportProvider .cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Auth\AuthServices.cs" />
@@ -670,6 +717,7 @@
     <Compile Include="Services\Setup\Model\Bpi\ItemBpiList.cs" />
     <Compile Include="Services\Setup\Model\EntityModel.cs" />
     <Compile Include="Services\Setup\Model\Item\AdditionalSpecsModel.cs" />
+    <Compile Include="Services\Setup\Model\Item\ItemInventoryModel.cs" />
     <Compile Include="Services\Setup\Model\Purchasing\PurchaseOrderListModel.cs" />
     <Compile Include="Services\Setup\Model\Purchasing\ReceivingReportModel.cs" />
     <Compile Include="Services\Setup\Model\Warehouse\WarehouseAddress.cs" />
@@ -722,6 +770,7 @@
     <Compile Include="Services\Setup\Warehouse\WarehouseAreaServices.cs" />
     <Compile Include="Services\Setup\Warehouse\WarehouseNameServices.cs" />
     <Compile Include="Services\Setup\Warehouse\WarehouseUsetypeServices.cs" />
+    <Compile Include="SqlServerTypes\Loader.cs" />
     <EmbeddedResource Include="Pages\Business_Partner_Info\BpiBranchUC.resx">
       <DependentUpon>BpiBranchUC.cs</DependentUpon>
     </EmbeddedResource>
@@ -843,8 +892,11 @@
     <EmbeddedResource Include="Pages\Purchasing\PurchaseList\SOPurchaseItemCard.resx">
       <DependentUpon>SOPurchaseItemCard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Pages\Purchasing\PurchaseOrder\PurchaseOrder.resx">
-      <DependentUpon>PurchaseOrder.cs</DependentUpon>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseOrder\frm_PurchaseOrder.resx">
+      <DependentUpon>frm_PurchaseOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseOrder\PurchasingPrintModal.resx">
+      <DependentUpon>PurchasingPrintModal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Purchasing\Redbox\PurchaseRequisitionCard.resx">
       <DependentUpon>PurchaseRequisitionCard.cs</DependentUpon>
@@ -930,8 +982,17 @@
     <EmbeddedResource Include="Pages\Setup\TradeTypeSelectionModal.resx">
       <DependentUpon>TradeTypeSelectionModal.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Shared\AttachmentUC.resx">
+      <DependentUpon>AttachmentUC.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pages\Shared\LoaderIdicatorOverlay.resx">
       <DependentUpon>LoaderIdicatorOverlay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Shared\PrintDocumentUC.resx">
+      <DependentUpon>PrintDocumentUC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Shared\PrintPreview.resx">
+      <DependentUpon>PrintPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Shared\SetupPageUC.resx">
       <DependentUpon>SetupPageUC.cs</DependentUpon>
@@ -939,6 +1000,8 @@
     <EmbeddedResource Include="Pages\WebSocketForm.resx">
       <DependentUpon>WebSocketForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Printing\PurchaseOrderReport.rdlc" />
+    <EmbeddedResource Include="Printing\ReporTemplate.rdlc" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -950,6 +1013,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\smpc_inventory_app.Services.Setup.Model.Purchasing.PurchaseOrderDetailsModel.datasource" />
+    <None Include="Properties\DataSources\smpc_inventory_app.Services.Setup.Model.Purchasing.PurchaseOrders.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -964,6 +1029,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="SqlServerTypes\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\line-chart.png" />
     <None Include="Resources\spinner.png" />
     <None Include="Resources\word.png" />
@@ -993,6 +1071,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.3537.50\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.3537.50\build\Microsoft.Web.WebView2.targets')" />

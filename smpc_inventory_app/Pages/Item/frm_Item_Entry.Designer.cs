@@ -38,9 +38,9 @@
             this.btn_edit = new System.Windows.Forms.ToolStripButton();
             this.btn_delete = new System.Windows.Forms.ToolStripButton();
             this.btn_save = new System.Windows.Forms.ToolStripButton();
-            this.btn_prev = new System.Windows.Forms.ToolStripButton();
             this.btn_close = new System.Windows.Forms.ToolStripButton();
             this.btn_next = new System.Windows.Forms.ToolStripButton();
+            this.btn_prev = new System.Windows.Forms.ToolStripButton();
             this.pnl_footer = new System.Windows.Forms.Panel();
             this.pnl_child = new System.Windows.Forms.Panel();
             this.tabcontrol1 = new System.Windows.Forms.TabControl();
@@ -109,20 +109,20 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.dgv_canvass_sheet = new System.Windows.Forms.DataGridView();
             this.canvass_sheet = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel22 = new System.Windows.Forms.Panel();
             this.btn_add_supplier = new System.Windows.Forms.Button();
             this.panel7 = new System.Windows.Forms.Panel();
-            this.dg_purchasing = new System.Windows.Forms.DataGridView();
-            this.line_no = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgv_purchasing = new System.Windows.Forms.DataGridView();
             this.suppliernameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_type_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.validity_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column19 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.line_no = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bindingSourcePurchasing = new System.Windows.Forms.BindingSource(this.components);
             this.ds_purchasing = new System.Data.DataSet();
             this.dt_purchasing = new System.Data.DataTable();
@@ -135,15 +135,14 @@
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.tab_sales = new System.Windows.Forms.TabPage();
             this.pnl_sales = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
             this.dgv_sales = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.customernameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.salesordernoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.salesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.bindingSourceSales = new System.Windows.Forms.BindingSource(this.components);
             this.ds_sales = new System.Data.DataSet();
@@ -156,46 +155,62 @@
             this.label20 = new System.Windows.Forms.Label();
             this.tab_inventory = new System.Windows.Forms.TabPage();
             this.pnl_inventory = new System.Windows.Forms.Panel();
+            this.pnl_body = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.txt_default_bin_location = new System.Windows.Forms.TextBox();
+            this.txt_item_inventory_id = new System.Windows.Forms.TextBox();
+            this.txt_item_inventory_based_id = new System.Windows.Forms.TextBox();
+            this.cmb_default_zone = new System.Windows.Forms.ComboBox();
+            this.cmb_storage_type = new System.Windows.Forms.ComboBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.cmb_warehouse = new System.Windows.Forms.ComboBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.btn_add_valuation_method = new System.Windows.Forms.Button();
+            this.label26 = new System.Windows.Forms.Label();
+            this.cmb_valuation_method = new System.Windows.Forms.ComboBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.chk_special_item = new System.Windows.Forms.CheckBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.chk_fast_item = new System.Windows.Forms.CheckBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.txt_maximum_inventory = new System.Windows.Forms.TextBox();
+            this.txt_minimum_inventory = new System.Windows.Forms.TextBox();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.panel9 = new System.Windows.Forms.Panel();
-            this.panel13 = new System.Windows.Forms.Panel();
-            this.panel19 = new System.Windows.Forms.Panel();
-            this.dataGridView6 = new System.Windows.Forms.DataGridView();
+            this.dgv_available_inventory = new System.Windows.Forms.DataGridView();
+            this.warehousenameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.locationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.itemidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.stockqtyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.stockuomDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tblavailableinvBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.bindingSourceInventory = new System.Windows.Forms.BindingSource(this.components);
+            this.ds_inventory = new System.Data.DataSet();
+            this.dataTable3 = new System.Data.DataTable();
+            this.dataColumn10 = new System.Data.DataColumn();
+            this.dataColumn11 = new System.Data.DataColumn();
+            this.dataColumn12 = new System.Data.DataColumn();
+            this.dataColumn13 = new System.Data.DataColumn();
+            this.dataColumn14 = new System.Data.DataColumn();
+            this.dataColumn15 = new System.Data.DataColumn();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.dgv_released_stock = new System.Windows.Forms.DataGridView();
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel18 = new System.Windows.Forms.Panel();
-            this.label31 = new System.Windows.Forms.Label();
-            this.panel14 = new System.Windows.Forms.Panel();
-            this.panel17 = new System.Windows.Forms.Panel();
-            this.dataGridView5 = new System.Windows.Forms.DataGridView();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RESERVED = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel16 = new System.Windows.Forms.Panel();
-            this.label30 = new System.Windows.Forms.Label();
-            this.panel15 = new System.Windows.Forms.Panel();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.label21 = new System.Windows.Forms.Label();
             this.tab_production = new System.Windows.Forms.TabPage();
             this.pnl_production = new System.Windows.Forms.Panel();
             this.panel10 = new System.Windows.Forms.Panel();
-            this.dataGridView8 = new System.Windows.Forms.DataGridView();
+            this.dgv_production_request = new System.Windows.Forms.DataGridView();
             this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -206,7 +221,7 @@
             this.label33 = new System.Windows.Forms.Label();
             this.panel11 = new System.Windows.Forms.Panel();
             this.panel21 = new System.Windows.Forms.Panel();
-            this.dataGridView7 = new System.Windows.Forms.DataGridView();
+            this.dgv_bom = new System.Windows.Forms.DataGridView();
             this.itemcodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bomqtyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -218,25 +233,32 @@
             this.bom_id = new System.Data.DataColumn();
             this.panel12 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.label32 = new System.Windows.Forms.Label();
             this.tab_attachments = new System.Windows.Forms.TabPage();
             this.pnl_attachments = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.pnl_Receiving = new System.Windows.Forms.Panel();
+            this.label43 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnUpload = new System.Windows.Forms.Button();
+            this.ITEM_LV = new System.Windows.Forms.ListView();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.TV1_preview = new System.Windows.Forms.Panel();
+            this.label45 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.ITEM_TV = new System.Windows.Forms.TreeView();
             this.salesBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.table1BindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.txt_item_code1 = new System.Windows.Forms.TextBox();
+            this.txt_item_code = new System.Windows.Forms.TextBox();
             this.chk_is_stop_selling = new System.Windows.Forms.CheckBox();
             this.cmb_item_class = new System.Windows.Forms.ComboBox();
             this.cmb_item_brand = new System.Windows.Forms.ComboBox();
             this.cmb_unit_of_measure = new System.Windows.Forms.ComboBox();
-            this.btn_add_class = new System.Windows.Forms.Button();
-            this.btn_add_name = new System.Windows.Forms.Button();
-            this.btn_add_brand = new System.Windows.Forms.Button();
-            this.btn_add_oum = new System.Windows.Forms.Button();
             this.label34 = new System.Windows.Forms.Label();
             this.txt_id = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
@@ -251,6 +273,12 @@
             this.cmb_item_name = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.pnl_header = new System.Windows.Forms.Panel();
+            this.btn_add_oum = new System.Windows.Forms.Button();
+            this.btn_add_brand = new System.Windows.Forms.Button();
+            this.btn_add_name = new System.Windows.Forms.Button();
+            this.btn_add_class = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.treeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pnl_page_title.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnl_child.SuspendLayout();
@@ -265,11 +293,11 @@
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_canvass_sheet)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel22.SuspendLayout();
             this.panel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dg_purchasing)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_purchasing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePurchasing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ds_purchasing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dt_purchasing)).BeginInit();
@@ -277,7 +305,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.tab_sales.SuspendLayout();
             this.pnl_sales.SuspendLayout();
-            this.panel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_sales)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.salesBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceSales)).BeginInit();
@@ -286,31 +313,48 @@
             this.pnl_item_sales_price.SuspendLayout();
             this.tab_inventory.SuspendLayout();
             this.pnl_inventory.SuspendLayout();
+            this.pnl_body.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.panel9.SuspendLayout();
-            this.panel13.SuspendLayout();
-            this.panel19.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
-            this.panel18.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_available_inventory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tblavailableinvBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceInventory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_inventory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable3)).BeginInit();
+            this.panel6.SuspendLayout();
             this.panel14.SuspendLayout();
-            this.panel17.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
-            this.panel16.SuspendLayout();
-            this.panel15.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_released_stock)).BeginInit();
+            this.panel13.SuspendLayout();
             this.tab_production.SuspendLayout();
             this.pnl_production.SuspendLayout();
             this.panel10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_production_request)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).BeginInit();
             this.panel20.SuspendLayout();
             this.panel11.SuspendLayout();
             this.panel21.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_bom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceProduction)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ds_production)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable2)).BeginInit();
             this.panel12.SuspendLayout();
             this.tab_attachments.SuspendLayout();
+            this.pnl_attachments.SuspendLayout();
+            this.panel8.SuspendLayout();
+            this.panel15.SuspendLayout();
+            this.pnl_Receiving.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel16.SuspendLayout();
+            this.TV1_preview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.salesBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource)).BeginInit();
             this.pnl_header.SuspendLayout();
@@ -400,16 +444,6 @@
             this.btn_save.Visible = false;
             this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
             // 
-            // btn_prev
-            // 
-            this.btn_prev.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.btn_prev.Image = ((System.Drawing.Image)(resources.GetObject("btn_prev.Image")));
-            this.btn_prev.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_prev.Name = "btn_prev";
-            this.btn_prev.Size = new System.Drawing.Size(72, 22);
-            this.btn_prev.Text = "Previous";
-            this.btn_prev.Click += new System.EventHandler(this.btn_prev_Click);
-            // 
             // btn_close
             // 
             this.btn_close.Image = ((System.Drawing.Image)(resources.GetObject("btn_close.Image")));
@@ -430,6 +464,16 @@
             this.btn_next.Text = "Next";
             this.btn_next.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
+            // 
+            // btn_prev
+            // 
+            this.btn_prev.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btn_prev.Image = ((System.Drawing.Image)(resources.GetObject("btn_prev.Image")));
+            this.btn_prev.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_prev.Name = "btn_prev";
+            this.btn_prev.Size = new System.Drawing.Size(72, 22);
+            this.btn_prev.Text = "Previous";
+            this.btn_prev.Click += new System.EventHandler(this.btn_prev_Click);
             // 
             // pnl_footer
             // 
@@ -661,6 +705,7 @@
             // cmb_pump_count_compatability
             // 
             this.cmb_pump_count_compatability.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_pump_count_compatability.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmb_pump_count_compatability.FormattingEnabled = true;
             this.cmb_pump_count_compatability.Location = new System.Drawing.Point(188, 241);
             this.cmb_pump_count_compatability.Name = "cmb_pump_count_compatability";
@@ -703,6 +748,7 @@
             // cmb_material
             // 
             this.cmb_material.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_material.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmb_material.FormattingEnabled = true;
             this.cmb_material.Location = new System.Drawing.Point(188, 50);
             this.cmb_material.Name = "cmb_material";
@@ -743,7 +789,6 @@
             this.txt_additional_specs_id.Name = "txt_additional_specs_id";
             this.txt_additional_specs_id.Size = new System.Drawing.Size(65, 20);
             this.txt_additional_specs_id.TabIndex = 123;
-            this.txt_additional_specs_id.Visible = false;
             // 
             // txt_additional_specs_based_id
             // 
@@ -751,7 +796,6 @@
             this.txt_additional_specs_based_id.Name = "txt_additional_specs_based_id";
             this.txt_additional_specs_based_id.Size = new System.Drawing.Size(65, 20);
             this.txt_additional_specs_based_id.TabIndex = 124;
-            this.txt_additional_specs_based_id.Visible = false;
             // 
             // txt_long_description
             // 
@@ -929,7 +973,7 @@
             // lbl_filename
             // 
             this.lbl_filename.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_filename.Location = new System.Drawing.Point(13, 324);
+            this.lbl_filename.Location = new System.Drawing.Point(45, 327);
             this.lbl_filename.Name = "lbl_filename";
             this.lbl_filename.Size = new System.Drawing.Size(215, 85);
             this.lbl_filename.TabIndex = 130;
@@ -960,9 +1004,9 @@
             // 
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(266, 59);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(316, 29);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(129, 325);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(129, 344);
             this.flowLayoutPanel1.TabIndex = 127;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -994,9 +1038,9 @@
             // 
             // img_preview
             // 
-            this.img_preview.Location = new System.Drawing.Point(16, 130);
+            this.img_preview.Location = new System.Drawing.Point(16, 93);
             this.img_preview.Name = "img_preview";
-            this.img_preview.Size = new System.Drawing.Size(212, 185);
+            this.img_preview.Size = new System.Drawing.Size(282, 222);
             this.img_preview.TabIndex = 78;
             this.img_preview.TabStop = false;
             // 
@@ -1138,24 +1182,24 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.dataGridView2);
+            this.panel3.Controls.Add(this.dgv_canvass_sheet);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel3.Location = new System.Drawing.Point(863, 0);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(360, 422);
             this.panel3.TabIndex = 3;
             // 
-            // dataGridView2
+            // dgv_canvass_sheet
             // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgv_canvass_sheet.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_canvass_sheet.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.canvass_sheet,
             this.date});
-            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView2.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(360, 422);
-            this.dataGridView2.TabIndex = 0;
+            this.dgv_canvass_sheet.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv_canvass_sheet.Location = new System.Drawing.Point(0, 0);
+            this.dgv_canvass_sheet.Name = "dgv_canvass_sheet";
+            this.dgv_canvass_sheet.Size = new System.Drawing.Size(360, 422);
+            this.dgv_canvass_sheet.TabIndex = 0;
             // 
             // canvass_sheet
             // 
@@ -1200,36 +1244,30 @@
             // 
             // panel7
             // 
-            this.panel7.Controls.Add(this.dg_purchasing);
+            this.panel7.Controls.Add(this.dgv_purchasing);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(0, 0);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(846, 422);
             this.panel7.TabIndex = 1;
             // 
-            // dg_purchasing
+            // dgv_purchasing
             // 
-            this.dg_purchasing.AutoGenerateColumns = false;
-            this.dg_purchasing.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dg_purchasing.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.line_no,
+            this.dgv_purchasing.AutoGenerateColumns = false;
+            this.dgv_purchasing.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_purchasing.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.suppliernameDataGridViewTextBoxColumn,
             this.supplier_type_name,
             this.price,
             this.validity_period,
-            this.Column19});
-            this.dg_purchasing.DataSource = this.bindingSourcePurchasing;
-            this.dg_purchasing.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dg_purchasing.Location = new System.Drawing.Point(0, 0);
-            this.dg_purchasing.Name = "dg_purchasing";
-            this.dg_purchasing.Size = new System.Drawing.Size(846, 422);
-            this.dg_purchasing.TabIndex = 0;
-            // 
-            // line_no
-            // 
-            this.line_no.HeaderText = "#";
-            this.line_no.Name = "line_no";
-            this.line_no.Width = 50;
+            this.Column19,
+            this.line_no});
+            this.dgv_purchasing.DataSource = this.bindingSourcePurchasing;
+            this.dgv_purchasing.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv_purchasing.Location = new System.Drawing.Point(0, 0);
+            this.dgv_purchasing.Name = "dgv_purchasing";
+            this.dgv_purchasing.Size = new System.Drawing.Size(846, 422);
+            this.dgv_purchasing.TabIndex = 0;
             // 
             // suppliernameDataGridViewTextBoxColumn
             // 
@@ -1265,6 +1303,12 @@
             this.Column19.DataPropertyName = "validity_period";
             this.Column19.HeaderText = "PAYMENT TERMS";
             this.Column19.Name = "Column19";
+            // 
+            // line_no
+            // 
+            this.line_no.HeaderText = "#";
+            this.line_no.Name = "line_no";
+            this.line_no.Width = 50;
             // 
             // bindingSourcePurchasing
             // 
@@ -1338,7 +1382,7 @@
             // 
             // pnl_sales
             // 
-            this.pnl_sales.Controls.Add(this.panel8);
+            this.pnl_sales.Controls.Add(this.dgv_sales);
             this.pnl_sales.Controls.Add(this.pnl_item_sales_price);
             this.pnl_sales.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_sales.Location = new System.Drawing.Point(3, 3);
@@ -1346,39 +1390,24 @@
             this.pnl_sales.Size = new System.Drawing.Size(1223, 509);
             this.pnl_sales.TabIndex = 0;
             // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.dgv_sales);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel8.Location = new System.Drawing.Point(0, 0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(728, 509);
-            this.panel8.TabIndex = 58;
-            // 
             // dgv_sales
             // 
             this.dgv_sales.AutoGenerateColumns = false;
             this.dgv_sales.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_sales.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
             this.Column2,
             this.Column3,
             this.Column4,
             this.customernameDataGridViewTextBoxColumn,
             this.salesordernoDataGridViewTextBoxColumn,
-            this.dateDataGridViewTextBoxColumn});
+            this.dateDataGridViewTextBoxColumn,
+            this.Column1});
             this.dgv_sales.DataSource = this.salesBindingSource;
             this.dgv_sales.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_sales.Location = new System.Drawing.Point(0, 0);
             this.dgv_sales.Name = "dgv_sales";
-            this.dgv_sales.Size = new System.Drawing.Size(728, 509);
+            this.dgv_sales.Size = new System.Drawing.Size(1029, 509);
             this.dgv_sales.TabIndex = 0;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "#";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 50;
             // 
             // Column2
             // 
@@ -1404,20 +1433,26 @@
             // customernameDataGridViewTextBoxColumn
             // 
             this.customernameDataGridViewTextBoxColumn.DataPropertyName = "customer_name";
-            this.customernameDataGridViewTextBoxColumn.HeaderText = "customer_name";
+            this.customernameDataGridViewTextBoxColumn.HeaderText = "CUSTOMER NAME";
             this.customernameDataGridViewTextBoxColumn.Name = "customernameDataGridViewTextBoxColumn";
             // 
             // salesordernoDataGridViewTextBoxColumn
             // 
             this.salesordernoDataGridViewTextBoxColumn.DataPropertyName = "sales_order_no";
-            this.salesordernoDataGridViewTextBoxColumn.HeaderText = "sales_order_no";
+            this.salesordernoDataGridViewTextBoxColumn.HeaderText = "SALES ORDER #";
             this.salesordernoDataGridViewTextBoxColumn.Name = "salesordernoDataGridViewTextBoxColumn";
             // 
             // dateDataGridViewTextBoxColumn
             // 
             this.dateDataGridViewTextBoxColumn.DataPropertyName = "date";
-            this.dateDataGridViewTextBoxColumn.HeaderText = "date";
+            this.dateDataGridViewTextBoxColumn.HeaderText = "DATE";
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "#";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 50;
             // 
             // salesBindingSource
             // 
@@ -1460,14 +1495,14 @@
             this.pnl_item_sales_price.Controls.Add(this.txt_price);
             this.pnl_item_sales_price.Controls.Add(this.label20);
             this.pnl_item_sales_price.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnl_item_sales_price.Location = new System.Drawing.Point(734, 0);
+            this.pnl_item_sales_price.Location = new System.Drawing.Point(1029, 0);
             this.pnl_item_sales_price.Name = "pnl_item_sales_price";
-            this.pnl_item_sales_price.Size = new System.Drawing.Size(489, 509);
+            this.pnl_item_sales_price.Size = new System.Drawing.Size(194, 509);
             this.pnl_item_sales_price.TabIndex = 57;
             // 
             // txt_price
             // 
-            this.txt_price.Location = new System.Drawing.Point(100, 62);
+            this.txt_price.Location = new System.Drawing.Point(66, 19);
             this.txt_price.Name = "txt_price";
             this.txt_price.Size = new System.Drawing.Size(105, 20);
             this.txt_price.TabIndex = 119;
@@ -1476,7 +1511,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(26, 65);
+            this.label20.Location = new System.Drawing.Point(18, 22);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(42, 13);
             this.label20.TabIndex = 10;
@@ -1495,68 +1530,455 @@
             // 
             // pnl_inventory
             // 
-            this.pnl_inventory.Controls.Add(this.panel9);
+            this.pnl_inventory.Controls.Add(this.pnl_body);
             this.pnl_inventory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_inventory.Location = new System.Drawing.Point(3, 3);
             this.pnl_inventory.Name = "pnl_inventory";
             this.pnl_inventory.Size = new System.Drawing.Size(1223, 509);
             this.pnl_inventory.TabIndex = 1;
             // 
+            // pnl_body
+            // 
+            this.pnl_body.Controls.Add(this.splitContainer1);
+            this.pnl_body.Location = new System.Drawing.Point(0, 0);
+            this.pnl_body.Name = "pnl_body";
+            this.pnl_body.Size = new System.Drawing.Size(1223, 509);
+            this.pnl_body.TabIndex = 0;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.label31);
+            this.splitContainer1.Panel1.Controls.Add(this.label30);
+            this.splitContainer1.Panel1.Controls.Add(this.txt_default_bin_location);
+            this.splitContainer1.Panel1.Controls.Add(this.txt_item_inventory_id);
+            this.splitContainer1.Panel1.Controls.Add(this.txt_item_inventory_based_id);
+            this.splitContainer1.Panel1.Controls.Add(this.cmb_default_zone);
+            this.splitContainer1.Panel1.Controls.Add(this.cmb_storage_type);
+            this.splitContainer1.Panel1.Controls.Add(this.label28);
+            this.splitContainer1.Panel1.Controls.Add(this.cmb_warehouse);
+            this.splitContainer1.Panel1.Controls.Add(this.label27);
+            this.splitContainer1.Panel1.Controls.Add(this.btn_add_valuation_method);
+            this.splitContainer1.Panel1.Controls.Add(this.label26);
+            this.splitContainer1.Panel1.Controls.Add(this.cmb_valuation_method);
+            this.splitContainer1.Panel1.Controls.Add(this.label25);
+            this.splitContainer1.Panel1.Controls.Add(this.chk_special_item);
+            this.splitContainer1.Panel1.Controls.Add(this.label24);
+            this.splitContainer1.Panel1.Controls.Add(this.chk_fast_item);
+            this.splitContainer1.Panel1.Controls.Add(this.label23);
+            this.splitContainer1.Panel1.Controls.Add(this.label29);
+            this.splitContainer1.Panel1.Controls.Add(this.label22);
+            this.splitContainer1.Panel1.Controls.Add(this.txt_maximum_inventory);
+            this.splitContainer1.Panel1.Controls.Add(this.txt_minimum_inventory);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Size = new System.Drawing.Size(1223, 509);
+            this.splitContainer1.SplitterDistance = 353;
+            this.splitContainer1.TabIndex = 3;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(42, 247);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(18, 13);
+            this.label31.TabIndex = 140;
+            this.label31.Text = "ID";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(161, 248);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(25, 13);
+            this.label30.TabIndex = 139;
+            this.label30.Text = "BID";
+            // 
+            // txt_default_bin_location
+            // 
+            this.txt_default_bin_location.Location = new System.Drawing.Point(155, 73);
+            this.txt_default_bin_location.Name = "txt_default_bin_location";
+            this.txt_default_bin_location.ReadOnly = true;
+            this.txt_default_bin_location.Size = new System.Drawing.Size(175, 20);
+            this.txt_default_bin_location.TabIndex = 70;
+            this.txt_default_bin_location.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_default_bin_location_KeyDown);
+            // 
+            // txt_item_inventory_id
+            // 
+            this.txt_item_inventory_id.Location = new System.Drawing.Point(66, 244);
+            this.txt_item_inventory_id.Name = "txt_item_inventory_id";
+            this.txt_item_inventory_id.Size = new System.Drawing.Size(65, 20);
+            this.txt_item_inventory_id.TabIndex = 137;
+            // 
+            // txt_item_inventory_based_id
+            // 
+            this.txt_item_inventory_based_id.Location = new System.Drawing.Point(189, 244);
+            this.txt_item_inventory_based_id.Name = "txt_item_inventory_based_id";
+            this.txt_item_inventory_based_id.Size = new System.Drawing.Size(65, 20);
+            this.txt_item_inventory_based_id.TabIndex = 138;
+            // 
+            // cmb_default_zone
+            // 
+            this.cmb_default_zone.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_default_zone.FormattingEnabled = true;
+            this.cmb_default_zone.Location = new System.Drawing.Point(155, 73);
+            this.cmb_default_zone.Name = "cmb_default_zone";
+            this.cmb_default_zone.Size = new System.Drawing.Size(191, 21);
+            this.cmb_default_zone.TabIndex = 136;
+            this.cmb_default_zone.Tag = "TEXT";
+            this.cmb_default_zone.DropDown += new System.EventHandler(this.cmb_default_zone_DropDown);
+            this.cmb_default_zone.SelectedIndexChanged += new System.EventHandler(this.cmb_default_zone_SelectedIndexChanged);
+            this.cmb_default_zone.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_default_zone_KeyDown);
+            // 
+            // cmb_storage_type
+            // 
+            this.cmb_storage_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_storage_type.FormattingEnabled = true;
+            this.cmb_storage_type.Items.AddRange(new object[] {
+            "NONE",
+            "PALETTE",
+            "CRATE"});
+            this.cmb_storage_type.Location = new System.Drawing.Point(155, 51);
+            this.cmb_storage_type.Name = "cmb_storage_type";
+            this.cmb_storage_type.Size = new System.Drawing.Size(191, 21);
+            this.cmb_storage_type.TabIndex = 135;
+            this.cmb_storage_type.Tag = "";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(2, 32);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(90, 13);
+            this.label28.TabIndex = 63;
+            this.label28.Text = "WAREHOUSE/S";
+            // 
+            // cmb_warehouse
+            // 
+            this.cmb_warehouse.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_warehouse.FormattingEnabled = true;
+            this.cmb_warehouse.Location = new System.Drawing.Point(155, 29);
+            this.cmb_warehouse.Name = "cmb_warehouse";
+            this.cmb_warehouse.Size = new System.Drawing.Size(191, 21);
+            this.cmb_warehouse.TabIndex = 134;
+            this.cmb_warehouse.Tag = "DYNAMIC";
+            this.cmb_warehouse.SelectedIndexChanged += new System.EventHandler(this.cmb_warehouse_name_SelectedIndexChanged);
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(2, 54);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(90, 13);
+            this.label27.TabIndex = 65;
+            this.label27.Text = "STORAGE TYPE";
+            // 
+            // btn_add_valuation_method
+            // 
+            this.btn_add_valuation_method.BackColor = System.Drawing.Color.Transparent;
+            this.btn_add_valuation_method.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_valuation_method.BackgroundImage")));
+            this.btn_add_valuation_method.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_add_valuation_method.Location = new System.Drawing.Point(317, 115);
+            this.btn_add_valuation_method.Name = "btn_add_valuation_method";
+            this.btn_add_valuation_method.Size = new System.Drawing.Size(30, 22);
+            this.btn_add_valuation_method.TabIndex = 132;
+            this.btn_add_valuation_method.UseVisualStyleBackColor = false;
+            this.btn_add_valuation_method.Click += new System.EventHandler(this.btn_add_valuation_method_Click);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(3, 76);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(89, 13);
+            this.label26.TabIndex = 67;
+            this.label26.Text = "DEFAULT ZONE";
+            // 
+            // cmb_valuation_method
+            // 
+            this.cmb_valuation_method.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_valuation_method.FormattingEnabled = true;
+            this.cmb_valuation_method.Location = new System.Drawing.Point(155, 116);
+            this.cmb_valuation_method.Name = "cmb_valuation_method";
+            this.cmb_valuation_method.Size = new System.Drawing.Size(162, 21);
+            this.cmb_valuation_method.TabIndex = 133;
+            this.cmb_valuation_method.Tag = "DYNAMIC";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(3, 98);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(134, 13);
+            this.label25.TabIndex = 69;
+            this.label25.Text = "DEFAULT BIN LOCATION";
+            // 
+            // chk_special_item
+            // 
+            this.chk_special_item.AutoSize = true;
+            this.chk_special_item.Location = new System.Drawing.Point(155, 184);
+            this.chk_special_item.Name = "chk_special_item";
+            this.chk_special_item.Size = new System.Drawing.Size(99, 17);
+            this.chk_special_item.TabIndex = 79;
+            this.chk_special_item.Text = "SPECIAL ITEM";
+            this.chk_special_item.UseVisualStyleBackColor = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(2, 119);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(118, 13);
+            this.label24.TabIndex = 71;
+            this.label24.Text = "VALUATION METHOD";
+            // 
+            // chk_fast_item
+            // 
+            this.chk_fast_item.AutoSize = true;
+            this.chk_fast_item.Enabled = false;
+            this.chk_fast_item.Location = new System.Drawing.Point(264, 184);
+            this.chk_fast_item.Name = "chk_fast_item";
+            this.chk_fast_item.Size = new System.Drawing.Size(82, 17);
+            this.chk_fast_item.TabIndex = 78;
+            this.chk_fast_item.Text = "FAST ITEM";
+            this.chk_fast_item.UseVisualStyleBackColor = true;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(2, 140);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(122, 13);
+            this.label23.TabIndex = 73;
+            this.label23.Text = "MINIMUM INVENTORY";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(3, 185);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(101, 13);
+            this.label29.TabIndex = 77;
+            this.label29.Text = "INVENTORY TYPE";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(2, 161);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(125, 13);
+            this.label22.TabIndex = 75;
+            this.label22.Text = "MAXIMUM INVENTORY";
+            // 
+            // txt_maximum_inventory
+            // 
+            this.txt_maximum_inventory.Location = new System.Drawing.Point(155, 158);
+            this.txt_maximum_inventory.Name = "txt_maximum_inventory";
+            this.txt_maximum_inventory.Size = new System.Drawing.Size(191, 20);
+            this.txt_maximum_inventory.TabIndex = 76;
+            this.txt_maximum_inventory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_maximum_inventory_KeyPress);
+            // 
+            // txt_minimum_inventory
+            // 
+            this.txt_minimum_inventory.Location = new System.Drawing.Point(155, 137);
+            this.txt_minimum_inventory.Name = "txt_minimum_inventory";
+            this.txt_minimum_inventory.Size = new System.Drawing.Size(191, 20);
+            this.txt_minimum_inventory.TabIndex = 74;
+            this.txt_minimum_inventory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_minimum_inventory_KeyPress);
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.panel9);
+            this.splitContainer2.Panel1.Controls.Add(this.panel6);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.panel14);
+            this.splitContainer2.Panel2.Controls.Add(this.panel13);
+            this.splitContainer2.Size = new System.Drawing.Size(866, 509);
+            this.splitContainer2.SplitterDistance = 433;
+            this.splitContainer2.TabIndex = 0;
+            // 
             // panel9
             // 
-            this.panel9.Controls.Add(this.panel13);
-            this.panel9.Controls.Add(this.panel14);
-            this.panel9.Controls.Add(this.panel15);
+            this.panel9.Controls.Add(this.dgv_available_inventory);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(0, 0);
+            this.panel9.Location = new System.Drawing.Point(0, 50);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(1223, 509);
-            this.panel9.TabIndex = 0;
+            this.panel9.Size = new System.Drawing.Size(433, 459);
+            this.panel9.TabIndex = 1;
             // 
-            // panel13
+            // dgv_available_inventory
             // 
-            this.panel13.Controls.Add(this.panel19);
-            this.panel13.Controls.Add(this.panel18);
-            this.panel13.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel13.Location = new System.Drawing.Point(787, 0);
-            this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(433, 509);
-            this.panel13.TabIndex = 4;
+            this.dgv_available_inventory.AutoGenerateColumns = false;
+            this.dgv_available_inventory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_available_inventory.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.warehousenameDataGridViewTextBoxColumn,
+            this.locationDataGridViewTextBoxColumn,
+            this.itemidDataGridViewTextBoxColumn,
+            this.stockqtyDataGridViewTextBoxColumn,
+            this.stockuomDataGridViewTextBoxColumn});
+            this.dgv_available_inventory.DataSource = this.tblavailableinvBindingSource;
+            this.dgv_available_inventory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv_available_inventory.Location = new System.Drawing.Point(0, 0);
+            this.dgv_available_inventory.Name = "dgv_available_inventory";
+            this.dgv_available_inventory.Size = new System.Drawing.Size(433, 459);
+            this.dgv_available_inventory.TabIndex = 0;
             // 
-            // panel19
+            // warehousenameDataGridViewTextBoxColumn
             // 
-            this.panel19.Controls.Add(this.dataGridView6);
-            this.panel19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel19.Location = new System.Drawing.Point(0, 36);
-            this.panel19.Name = "panel19";
-            this.panel19.Size = new System.Drawing.Size(433, 473);
-            this.panel19.TabIndex = 1;
+            this.warehousenameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.warehousenameDataGridViewTextBoxColumn.DataPropertyName = "warehouse_name";
+            this.warehousenameDataGridViewTextBoxColumn.FillWeight = 98.97959F;
+            this.warehousenameDataGridViewTextBoxColumn.HeaderText = "WAREHOUSE";
+            this.warehousenameDataGridViewTextBoxColumn.Name = "warehousenameDataGridViewTextBoxColumn";
             // 
-            // dataGridView6
+            // locationDataGridViewTextBoxColumn
             // 
-            this.dataGridView6.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView6.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.locationDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.locationDataGridViewTextBoxColumn.DataPropertyName = "location";
+            this.locationDataGridViewTextBoxColumn.FillWeight = 98.97959F;
+            this.locationDataGridViewTextBoxColumn.HeaderText = "LOCATION";
+            this.locationDataGridViewTextBoxColumn.Name = "locationDataGridViewTextBoxColumn";
+            // 
+            // itemidDataGridViewTextBoxColumn
+            // 
+            this.itemidDataGridViewTextBoxColumn.DataPropertyName = "item_id";
+            this.itemidDataGridViewTextBoxColumn.HeaderText = "item_id";
+            this.itemidDataGridViewTextBoxColumn.Name = "itemidDataGridViewTextBoxColumn";
+            this.itemidDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // stockqtyDataGridViewTextBoxColumn
+            // 
+            this.stockqtyDataGridViewTextBoxColumn.DataPropertyName = "stock_qty";
+            this.stockqtyDataGridViewTextBoxColumn.HeaderText = "STOCK";
+            this.stockqtyDataGridViewTextBoxColumn.Name = "stockqtyDataGridViewTextBoxColumn";
+            this.stockqtyDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // stockuomDataGridViewTextBoxColumn
+            // 
+            this.stockuomDataGridViewTextBoxColumn.DataPropertyName = "stock_uom";
+            this.stockuomDataGridViewTextBoxColumn.FillWeight = 102.0408F;
+            this.stockuomDataGridViewTextBoxColumn.HeaderText = "UOM";
+            this.stockuomDataGridViewTextBoxColumn.Name = "stockuomDataGridViewTextBoxColumn";
+            this.stockuomDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // tblavailableinvBindingSource
+            // 
+            this.tblavailableinvBindingSource.DataMember = "tbl_available_inv";
+            this.tblavailableinvBindingSource.DataSource = this.bindingSourceInventory;
+            // 
+            // bindingSourceInventory
+            // 
+            this.bindingSourceInventory.DataSource = this.ds_inventory;
+            this.bindingSourceInventory.Position = 0;
+            // 
+            // ds_inventory
+            // 
+            this.ds_inventory.DataSetName = "NewDataSet";
+            this.ds_inventory.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable3});
+            // 
+            // dataTable3
+            // 
+            this.dataTable3.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn10,
+            this.dataColumn11,
+            this.dataColumn12,
+            this.dataColumn13,
+            this.dataColumn14,
+            this.dataColumn15});
+            this.dataTable3.TableName = "tbl_available_inv";
+            // 
+            // dataColumn10
+            // 
+            this.dataColumn10.ColumnName = "warehouse_id";
+            // 
+            // dataColumn11
+            // 
+            this.dataColumn11.ColumnName = "warehouse_name";
+            // 
+            // dataColumn12
+            // 
+            this.dataColumn12.ColumnName = "location";
+            // 
+            // dataColumn13
+            // 
+            this.dataColumn13.ColumnName = "item_id";
+            // 
+            // dataColumn14
+            // 
+            this.dataColumn14.ColumnName = "stock_qty";
+            // 
+            // dataColumn15
+            // 
+            this.dataColumn15.ColumnName = "stock_uom";
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.label7);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(433, 50);
+            this.panel6.TabIndex = 0;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(10, 29);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(130, 13);
+            this.label7.TabIndex = 64;
+            this.label7.Text = "AVAILABLE INVENTORY";
+            // 
+            // panel14
+            // 
+            this.panel14.Controls.Add(this.dgv_released_stock);
+            this.panel14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel14.Location = new System.Drawing.Point(0, 50);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(429, 459);
+            this.panel14.TabIndex = 2;
+            // 
+            // dgv_released_stock
+            // 
+            this.dgv_released_stock.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_released_stock.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column7,
             this.Column8,
             this.Column9,
             this.Column10});
-            this.dataGridView6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView6.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView6.Name = "dataGridView6";
-            this.dataGridView6.Size = new System.Drawing.Size(433, 473);
-            this.dataGridView6.TabIndex = 0;
+            this.dgv_released_stock.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv_released_stock.Location = new System.Drawing.Point(0, 0);
+            this.dgv_released_stock.Name = "dgv_released_stock";
+            this.dgv_released_stock.Size = new System.Drawing.Size(429, 459);
+            this.dgv_released_stock.TabIndex = 0;
             // 
             // Column7
             // 
             this.Column7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column7.HeaderText = "SERIAL NUMBER";
+            this.Column7.HeaderText = "SERIAL NO.";
             this.Column7.Name = "Column7";
             // 
             // Column8
             // 
-            this.Column8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column8.HeaderText = "SALES ORDER NO.";
+            this.Column8.HeaderText = "SO NO.";
             this.Column8.Name = "Column8";
+            this.Column8.Width = 70;
             // 
             // Column9
             // 
@@ -1570,257 +1992,23 @@
             this.Column10.HeaderText = "DATE RELEASED";
             this.Column10.Name = "Column10";
             // 
-            // panel18
+            // panel13
             // 
-            this.panel18.Controls.Add(this.label31);
-            this.panel18.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel18.Location = new System.Drawing.Point(0, 0);
-            this.panel18.Name = "panel18";
-            this.panel18.Size = new System.Drawing.Size(433, 36);
-            this.panel18.TabIndex = 0;
+            this.panel13.Controls.Add(this.label21);
+            this.panel13.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel13.Location = new System.Drawing.Point(0, 0);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(429, 50);
+            this.panel13.TabIndex = 1;
             // 
-            // label31
+            // label21
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(6, 16);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(103, 13);
-            this.label31.TabIndex = 65;
-            this.label31.Text = "RELEASED STOCK";
-            // 
-            // panel14
-            // 
-            this.panel14.Controls.Add(this.panel17);
-            this.panel14.Controls.Add(this.panel16);
-            this.panel14.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel14.Location = new System.Drawing.Point(387, 0);
-            this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(400, 509);
-            this.panel14.TabIndex = 3;
-            // 
-            // panel17
-            // 
-            this.panel17.Controls.Add(this.dataGridView5);
-            this.panel17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel17.Location = new System.Drawing.Point(0, 36);
-            this.panel17.Name = "panel17";
-            this.panel17.Size = new System.Drawing.Size(400, 473);
-            this.panel17.TabIndex = 1;
-            // 
-            // dataGridView5
-            // 
-            this.dataGridView5.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView5.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column5,
-            this.Column6,
-            this.RESERVED});
-            this.dataGridView5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView5.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView5.Name = "dataGridView5";
-            this.dataGridView5.Size = new System.Drawing.Size(400, 473);
-            this.dataGridView5.TabIndex = 0;
-            // 
-            // Column5
-            // 
-            this.Column5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column5.HeaderText = "WAREHOUSE";
-            this.Column5.Name = "Column5";
-            // 
-            // Column6
-            // 
-            this.Column6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column6.HeaderText = "STOCK";
-            this.Column6.Name = "Column6";
-            // 
-            // RESERVED
-            // 
-            this.RESERVED.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.RESERVED.HeaderText = "RESERVED";
-            this.RESERVED.Name = "RESERVED";
-            // 
-            // panel16
-            // 
-            this.panel16.Controls.Add(this.label30);
-            this.panel16.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel16.Location = new System.Drawing.Point(0, 0);
-            this.panel16.Name = "panel16";
-            this.panel16.Size = new System.Drawing.Size(400, 36);
-            this.panel16.TabIndex = 0;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(6, 16);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(130, 13);
-            this.label30.TabIndex = 64;
-            this.label30.Text = "AVAILABLE INVENTORY";
-            // 
-            // panel15
-            // 
-            this.panel15.Controls.Add(this.checkBox2);
-            this.panel15.Controls.Add(this.checkBox1);
-            this.panel15.Controls.Add(this.label29);
-            this.panel15.Controls.Add(this.textBox1);
-            this.panel15.Controls.Add(this.textBox2);
-            this.panel15.Controls.Add(this.textBox3);
-            this.panel15.Controls.Add(this.textBox4);
-            this.panel15.Controls.Add(this.textBox5);
-            this.panel15.Controls.Add(this.textBox6);
-            this.panel15.Controls.Add(this.textBox7);
-            this.panel15.Controls.Add(this.label22);
-            this.panel15.Controls.Add(this.label23);
-            this.panel15.Controls.Add(this.label24);
-            this.panel15.Controls.Add(this.label25);
-            this.panel15.Controls.Add(this.label26);
-            this.panel15.Controls.Add(this.label27);
-            this.panel15.Controls.Add(this.label28);
-            this.panel15.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel15.Location = new System.Drawing.Point(0, 0);
-            this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(387, 509);
-            this.panel15.TabIndex = 2;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(173, 224);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(99, 17);
-            this.checkBox2.TabIndex = 79;
-            this.checkBox2.Text = "SPECIAL ITEM";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(173, 201);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(82, 17);
-            this.checkBox1.TabIndex = 78;
-            this.checkBox1.Text = "FAST ITEM";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(20, 205);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(101, 13);
-            this.label29.TabIndex = 77;
-            this.label29.Text = "INVENTORY TYPE";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(173, 164);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(191, 20);
-            this.textBox1.TabIndex = 76;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(173, 143);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(191, 20);
-            this.textBox2.TabIndex = 74;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(173, 122);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(191, 20);
-            this.textBox3.TabIndex = 72;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(173, 101);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(191, 20);
-            this.textBox4.TabIndex = 70;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(173, 80);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(191, 20);
-            this.textBox5.TabIndex = 68;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(173, 59);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(191, 20);
-            this.textBox6.TabIndex = 66;
-            // 
-            // textBox7
-            // 
-            this.textBox7.Location = new System.Drawing.Point(173, 38);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(191, 20);
-            this.textBox7.TabIndex = 64;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(20, 167);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(107, 13);
-            this.label22.TabIndex = 75;
-            this.label22.Text = "MAXIMUM VOLUME";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(20, 146);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(122, 13);
-            this.label23.TabIndex = 73;
-            this.label23.Text = "MINIMUM INVENTORY";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(20, 125);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(118, 13);
-            this.label24.TabIndex = 71;
-            this.label24.Text = "VALUATION METHOD";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(20, 104);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(134, 13);
-            this.label25.TabIndex = 69;
-            this.label25.Text = "DEFAULT BIN LOCATION";
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(20, 83);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(90, 13);
-            this.label26.TabIndex = 67;
-            this.label26.Text = "STORAGE TYPE";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(20, 62);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(89, 13);
-            this.label27.TabIndex = 65;
-            this.label27.Text = "DEFAULT ZONE";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(20, 41);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(90, 13);
-            this.label28.TabIndex = 63;
-            this.label28.Text = "WAREHOUSE/S";
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(15, 29);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(103, 13);
+            this.label21.TabIndex = 64;
+            this.label21.Text = "RELEASED STOCK";
             // 
             // tab_production
             // 
@@ -1845,7 +2033,7 @@
             // 
             // panel10
             // 
-            this.panel10.Controls.Add(this.dataGridView8);
+            this.panel10.Controls.Add(this.dgv_production_request);
             this.panel10.Controls.Add(this.dataGridView9);
             this.panel10.Controls.Add(this.panel20);
             this.panel10.Dock = System.Windows.Forms.DockStyle.Right;
@@ -1854,20 +2042,20 @@
             this.panel10.Size = new System.Drawing.Size(674, 509);
             this.panel10.TabIndex = 2;
             // 
-            // dataGridView8
+            // dgv_production_request
             // 
-            this.dataGridView8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView8.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgv_production_request.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_production_request.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column14,
             this.Column15,
             this.Column16,
             this.Column17,
             this.Column18});
-            this.dataGridView8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView8.Location = new System.Drawing.Point(0, 36);
-            this.dataGridView8.Name = "dataGridView8";
-            this.dataGridView8.Size = new System.Drawing.Size(674, 473);
-            this.dataGridView8.TabIndex = 65;
+            this.dgv_production_request.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv_production_request.Location = new System.Drawing.Point(0, 36);
+            this.dgv_production_request.Name = "dgv_production_request";
+            this.dgv_production_request.Size = new System.Drawing.Size(674, 473);
+            this.dgv_production_request.TabIndex = 65;
             // 
             // Column14
             // 
@@ -1937,27 +2125,27 @@
             // 
             // panel21
             // 
-            this.panel21.Controls.Add(this.dataGridView7);
+            this.panel21.Controls.Add(this.dgv_bom);
             this.panel21.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel21.Location = new System.Drawing.Point(0, 36);
             this.panel21.Name = "panel21";
             this.panel21.Size = new System.Drawing.Size(511, 473);
             this.panel21.TabIndex = 3;
             // 
-            // dataGridView7
+            // dgv_bom
             // 
-            this.dataGridView7.AutoGenerateColumns = false;
-            this.dataGridView7.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView7.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgv_bom.AutoGenerateColumns = false;
+            this.dgv_bom.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_bom.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.itemcodeDataGridViewTextBoxColumn,
             this.bomqtyDataGridViewTextBoxColumn,
             this.Column13});
-            this.dataGridView7.DataSource = this.table1BindingSource1;
-            this.dataGridView7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView7.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView7.Name = "dataGridView7";
-            this.dataGridView7.Size = new System.Drawing.Size(511, 473);
-            this.dataGridView7.TabIndex = 0;
+            this.dgv_bom.DataSource = this.table1BindingSource1;
+            this.dgv_bom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv_bom.Location = new System.Drawing.Point(0, 0);
+            this.dgv_bom.Name = "dgv_bom";
+            this.dgv_bom.Size = new System.Drawing.Size(511, 473);
+            this.dgv_bom.TabIndex = 0;
             // 
             // itemcodeDataGridViewTextBoxColumn
             // 
@@ -2011,7 +2199,6 @@
             // panel12
             // 
             this.panel12.Controls.Add(this.button2);
-            this.panel12.Controls.Add(this.button1);
             this.panel12.Controls.Add(this.label32);
             this.panel12.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel12.Location = new System.Drawing.Point(0, 0);
@@ -2021,21 +2208,12 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(331, 6);
+            this.button2.Location = new System.Drawing.Point(428, 7);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 66;
-            this.button2.Text = "KIT ->";
+            this.button2.Text = "KIT -->";
             this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(236, 7);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(89, 23);
-            this.button1.TabIndex = 65;
-            this.button1.Text = "PRODUCTION";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // label32
             // 
@@ -2059,11 +2237,147 @@
             // 
             // pnl_attachments
             // 
+            this.pnl_attachments.Controls.Add(this.panel8);
             this.pnl_attachments.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_attachments.Location = new System.Drawing.Point(3, 3);
             this.pnl_attachments.Name = "pnl_attachments";
             this.pnl_attachments.Size = new System.Drawing.Size(1223, 509);
-            this.pnl_attachments.TabIndex = 1;
+            this.pnl_attachments.TabIndex = 2;
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.panel15);
+            this.panel8.Controls.Add(this.panel16);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(0, 0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(1223, 509);
+            this.panel8.TabIndex = 1;
+            // 
+            // panel15
+            // 
+            this.panel15.Controls.Add(this.pnl_Receiving);
+            this.panel15.Controls.Add(this.btnUpload);
+            this.panel15.Controls.Add(this.ITEM_LV);
+            this.panel15.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel15.Location = new System.Drawing.Point(573, 0);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(650, 509);
+            this.panel15.TabIndex = 1;
+            // 
+            // pnl_Receiving
+            // 
+            this.pnl_Receiving.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnl_Receiving.Controls.Add(this.label43);
+            this.pnl_Receiving.Controls.Add(this.pictureBox1);
+            this.pnl_Receiving.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnl_Receiving.Location = new System.Drawing.Point(0, 0);
+            this.pnl_Receiving.Name = "pnl_Receiving";
+            this.pnl_Receiving.Size = new System.Drawing.Size(650, 509);
+            this.pnl_Receiving.TabIndex = 29;
+            this.pnl_Receiving.DoubleClick += new System.EventHandler(this.ITEM_TV_DoubleClick);
+            this.pnl_Receiving.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ITEM_TV_MouseDown);
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.Location = new System.Drawing.Point(243, 165);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(179, 23);
+            this.label43.TabIndex = 1;
+            this.label43.Text = "Please select a folder";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::smpc_inventory_app.Properties.Resources.FolderIcon;
+            this.pictureBox1.Location = new System.Drawing.Point(263, 73);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(139, 79);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // btnUpload
+            // 
+            this.btnUpload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUpload.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.btnUpload.Location = new System.Drawing.Point(552, 472);
+            this.btnUpload.Name = "btnUpload";
+            this.btnUpload.Size = new System.Drawing.Size(75, 23);
+            this.btnUpload.TabIndex = 3;
+            this.btnUpload.Text = "Upload";
+            this.btnUpload.UseVisualStyleBackColor = false;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            // 
+            // ITEM_LV
+            // 
+            this.ITEM_LV.AllowDrop = true;
+            this.ITEM_LV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ITEM_LV.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ITEM_LV.FullRowSelect = true;
+            this.ITEM_LV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.ITEM_LV.HideSelection = false;
+            this.ITEM_LV.HoverSelection = true;
+            this.ITEM_LV.Location = new System.Drawing.Point(0, 0);
+            this.ITEM_LV.MultiSelect = false;
+            this.ITEM_LV.Name = "ITEM_LV";
+            this.ITEM_LV.Size = new System.Drawing.Size(650, 509);
+            this.ITEM_LV.TabIndex = 2;
+            this.ITEM_LV.UseCompatibleStateImageBehavior = false;
+            this.ITEM_LV.View = System.Windows.Forms.View.Details;
+            this.ITEM_LV.MouseEnter += new System.EventHandler(this.ITEM_LV_MouseEnter);
+            // 
+            // panel16
+            // 
+            this.panel16.Controls.Add(this.TV1_preview);
+            this.panel16.Controls.Add(this.ITEM_TV);
+            this.panel16.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel16.Location = new System.Drawing.Point(0, 0);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(598, 509);
+            this.panel16.TabIndex = 0;
+            // 
+            // TV1_preview
+            // 
+            this.TV1_preview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TV1_preview.Controls.Add(this.label45);
+            this.TV1_preview.Controls.Add(this.pictureBox3);
+            this.TV1_preview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TV1_preview.Location = new System.Drawing.Point(0, 0);
+            this.TV1_preview.Name = "TV1_preview";
+            this.TV1_preview.Size = new System.Drawing.Size(598, 509);
+            this.TV1_preview.TabIndex = 26;
+            this.TV1_preview.Visible = false;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label45.Location = new System.Drawing.Point(169, 165);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(260, 23);
+            this.label45.TabIndex = 4;
+            this.label45.Text = "Directory will open when saved";
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::smpc_inventory_app.Properties.Resources.search;
+            this.pictureBox3.Location = new System.Drawing.Point(213, 73);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(151, 79);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 3;
+            this.pictureBox3.TabStop = false;
+            // 
+            // ITEM_TV
+            // 
+            this.ITEM_TV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ITEM_TV.Location = new System.Drawing.Point(0, 0);
+            this.ITEM_TV.Name = "ITEM_TV";
+            this.ITEM_TV.Size = new System.Drawing.Size(598, 509);
+            this.ITEM_TV.TabIndex = 3;
+            this.ITEM_TV.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ITEM_TV_AfterSelect);
             // 
             // salesBindingSource1
             // 
@@ -2111,15 +2425,15 @@
             this.label5.TabIndex = 5;
             this.label5.Text = "BRAND:";
             // 
-            // txt_item_code1
+            // txt_item_code
             // 
-            this.txt_item_code1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_item_code1.Location = new System.Drawing.Point(166, 81);
-            this.txt_item_code1.Name = "txt_item_code1";
-            this.txt_item_code1.ReadOnly = true;
-            this.txt_item_code1.Size = new System.Drawing.Size(200, 20);
-            this.txt_item_code1.TabIndex = 9;
-            this.txt_item_code1.Text = "I#0000";
+            this.txt_item_code.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txt_item_code.Location = new System.Drawing.Point(166, 81);
+            this.txt_item_code.Name = "txt_item_code";
+            this.txt_item_code.ReadOnly = true;
+            this.txt_item_code.Size = new System.Drawing.Size(200, 20);
+            this.txt_item_code.TabIndex = 9;
+            this.txt_item_code.Text = "I#0000";
             // 
             // chk_is_stop_selling
             // 
@@ -2166,72 +2480,22 @@
             this.cmb_unit_of_measure.TabIndex = 23;
             this.cmb_unit_of_measure.Tag = "DYNAMIC";
             // 
-            // btn_add_class
-            // 
-            this.btn_add_class.BackColor = System.Drawing.Color.Transparent;
-            this.btn_add_class.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_class.BackgroundImage")));
-            this.btn_add_class.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_add_class.Location = new System.Drawing.Point(707, 16);
-            this.btn_add_class.Name = "btn_add_class";
-            this.btn_add_class.Size = new System.Drawing.Size(30, 22);
-            this.btn_add_class.TabIndex = 33;
-            this.btn_add_class.UseVisualStyleBackColor = false;
-            this.btn_add_class.Click += new System.EventHandler(this.btn_add_class_Click);
-            // 
-            // btn_add_name
-            // 
-            this.btn_add_name.BackColor = System.Drawing.Color.Transparent;
-            this.btn_add_name.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_name.BackgroundImage")));
-            this.btn_add_name.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_add_name.Location = new System.Drawing.Point(366, 15);
-            this.btn_add_name.Name = "btn_add_name";
-            this.btn_add_name.Size = new System.Drawing.Size(30, 22);
-            this.btn_add_name.TabIndex = 34;
-            this.btn_add_name.UseVisualStyleBackColor = false;
-            this.btn_add_name.Click += new System.EventHandler(this.btn_add_name_Click);
-            // 
-            // btn_add_brand
-            // 
-            this.btn_add_brand.BackColor = System.Drawing.Color.Transparent;
-            this.btn_add_brand.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_brand.BackgroundImage")));
-            this.btn_add_brand.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_add_brand.Location = new System.Drawing.Point(707, 38);
-            this.btn_add_brand.Name = "btn_add_brand";
-            this.btn_add_brand.Size = new System.Drawing.Size(30, 22);
-            this.btn_add_brand.TabIndex = 35;
-            this.btn_add_brand.UseVisualStyleBackColor = false;
-            this.btn_add_brand.Click += new System.EventHandler(this.btn_add_brand_Click);
-            // 
-            // btn_add_oum
-            // 
-            this.btn_add_oum.BackColor = System.Drawing.Color.Transparent;
-            this.btn_add_oum.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_oum.BackgroundImage")));
-            this.btn_add_oum.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_add_oum.Location = new System.Drawing.Point(707, 60);
-            this.btn_add_oum.Name = "btn_add_oum";
-            this.btn_add_oum.Size = new System.Drawing.Size(30, 22);
-            this.btn_add_oum.TabIndex = 36;
-            this.btn_add_oum.UseVisualStyleBackColor = false;
-            this.btn_add_oum.Click += new System.EventHandler(this.btn_add_oum_Click);
-            // 
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(397, 105);
+            this.label34.Location = new System.Drawing.Point(142, 105);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(18, 13);
             this.label34.TabIndex = 38;
             this.label34.Text = "ID";
-            this.label34.Visible = false;
             // 
             // txt_id
             // 
-            this.txt_id.Location = new System.Drawing.Point(421, 102);
+            this.txt_id.Location = new System.Drawing.Point(166, 102);
             this.txt_id.Name = "txt_id";
             this.txt_id.Size = new System.Drawing.Size(54, 20);
             this.txt_id.TabIndex = 39;
             this.txt_id.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txt_id.Visible = false;
             // 
             // label36
             // 
@@ -2258,6 +2522,7 @@
             this.cmb_item_tangibility_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_item_tangibility_type.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmb_item_tangibility_type.FormattingEnabled = true;
+            this.cmb_item_tangibility_type.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.cmb_item_tangibility_type.Items.AddRange(new object[] {
             "--SELECT--",
             "TANGIBLE",
@@ -2369,7 +2634,7 @@
             this.pnl_header.Controls.Add(this.cmb_item_brand);
             this.pnl_header.Controls.Add(this.cmb_item_class);
             this.pnl_header.Controls.Add(this.chk_is_stop_selling);
-            this.pnl_header.Controls.Add(this.txt_item_code1);
+            this.pnl_header.Controls.Add(this.txt_item_code);
             this.pnl_header.Controls.Add(this.label5);
             this.pnl_header.Controls.Add(this.label4);
             this.pnl_header.Controls.Add(this.label3);
@@ -2379,6 +2644,59 @@
             this.pnl_header.Name = "pnl_header";
             this.pnl_header.Size = new System.Drawing.Size(1237, 155);
             this.pnl_header.TabIndex = 9;
+            // 
+            // btn_add_oum
+            // 
+            this.btn_add_oum.BackColor = System.Drawing.Color.Transparent;
+            this.btn_add_oum.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_oum.BackgroundImage")));
+            this.btn_add_oum.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_add_oum.Location = new System.Drawing.Point(707, 60);
+            this.btn_add_oum.Name = "btn_add_oum";
+            this.btn_add_oum.Size = new System.Drawing.Size(30, 22);
+            this.btn_add_oum.TabIndex = 36;
+            this.btn_add_oum.UseVisualStyleBackColor = false;
+            this.btn_add_oum.Click += new System.EventHandler(this.btn_add_oum_Click);
+            // 
+            // btn_add_brand
+            // 
+            this.btn_add_brand.BackColor = System.Drawing.Color.Transparent;
+            this.btn_add_brand.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_brand.BackgroundImage")));
+            this.btn_add_brand.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_add_brand.Location = new System.Drawing.Point(707, 38);
+            this.btn_add_brand.Name = "btn_add_brand";
+            this.btn_add_brand.Size = new System.Drawing.Size(30, 22);
+            this.btn_add_brand.TabIndex = 35;
+            this.btn_add_brand.UseVisualStyleBackColor = false;
+            this.btn_add_brand.Click += new System.EventHandler(this.btn_add_brand_Click);
+            // 
+            // btn_add_name
+            // 
+            this.btn_add_name.BackColor = System.Drawing.Color.Transparent;
+            this.btn_add_name.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_name.BackgroundImage")));
+            this.btn_add_name.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_add_name.Location = new System.Drawing.Point(366, 15);
+            this.btn_add_name.Name = "btn_add_name";
+            this.btn_add_name.Size = new System.Drawing.Size(30, 22);
+            this.btn_add_name.TabIndex = 34;
+            this.btn_add_name.UseVisualStyleBackColor = false;
+            this.btn_add_name.Click += new System.EventHandler(this.btn_add_name_Click);
+            // 
+            // btn_add_class
+            // 
+            this.btn_add_class.BackColor = System.Drawing.Color.Transparent;
+            this.btn_add_class.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_class.BackgroundImage")));
+            this.btn_add_class.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_add_class.Location = new System.Drawing.Point(707, 16);
+            this.btn_add_class.Name = "btn_add_class";
+            this.btn_add_class.Size = new System.Drawing.Size(30, 22);
+            this.btn_add_class.TabIndex = 33;
+            this.btn_add_class.UseVisualStyleBackColor = false;
+            this.btn_add_class.Click += new System.EventHandler(this.btn_add_class_Click);
+            // 
+            // treeViewContextMenu
+            // 
+            this.treeViewContextMenu.Name = "treeViewContextMenu";
+            this.treeViewContextMenu.Size = new System.Drawing.Size(61, 4);
             // 
             // frm_Item_Entry
             // 
@@ -2411,11 +2729,11 @@
             this.panel1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_canvass_sheet)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel22.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dg_purchasing)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_purchasing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePurchasing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ds_purchasing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dt_purchasing)).EndInit();
@@ -2423,7 +2741,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
             this.tab_sales.ResumeLayout(false);
             this.pnl_sales.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_sales)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.salesBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceSales)).EndInit();
@@ -2433,29 +2750,38 @@
             this.pnl_item_sales_price.PerformLayout();
             this.tab_inventory.ResumeLayout(false);
             this.pnl_inventory.ResumeLayout(false);
+            this.pnl_body.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
-            this.panel13.ResumeLayout(false);
-            this.panel19.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
-            this.panel18.ResumeLayout(false);
-            this.panel18.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_available_inventory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tblavailableinvBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceInventory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_inventory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable3)).EndInit();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.panel14.ResumeLayout(false);
-            this.panel17.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
-            this.panel16.ResumeLayout(false);
-            this.panel16.PerformLayout();
-            this.panel15.ResumeLayout(false);
-            this.panel15.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_released_stock)).EndInit();
+            this.panel13.ResumeLayout(false);
+            this.panel13.PerformLayout();
             this.tab_production.ResumeLayout(false);
             this.pnl_production.ResumeLayout(false);
             this.panel10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_production_request)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).EndInit();
             this.panel20.ResumeLayout(false);
             this.panel20.PerformLayout();
             this.panel11.ResumeLayout(false);
             this.panel21.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_bom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceProduction)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ds_production)).EndInit();
@@ -2463,6 +2789,16 @@
             this.panel12.ResumeLayout(false);
             this.panel12.PerformLayout();
             this.tab_attachments.ResumeLayout(false);
+            this.pnl_attachments.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
+            this.panel15.ResumeLayout(false);
+            this.pnl_Receiving.ResumeLayout(false);
+            this.pnl_Receiving.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel16.ResumeLayout(false);
+            this.TV1_preview.ResumeLayout(false);
+            this.TV1_preview.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.salesBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource)).EndInit();
             this.pnl_header.ResumeLayout(false);
@@ -2493,36 +2829,25 @@
         private System.Windows.Forms.TabPage tab_production;
         private System.Windows.Forms.Panel pnl_production;
         private System.Windows.Forms.TabPage tab_attachments;
-        private System.Windows.Forms.Panel pnl_attachments;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridView dgv_canvass_sheet;
         private System.Windows.Forms.DataGridViewTextBoxColumn canvass_sheet;
         private System.Windows.Forms.DataGridViewTextBoxColumn date;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.DataGridView dg_purchasing;
+        private System.Windows.Forms.DataGridView dgv_purchasing;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.DataGridView dataGridView4;
-        private System.Windows.Forms.Panel panel8;
-        private System.Windows.Forms.DataGridView dgv_sales;
         private System.Windows.Forms.Panel pnl_item_sales_price;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.Panel panel13;
-        private System.Windows.Forms.Panel panel14;
-        private System.Windows.Forms.Panel panel15;
-        private System.Windows.Forms.Panel panel17;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Panel pnl_body;
+        private System.Windows.Forms.CheckBox chk_special_item;
+        private System.Windows.Forms.CheckBox chk_fast_item;
         private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox txt_maximum_inventory;
+        private System.Windows.Forms.TextBox txt_minimum_inventory;
+        private System.Windows.Forms.TextBox txt_default_bin_location;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label24;
@@ -2530,22 +2855,10 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Panel panel19;
-        private System.Windows.Forms.DataGridView dataGridView6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
-        private System.Windows.Forms.Panel panel18;
-        private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.DataGridView dataGridView5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RESERVED;
-        private System.Windows.Forms.Panel panel16;
-        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.DataGridView dgv_released_stock;
+        private System.Windows.Forms.DataGridView dgv_available_inventory;
         private System.Windows.Forms.Panel panel10;
-        private System.Windows.Forms.DataGridView dataGridView8;
+        private System.Windows.Forms.DataGridView dgv_production_request;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column14;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
@@ -2556,10 +2869,9 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Panel panel11;
         private System.Windows.Forms.Panel panel21;
-        private System.Windows.Forms.DataGridView dataGridView7;
+        private System.Windows.Forms.DataGridView dgv_bom;
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.ToolStripButton btn_edit;
         private System.Windows.Forms.ToolStripButton btn_delete;
@@ -2604,15 +2916,8 @@
         private System.Data.DataColumn dataColumn8;
         private System.Windows.Forms.BindingSource salesBindingSource;
         private System.Windows.Forms.TextBox txt_price;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.BindingSource salesBindingSource1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn customernameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn salesordernoDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button btn_remove_image;
         private System.Windows.Forms.Panel pnl_additional_specs;
         private System.Windows.Forms.TextBox txt_pump_type_compatability;
@@ -2690,10 +2995,69 @@
         private System.Windows.Forms.ComboBox cmb_item_brand;
         private System.Windows.Forms.ComboBox cmb_item_class;
         private System.Windows.Forms.CheckBox chk_is_stop_selling;
-        private System.Windows.Forms.TextBox txt_item_code1;
+        private System.Windows.Forms.TextBox txt_item_code;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btn_add_valuation_method;
+        private System.Windows.Forms.ComboBox cmb_valuation_method;
+        private System.Windows.Forms.ComboBox cmb_warehouse;
+        private System.Windows.Forms.ComboBox cmb_default_zone;
+        private System.Windows.Forms.ComboBox cmb_storage_type;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel14;
+        private System.Windows.Forms.Panel panel13;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
+        private System.Windows.Forms.TextBox txt_item_inventory_id;
+        private System.Windows.Forms.TextBox txt_item_inventory_based_id;
+        private System.Data.DataSet ds_inventory;
+        private System.Data.DataTable dataTable3;
+        private System.Data.DataColumn dataColumn10;
+        private System.Data.DataColumn dataColumn11;
+        private System.Data.DataColumn dataColumn12;
+        private System.Data.DataColumn dataColumn13;
+        private System.Data.DataColumn dataColumn14;
+        private System.Data.DataColumn dataColumn15;
+        private System.Windows.Forms.BindingSource bindingSourceInventory;
+        private System.Windows.Forms.BindingSource tblavailableinvBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn warehousenameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn locationDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn itemidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn stockqtyDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn stockuomDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.DataGridView dgv_sales;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn customernameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn salesordernoDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Panel pnl_attachments;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Panel panel15;
+        private System.Windows.Forms.Panel pnl_Receiving;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button btnUpload;
+        private System.Windows.Forms.ListView ITEM_LV;
+        private System.Windows.Forms.Panel panel16;
+        private System.Windows.Forms.Panel TV1_preview;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.TreeView ITEM_TV;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ContextMenuStrip treeViewContextMenu;
     }
 }

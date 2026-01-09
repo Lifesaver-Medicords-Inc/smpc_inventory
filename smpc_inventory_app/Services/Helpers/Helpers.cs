@@ -1080,7 +1080,6 @@ namespace smpc_app.Services.Helpers
 
                                 if (comboBox.Tag == "DYNAMIC")
                                 {
-
                                     Console.WriteLine("DYNAMICS:", comboBox.Name);
                                     comboBox.SelectedValue = (string)dt.Rows[selectedIndex][key].ToString();
                                 }
@@ -1112,7 +1111,6 @@ namespace smpc_app.Services.Helpers
                                 else
                                 {
                                     string keys = comboBox.Name.Replace("cmb_", "");
-                                    //Console.WriteLine(comboBox.Name);
                                     comboBox.Text = (string)dt.Rows[selectedIndex][column_name].ToString();
                                 }
 
@@ -1120,11 +1118,10 @@ namespace smpc_app.Services.Helpers
                             // Check if the control is a Checkbox
                             if (control is CheckBox checkbox)
                             {
-
                                 //to hand outofbound rows
                                 if (selectedIndex < 0 || selectedIndex >= dt.Rows.Count)
                                 {
-                                    Console.WriteLine("IndexOutOfRangeException selectedIndex");
+                                    Console.WriteLine("IndexOutOfRangeException  ");
                                     return;
                                 }
                                 string key = checkbox.Name.Replace("chk_", "");

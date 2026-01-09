@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Configuration;
+
 namespace smpc_inventory_app.Properties {
     
     
@@ -45,11 +47,29 @@ namespace smpc_inventory_app.Properties {
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Public\\Documents\\SMPC\\ITEM ENTRY")]
+        public string ITEMENTRYPATH
+        {
+            get
+            {
+                return ((string)(this["ITEMENTRYPATH"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("ws://127.0.0.1:3000")]
         public string Websocket {
             get {
                 return ((string)(this["Websocket"]));
             }
+        }
+
+        [ApplicationScopedSetting]
+        [DefaultSettingValue("D:\\LEM\\Source Tree\\Inventory\\smpc_inventory_app\\Printing")]
+        public string REPORTPATH
+        {
+            get { return ((string)this["REPORTPATH"]); }
         }
     }
 }
