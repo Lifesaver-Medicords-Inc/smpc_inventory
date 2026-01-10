@@ -17,6 +17,27 @@ namespace smpc_app.Services.Helpers
 {
     internal static class Helpers
     {
+        public static void SetChildControlsEnabled(Control[] parents, bool enable, string[] excludeNames)
+        {
+            foreach (Control parent in parents)
+            {
+                foreach (Control control in parent.Controls)
+                {
+                    // Skip excluded controls
+                    if (excludeNames != null && excludeNames.Contains(control.Name))
+                        continue;
+
+                    // Affect controls of these types
+                    if (control is TextBox || control is ComboBox || control is CheckBox || control is DateTimePicker)
+                        control.Enabled = enable;
+
+                    // Recurse into child containers
+                    if (control.HasChildren)
+                        SetChildControlsEnabled(new Control[] { control }, enable, excludeNames);
+                }
+            }
+        }
+
         public static void ApplySearchingFilter(DataGridView dataGridView, string searchText, params string[] columnsToSearch)
         {
             if (dataGridView.DataSource == null)

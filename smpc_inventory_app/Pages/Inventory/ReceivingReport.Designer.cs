@@ -31,7 +31,7 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReceivingReport));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_head = new System.Windows.Forms.Panel();
             this.lbl_rr = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -257,7 +257,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.pnl_main.Controls.Add(this.txt_doc);
             this.pnl_main.Controls.Add(this.supplierlbl);
             this.pnl_main.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnl_main.Enabled = false;
             this.pnl_main.Location = new System.Drawing.Point(0, 88);
             this.pnl_main.Name = "pnl_main";
             this.pnl_main.Size = new System.Drawing.Size(1285, 132);
@@ -265,6 +264,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // dtp_date_received
             // 
+            this.dtp_date_received.Enabled = false;
             this.dtp_date_received.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtp_date_received.Location = new System.Drawing.Point(140, 53);
             this.dtp_date_received.Name = "dtp_date_received";
@@ -288,6 +288,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.cmb_ref_doc.TabStop = false;
             this.cmb_ref_doc.Tag = "REQUIRED";
             this.cmb_ref_doc.SelectedIndexChanged += new System.EventHandler(this.cmb_ref_doc_SelectedIndexChanged);
+            this.cmb_ref_doc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_ref_doc_KeyDown);
             // 
             // txt_address
             // 
@@ -302,7 +303,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // 
             // cmb_warehouse_name
             // 
-            this.cmb_warehouse_name.BackColor = System.Drawing.SystemColors.Window;
+            this.cmb_warehouse_name.BackColor = System.Drawing.Color.White;
             this.cmb_warehouse_name.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_warehouse_name.Enabled = false;
             this.cmb_warehouse_name.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -557,14 +558,14 @@ namespace smpc_inventory_app.Pages.Inventory
             this.dgv_main.AllowUserToAddRows = false;
             this.dgv_main.AllowUserToDeleteRows = false;
             this.dgv_main.AllowUserToResizeColumns = false;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv_main.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_main.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv_main.ColumnHeadersHeight = 50;
             this.dgv_main.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgv_main.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
