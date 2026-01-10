@@ -72,13 +72,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.tab_closed = new System.Windows.Forms.TabPage();
             this.panel4 = new System.Windows.Forms.Panel();
             this.dgv_closed_po = new System.Windows.Forms.DataGridView();
-            this.idDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.docnoDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.suppliernameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalamountdueDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.leadtimeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.receivingreportidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.receivingreportnoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bindingSource_closed_po = new System.Windows.Forms.BindingSource(this.components);
             this.pnl_header_closed = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -87,6 +80,13 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_create_po = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.idDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.docnoDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.suppliernameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalamountdueDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.leadtimeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.receivingreportidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.receivingreportnoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tab_sales_order.SuspendLayout();
@@ -260,6 +260,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             // dgv_ative_po
             // 
             this.dgv_ative_po.AllowUserToAddRows = false;
+            this.dgv_ative_po.AllowUserToDeleteRows = false;
             this.dgv_ative_po.AutoGenerateColumns = false;
             this.dgv_ative_po.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_ative_po.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -449,6 +450,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             // dgv_closed_po
             // 
             this.dgv_closed_po.AllowUserToAddRows = false;
+            this.dgv_closed_po.AllowUserToDeleteRows = false;
             this.dgv_closed_po.AutoGenerateColumns = false;
             this.dgv_closed_po.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_closed_po.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -466,64 +468,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.dgv_closed_po.ReadOnly = true;
             this.dgv_closed_po.Size = new System.Drawing.Size(1223, 739);
             this.dgv_closed_po.TabIndex = 0;
-            // 
-            // idDataGridViewTextBoxColumn1
-            // 
-            this.idDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.idDataGridViewTextBoxColumn1.DataPropertyName = "id";
-            this.idDataGridViewTextBoxColumn1.HeaderText = "id";
-            this.idDataGridViewTextBoxColumn1.Name = "idDataGridViewTextBoxColumn1";
-            this.idDataGridViewTextBoxColumn1.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn1.Visible = false;
-            // 
-            // docnoDataGridViewTextBoxColumn1
-            // 
-            this.docnoDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.docnoDataGridViewTextBoxColumn1.DataPropertyName = "doc_no";
-            this.docnoDataGridViewTextBoxColumn1.HeaderText = "DOC NO";
-            this.docnoDataGridViewTextBoxColumn1.Name = "docnoDataGridViewTextBoxColumn1";
-            this.docnoDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // suppliernameDataGridViewTextBoxColumn1
-            // 
-            this.suppliernameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.suppliernameDataGridViewTextBoxColumn1.DataPropertyName = "supplier_name";
-            this.suppliernameDataGridViewTextBoxColumn1.HeaderText = "SUPPLIER NAME";
-            this.suppliernameDataGridViewTextBoxColumn1.Name = "suppliernameDataGridViewTextBoxColumn1";
-            this.suppliernameDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // totalamountdueDataGridViewTextBoxColumn1
-            // 
-            this.totalamountdueDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.totalamountdueDataGridViewTextBoxColumn1.DataPropertyName = "total_amount_due";
-            this.totalamountdueDataGridViewTextBoxColumn1.HeaderText = "RPICE";
-            this.totalamountdueDataGridViewTextBoxColumn1.Name = "totalamountdueDataGridViewTextBoxColumn1";
-            this.totalamountdueDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // leadtimeDataGridViewTextBoxColumn1
-            // 
-            this.leadtimeDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.leadtimeDataGridViewTextBoxColumn1.DataPropertyName = "lead_time";
-            this.leadtimeDataGridViewTextBoxColumn1.HeaderText = "DATE OF ARRIVAL";
-            this.leadtimeDataGridViewTextBoxColumn1.Name = "leadtimeDataGridViewTextBoxColumn1";
-            this.leadtimeDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // receivingreportidDataGridViewTextBoxColumn
-            // 
-            this.receivingreportidDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.receivingreportidDataGridViewTextBoxColumn.DataPropertyName = "receiving_report_id";
-            this.receivingreportidDataGridViewTextBoxColumn.HeaderText = "receiving_report_id";
-            this.receivingreportidDataGridViewTextBoxColumn.Name = "receivingreportidDataGridViewTextBoxColumn";
-            this.receivingreportidDataGridViewTextBoxColumn.ReadOnly = true;
-            this.receivingreportidDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // receivingreportnoDataGridViewTextBoxColumn
-            // 
-            this.receivingreportnoDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.receivingreportnoDataGridViewTextBoxColumn.DataPropertyName = "receiving_report_no";
-            this.receivingreportnoDataGridViewTextBoxColumn.HeaderText = "RECEIVING REPORT";
-            this.receivingreportnoDataGridViewTextBoxColumn.Name = "receivingreportnoDataGridViewTextBoxColumn";
-            this.receivingreportnoDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // bindingSource_closed_po
             // 
@@ -594,6 +538,64 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.label1.Size = new System.Drawing.Size(137, 24);
             this.label1.TabIndex = 2;
             this.label1.Text = "Purchasing List";
+            // 
+            // idDataGridViewTextBoxColumn1
+            // 
+            this.idDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.idDataGridViewTextBoxColumn1.DataPropertyName = "id";
+            this.idDataGridViewTextBoxColumn1.HeaderText = "id";
+            this.idDataGridViewTextBoxColumn1.Name = "idDataGridViewTextBoxColumn1";
+            this.idDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // docnoDataGridViewTextBoxColumn1
+            // 
+            this.docnoDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.docnoDataGridViewTextBoxColumn1.DataPropertyName = "doc_no";
+            this.docnoDataGridViewTextBoxColumn1.HeaderText = "DOC NO";
+            this.docnoDataGridViewTextBoxColumn1.Name = "docnoDataGridViewTextBoxColumn1";
+            this.docnoDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // suppliernameDataGridViewTextBoxColumn1
+            // 
+            this.suppliernameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.suppliernameDataGridViewTextBoxColumn1.DataPropertyName = "supplier_name";
+            this.suppliernameDataGridViewTextBoxColumn1.HeaderText = "SUPPLIER NAME";
+            this.suppliernameDataGridViewTextBoxColumn1.Name = "suppliernameDataGridViewTextBoxColumn1";
+            this.suppliernameDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // totalamountdueDataGridViewTextBoxColumn1
+            // 
+            this.totalamountdueDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.totalamountdueDataGridViewTextBoxColumn1.DataPropertyName = "total_amount_due";
+            this.totalamountdueDataGridViewTextBoxColumn1.HeaderText = "PRICE";
+            this.totalamountdueDataGridViewTextBoxColumn1.Name = "totalamountdueDataGridViewTextBoxColumn1";
+            this.totalamountdueDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // leadtimeDataGridViewTextBoxColumn1
+            // 
+            this.leadtimeDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.leadtimeDataGridViewTextBoxColumn1.DataPropertyName = "lead_time";
+            this.leadtimeDataGridViewTextBoxColumn1.HeaderText = "DATE OF ARRIVAL";
+            this.leadtimeDataGridViewTextBoxColumn1.Name = "leadtimeDataGridViewTextBoxColumn1";
+            this.leadtimeDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // receivingreportidDataGridViewTextBoxColumn
+            // 
+            this.receivingreportidDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.receivingreportidDataGridViewTextBoxColumn.DataPropertyName = "receiving_report_id";
+            this.receivingreportidDataGridViewTextBoxColumn.HeaderText = "receiving_report_id";
+            this.receivingreportidDataGridViewTextBoxColumn.Name = "receivingreportidDataGridViewTextBoxColumn";
+            this.receivingreportidDataGridViewTextBoxColumn.ReadOnly = true;
+            this.receivingreportidDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // receivingreportnoDataGridViewTextBoxColumn
+            // 
+            this.receivingreportnoDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.receivingreportnoDataGridViewTextBoxColumn.DataPropertyName = "receiving_report_no";
+            this.receivingreportnoDataGridViewTextBoxColumn.HeaderText = "RECEIVING REPORT";
+            this.receivingreportnoDataGridViewTextBoxColumn.Name = "receivingreportnoDataGridViewTextBoxColumn";
+            this.receivingreportnoDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // NewPurchasingList
             // 
@@ -678,13 +680,6 @@ namespace smpc_inventory_app.Pages.Purchasing
         private System.Data.DataColumn dataColumn10;
         private System.Data.DataColumn dataColumn11;
         private System.Data.DataColumn dataColumn12;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn docnoDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn suppliernameDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn totalamountdueDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn leadtimeDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn receivingreportidDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn receivingreportnoDataGridViewTextBoxColumn;
         private System.Windows.Forms.Panel pnl_header_active;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txt_seach_active;
@@ -694,5 +689,12 @@ namespace smpc_inventory_app.Pages.Purchasing
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txt_search_so;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn docnoDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn suppliernameDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn totalamountdueDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn leadtimeDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn receivingreportidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn receivingreportnoDataGridViewTextBoxColumn;
     }
 }
