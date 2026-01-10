@@ -395,6 +395,22 @@ namespace smpc_inventory_app.Pages.Inventory
                 rrDetails.Add(detail);
             }
 
+            // Validate all rows have zero or no received quantity
+            bool allZeroReceivedQty = rrDetails.All(d =>
+            {
+                int receivedQty;
+                return !int.TryParse(d.received_qty, out receivedQty) || receivedQty <= 0;
+            });
+
+            if (allZeroReceivedQty)
+            {
+                Helpers.ShowDialogMessage(
+                    "error",
+                    "Receiving quantity cannot be zero for all items. At least one item must have a received quantity."
+                );
+                return;
+            }
+
             // Wrap everything into ReceivingReportPayload
             var rrPayload = new ReceivingReportPayload
             {
