@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -169,7 +169,6 @@ namespace smpc_inventory_app.Pages.Item
 
             records = response.Data;
 
-            // heavy work off the UI thread
             var tables = await Task.Run(() => new
             {
                 Items = JsonHelper.ToDataTable(records.items),
