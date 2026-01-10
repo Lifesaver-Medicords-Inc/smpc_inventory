@@ -272,7 +272,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.dgv_ative_po.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_ative_po.Location = new System.Drawing.Point(0, 0);
             this.dgv_ative_po.Name = "dgv_ative_po";
-            this.dgv_ative_po.ReadOnly = true;
             this.dgv_ative_po.Size = new System.Drawing.Size(1223, 739);
             this.dgv_ative_po.TabIndex = 0;
             // 
@@ -281,7 +280,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.idDataGridViewTextBoxColumn.DataPropertyName = "id";
             this.idDataGridViewTextBoxColumn.HeaderText = "id";
             this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.ReadOnly = true;
             this.idDataGridViewTextBoxColumn.Visible = false;
             // 
             // docnoDataGridViewTextBoxColumn
@@ -290,7 +288,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.docnoDataGridViewTextBoxColumn.DataPropertyName = "doc_no";
             this.docnoDataGridViewTextBoxColumn.HeaderText = "DOC NO";
             this.docnoDataGridViewTextBoxColumn.Name = "docnoDataGridViewTextBoxColumn";
-            this.docnoDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // suppliernameDataGridViewTextBoxColumn
             // 
@@ -298,7 +295,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.suppliernameDataGridViewTextBoxColumn.DataPropertyName = "supplier_name";
             this.suppliernameDataGridViewTextBoxColumn.HeaderText = "SUPPLIER NAME";
             this.suppliernameDataGridViewTextBoxColumn.Name = "suppliernameDataGridViewTextBoxColumn";
-            this.suppliernameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // totalamountdueDataGridViewTextBoxColumn
             // 
@@ -306,7 +302,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.totalamountdueDataGridViewTextBoxColumn.DataPropertyName = "total_amount_due";
             this.totalamountdueDataGridViewTextBoxColumn.HeaderText = "PRICE";
             this.totalamountdueDataGridViewTextBoxColumn.Name = "totalamountdueDataGridViewTextBoxColumn";
-            this.totalamountdueDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // leadtimeDataGridViewTextBoxColumn
             // 
@@ -314,7 +309,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.leadtimeDataGridViewTextBoxColumn.DataPropertyName = "lead_time";
             this.leadtimeDataGridViewTextBoxColumn.HeaderText = "EXPECTED ARRIVAL";
             this.leadtimeDataGridViewTextBoxColumn.Name = "leadtimeDataGridViewTextBoxColumn";
-            this.leadtimeDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // bindingSource_active_po
             // 
@@ -463,7 +457,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.dgv_closed_po.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_closed_po.Location = new System.Drawing.Point(0, 0);
             this.dgv_closed_po.Name = "dgv_closed_po";
-            this.dgv_closed_po.ReadOnly = true;
             this.dgv_closed_po.Size = new System.Drawing.Size(1223, 739);
             this.dgv_closed_po.TabIndex = 0;
             // 
@@ -473,7 +466,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.idDataGridViewTextBoxColumn1.DataPropertyName = "id";
             this.idDataGridViewTextBoxColumn1.HeaderText = "id";
             this.idDataGridViewTextBoxColumn1.Name = "idDataGridViewTextBoxColumn1";
-            this.idDataGridViewTextBoxColumn1.ReadOnly = true;
             this.idDataGridViewTextBoxColumn1.Visible = false;
             // 
             // docnoDataGridViewTextBoxColumn1
@@ -482,7 +474,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.docnoDataGridViewTextBoxColumn1.DataPropertyName = "doc_no";
             this.docnoDataGridViewTextBoxColumn1.HeaderText = "DOC NO";
             this.docnoDataGridViewTextBoxColumn1.Name = "docnoDataGridViewTextBoxColumn1";
-            this.docnoDataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // suppliernameDataGridViewTextBoxColumn1
             // 
@@ -490,7 +481,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.suppliernameDataGridViewTextBoxColumn1.DataPropertyName = "supplier_name";
             this.suppliernameDataGridViewTextBoxColumn1.HeaderText = "SUPPLIER NAME";
             this.suppliernameDataGridViewTextBoxColumn1.Name = "suppliernameDataGridViewTextBoxColumn1";
-            this.suppliernameDataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // totalamountdueDataGridViewTextBoxColumn1
             // 
@@ -498,7 +488,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.totalamountdueDataGridViewTextBoxColumn1.DataPropertyName = "total_amount_due";
             this.totalamountdueDataGridViewTextBoxColumn1.HeaderText = "RPICE";
             this.totalamountdueDataGridViewTextBoxColumn1.Name = "totalamountdueDataGridViewTextBoxColumn1";
-            this.totalamountdueDataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // leadtimeDataGridViewTextBoxColumn1
             // 
@@ -506,7 +495,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.leadtimeDataGridViewTextBoxColumn1.DataPropertyName = "lead_time";
             this.leadtimeDataGridViewTextBoxColumn1.HeaderText = "DATE OF ARRIVAL";
             this.leadtimeDataGridViewTextBoxColumn1.Name = "leadtimeDataGridViewTextBoxColumn1";
-            this.leadtimeDataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // receivingreportidDataGridViewTextBoxColumn
             // 
@@ -514,7 +502,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.receivingreportidDataGridViewTextBoxColumn.DataPropertyName = "receiving_report_id";
             this.receivingreportidDataGridViewTextBoxColumn.HeaderText = "receiving_report_id";
             this.receivingreportidDataGridViewTextBoxColumn.Name = "receivingreportidDataGridViewTextBoxColumn";
-            this.receivingreportidDataGridViewTextBoxColumn.ReadOnly = true;
             this.receivingreportidDataGridViewTextBoxColumn.Visible = false;
             // 
             // receivingreportnoDataGridViewTextBoxColumn
@@ -523,7 +510,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.receivingreportnoDataGridViewTextBoxColumn.DataPropertyName = "receiving_report_no";
             this.receivingreportnoDataGridViewTextBoxColumn.HeaderText = "RECEIVING REPORT";
             this.receivingreportnoDataGridViewTextBoxColumn.Name = "receivingreportnoDataGridViewTextBoxColumn";
-            this.receivingreportnoDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // bindingSource_closed_po
             // 
