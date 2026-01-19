@@ -92,9 +92,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             txt_branch_name.Text = TabTitle;
             //GetIndustriesSetup();
+            GetPositionSetup();
             GetTaxCode();
             await GetPayments();
-            await  GetPositionSetup();
             await GetSocialMediaSetup();
             //GetEntity();
             //GetBranchIndustries();
@@ -1265,18 +1265,18 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 nameCell.Style.ForeColor = Color.Black;
             }
-            if (e.ColumnIndex == 6) // position column
+
+            if (dg_contacts.Columns[e.ColumnIndex].Name == "position")
             {
-                var positionCell = (DataGridViewComboBoxCell)row.Cells[6];
+                var value = dg_contacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                MessageBox.Show(CacheData.Positions.Columns["id"].DataType.ToString());
 
-                int positionId = positionCell.Value != null
-                    ? Convert.ToInt32(positionCell.Value)
-                    : 0;
-
-                string positionName = positionCell.FormattedValue?.ToString() ?? "";
-
-                // Use positionName here (validation, saving, display elsewhere)
+                MessageBox.Show(
+                    $"Value: {value}\n" +
+                    $"Type: {value?.GetType()}"
+                );
             }
+
 
         }
         private readonly string[] PhAreaCodes = new string[]
@@ -1594,7 +1594,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             var combobox = (DataGridViewComboBoxColumn)dg_contacts.Columns["position"];
             combobox.DataSource = CacheData.Positions;
-            combobox.DisplayMember = "name";
+            combobox.DataPropertyName = "position";
+            combobox.DisplayMember = "code";
             combobox.ValueMember = "id";
 
         }
@@ -2097,6 +2098,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private void dg_history_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             HideSystemColumns((DataGridView)sender, "history");
+        }
+
+        private void dg_contacts_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            
         }
     }
 }

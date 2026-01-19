@@ -31,8 +31,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BusinessPartnerInfo));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel_header = new System.Windows.Forms.Panel();
             this.BPI = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -142,9 +142,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label15 = new System.Windows.Forms.Label();
             this.cmb_item_accounts = new System.Windows.Forms.ComboBox();
             this.footer_panel = new System.Windows.Forms.Panel();
-            this.btn_add = new System.Windows.Forms.Button();
-            this.btn_cancel = new System.Windows.Forms.Button();
-            this.btn_update = new System.Windows.Forms.Button();
             this.btn_qoute = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
@@ -161,127 +158,127 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.menu_delete = new System.Windows.Forms.ToolStripMenuItem();
             this.history_panel = new System.Windows.Forms.Panel();
             this.tabControl_History = new System.Windows.Forms.TabControl();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.dg_history = new System.Windows.Forms.DataGridView();
-            this.editbyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.edithistoryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.actionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.atdateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.actionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.edithistoryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.editbyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel_item = new System.Windows.Forms.Panel();
-            this.label21 = new System.Windows.Forms.Label();
-            this.txt_item_tax_code = new System.Windows.Forms.TextBox();
-            this.button9 = new System.Windows.Forms.Button();
-            this.cmb_payment_terms = new System.Windows.Forms.ComboBox();
-            this.cmb_tax_code = new System.Windows.Forms.ComboBox();
-            this.cmb_item_account = new System.Windows.Forms.ComboBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.cmb_item_account = new System.Windows.Forms.ComboBox();
+            this.cmb_tax_code = new System.Windows.Forms.ComboBox();
+            this.cmb_payment_terms = new System.Windows.Forms.ComboBox();
+            this.button9 = new System.Windows.Forms.Button();
+            this.txt_item_tax_code = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.dg_items = new System.Windows.Forms.DataGridView();
-            this.item_graph = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.item_is_deleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.bpi_item_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_item_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.status_trade = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.status_tangible = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.short_desc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.short_desc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.status_tangible = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.status_trade = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_item_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_item_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_is_deleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.item_graph = new System.Windows.Forms.DataGridViewButtonColumn();
             this.pnl_new_added_item = new System.Windows.Forms.Panel();
             this.btn_add_new_item = new System.Windows.Forms.Button();
             this.panel_finance = new System.Windows.Forms.Panel();
-            this.btn_finance_payment_terms = new System.Windows.Forms.Button();
-            this.cmb_finance_account = new System.Windows.Forms.ComboBox();
-            this.cmb_finance_payment_terms = new System.Windows.Forms.ComboBox();
-            this.txt_finance_id = new System.Windows.Forms.TextBox();
-            this.txt_finance_based_id = new System.Windows.Forms.TextBox();
             this.txt_finance_branch_id = new System.Windows.Forms.TextBox();
+            this.txt_finance_based_id = new System.Windows.Forms.TextBox();
+            this.txt_finance_id = new System.Windows.Forms.TextBox();
+            this.cmb_finance_payment_terms = new System.Windows.Forms.ComboBox();
+            this.cmb_finance_account = new System.Windows.Forms.ComboBox();
+            this.btn_finance_payment_terms = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.finance_tabpage_nale = new System.Windows.Forms.Panel();
             this.tabControl_Finance = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.dataGridView4 = new System.Windows.Forms.DataGridView();
-            this.finance_trans_or_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.finance_trans_or = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.finance_trans_si = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.finance_transaction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.finance_trans_po = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.finance_trans_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.finance_trans_so = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dg_finance_pending = new System.Windows.Forms.DataGridView();
-            this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.stage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.total_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.qoute_ref = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.qoute_ref = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.total_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.stage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.dataGridView4 = new System.Windows.Forms.DataGridView();
+            this.finance_trans_so = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.finance_trans_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.finance_trans_po = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.finance_transaction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.finance_trans_si = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.finance_trans_or = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.finance_trans_or_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dg_address = new System.Windows.Forms.DataGridView();
-            this.address_is_deleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.address_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.address_ids = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.address_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.location = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address_ids = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address_is_deleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.buttonPanel = new System.Windows.Forms.Panel();
-            this.btn_add_page = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.btn_add_page = new System.Windows.Forms.Button();
             this.dg_contacts = new System.Windows.Forms.DataGridView();
-            this.contact_notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.contacts_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.contacts_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.position = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ADD_PREF = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.preferences = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.is_default_contact = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.preferences = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ADD_PREF = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.position = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contacts_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contacts_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contact_notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel_general = new System.Windows.Forms.Panel();
-            this.txt_branch_website = new System.Windows.Forms.TextBox();
-            this.txt_branch_tel_no = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.lbl_customer_code = new System.Windows.Forms.Label();
-            this.lbl_supplier_code = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.txt_entity_type = new System.Windows.Forms.TextBox();
-            this.cmb_transaction_type = new System.Windows.Forms.ComboBox();
-            this.cmb_class_name = new System.Windows.Forms.ComboBox();
-            this.txt_branch_industry = new System.Windows.Forms.TextBox();
-            this.txt_customer_code = new System.Windows.Forms.TextBox();
-            this.txt_supplier_code = new System.Windows.Forms.TextBox();
-            this.txt_fax_no = new System.Windows.Forms.TextBox();
-            this.btn_get_entity = new System.Windows.Forms.Button();
-            this.btn_get_branch = new System.Windows.Forms.Button();
-            this.btn_social_links = new System.Windows.Forms.Button();
-            this.btn_branch_industry = new System.Windows.Forms.Button();
-            this.btn_add_entity = new System.Windows.Forms.Button();
-            this.txt_notes = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.lbl_branch_name = new System.Windows.Forms.Label();
-            this.txt_branch_name = new System.Windows.Forms.TextBox();
-            this.lbl_non_affiliated = new System.Windows.Forms.Label();
-            this.txt_non_affiliated = new System.Windows.Forms.TextBox();
-            this.lbl_affiliated = new System.Windows.Forms.Label();
-            this.txt_affiliated = new System.Windows.Forms.TextBox();
-            this.txt_general_id = new System.Windows.Forms.TextBox();
-            this.lbl_general_id = new System.Windows.Forms.Label();
-            this.txt_general_based_id = new System.Windows.Forms.TextBox();
-            this.lbl_general_based_id = new System.Windows.Forms.Label();
-            this.txt_branch_sales_id = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
             this.cmb_social = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txt_branch_sales_id = new System.Windows.Forms.TextBox();
+            this.lbl_general_based_id = new System.Windows.Forms.Label();
+            this.txt_general_based_id = new System.Windows.Forms.TextBox();
+            this.lbl_general_id = new System.Windows.Forms.Label();
+            this.txt_general_id = new System.Windows.Forms.TextBox();
+            this.txt_affiliated = new System.Windows.Forms.TextBox();
+            this.lbl_affiliated = new System.Windows.Forms.Label();
+            this.txt_non_affiliated = new System.Windows.Forms.TextBox();
+            this.lbl_non_affiliated = new System.Windows.Forms.Label();
+            this.txt_branch_name = new System.Windows.Forms.TextBox();
+            this.lbl_branch_name = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.txt_notes = new System.Windows.Forms.TextBox();
+            this.btn_add_entity = new System.Windows.Forms.Button();
+            this.btn_branch_industry = new System.Windows.Forms.Button();
+            this.btn_social_links = new System.Windows.Forms.Button();
+            this.btn_get_branch = new System.Windows.Forms.Button();
+            this.btn_get_entity = new System.Windows.Forms.Button();
+            this.txt_fax_no = new System.Windows.Forms.TextBox();
+            this.txt_supplier_code = new System.Windows.Forms.TextBox();
+            this.txt_customer_code = new System.Windows.Forms.TextBox();
+            this.txt_branch_industry = new System.Windows.Forms.TextBox();
+            this.cmb_class_name = new System.Windows.Forms.ComboBox();
+            this.cmb_transaction_type = new System.Windows.Forms.ComboBox();
+            this.txt_entity_type = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.lbl_supplier_code = new System.Windows.Forms.Label();
+            this.lbl_customer_code = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txt_branch_tel_no = new System.Windows.Forms.TextBox();
+            this.txt_branch_website = new System.Windows.Forms.TextBox();
             this.panel_header.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -325,10 +322,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_finance.SuspendLayout();
             this.finance_tabpage_nale.SuspendLayout();
             this.tabControl_Finance.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_finance_pending)).BeginInit();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_address)).BeginInit();
             this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_contacts)).BeginInit();
@@ -1129,9 +1126,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // footer_panel
             // 
-            this.footer_panel.Controls.Add(this.btn_add);
-            this.footer_panel.Controls.Add(this.btn_cancel);
-            this.footer_panel.Controls.Add(this.btn_update);
             this.footer_panel.Controls.Add(this.btn_qoute);
             this.footer_panel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.footer_panel.Location = new System.Drawing.Point(0, 900);
@@ -1139,39 +1133,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.footer_panel.Size = new System.Drawing.Size(1250, 118);
             this.footer_panel.TabIndex = 5;
             this.footer_panel.Paint += new System.Windows.Forms.PaintEventHandler(this.footer_panel_Paint);
-            // 
-            // btn_add
-            // 
-            this.btn_add.Location = new System.Drawing.Point(997, 28);
-            this.btn_add.Name = "btn_add";
-            this.btn_add.Size = new System.Drawing.Size(75, 26);
-            this.btn_add.TabIndex = 14;
-            this.btn_add.Text = "ADD";
-            this.btn_add.UseVisualStyleBackColor = true;
-            this.btn_add.Visible = false;
-            this.btn_add.Click += new System.EventHandler(this.btn_add_Click);
-            // 
-            // btn_cancel
-            // 
-            this.btn_cancel.Location = new System.Drawing.Point(1142, 28);
-            this.btn_cancel.Name = "btn_cancel";
-            this.btn_cancel.Size = new System.Drawing.Size(75, 26);
-            this.btn_cancel.TabIndex = 13;
-            this.btn_cancel.Text = "CANCEL";
-            this.btn_cancel.UseVisualStyleBackColor = true;
-            this.btn_cancel.Visible = false;
-            this.btn_cancel.Click += new System.EventHandler(this.btn_cancel_Click);
-            // 
-            // btn_update
-            // 
-            this.btn_update.Location = new System.Drawing.Point(1069, 28);
-            this.btn_update.Name = "btn_update";
-            this.btn_update.Size = new System.Drawing.Size(75, 26);
-            this.btn_update.TabIndex = 12;
-            this.btn_update.Text = "UPDATE";
-            this.btn_update.UseVisualStyleBackColor = true;
-            this.btn_update.Visible = false;
-            this.btn_update.Click += new System.EventHandler(this.btn_update_Click);
             // 
             // btn_qoute
             // 
@@ -1260,6 +1221,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabControl_History.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl_History.TabIndex = 0;
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1214, 362);
+            this.tabPage4.TabIndex = 0;
+            this.tabPage4.Text = "TRANSACTION LOG";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
             // tabPage5
             // 
             this.tabPage5.Controls.Add(this.dg_history);
@@ -1287,21 +1258,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_history.Size = new System.Drawing.Size(1208, 356);
             this.dg_history.TabIndex = 0;
             // 
-            // editbyDataGridViewTextBoxColumn
+            // atdateDataGridViewTextBoxColumn
             // 
-            this.editbyDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.editbyDataGridViewTextBoxColumn.DataPropertyName = "edit_by";
-            this.editbyDataGridViewTextBoxColumn.HeaderText = "EDIT BY";
-            this.editbyDataGridViewTextBoxColumn.Name = "editbyDataGridViewTextBoxColumn";
-            this.editbyDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // edithistoryDataGridViewTextBoxColumn
-            // 
-            this.edithistoryDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.edithistoryDataGridViewTextBoxColumn.DataPropertyName = "edit_history";
-            this.edithistoryDataGridViewTextBoxColumn.HeaderText = "EDIT HISTORY";
-            this.edithistoryDataGridViewTextBoxColumn.Name = "edithistoryDataGridViewTextBoxColumn";
-            this.edithistoryDataGridViewTextBoxColumn.ReadOnly = true;
+            this.atdateDataGridViewTextBoxColumn.DataPropertyName = "at_date";
+            this.atdateDataGridViewTextBoxColumn.HeaderText = "DATE";
+            this.atdateDataGridViewTextBoxColumn.Name = "atdateDataGridViewTextBoxColumn";
+            this.atdateDataGridViewTextBoxColumn.ReadOnly = true;
+            this.atdateDataGridViewTextBoxColumn.Width = 150;
             // 
             // actionsDataGridViewTextBoxColumn
             // 
@@ -1311,23 +1274,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.actionsDataGridViewTextBoxColumn.ReadOnly = true;
             this.actionsDataGridViewTextBoxColumn.Width = 150;
             // 
-            // atdateDataGridViewTextBoxColumn
+            // edithistoryDataGridViewTextBoxColumn
             // 
-            this.atdateDataGridViewTextBoxColumn.DataPropertyName = "at_date";
-            this.atdateDataGridViewTextBoxColumn.HeaderText = "DATE";
-            this.atdateDataGridViewTextBoxColumn.Name = "atdateDataGridViewTextBoxColumn";
-            this.atdateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.atdateDataGridViewTextBoxColumn.Width = 150;
+            this.edithistoryDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.edithistoryDataGridViewTextBoxColumn.DataPropertyName = "edit_history";
+            this.edithistoryDataGridViewTextBoxColumn.HeaderText = "EDIT HISTORY";
+            this.edithistoryDataGridViewTextBoxColumn.Name = "edithistoryDataGridViewTextBoxColumn";
+            this.edithistoryDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // tabPage4
+            // editbyDataGridViewTextBoxColumn
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1214, 362);
-            this.tabPage4.TabIndex = 0;
-            this.tabPage4.Text = "TRANSACTION LOG";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.editbyDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.editbyDataGridViewTextBoxColumn.DataPropertyName = "edit_by";
+            this.editbyDataGridViewTextBoxColumn.HeaderText = "EDIT BY";
+            this.editbyDataGridViewTextBoxColumn.Name = "editbyDataGridViewTextBoxColumn";
+            this.editbyDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // panel_item
             // 
@@ -1347,23 +1308,70 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_item.Size = new System.Drawing.Size(1222, 83);
             this.panel_item.TabIndex = 6;
             // 
-            // label21
+            // button1
             // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(307, 48);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(21, 16);
-            this.label21.TabIndex = 5;
-            this.label21.Text = "%";
+            this.button1.Location = new System.Drawing.Point(1111, 44);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 37;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // txt_item_tax_code
+            // label25
             // 
-            this.txt_item_tax_code.Location = new System.Drawing.Point(223, 46);
-            this.txt_item_tax_code.Multiline = true;
-            this.txt_item_tax_code.Name = "txt_item_tax_code";
-            this.txt_item_tax_code.Size = new System.Drawing.Size(82, 21);
-            this.txt_item_tax_code.TabIndex = 3;
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(11, 51);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(61, 13);
+            this.label25.TabIndex = 36;
+            this.label25.Text = "TAX CODE";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(11, 32);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(100, 13);
+            this.label24.TabIndex = 35;
+            this.label24.Text = "PAYMENT TERMS";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(489, 27);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(59, 13);
+            this.label23.TabIndex = 9;
+            this.label23.Text = "ACCOUNT";
+            // 
+            // cmb_item_account
+            // 
+            this.cmb_item_account.FormattingEnabled = true;
+            this.cmb_item_account.Location = new System.Drawing.Point(552, 24);
+            this.cmb_item_account.Name = "cmb_item_account";
+            this.cmb_item_account.Size = new System.Drawing.Size(186, 21);
+            this.cmb_item_account.TabIndex = 34;
+            this.cmb_item_account.Tag = "DYNAMIC";
+            // 
+            // cmb_tax_code
+            // 
+            this.cmb_tax_code.FormattingEnabled = true;
+            this.cmb_tax_code.Location = new System.Drawing.Point(117, 46);
+            this.cmb_tax_code.Name = "cmb_tax_code";
+            this.cmb_tax_code.Size = new System.Drawing.Size(109, 21);
+            this.cmb_tax_code.TabIndex = 33;
+            this.cmb_tax_code.Tag = "";
+            this.cmb_tax_code.SelectedIndexChanged += new System.EventHandler(this.cmb_tax_code_SelectedIndexChanged_1);
+            // 
+            // cmb_payment_terms
+            // 
+            this.cmb_payment_terms.FormattingEnabled = true;
+            this.cmb_payment_terms.Location = new System.Drawing.Point(117, 24);
+            this.cmb_payment_terms.Name = "cmb_payment_terms";
+            this.cmb_payment_terms.Size = new System.Drawing.Size(186, 21);
+            this.cmb_payment_terms.TabIndex = 32;
+            this.cmb_payment_terms.Tag = "DYNAMIC";
             // 
             // button9
             // 
@@ -1376,70 +1384,23 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.button9.TabIndex = 31;
             this.button9.UseVisualStyleBackColor = false;
             // 
-            // cmb_payment_terms
+            // txt_item_tax_code
             // 
-            this.cmb_payment_terms.FormattingEnabled = true;
-            this.cmb_payment_terms.Location = new System.Drawing.Point(117, 24);
-            this.cmb_payment_terms.Name = "cmb_payment_terms";
-            this.cmb_payment_terms.Size = new System.Drawing.Size(186, 21);
-            this.cmb_payment_terms.TabIndex = 32;
-            this.cmb_payment_terms.Tag = "DYNAMIC";
+            this.txt_item_tax_code.Location = new System.Drawing.Point(223, 46);
+            this.txt_item_tax_code.Multiline = true;
+            this.txt_item_tax_code.Name = "txt_item_tax_code";
+            this.txt_item_tax_code.Size = new System.Drawing.Size(82, 21);
+            this.txt_item_tax_code.TabIndex = 3;
             // 
-            // cmb_tax_code
+            // label21
             // 
-            this.cmb_tax_code.FormattingEnabled = true;
-            this.cmb_tax_code.Location = new System.Drawing.Point(117, 46);
-            this.cmb_tax_code.Name = "cmb_tax_code";
-            this.cmb_tax_code.Size = new System.Drawing.Size(109, 21);
-            this.cmb_tax_code.TabIndex = 33;
-            this.cmb_tax_code.Tag = "";
-            this.cmb_tax_code.SelectedIndexChanged += new System.EventHandler(this.cmb_tax_code_SelectedIndexChanged_1);
-            // 
-            // cmb_item_account
-            // 
-            this.cmb_item_account.FormattingEnabled = true;
-            this.cmb_item_account.Location = new System.Drawing.Point(552, 24);
-            this.cmb_item_account.Name = "cmb_item_account";
-            this.cmb_item_account.Size = new System.Drawing.Size(186, 21);
-            this.cmb_item_account.TabIndex = 34;
-            this.cmb_item_account.Tag = "DYNAMIC";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(489, 27);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(59, 13);
-            this.label23.TabIndex = 9;
-            this.label23.Text = "ACCOUNT";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(11, 32);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(100, 13);
-            this.label24.TabIndex = 35;
-            this.label24.Text = "PAYMENT TERMS";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(11, 51);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(61, 13);
-            this.label25.TabIndex = 36;
-            this.label25.Text = "TAX CODE";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(1111, 44);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 37;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(307, 48);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(21, 16);
+            this.label21.TabIndex = 5;
+            this.label21.Text = "%";
             // 
             // dg_items
             // 
@@ -1467,78 +1428,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_items.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_items_CellClick);
             this.dg_items.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dg_items_UserDeletingRow);
             // 
-            // item_graph
+            // item_code
             // 
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.NullValue = "GRAPH >>";
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle2;
-            this.item_graph.HeaderText = "";
-            this.item_graph.MinimumWidth = 70;
-            this.item_graph.Name = "item_graph";
-            this.item_graph.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.item_graph.Width = 70;
+            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.item_code.DataPropertyName = "item_code";
+            this.item_code.HeaderText = "ITEM CODE";
+            this.item_code.Name = "item_code";
+            this.item_code.ReadOnly = true;
             // 
-            // item_is_deleted
+            // short_desc
             // 
-            this.item_is_deleted.DataPropertyName = "item_is_deleted";
-            this.item_is_deleted.HeaderText = "item_is_deleted";
-            this.item_is_deleted.Name = "item_is_deleted";
-            this.item_is_deleted.Visible = false;
-            // 
-            // bpi_item_branch_id
-            // 
-            this.bpi_item_branch_id.DataPropertyName = "bpi_item_branch_id";
-            this.bpi_item_branch_id.HeaderText = "bpi_item_branch_id";
-            this.bpi_item_branch_id.Name = "bpi_item_branch_id";
-            this.bpi_item_branch_id.Visible = false;
-            // 
-            // bpi_item_based_id
-            // 
-            this.bpi_item_based_id.DataPropertyName = "bpi_item_based_id";
-            this.bpi_item_based_id.HeaderText = "BPI ITEM BASED ID";
-            this.bpi_item_based_id.Name = "bpi_item_based_id";
-            this.bpi_item_based_id.Visible = false;
-            // 
-            // bpi_item_id
-            // 
-            this.bpi_item_id.DataPropertyName = "bpi_item_id";
-            this.bpi_item_id.HeaderText = "BPI ITEM ID";
-            this.bpi_item_id.Name = "bpi_item_id";
-            this.bpi_item_id.Visible = false;
-            // 
-            // item_id
-            // 
-            this.item_id.DataPropertyName = "item_id";
-            this.item_id.HeaderText = "item_id";
-            this.item_id.Name = "item_id";
-            this.item_id.Visible = false;
-            // 
-            // status_trade
-            // 
-            this.status_trade.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.status_trade.DataPropertyName = "status_trade";
-            this.status_trade.HeaderText = "STATUS TRADE";
-            this.status_trade.Name = "status_trade";
-            this.status_trade.ReadOnly = true;
-            this.status_trade.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // status_tangible
-            // 
-            this.status_tangible.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.status_tangible.DataPropertyName = "status_tangible";
-            this.status_tangible.HeaderText = "STATUS TANGIBLE";
-            this.status_tangible.Name = "status_tangible";
-            this.status_tangible.ReadOnly = true;
-            this.status_tangible.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // notes
-            // 
-            this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.notes.DataPropertyName = "notes";
-            this.notes.HeaderText = "NOTES";
-            this.notes.Name = "notes";
+            this.short_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.short_desc.DataPropertyName = "short_desc";
+            this.short_desc.HeaderText = "SHORT DESC";
+            this.short_desc.Name = "short_desc";
+            this.short_desc.ReadOnly = true;
             // 
             // price
             // 
@@ -1551,21 +1455,78 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.price.Name = "price";
             this.price.ReadOnly = true;
             // 
-            // short_desc
+            // notes
             // 
-            this.short_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.short_desc.DataPropertyName = "short_desc";
-            this.short_desc.HeaderText = "SHORT DESC";
-            this.short_desc.Name = "short_desc";
-            this.short_desc.ReadOnly = true;
+            this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.notes.DataPropertyName = "notes";
+            this.notes.HeaderText = "NOTES";
+            this.notes.Name = "notes";
             // 
-            // item_code
+            // status_tangible
             // 
-            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.item_code.DataPropertyName = "item_code";
-            this.item_code.HeaderText = "ITEM CODE";
-            this.item_code.Name = "item_code";
-            this.item_code.ReadOnly = true;
+            this.status_tangible.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.status_tangible.DataPropertyName = "status_tangible";
+            this.status_tangible.HeaderText = "STATUS TANGIBLE";
+            this.status_tangible.Name = "status_tangible";
+            this.status_tangible.ReadOnly = true;
+            this.status_tangible.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // status_trade
+            // 
+            this.status_trade.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.status_trade.DataPropertyName = "status_trade";
+            this.status_trade.HeaderText = "STATUS TRADE";
+            this.status_trade.Name = "status_trade";
+            this.status_trade.ReadOnly = true;
+            this.status_trade.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // item_id
+            // 
+            this.item_id.DataPropertyName = "item_id";
+            this.item_id.HeaderText = "item_id";
+            this.item_id.Name = "item_id";
+            this.item_id.Visible = false;
+            // 
+            // bpi_item_id
+            // 
+            this.bpi_item_id.DataPropertyName = "bpi_item_id";
+            this.bpi_item_id.HeaderText = "BPI ITEM ID";
+            this.bpi_item_id.Name = "bpi_item_id";
+            this.bpi_item_id.Visible = false;
+            // 
+            // bpi_item_based_id
+            // 
+            this.bpi_item_based_id.DataPropertyName = "bpi_item_based_id";
+            this.bpi_item_based_id.HeaderText = "BPI ITEM BASED ID";
+            this.bpi_item_based_id.Name = "bpi_item_based_id";
+            this.bpi_item_based_id.Visible = false;
+            // 
+            // bpi_item_branch_id
+            // 
+            this.bpi_item_branch_id.DataPropertyName = "bpi_item_branch_id";
+            this.bpi_item_branch_id.HeaderText = "bpi_item_branch_id";
+            this.bpi_item_branch_id.Name = "bpi_item_branch_id";
+            this.bpi_item_branch_id.Visible = false;
+            // 
+            // item_is_deleted
+            // 
+            this.item_is_deleted.DataPropertyName = "item_is_deleted";
+            this.item_is_deleted.HeaderText = "item_is_deleted";
+            this.item_is_deleted.Name = "item_is_deleted";
+            this.item_is_deleted.Visible = false;
+            // 
+            // item_graph
+            // 
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.NullValue = "GRAPH >>";
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle2;
+            this.item_graph.HeaderText = "";
+            this.item_graph.MinimumWidth = 70;
+            this.item_graph.Name = "item_graph";
+            this.item_graph.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.item_graph.Width = 70;
             // 
             // pnl_new_added_item
             // 
@@ -1601,6 +1562,45 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_finance.Size = new System.Drawing.Size(1222, 50);
             this.panel_finance.TabIndex = 18;
             // 
+            // txt_finance_branch_id
+            // 
+            this.txt_finance_branch_id.Location = new System.Drawing.Point(1013, 17);
+            this.txt_finance_branch_id.Name = "txt_finance_branch_id";
+            this.txt_finance_branch_id.Size = new System.Drawing.Size(56, 20);
+            this.txt_finance_branch_id.TabIndex = 35;
+            // 
+            // txt_finance_based_id
+            // 
+            this.txt_finance_based_id.Location = new System.Drawing.Point(1137, 17);
+            this.txt_finance_based_id.Name = "txt_finance_based_id";
+            this.txt_finance_based_id.Size = new System.Drawing.Size(59, 20);
+            this.txt_finance_based_id.TabIndex = 34;
+            // 
+            // txt_finance_id
+            // 
+            this.txt_finance_id.Location = new System.Drawing.Point(1075, 17);
+            this.txt_finance_id.Name = "txt_finance_id";
+            this.txt_finance_id.Size = new System.Drawing.Size(56, 20);
+            this.txt_finance_id.TabIndex = 33;
+            // 
+            // cmb_finance_payment_terms
+            // 
+            this.cmb_finance_payment_terms.FormattingEnabled = true;
+            this.cmb_finance_payment_terms.Location = new System.Drawing.Point(557, 16);
+            this.cmb_finance_payment_terms.Name = "cmb_finance_payment_terms";
+            this.cmb_finance_payment_terms.Size = new System.Drawing.Size(193, 21);
+            this.cmb_finance_payment_terms.TabIndex = 32;
+            this.cmb_finance_payment_terms.Tag = "DYNAMIC";
+            // 
+            // cmb_finance_account
+            // 
+            this.cmb_finance_account.FormattingEnabled = true;
+            this.cmb_finance_account.Location = new System.Drawing.Point(130, 16);
+            this.cmb_finance_account.Name = "cmb_finance_account";
+            this.cmb_finance_account.Size = new System.Drawing.Size(200, 21);
+            this.cmb_finance_account.TabIndex = 31;
+            this.cmb_finance_account.Tag = "DYNAMIC";
+            // 
             // btn_finance_payment_terms
             // 
             this.btn_finance_payment_terms.BackColor = System.Drawing.Color.Transparent;
@@ -1612,45 +1612,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_finance_payment_terms.TabIndex = 30;
             this.btn_finance_payment_terms.UseVisualStyleBackColor = false;
             this.btn_finance_payment_terms.Click += new System.EventHandler(this.btn_finance_payment_terms_Click);
-            // 
-            // cmb_finance_account
-            // 
-            this.cmb_finance_account.FormattingEnabled = true;
-            this.cmb_finance_account.Location = new System.Drawing.Point(130, 16);
-            this.cmb_finance_account.Name = "cmb_finance_account";
-            this.cmb_finance_account.Size = new System.Drawing.Size(200, 21);
-            this.cmb_finance_account.TabIndex = 31;
-            this.cmb_finance_account.Tag = "DYNAMIC";
-            // 
-            // cmb_finance_payment_terms
-            // 
-            this.cmb_finance_payment_terms.FormattingEnabled = true;
-            this.cmb_finance_payment_terms.Location = new System.Drawing.Point(557, 16);
-            this.cmb_finance_payment_terms.Name = "cmb_finance_payment_terms";
-            this.cmb_finance_payment_terms.Size = new System.Drawing.Size(193, 21);
-            this.cmb_finance_payment_terms.TabIndex = 32;
-            this.cmb_finance_payment_terms.Tag = "DYNAMIC";
-            // 
-            // txt_finance_id
-            // 
-            this.txt_finance_id.Location = new System.Drawing.Point(1075, 17);
-            this.txt_finance_id.Name = "txt_finance_id";
-            this.txt_finance_id.Size = new System.Drawing.Size(56, 20);
-            this.txt_finance_id.TabIndex = 33;
-            // 
-            // txt_finance_based_id
-            // 
-            this.txt_finance_based_id.Location = new System.Drawing.Point(1137, 17);
-            this.txt_finance_based_id.Name = "txt_finance_based_id";
-            this.txt_finance_based_id.Size = new System.Drawing.Size(59, 20);
-            this.txt_finance_based_id.TabIndex = 34;
-            // 
-            // txt_finance_branch_id
-            // 
-            this.txt_finance_branch_id.Location = new System.Drawing.Point(1013, 17);
-            this.txt_finance_branch_id.Name = "txt_finance_branch_id";
-            this.txt_finance_branch_id.Size = new System.Drawing.Size(56, 20);
-            this.txt_finance_branch_id.TabIndex = 35;
             // 
             // label8
             // 
@@ -1690,76 +1651,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabControl_Finance.Size = new System.Drawing.Size(1222, 338);
             this.tabControl_Finance.TabIndex = 0;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.dataGridView4);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1214, 312);
-            this.tabPage3.TabIndex = 1;
-            this.tabPage3.Text = "TRANSACTIONS";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView4
-            // 
-            this.dataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView4.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.finance_trans_so,
-            this.finance_trans_date,
-            this.finance_trans_po,
-            this.finance_transaction_date,
-            this.finance_trans_si,
-            this.finance_trans_or,
-            this.finance_trans_or_date});
-            this.dataGridView4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView4.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView4.Name = "dataGridView4";
-            this.dataGridView4.Size = new System.Drawing.Size(1208, 306);
-            this.dataGridView4.TabIndex = 0;
-            // 
-            // finance_trans_or_date
-            // 
-            this.finance_trans_or_date.HeaderText = "DATE";
-            this.finance_trans_or_date.Name = "finance_trans_or_date";
-            this.finance_trans_or_date.Width = 200;
-            // 
-            // finance_trans_or
-            // 
-            this.finance_trans_or.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.finance_trans_or.HeaderText = "OFFICIAL RECEIPT";
-            this.finance_trans_or.Name = "finance_trans_or";
-            // 
-            // finance_trans_si
-            // 
-            this.finance_trans_si.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.finance_trans_si.HeaderText = "SALES INVOICE";
-            this.finance_trans_si.Name = "finance_trans_si";
-            // 
-            // finance_transaction_date
-            // 
-            this.finance_transaction_date.HeaderText = "DATE";
-            this.finance_transaction_date.Name = "finance_transaction_date";
-            this.finance_transaction_date.Width = 200;
-            // 
-            // finance_trans_po
-            // 
-            this.finance_trans_po.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.finance_trans_po.HeaderText = "PURCHASE ORDER";
-            this.finance_trans_po.Name = "finance_trans_po";
-            // 
-            // finance_trans_date
-            // 
-            this.finance_trans_date.HeaderText = "DATE";
-            this.finance_trans_date.Name = "finance_trans_date";
-            this.finance_trans_date.Width = 200;
-            // 
-            // finance_trans_so
-            // 
-            this.finance_trans_so.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.finance_trans_so.HeaderText = "SALES ORDER";
-            this.finance_trans_so.Name = "finance_trans_so";
-            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.dg_finance_pending);
@@ -1791,29 +1682,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_finance_pending.Size = new System.Drawing.Size(1208, 306);
             this.dg_finance_pending.TabIndex = 0;
             // 
-            // status
+            // date
             // 
-            this.status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.status.DataPropertyName = "status";
-            this.status.HeaderText = "STATUS";
-            this.status.Name = "status";
-            this.status.ReadOnly = true;
-            // 
-            // stage
-            // 
-            this.stage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.stage.DataPropertyName = "stage";
-            this.stage.HeaderText = "STAGE";
-            this.stage.Name = "stage";
-            this.stage.ReadOnly = true;
-            // 
-            // total_price
-            // 
-            this.total_price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.total_price.DataPropertyName = "total_price";
-            this.total_price.HeaderText = "PRICE";
-            this.total_price.Name = "total_price";
-            this.total_price.ReadOnly = true;
+            this.date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.date.DataPropertyName = "date";
+            this.date.HeaderText = "DATE";
+            this.date.Name = "date";
+            this.date.ReadOnly = true;
             // 
             // qoute_ref
             // 
@@ -1823,13 +1698,99 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.qoute_ref.Name = "qoute_ref";
             this.qoute_ref.ReadOnly = true;
             // 
-            // date
+            // total_price
             // 
-            this.date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.date.DataPropertyName = "date";
-            this.date.HeaderText = "DATE";
-            this.date.Name = "date";
-            this.date.ReadOnly = true;
+            this.total_price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.total_price.DataPropertyName = "total_price";
+            this.total_price.HeaderText = "PRICE";
+            this.total_price.Name = "total_price";
+            this.total_price.ReadOnly = true;
+            // 
+            // stage
+            // 
+            this.stage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.stage.DataPropertyName = "stage";
+            this.stage.HeaderText = "STAGE";
+            this.stage.Name = "stage";
+            this.stage.ReadOnly = true;
+            // 
+            // status
+            // 
+            this.status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.status.DataPropertyName = "status";
+            this.status.HeaderText = "STATUS";
+            this.status.Name = "status";
+            this.status.ReadOnly = true;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.dataGridView4);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(1214, 312);
+            this.tabPage3.TabIndex = 1;
+            this.tabPage3.Text = "TRANSACTIONS";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView4
+            // 
+            this.dataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView4.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.finance_trans_so,
+            this.finance_trans_date,
+            this.finance_trans_po,
+            this.finance_transaction_date,
+            this.finance_trans_si,
+            this.finance_trans_or,
+            this.finance_trans_or_date});
+            this.dataGridView4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView4.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView4.Name = "dataGridView4";
+            this.dataGridView4.Size = new System.Drawing.Size(1208, 306);
+            this.dataGridView4.TabIndex = 0;
+            // 
+            // finance_trans_so
+            // 
+            this.finance_trans_so.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.finance_trans_so.HeaderText = "SALES ORDER";
+            this.finance_trans_so.Name = "finance_trans_so";
+            // 
+            // finance_trans_date
+            // 
+            this.finance_trans_date.HeaderText = "DATE";
+            this.finance_trans_date.Name = "finance_trans_date";
+            this.finance_trans_date.Width = 200;
+            // 
+            // finance_trans_po
+            // 
+            this.finance_trans_po.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.finance_trans_po.HeaderText = "PURCHASE ORDER";
+            this.finance_trans_po.Name = "finance_trans_po";
+            // 
+            // finance_transaction_date
+            // 
+            this.finance_transaction_date.HeaderText = "DATE";
+            this.finance_transaction_date.Name = "finance_transaction_date";
+            this.finance_transaction_date.Width = 200;
+            // 
+            // finance_trans_si
+            // 
+            this.finance_trans_si.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.finance_trans_si.HeaderText = "SALES INVOICE";
+            this.finance_trans_si.Name = "finance_trans_si";
+            // 
+            // finance_trans_or
+            // 
+            this.finance_trans_or.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.finance_trans_or.HeaderText = "OFFICIAL RECEIPT";
+            this.finance_trans_or.Name = "finance_trans_or";
+            // 
+            // finance_trans_or_date
+            // 
+            this.finance_trans_or_date.HeaderText = "DATE";
+            this.finance_trans_or_date.Name = "finance_trans_or_date";
+            this.finance_trans_or_date.Width = 200;
             // 
             // dg_address
             // 
@@ -1850,26 +1811,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_address.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dg_address_UserDeletedRow);
             this.dg_address.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dg_address_UserDeletingRow);
             // 
-            // address_is_deleted
+            // location
             // 
-            this.address_is_deleted.DataPropertyName = "address_is_deleted";
-            this.address_is_deleted.HeaderText = "address_is_deleted";
-            this.address_is_deleted.Name = "address_is_deleted";
-            this.address_is_deleted.Visible = false;
-            // 
-            // address_branch_id
-            // 
-            this.address_branch_id.DataPropertyName = "address_branch_id";
-            this.address_branch_id.HeaderText = "address_branch_id";
-            this.address_branch_id.Name = "address_branch_id";
-            this.address_branch_id.Visible = false;
-            // 
-            // address_ids
-            // 
-            this.address_ids.DataPropertyName = "address_ids";
-            this.address_ids.HeaderText = "address_ids";
-            this.address_ids.Name = "address_ids";
-            this.address_ids.Visible = false;
+            this.location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.location.DataPropertyName = "location";
+            this.location.HeaderText = "STREET ADDRESS, CITY , STATE, ZIP CODE";
+            this.location.Name = "location";
             // 
             // address_based_id
             // 
@@ -1878,12 +1825,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.address_based_id.Name = "address_based_id";
             this.address_based_id.Visible = false;
             // 
-            // location
+            // address_ids
             // 
-            this.location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.location.DataPropertyName = "location";
-            this.location.HeaderText = "STREET ADDRESS, CITY , STATE, ZIP CODE";
-            this.location.Name = "location";
+            this.address_ids.DataPropertyName = "address_ids";
+            this.address_ids.HeaderText = "address_ids";
+            this.address_ids.Name = "address_ids";
+            this.address_ids.Visible = false;
+            // 
+            // address_branch_id
+            // 
+            this.address_branch_id.DataPropertyName = "address_branch_id";
+            this.address_branch_id.HeaderText = "address_branch_id";
+            this.address_branch_id.Name = "address_branch_id";
+            this.address_branch_id.Visible = false;
+            // 
+            // address_is_deleted
+            // 
+            this.address_is_deleted.DataPropertyName = "address_is_deleted";
+            this.address_is_deleted.HeaderText = "address_is_deleted";
+            this.address_is_deleted.Name = "address_is_deleted";
+            this.address_is_deleted.Visible = false;
             // 
             // buttonPanel
             // 
@@ -1894,16 +1855,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.buttonPanel.Size = new System.Drawing.Size(1250, 35);
             this.buttonPanel.TabIndex = 7;
             // 
-            // btn_add_page
-            // 
-            this.btn_add_page.Location = new System.Drawing.Point(7, 3);
-            this.btn_add_page.Name = "btn_add_page";
-            this.btn_add_page.Size = new System.Drawing.Size(75, 26);
-            this.btn_add_page.TabIndex = 21;
-            this.btn_add_page.Text = "ADD PAGE";
-            this.btn_add_page.UseVisualStyleBackColor = true;
-            this.btn_add_page.Click += new System.EventHandler(this.button5_Click_1);
-            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(88, 5);
@@ -1913,6 +1864,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.button2.Text = "+ ADD GROUP";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // btn_add_page
+            // 
+            this.btn_add_page.Location = new System.Drawing.Point(7, 3);
+            this.btn_add_page.Name = "btn_add_page";
+            this.btn_add_page.Size = new System.Drawing.Size(75, 26);
+            this.btn_add_page.TabIndex = 21;
+            this.btn_add_page.Text = "ADD PAGE";
+            this.btn_add_page.UseVisualStyleBackColor = true;
+            this.btn_add_page.Click += new System.EventHandler(this.button5_Click_1);
             // 
             // dg_contacts
             // 
@@ -1945,40 +1906,42 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_contacts.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg_contacts_EditingControlShowing);
             this.dg_contacts.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dg_contacts_UserDeletedRow);
             // 
-            // contact_notes
+            // is_default_contact
             // 
-            this.contact_notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.contact_notes.DataPropertyName = "contact_notes";
-            this.contact_notes.HeaderText = "NOTES";
-            this.contact_notes.Name = "contact_notes";
+            this.is_default_contact.DataPropertyName = "is_default_contact";
+            this.is_default_contact.HeaderText = "";
+            this.is_default_contact.Name = "is_default_contact";
+            this.is_default_contact.Width = 50;
             // 
-            // branch_id
+            // number
             // 
-            this.branch_id.DataPropertyName = "branch_id";
-            this.branch_id.HeaderText = "branch_id";
-            this.branch_id.Name = "branch_id";
-            this.branch_id.Visible = false;
+            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.number.DataPropertyName = "number";
+            this.number.HeaderText = "NUMBER";
+            this.number.Name = "number";
             // 
-            // contacts_based_id
+            // email
             // 
-            this.contacts_based_id.DataPropertyName = "contacts_based_id";
-            this.contacts_based_id.HeaderText = "BASED_ID";
-            this.contacts_based_id.Name = "contacts_based_id";
-            this.contacts_based_id.Visible = false;
+            this.email.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.email.DataPropertyName = "email";
+            this.email.HeaderText = "EMAIL";
+            this.email.Name = "email";
             // 
-            // contacts_id
+            // preferences
             // 
-            this.contacts_id.DataPropertyName = "contacts_id";
-            this.contacts_id.HeaderText = "ID";
-            this.contacts_id.Name = "contacts_id";
-            this.contacts_id.Visible = false;
+            this.preferences.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.preferences.DataPropertyName = "preferences";
+            this.preferences.HeaderText = "PREFERENCE";
+            this.preferences.Name = "preferences";
+            this.preferences.ReadOnly = true;
+            this.preferences.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.preferences.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // name
+            // ADD_PREF
             // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.name.DataPropertyName = "name";
-            this.name.HeaderText = "NAME";
-            this.name.Name = "name";
+            this.ADD_PREF.HeaderText = "";
+            this.ADD_PREF.Name = "ADD_PREF";
+            this.ADD_PREF.Width = 20;
             // 
             // position
             // 
@@ -1992,42 +1955,40 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.position.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.position.ValueMember = "id";
             // 
-            // ADD_PREF
+            // name
             // 
-            this.ADD_PREF.HeaderText = "";
-            this.ADD_PREF.Name = "ADD_PREF";
-            this.ADD_PREF.Width = 20;
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.name.DataPropertyName = "name";
+            this.name.HeaderText = "NAME";
+            this.name.Name = "name";
             // 
-            // preferences
+            // contacts_id
             // 
-            this.preferences.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.preferences.DataPropertyName = "preferences";
-            this.preferences.HeaderText = "PREFERENCE";
-            this.preferences.Name = "preferences";
-            this.preferences.ReadOnly = true;
-            this.preferences.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.preferences.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.contacts_id.DataPropertyName = "contacts_id";
+            this.contacts_id.HeaderText = "ID";
+            this.contacts_id.Name = "contacts_id";
+            this.contacts_id.Visible = false;
             // 
-            // email
+            // contacts_based_id
             // 
-            this.email.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.email.DataPropertyName = "email";
-            this.email.HeaderText = "EMAIL";
-            this.email.Name = "email";
+            this.contacts_based_id.DataPropertyName = "contacts_based_id";
+            this.contacts_based_id.HeaderText = "BASED_ID";
+            this.contacts_based_id.Name = "contacts_based_id";
+            this.contacts_based_id.Visible = false;
             // 
-            // number
+            // branch_id
             // 
-            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.number.DataPropertyName = "number";
-            this.number.HeaderText = "NUMBER";
-            this.number.Name = "number";
+            this.branch_id.DataPropertyName = "branch_id";
+            this.branch_id.HeaderText = "branch_id";
+            this.branch_id.Name = "branch_id";
+            this.branch_id.Visible = false;
             // 
-            // is_default_contact
+            // contact_notes
             // 
-            this.is_default_contact.DataPropertyName = "is_default_contact";
-            this.is_default_contact.HeaderText = "";
-            this.is_default_contact.Name = "is_default_contact";
-            this.is_default_contact.Width = 50;
+            this.contact_notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.contact_notes.DataPropertyName = "contact_notes";
+            this.contact_notes.HeaderText = "NOTES";
+            this.contact_notes.Name = "contact_notes";
             // 
             // panel_general
             // 
@@ -2076,216 +2037,151 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_general.Size = new System.Drawing.Size(1222, 317);
             this.panel_general.TabIndex = 0;
             // 
-            // txt_branch_website
+            // cmb_social
             // 
-            this.txt_branch_website.Location = new System.Drawing.Point(135, 144);
-            this.txt_branch_website.Name = "txt_branch_website";
-            this.txt_branch_website.Size = new System.Drawing.Size(200, 20);
-            this.txt_branch_website.TabIndex = 19;
-            this.txt_branch_website.Validating += new System.ComponentModel.CancelEventHandler(this.txt_branch_website_Validating);
+            this.cmb_social.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_social.FormattingEnabled = true;
+            this.cmb_social.Location = new System.Drawing.Point(133, 207);
+            this.cmb_social.Name = "cmb_social";
+            this.cmb_social.Size = new System.Drawing.Size(200, 21);
+            this.cmb_social.TabIndex = 23;
+            this.cmb_social.Tag = "DYNAMIC";
             // 
-            // txt_branch_tel_no
+            // label16
             // 
-            this.txt_branch_tel_no.Location = new System.Drawing.Point(135, 123);
-            this.txt_branch_tel_no.Name = "txt_branch_tel_no";
-            this.txt_branch_tel_no.Size = new System.Drawing.Size(200, 20);
-            this.txt_branch_tel_no.TabIndex = 18;
-            this.txt_branch_tel_no.TextChanged += new System.EventHandler(this.txt_branch_tel_no_TextChanged);
-            this.txt_branch_tel_no.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_branch_tel_no_KeyPress);
-            this.txt_branch_tel_no.Validating += new System.ComponentModel.CancelEventHandler(this.txt_branch_tel_no_Validating);
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(546, 19);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(103, 13);
+            this.label16.TabIndex = 47;
+            this.label16.Text = "BRANCH SALES ID";
+            this.label16.Visible = false;
             // 
-            // label7
+            // txt_branch_sales_id
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 41);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(77, 13);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "ENTITY TYPE";
+            this.txt_branch_sales_id.Location = new System.Drawing.Point(659, 13);
+            this.txt_branch_sales_id.Name = "txt_branch_sales_id";
+            this.txt_branch_sales_id.Size = new System.Drawing.Size(68, 20);
+            this.txt_branch_sales_id.TabIndex = 46;
+            this.txt_branch_sales_id.Visible = false;
             // 
-            // label9
+            // lbl_general_based_id
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 62);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(115, 13);
-            this.label9.TabIndex = 2;
-            this.label9.Text = "TRANSACTION TYPE";
+            this.lbl_general_based_id.AutoSize = true;
+            this.lbl_general_based_id.Location = new System.Drawing.Point(183, 475);
+            this.lbl_general_based_id.Name = "lbl_general_based_id";
+            this.lbl_general_based_id.Size = new System.Drawing.Size(91, 13);
+            this.lbl_general_based_id.TabIndex = 45;
+            this.lbl_general_based_id.Text = "general_based_id";
+            this.lbl_general_based_id.Visible = false;
             // 
-            // label10
+            // txt_general_based_id
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(10, 82);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(41, 13);
-            this.label10.TabIndex = 3;
-            this.label10.Text = "CLASS";
+            this.txt_general_based_id.Location = new System.Drawing.Point(280, 472);
+            this.txt_general_based_id.Name = "txt_general_based_id";
+            this.txt_general_based_id.Size = new System.Drawing.Size(54, 20);
+            this.txt_general_based_id.TabIndex = 44;
+            this.txt_general_based_id.Visible = false;
             // 
-            // label11
+            // lbl_general_id
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(10, 105);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(111, 13);
-            this.label11.TabIndex = 4;
-            this.label11.Text = "BRANCH INDUSTRY";
+            this.lbl_general_id.AutoSize = true;
+            this.lbl_general_id.Location = new System.Drawing.Point(81, 472);
+            this.lbl_general_id.Name = "lbl_general_id";
+            this.lbl_general_id.Size = new System.Drawing.Size(15, 13);
+            this.lbl_general_id.TabIndex = 43;
+            this.lbl_general_id.Text = "id";
+            this.lbl_general_id.Visible = false;
             // 
-            // label12
+            // txt_general_id
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(10, 126);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(97, 13);
-            this.label12.TabIndex = 5;
-            this.label12.Text = "BRANCH TEL NO ";
+            this.txt_general_id.Location = new System.Drawing.Point(102, 469);
+            this.txt_general_id.Name = "txt_general_id";
+            this.txt_general_id.Size = new System.Drawing.Size(54, 20);
+            this.txt_general_id.TabIndex = 42;
+            this.txt_general_id.Visible = false;
             // 
-            // label13
+            // txt_affiliated
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(10, 148);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(104, 13);
-            this.label13.TabIndex = 6;
-            this.label13.Text = "BRANCH WEBSITE";
+            this.txt_affiliated.Location = new System.Drawing.Point(659, 127);
+            this.txt_affiliated.Name = "txt_affiliated";
+            this.txt_affiliated.Size = new System.Drawing.Size(200, 20);
+            this.txt_affiliated.TabIndex = 41;
+            this.txt_affiliated.Visible = false;
             // 
-            // label14
+            // lbl_affiliated
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 210);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(131, 13);
-            this.label14.TabIndex = 7;
-            this.label14.Text = "HOW THEY FOUND US?";
+            this.lbl_affiliated.AutoSize = true;
+            this.lbl_affiliated.Location = new System.Drawing.Point(583, 134);
+            this.lbl_affiliated.Name = "lbl_affiliated";
+            this.lbl_affiliated.Size = new System.Drawing.Size(67, 13);
+            this.lbl_affiliated.TabIndex = 40;
+            this.lbl_affiliated.Text = "AFFILIATED";
+            this.lbl_affiliated.Visible = false;
             // 
-            // lbl_customer_code
+            // txt_non_affiliated
             // 
-            this.lbl_customer_code.AutoSize = true;
-            this.lbl_customer_code.Location = new System.Drawing.Point(546, 41);
-            this.lbl_customer_code.Name = "lbl_customer_code";
-            this.lbl_customer_code.Size = new System.Drawing.Size(104, 13);
-            this.lbl_customer_code.TabIndex = 8;
-            this.lbl_customer_code.Text = "CUSTOMER CODE ";
+            this.txt_non_affiliated.Location = new System.Drawing.Point(659, 105);
+            this.txt_non_affiliated.Name = "txt_non_affiliated";
+            this.txt_non_affiliated.Size = new System.Drawing.Size(200, 20);
+            this.txt_non_affiliated.TabIndex = 39;
+            this.txt_non_affiliated.Visible = false;
+            this.txt_non_affiliated.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // lbl_supplier_code
+            // lbl_non_affiliated
             // 
-            this.lbl_supplier_code.AutoSize = true;
-            this.lbl_supplier_code.Location = new System.Drawing.Point(557, 61);
-            this.lbl_supplier_code.Name = "lbl_supplier_code";
-            this.lbl_supplier_code.Size = new System.Drawing.Size(93, 13);
-            this.lbl_supplier_code.TabIndex = 9;
-            this.lbl_supplier_code.Text = "SUPPLIER CODE";
-            this.lbl_supplier_code.Click += new System.EventHandler(this.label16_Click);
+            this.lbl_non_affiliated.AutoSize = true;
+            this.lbl_non_affiliated.Location = new System.Drawing.Point(551, 110);
+            this.lbl_non_affiliated.Name = "lbl_non_affiliated";
+            this.lbl_non_affiliated.Size = new System.Drawing.Size(94, 13);
+            this.lbl_non_affiliated.TabIndex = 38;
+            this.lbl_non_affiliated.Text = "NON-AFFILIATED";
+            this.lbl_non_affiliated.Visible = false;
+            this.lbl_non_affiliated.Click += new System.EventHandler(this.label24_Click);
             // 
-            // label17
+            // txt_branch_name
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(601, 82);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(49, 13);
-            this.label17.TabIndex = 10;
-            this.label17.Text = "FAX NO.";
+            this.txt_branch_name.Location = new System.Drawing.Point(134, 16);
+            this.txt_branch_name.Name = "txt_branch_name";
+            this.txt_branch_name.Size = new System.Drawing.Size(200, 20);
+            this.txt_branch_name.TabIndex = 37;
             // 
-            // txt_entity_type
+            // lbl_branch_name
             // 
-            this.txt_entity_type.Location = new System.Drawing.Point(135, 37);
-            this.txt_entity_type.Name = "txt_entity_type";
-            this.txt_entity_type.ReadOnly = true;
-            this.txt_entity_type.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txt_entity_type.Size = new System.Drawing.Size(200, 20);
-            this.txt_entity_type.TabIndex = 13;
-            this.txt_entity_type.Tag = "MULTI";
+            this.lbl_branch_name.AutoSize = true;
+            this.lbl_branch_name.Location = new System.Drawing.Point(10, 20);
+            this.lbl_branch_name.Name = "lbl_branch_name";
+            this.lbl_branch_name.Size = new System.Drawing.Size(86, 13);
+            this.lbl_branch_name.TabIndex = 36;
+            this.lbl_branch_name.Text = "BRANCH NAME";
             // 
-            // cmb_transaction_type
+            // label22
             // 
-            this.cmb_transaction_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_transaction_type.FormattingEnabled = true;
-            this.cmb_transaction_type.Items.AddRange(new object[] {
-            "Trade",
-            "Non-Trade"});
-            this.cmb_transaction_type.Location = new System.Drawing.Point(135, 58);
-            this.cmb_transaction_type.Name = "cmb_transaction_type";
-            this.cmb_transaction_type.Size = new System.Drawing.Size(200, 21);
-            this.cmb_transaction_type.TabIndex = 15;
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(3, 252);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(44, 13);
+            this.label22.TabIndex = 35;
+            this.label22.Text = "NOTES";
             // 
-            // cmb_class_name
+            // txt_notes
             // 
-            this.cmb_class_name.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_class_name.FormattingEnabled = true;
-            this.cmb_class_name.Items.AddRange(new object[] {
-            "FOREIGN",
-            "LOCAL"});
-            this.cmb_class_name.Location = new System.Drawing.Point(135, 80);
-            this.cmb_class_name.Name = "cmb_class_name";
-            this.cmb_class_name.Size = new System.Drawing.Size(200, 21);
-            this.cmb_class_name.TabIndex = 16;
+            this.txt_notes.Location = new System.Drawing.Point(6, 270);
+            this.txt_notes.Multiline = true;
+            this.txt_notes.Name = "txt_notes";
+            this.txt_notes.Size = new System.Drawing.Size(538, 176);
+            this.txt_notes.TabIndex = 34;
             // 
-            // txt_branch_industry
+            // btn_add_entity
             // 
-            this.txt_branch_industry.Location = new System.Drawing.Point(135, 102);
-            this.txt_branch_industry.Name = "txt_branch_industry";
-            this.txt_branch_industry.ReadOnly = true;
-            this.txt_branch_industry.Size = new System.Drawing.Size(200, 20);
-            this.txt_branch_industry.TabIndex = 17;
-            this.txt_branch_industry.Tag = "MULTI";
-            // 
-            // txt_customer_code
-            // 
-            this.txt_customer_code.Enabled = false;
-            this.txt_customer_code.Location = new System.Drawing.Point(659, 37);
-            this.txt_customer_code.Name = "txt_customer_code";
-            this.txt_customer_code.Size = new System.Drawing.Size(200, 20);
-            this.txt_customer_code.TabIndex = 20;
-            // 
-            // txt_supplier_code
-            // 
-            this.txt_supplier_code.Enabled = false;
-            this.txt_supplier_code.Location = new System.Drawing.Point(659, 58);
-            this.txt_supplier_code.Name = "txt_supplier_code";
-            this.txt_supplier_code.Size = new System.Drawing.Size(200, 20);
-            this.txt_supplier_code.TabIndex = 21;
-            // 
-            // txt_fax_no
-            // 
-            this.txt_fax_no.Location = new System.Drawing.Point(659, 79);
-            this.txt_fax_no.Name = "txt_fax_no";
-            this.txt_fax_no.Size = new System.Drawing.Size(200, 20);
-            this.txt_fax_no.TabIndex = 22;
-            // 
-            // btn_get_entity
-            // 
-            this.btn_get_entity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_get_entity.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.btn_get_entity.Location = new System.Drawing.Point(335, 37);
-            this.btn_get_entity.Name = "btn_get_entity";
-            this.btn_get_entity.Size = new System.Drawing.Size(30, 22);
-            this.btn_get_entity.TabIndex = 27;
-            this.btn_get_entity.Text = "...";
-            this.btn_get_entity.UseVisualStyleBackColor = true;
-            this.btn_get_entity.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // btn_get_branch
-            // 
-            this.btn_get_branch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_get_branch.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.btn_get_branch.Location = new System.Drawing.Point(335, 101);
-            this.btn_get_branch.Name = "btn_get_branch";
-            this.btn_get_branch.Size = new System.Drawing.Size(30, 22);
-            this.btn_get_branch.TabIndex = 28;
-            this.btn_get_branch.Text = "...";
-            this.btn_get_branch.UseVisualStyleBackColor = true;
-            this.btn_get_branch.Click += new System.EventHandler(this.btn_get_branch_Click);
-            // 
-            // btn_social_links
-            // 
-            this.btn_social_links.BackColor = System.Drawing.Color.Transparent;
-            this.btn_social_links.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_social_links.BackgroundImage")));
-            this.btn_social_links.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_social_links.Location = new System.Drawing.Point(334, 207);
-            this.btn_social_links.Name = "btn_social_links";
-            this.btn_social_links.Size = new System.Drawing.Size(30, 22);
-            this.btn_social_links.TabIndex = 30;
-            this.btn_social_links.UseVisualStyleBackColor = false;
-            this.btn_social_links.Click += new System.EventHandler(this.btn_social_links_Click);
+            this.btn_add_entity.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_entity.BackgroundImage")));
+            this.btn_add_entity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btn_add_entity.Location = new System.Drawing.Point(363, 37);
+            this.btn_add_entity.Name = "btn_add_entity";
+            this.btn_add_entity.Size = new System.Drawing.Size(30, 22);
+            this.btn_add_entity.TabIndex = 33;
+            this.btn_add_entity.UseVisualStyleBackColor = true;
+            this.btn_add_entity.Click += new System.EventHandler(this.btn_add_entity_Click);
             // 
             // btn_branch_industry
             // 
@@ -2299,151 +2195,216 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_branch_industry.UseVisualStyleBackColor = false;
             this.btn_branch_industry.Click += new System.EventHandler(this.btn_branch_industry_Click);
             // 
-            // btn_add_entity
+            // btn_social_links
             // 
-            this.btn_add_entity.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_entity.BackgroundImage")));
-            this.btn_add_entity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_add_entity.Location = new System.Drawing.Point(363, 37);
-            this.btn_add_entity.Name = "btn_add_entity";
-            this.btn_add_entity.Size = new System.Drawing.Size(30, 22);
-            this.btn_add_entity.TabIndex = 33;
-            this.btn_add_entity.UseVisualStyleBackColor = true;
-            this.btn_add_entity.Click += new System.EventHandler(this.btn_add_entity_Click);
+            this.btn_social_links.BackColor = System.Drawing.Color.Transparent;
+            this.btn_social_links.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_social_links.BackgroundImage")));
+            this.btn_social_links.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_social_links.Location = new System.Drawing.Point(334, 207);
+            this.btn_social_links.Name = "btn_social_links";
+            this.btn_social_links.Size = new System.Drawing.Size(30, 22);
+            this.btn_social_links.TabIndex = 30;
+            this.btn_social_links.UseVisualStyleBackColor = false;
+            this.btn_social_links.Click += new System.EventHandler(this.btn_social_links_Click);
             // 
-            // txt_notes
+            // btn_get_branch
             // 
-            this.txt_notes.Location = new System.Drawing.Point(6, 270);
-            this.txt_notes.Multiline = true;
-            this.txt_notes.Name = "txt_notes";
-            this.txt_notes.Size = new System.Drawing.Size(538, 176);
-            this.txt_notes.TabIndex = 34;
+            this.btn_get_branch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_get_branch.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.btn_get_branch.Location = new System.Drawing.Point(335, 101);
+            this.btn_get_branch.Name = "btn_get_branch";
+            this.btn_get_branch.Size = new System.Drawing.Size(30, 22);
+            this.btn_get_branch.TabIndex = 28;
+            this.btn_get_branch.Text = "...";
+            this.btn_get_branch.UseVisualStyleBackColor = true;
+            this.btn_get_branch.Click += new System.EventHandler(this.btn_get_branch_Click);
             // 
-            // label22
+            // btn_get_entity
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(3, 252);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(44, 13);
-            this.label22.TabIndex = 35;
-            this.label22.Text = "NOTES";
+            this.btn_get_entity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_get_entity.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.btn_get_entity.Location = new System.Drawing.Point(335, 37);
+            this.btn_get_entity.Name = "btn_get_entity";
+            this.btn_get_entity.Size = new System.Drawing.Size(30, 22);
+            this.btn_get_entity.TabIndex = 27;
+            this.btn_get_entity.Text = "...";
+            this.btn_get_entity.UseVisualStyleBackColor = true;
+            this.btn_get_entity.Click += new System.EventHandler(this.button1_Click);
             // 
-            // lbl_branch_name
+            // txt_fax_no
             // 
-            this.lbl_branch_name.AutoSize = true;
-            this.lbl_branch_name.Location = new System.Drawing.Point(10, 20);
-            this.lbl_branch_name.Name = "lbl_branch_name";
-            this.lbl_branch_name.Size = new System.Drawing.Size(86, 13);
-            this.lbl_branch_name.TabIndex = 36;
-            this.lbl_branch_name.Text = "BRANCH NAME";
+            this.txt_fax_no.Location = new System.Drawing.Point(659, 79);
+            this.txt_fax_no.Name = "txt_fax_no";
+            this.txt_fax_no.Size = new System.Drawing.Size(200, 20);
+            this.txt_fax_no.TabIndex = 22;
             // 
-            // txt_branch_name
+            // txt_supplier_code
             // 
-            this.txt_branch_name.Location = new System.Drawing.Point(134, 16);
-            this.txt_branch_name.Name = "txt_branch_name";
-            this.txt_branch_name.Size = new System.Drawing.Size(200, 20);
-            this.txt_branch_name.TabIndex = 37;
+            this.txt_supplier_code.Enabled = false;
+            this.txt_supplier_code.Location = new System.Drawing.Point(659, 58);
+            this.txt_supplier_code.Name = "txt_supplier_code";
+            this.txt_supplier_code.Size = new System.Drawing.Size(200, 20);
+            this.txt_supplier_code.TabIndex = 21;
             // 
-            // lbl_non_affiliated
+            // txt_customer_code
             // 
-            this.lbl_non_affiliated.AutoSize = true;
-            this.lbl_non_affiliated.Location = new System.Drawing.Point(551, 110);
-            this.lbl_non_affiliated.Name = "lbl_non_affiliated";
-            this.lbl_non_affiliated.Size = new System.Drawing.Size(94, 13);
-            this.lbl_non_affiliated.TabIndex = 38;
-            this.lbl_non_affiliated.Text = "NON-AFFILIATED";
-            this.lbl_non_affiliated.Visible = false;
-            this.lbl_non_affiliated.Click += new System.EventHandler(this.label24_Click);
+            this.txt_customer_code.Enabled = false;
+            this.txt_customer_code.Location = new System.Drawing.Point(659, 37);
+            this.txt_customer_code.Name = "txt_customer_code";
+            this.txt_customer_code.Size = new System.Drawing.Size(200, 20);
+            this.txt_customer_code.TabIndex = 20;
             // 
-            // txt_non_affiliated
+            // txt_branch_industry
             // 
-            this.txt_non_affiliated.Location = new System.Drawing.Point(659, 105);
-            this.txt_non_affiliated.Name = "txt_non_affiliated";
-            this.txt_non_affiliated.Size = new System.Drawing.Size(200, 20);
-            this.txt_non_affiliated.TabIndex = 39;
-            this.txt_non_affiliated.Visible = false;
-            this.txt_non_affiliated.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.txt_branch_industry.Location = new System.Drawing.Point(135, 102);
+            this.txt_branch_industry.Name = "txt_branch_industry";
+            this.txt_branch_industry.ReadOnly = true;
+            this.txt_branch_industry.Size = new System.Drawing.Size(200, 20);
+            this.txt_branch_industry.TabIndex = 17;
+            this.txt_branch_industry.Tag = "MULTI";
             // 
-            // lbl_affiliated
+            // cmb_class_name
             // 
-            this.lbl_affiliated.AutoSize = true;
-            this.lbl_affiliated.Location = new System.Drawing.Point(583, 134);
-            this.lbl_affiliated.Name = "lbl_affiliated";
-            this.lbl_affiliated.Size = new System.Drawing.Size(67, 13);
-            this.lbl_affiliated.TabIndex = 40;
-            this.lbl_affiliated.Text = "AFFILIATED";
-            this.lbl_affiliated.Visible = false;
+            this.cmb_class_name.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_class_name.FormattingEnabled = true;
+            this.cmb_class_name.Items.AddRange(new object[] {
+            "FOREIGN",
+            "LOCAL"});
+            this.cmb_class_name.Location = new System.Drawing.Point(135, 80);
+            this.cmb_class_name.Name = "cmb_class_name";
+            this.cmb_class_name.Size = new System.Drawing.Size(200, 21);
+            this.cmb_class_name.TabIndex = 16;
             // 
-            // txt_affiliated
+            // cmb_transaction_type
             // 
-            this.txt_affiliated.Location = new System.Drawing.Point(659, 127);
-            this.txt_affiliated.Name = "txt_affiliated";
-            this.txt_affiliated.Size = new System.Drawing.Size(200, 20);
-            this.txt_affiliated.TabIndex = 41;
-            this.txt_affiliated.Visible = false;
+            this.cmb_transaction_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_transaction_type.FormattingEnabled = true;
+            this.cmb_transaction_type.Items.AddRange(new object[] {
+            "Trade",
+            "Non-Trade"});
+            this.cmb_transaction_type.Location = new System.Drawing.Point(135, 58);
+            this.cmb_transaction_type.Name = "cmb_transaction_type";
+            this.cmb_transaction_type.Size = new System.Drawing.Size(200, 21);
+            this.cmb_transaction_type.TabIndex = 15;
             // 
-            // txt_general_id
+            // txt_entity_type
             // 
-            this.txt_general_id.Location = new System.Drawing.Point(102, 469);
-            this.txt_general_id.Name = "txt_general_id";
-            this.txt_general_id.Size = new System.Drawing.Size(54, 20);
-            this.txt_general_id.TabIndex = 42;
-            this.txt_general_id.Visible = false;
+            this.txt_entity_type.Location = new System.Drawing.Point(135, 37);
+            this.txt_entity_type.Name = "txt_entity_type";
+            this.txt_entity_type.ReadOnly = true;
+            this.txt_entity_type.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txt_entity_type.Size = new System.Drawing.Size(200, 20);
+            this.txt_entity_type.TabIndex = 13;
+            this.txt_entity_type.Tag = "MULTI";
             // 
-            // lbl_general_id
+            // label17
             // 
-            this.lbl_general_id.AutoSize = true;
-            this.lbl_general_id.Location = new System.Drawing.Point(81, 472);
-            this.lbl_general_id.Name = "lbl_general_id";
-            this.lbl_general_id.Size = new System.Drawing.Size(15, 13);
-            this.lbl_general_id.TabIndex = 43;
-            this.lbl_general_id.Text = "id";
-            this.lbl_general_id.Visible = false;
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(601, 82);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(49, 13);
+            this.label17.TabIndex = 10;
+            this.label17.Text = "FAX NO.";
             // 
-            // txt_general_based_id
+            // lbl_supplier_code
             // 
-            this.txt_general_based_id.Location = new System.Drawing.Point(280, 472);
-            this.txt_general_based_id.Name = "txt_general_based_id";
-            this.txt_general_based_id.Size = new System.Drawing.Size(54, 20);
-            this.txt_general_based_id.TabIndex = 44;
-            this.txt_general_based_id.Visible = false;
+            this.lbl_supplier_code.AutoSize = true;
+            this.lbl_supplier_code.Location = new System.Drawing.Point(557, 61);
+            this.lbl_supplier_code.Name = "lbl_supplier_code";
+            this.lbl_supplier_code.Size = new System.Drawing.Size(93, 13);
+            this.lbl_supplier_code.TabIndex = 9;
+            this.lbl_supplier_code.Text = "SUPPLIER CODE";
+            this.lbl_supplier_code.Click += new System.EventHandler(this.label16_Click);
             // 
-            // lbl_general_based_id
+            // lbl_customer_code
             // 
-            this.lbl_general_based_id.AutoSize = true;
-            this.lbl_general_based_id.Location = new System.Drawing.Point(183, 475);
-            this.lbl_general_based_id.Name = "lbl_general_based_id";
-            this.lbl_general_based_id.Size = new System.Drawing.Size(91, 13);
-            this.lbl_general_based_id.TabIndex = 45;
-            this.lbl_general_based_id.Text = "general_based_id";
-            this.lbl_general_based_id.Visible = false;
+            this.lbl_customer_code.AutoSize = true;
+            this.lbl_customer_code.Location = new System.Drawing.Point(546, 41);
+            this.lbl_customer_code.Name = "lbl_customer_code";
+            this.lbl_customer_code.Size = new System.Drawing.Size(104, 13);
+            this.lbl_customer_code.TabIndex = 8;
+            this.lbl_customer_code.Text = "CUSTOMER CODE ";
             // 
-            // txt_branch_sales_id
+            // label14
             // 
-            this.txt_branch_sales_id.Location = new System.Drawing.Point(659, 13);
-            this.txt_branch_sales_id.Name = "txt_branch_sales_id";
-            this.txt_branch_sales_id.Size = new System.Drawing.Size(68, 20);
-            this.txt_branch_sales_id.TabIndex = 46;
-            this.txt_branch_sales_id.Visible = false;
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(3, 210);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(131, 13);
+            this.label14.TabIndex = 7;
+            this.label14.Text = "HOW THEY FOUND US?";
             // 
-            // label16
+            // label13
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(546, 19);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(103, 13);
-            this.label16.TabIndex = 47;
-            this.label16.Text = "BRANCH SALES ID";
-            this.label16.Visible = false;
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(10, 148);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(104, 13);
+            this.label13.TabIndex = 6;
+            this.label13.Text = "BRANCH WEBSITE";
             // 
-            // cmb_social
+            // label12
             // 
-            this.cmb_social.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_social.FormattingEnabled = true;
-            this.cmb_social.Location = new System.Drawing.Point(133, 207);
-            this.cmb_social.Name = "cmb_social";
-            this.cmb_social.Size = new System.Drawing.Size(200, 21);
-            this.cmb_social.TabIndex = 23;
-            this.cmb_social.Tag = "DYNAMIC";
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(10, 126);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(97, 13);
+            this.label12.TabIndex = 5;
+            this.label12.Text = "BRANCH TEL NO ";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(10, 105);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(111, 13);
+            this.label11.TabIndex = 4;
+            this.label11.Text = "BRANCH INDUSTRY";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(10, 82);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(41, 13);
+            this.label10.TabIndex = 3;
+            this.label10.Text = "CLASS";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(10, 62);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(115, 13);
+            this.label9.TabIndex = 2;
+            this.label9.Text = "TRANSACTION TYPE";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(10, 41);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(77, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "ENTITY TYPE";
+            // 
+            // txt_branch_tel_no
+            // 
+            this.txt_branch_tel_no.Location = new System.Drawing.Point(135, 123);
+            this.txt_branch_tel_no.Name = "txt_branch_tel_no";
+            this.txt_branch_tel_no.Size = new System.Drawing.Size(200, 20);
+            this.txt_branch_tel_no.TabIndex = 18;
+            this.txt_branch_tel_no.TextChanged += new System.EventHandler(this.txt_branch_tel_no_TextChanged);
+            this.txt_branch_tel_no.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_branch_tel_no_KeyPress);
+            this.txt_branch_tel_no.Validating += new System.ComponentModel.CancelEventHandler(this.txt_branch_tel_no_Validating);
+            // 
+            // txt_branch_website
+            // 
+            this.txt_branch_website.Location = new System.Drawing.Point(135, 144);
+            this.txt_branch_website.Name = "txt_branch_website";
+            this.txt_branch_website.Size = new System.Drawing.Size(200, 20);
+            this.txt_branch_website.TabIndex = 19;
+            this.txt_branch_website.Validating += new System.ComponentModel.CancelEventHandler(this.txt_branch_website_Validating);
             // 
             // BusinessPartnerInfo
             // 
@@ -2506,10 +2467,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_finance.PerformLayout();
             this.finance_tabpage_nale.ResumeLayout(false);
             this.tabControl_Finance.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_finance_pending)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_address)).EndInit();
             this.buttonPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_contacts)).EndInit();
@@ -2544,9 +2505,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel main_panel;
         private System.Windows.Forms.Panel footer_panel;
-        private System.Windows.Forms.Button btn_add;
-        private System.Windows.Forms.Button btn_cancel;
-        private System.Windows.Forms.Button btn_update;
         private System.Windows.Forms.Button btn_qoute;
         private System.Windows.Forms.Button btn_get_industries;
         private System.Windows.Forms.ComboBox cmb_name;

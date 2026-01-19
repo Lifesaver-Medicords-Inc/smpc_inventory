@@ -93,7 +93,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             GetBranchIndustries();
             GetPayments();
             GetEntityCount();
-            GetPositionSetup();
+            //GetPositionSetup();
 
             GetBpi();
             BtnToogle(false);
@@ -878,10 +878,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             btn_save.Visible = isEdit;
             btn_revise.Visible = isEdit;
-            btn_update.Visible = isEdit;
+            //btn_update.Visible = isEdit;
 
             btn_add_page.Enabled = isEdit;
-            btn_cancel.Visible = isEdit;
+            //btn_cancel.Visible = isEdit;
             btn_close.Visible = isEdit;
 
             panel_header_records.Enabled = isEdit;
@@ -1679,9 +1679,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             BpiBranchToggle();
             BtnToogle(true);
-            btn_add.Visible = true;
+            //btn_add.Visible = true;
             btn_save.Visible = true;
-            btn_add.Location = new System.Drawing.Point(1069, 28);
+            btn_revise.Visible = false;
+            //btn_add.Location = new System.Drawing.Point(1069, 28);
 
             if (isIncluded)
             {
@@ -2849,9 +2850,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             // var Accreditations = SaveAccreditations(false); ;
             BtnToogle(false);
-            btn_add.Visible = false;
+            //btn_add.Visible = false;
             btn_save.Visible = false;
-            btn_update.Visible = false;
+            //btn_update.Visible = false;
             btn_revise.Visible = false;
             GetBpi();
         }
@@ -2861,9 +2862,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             var isSelectedSales = GetSelectedSales();
             BpiBranchToggle(isSelectedSales);
             BtnToogle(true);
-            btn_add.Visible = false;
+            //btn_add.Visible = false;
             btn_save.Visible = false;
-            btn_update.Visible = true;
+            //btn_update.Visible = true;
             btn_revise.Visible = true;
         }
 
@@ -3511,7 +3512,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            btn_update.Visible = false; 
+            //btn_update.Visible = false; 
             btn_revise.Visible = false; 
             if (string.IsNullOrEmpty(txt_id.Text))
             {
@@ -3942,9 +3943,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             // var Accreditations = SaveAccreditations(false); ;
             BtnToogle(false);
-            btn_add.Enabled = false;
+            //btn_add.Enabled = false;
             btn_save.Visible = false;
-            btn_update.Visible = false;
+            //btn_update.Visible = false;
             btn_revise.Visible = false;
              
             GetBpi();

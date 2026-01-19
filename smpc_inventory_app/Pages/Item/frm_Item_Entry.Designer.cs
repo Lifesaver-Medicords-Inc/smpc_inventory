@@ -2488,6 +2488,7 @@
             this.label34.Size = new System.Drawing.Size(18, 13);
             this.label34.TabIndex = 38;
             this.label34.Text = "ID";
+            this.label34.Visible = false;
             // 
             // txt_id
             // 
@@ -2496,6 +2497,7 @@
             this.txt_id.Size = new System.Drawing.Size(54, 20);
             this.txt_id.TabIndex = 39;
             this.txt_id.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txt_id.Visible = false;
             // 
             // label36
             // 

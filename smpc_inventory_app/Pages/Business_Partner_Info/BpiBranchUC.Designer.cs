@@ -31,11 +31,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BpiBranchUC));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_new_brach = new System.Windows.Forms.Panel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.GENERAL = new System.Windows.Forms.TabPage();
@@ -794,6 +794,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_contacts.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dg_contacts_CellBeginEdit);
             this.dg_contacts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellClick);
             this.dg_contacts.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellEndEdit);
+            this.dg_contacts.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dg_contacts_CellFormatting);
             this.dg_contacts.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dg_contacts_CellValidating);
             this.dg_contacts.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_contacts_DataBindingComplete);
             this.dg_contacts.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dg_contacts_DataError);
@@ -967,7 +968,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // dataColumn8
             // 
             this.dataColumn8.ColumnName = "position";
-            this.dataColumn8.DataType = typeof(short);
+            this.dataColumn8.DataType = typeof(int);
             // 
             // dataColumn9
             // 
@@ -1413,9 +1414,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_code.DataPropertyName = "item_code";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.NullValue = "SELECT";
-            this.item_code.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = "SELECT";
+            this.item_code.DefaultCellStyle = dataGridViewCellStyle1;
             this.item_code.FillWeight = 28.2083F;
             this.item_code.HeaderText = "ITEM CODE";
             this.item_code.MinimumWidth = 30;
@@ -1427,8 +1428,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.item_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_type.DataPropertyName = "item_type";
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.item_type.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.item_type.DefaultCellStyle = dataGridViewCellStyle2;
             this.item_type.FillWeight = 37.78341F;
             this.item_type.HeaderText = "TYPE";
             this.item_type.MinimumWidth = 30;
@@ -1438,8 +1439,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.long_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.long_description.DataPropertyName = "long_description";
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.long_description.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.long_description.DefaultCellStyle = dataGridViewCellStyle3;
             this.long_description.FillWeight = 28.2083F;
             this.long_description.HeaderText = "DESCRIPTION";
             this.long_description.MinimumWidth = 30;
@@ -1456,8 +1457,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.price.DataPropertyName = "price";
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.price.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.price.DefaultCellStyle = dataGridViewCellStyle4;
             this.price.FillWeight = 28.2083F;
             this.price.HeaderText = "PRICE";
             this.price.MinimumWidth = 30;
@@ -1465,10 +1466,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // item_graph
             // 
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.DarkGray;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DarkGray;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle5;
             this.item_graph.HeaderText = "";
             this.item_graph.MinimumWidth = 40;
             this.item_graph.Name = "item_graph";
