@@ -1263,9 +1263,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             if (e.ColumnIndex == 2)
             {
-                // You may also add optional email format validation here
                 nameCell.Style.ForeColor = Color.Black;
             }
+            if (e.ColumnIndex == 6) // position column
+            {
+                var positionCell = (DataGridViewComboBoxCell)row.Cells[6];
+
+                int positionId = positionCell.Value != null
+                    ? Convert.ToInt32(positionCell.Value)
+                    : 0;
+
+                string positionName = positionCell.FormattedValue?.ToString() ?? "";
+
+                // Use positionName here (validation, saving, display elsewhere)
+            }
+
         }
         private readonly string[] PhAreaCodes = new string[]
         {

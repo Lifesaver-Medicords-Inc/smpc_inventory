@@ -875,7 +875,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             btn_next.Visible = !isEdit;
             btn_edit.Visible = !isEdit;
             btn_print.Visible = !isEdit;
-            btn_revise.Visible = !isEdit;
+
+            btn_save.Visible = isEdit;
+            btn_revise.Visible = isEdit;
+            btn_update.Visible = isEdit;
 
             btn_add_page.Enabled = isEdit;
             btn_cancel.Visible = isEdit;

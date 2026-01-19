@@ -30,6 +30,9 @@ namespace smpc_inventory_app.Pages
         private void InitializeComponent()
         {
             this.dg_setup = new System.Windows.Forms.DataGridView();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel_header = new System.Windows.Forms.Panel();
             this.lbl_setup_title = new System.Windows.Forms.Label();
             this.panel_button = new System.Windows.Forms.Panel();
@@ -45,9 +48,6 @@ namespace smpc_inventory_app.Pages
             this.label27 = new System.Windows.Forms.Label();
             this.lbl_code = new System.Windows.Forms.Label();
             this.panel_dg = new System.Windows.Forms.Panel();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dg_setup)).BeginInit();
             this.panel_header.SuspendLayout();
             this.panel_button.SuspendLayout();
@@ -73,6 +73,27 @@ namespace smpc_inventory_app.Pages
             this.dg_setup.TabIndex = 0;
             this.dg_setup.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_setup_CellClick);
             this.dg_setup.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_setup_CellContentClick);
+            // 
+            // id
+            // 
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "ID";
+            this.id.Name = "id";
+            this.id.Visible = false;
+            // 
+            // code
+            // 
+            this.code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.code.DataPropertyName = "code";
+            this.code.HeaderText = "CODE";
+            this.code.Name = "code";
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.name.DataPropertyName = "name";
+            this.name.HeaderText = "NAME";
+            this.name.Name = "name";
             // 
             // panel_header
             // 
@@ -229,27 +250,6 @@ namespace smpc_inventory_app.Pages
             this.panel_dg.Name = "panel_dg";
             this.panel_dg.Size = new System.Drawing.Size(400, 459);
             this.panel_dg.TabIndex = 7;
-            // 
-            // id
-            // 
-            this.id.DataPropertyName = "id";
-            this.id.HeaderText = "ID";
-            this.id.Name = "id";
-            this.id.Visible = false;
-            // 
-            // code
-            // 
-            this.code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.code.DataPropertyName = "code";
-            this.code.HeaderText = "CODE";
-            this.code.Name = "code";
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.name.DataPropertyName = "name";
-            this.name.HeaderText = "NAME";
-            this.name.Name = "name";
             // 
             // SetupModal
             // 
