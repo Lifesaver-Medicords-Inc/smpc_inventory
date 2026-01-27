@@ -692,6 +692,7 @@
     <Compile Include="Services\Setup\Bpi\BpiServices.cs" />
     <Compile Include="Services\Setup\Bpi\ItemListBpiServices.cs" />
     <Compile Include="Services\Setup\Bom\BomServices.cs" />
+    <Compile Include="Services\Setup\GeneralService.cs" />
     <Compile Include="Services\Setup\Inventory\InventoryLogbookService.cs" />
     <Compile Include="Services\Setup\Inventory\InventoryTrackerService.cs" />
     <Compile Include="Services\Setup\Inventory\ReceivingReportService.cs" />
@@ -754,6 +755,7 @@
     <Compile Include="Services\Setup\Purchasing\PurchasingRedboxListServices.cs" />
     <Compile Include="Services\Setup\Purchasing\PurchasingList\PurchasingListSupplierServices.cs" />
     <Compile Include="Services\Setup\Sales\ShipServices.cs" />
+    <Compile Include="Services\Setup\ServiceBase.cs" />
     <Compile Include="Services\Setup\SetupService.cs" />
     <Compile Include="Services\Setup\SocialMediaServices.cs" />
     <Compile Include="Services\Setup\Item\UnitOfMeasurementServices.cs" />

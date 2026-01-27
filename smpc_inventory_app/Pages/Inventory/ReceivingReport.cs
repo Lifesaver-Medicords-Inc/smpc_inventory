@@ -25,6 +25,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private List<ReceivingReportModel> _receivingReports;
         private ReceivingReportList2 _rrData;
         private int _currentRRIndex = -1;
+        private int _previousRRIndex = -1;
         private bool _suppressRefDocBinding = false;
         private bool _suppressWarehouseBinding = false;
         private bool _isEditing = false;
@@ -152,7 +153,7 @@ namespace smpc_inventory_app.Pages.Inventory
             SetEditableColumns(true);
         }
 
-        private void btn_new_Click(object sender, EventArgs e)
+        private async void btn_new_Click(object sender, EventArgs e)
         {
             _isEditing = true;
             cmb_ref_doc.SelectedIndex = -1;
@@ -171,6 +172,8 @@ namespace smpc_inventory_app.Pages.Inventory
             Helpers.ResetControls(pnl_main);
             cmb_ref_doc.SelectedIndex = -1;
             cmb_warehouse_name.SelectedIndex = -1;
+
+            await LoadPODoc();
         }
 
         private async void btn_close_Click(object sender, EventArgs e)
@@ -380,11 +383,11 @@ namespace smpc_inventory_app.Pages.Inventory
                     item_id = itemId,
                     item_code = row.Cells["item_code"]?.Value?.ToString(),
                     item_description = row.Cells["item_description"]?.Value?.ToString(),
-                    ordered_qty = row.Cells["ordered_qty"]?.Value?.ToString(),
+                    ordered_qty = Convert.ToInt32(row.Cells["ordered_qty"]?.Value ?? 0),
                     ordered_uom = row.Cells["ordered_uom"]?.Value?.ToString(),
-                    received_qty = row.Cells["received_qty"]?.Value?.ToString(),
+                    received_qty = Convert.ToInt32(row.Cells["received_qty"]?.Value ?? 0),
                     received_uom = row.Cells["received_uom"]?.Value?.ToString(),
-                    rejected_qty = row.Cells["rejected_qty"]?.Value?.ToString(),
+                    rejected_qty = Convert.ToInt32(row.Cells["rejected_qty"]?.Value ?? 0),
                     rejected_uom = row.Cells["rejected_uom"]?.Value?.ToString(),
                     serial_number = row.Cells["serial_number"]?.Value?.ToString(),
                     reason_for_rejection = row.Cells["reason_for_rejection"]?.Value?.ToString(),
@@ -396,11 +399,7 @@ namespace smpc_inventory_app.Pages.Inventory
             }
 
             // Validate all rows have zero or no received quantity
-            bool allZeroReceivedQty = rrDetails.All(d =>
-            {
-                int receivedQty;
-                return !int.TryParse(d.received_qty, out receivedQty) || receivedQty <= 0;
-            });
+            bool allZeroReceivedQty = rrDetails.All(d => d.received_qty <= 0);
 
             if (allZeroReceivedQty)
             {
@@ -444,7 +443,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 int.TryParse(txt_id.Text, out savedRecordId);
 
                 await DisableEditMode();
-                await LoadPODoc();
+                ClearRowEditors();
 
                 // Reload list and find the index of the saved record
                 if (_receivingReports != null && _receivingReports.Count > 0)
@@ -789,6 +788,8 @@ namespace smpc_inventory_app.Pages.Inventory
                 dgv_main.DataSource = null;
                 btn_prev.Enabled = false;
                 btn_next.Enabled = false;
+                // Clear panel fields
+                Helpers.ResetControls(new Panel[] { pnl_main });
             }
         }
 
@@ -2087,6 +2088,44 @@ namespace smpc_inventory_app.Pages.Inventory
                 txt_supplier_code.Text = "";
                 txt_prepared_by.Text = "";
             }
+        }
+
+        private void ClearRowEditors()
+        {
+            // Hide and clear ComboBoxes
+            foreach (var kvp in rowComboBoxes)
+            {
+                ComboBox cb = kvp.Value;
+
+                if (cb != null)
+                {
+                    cb.Visible = false;
+                    cb.Items.Clear();
+                    cb.Text = string.Empty;
+                    cb.Tag = null;
+
+                    if (dgv_main.Controls.Contains(cb))
+                        dgv_main.Controls.Remove(cb);
+                }
+            }
+
+            // Hide and clear TextBoxes
+            foreach (var kvp in rowTextBoxes)
+            {
+                TextBox tb = kvp.Value;
+
+                if (tb != null)
+                {
+                    tb.Visible = false;
+                    tb.Text = string.Empty;
+
+                    if (dgv_main.Controls.Contains(tb))
+                        dgv_main.Controls.Remove(tb);
+                }
+            }
+
+            rowComboBoxes.Clear();
+            rowTextBoxes.Clear();
         }
     }
 }

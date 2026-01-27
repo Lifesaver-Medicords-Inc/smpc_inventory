@@ -60,11 +60,11 @@ namespace smpc_inventory_app.Services.Setup.Model.Purchasing
         public int receiving_report_id { get; set; }
         public string item_code { get; set; }
         public string item_description { get; set; }
-        public string ordered_qty { get; set; }
+        public int ordered_qty { get; set; }
         public string ordered_uom { get; set; }
-        public string received_qty { get; set; }
+        public int received_qty { get; set; }
         public string received_uom { get; set; }
-        public string rejected_qty { get; set; }
+        public int rejected_qty { get; set; }
         public string rejected_uom { get; set; }
         public string reason_for_rejection { get; set; }
         public string serial_number { get; set; }
