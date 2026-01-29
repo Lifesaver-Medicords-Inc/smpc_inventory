@@ -110,7 +110,9 @@ namespace smpc_sales_app.Pages
             this.dgv_prlist.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgv_prlist.Size = new System.Drawing.Size(537, 382);
             this.dgv_prlist.TabIndex = 0;
-            this.dgv_prlist.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_itemList_CellClick);
+            this.dgv_prlist.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_prlist_CellClick);
+            this.dgv_prlist.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_prlist_CellDoubleClick);
+            this.dgv_prlist.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgv_prlist_KeyDown);
             // 
             // id
             // 
@@ -163,8 +165,9 @@ namespace smpc_sales_app.Pages
             this.Controls.Add(this.pnl_dgv);
             this.Controls.Add(this.pnl_title);
             this.Name = "PRModal";
-            this.Text = "PRModal";
-            this.Load += new System.EventHandler(this.ItemModal_Load);
+            this.Text = "Select Purchase Requisition";
+            this.Load += new System.EventHandler(this.PRModal_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PRModal_KeyDown);
             this.pnl_title.ResumeLayout(false);
             this.pnl_title.PerformLayout();
             this.pnl_dgv.ResumeLayout(false);

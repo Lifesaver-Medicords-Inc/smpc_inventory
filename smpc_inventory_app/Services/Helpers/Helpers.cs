@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using smpc_inventory_app.Services.Helpers;
 
 namespace smpc_app.Services.Helpers
 {
@@ -1426,5 +1427,28 @@ namespace smpc_app.Services.Helpers
                 grid.Rows.Clear();
             }
         }
+        internal static DataTable SafeTable<T>(List<T> list)
+        {
+            var typeName = typeof(T).Name;
+
+            if (list == null)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[SafeTable] {typeName} list is NULL"
+                );
+
+                return JsonHelper.ToDataTable(new List<T>());
+            }
+
+            if (list.Count == 0)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[SafeTable] {typeName} list is EMPTY"
+                );
+            }
+
+            return JsonHelper.ToDataTable(list);
+        }
+
     }
 } 

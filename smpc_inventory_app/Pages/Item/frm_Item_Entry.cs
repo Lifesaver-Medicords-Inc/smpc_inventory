@@ -172,16 +172,17 @@ namespace smpc_inventory_app.Pages.Item
             // heavy work off the UI thread
             var tables = await Task.Run(() => new
             {
-                Items = JsonHelper.ToDataTable(records.items),
-                ItemSpecs = JsonHelper.ToDataTable(records.itemspecs),
-                AdditionalSpecs = JsonHelper.ToDataTable(records.additionalspecs),
-                ItemImages = JsonHelper.ToDataTable(records.itemimages),
-                ItemPurchasing = JsonHelper.ToDataTable(records.itempurchasing),
-                ItemSales = JsonHelper.ToDataTable(records.itemsales),
-                ItemInventory = JsonHelper.ToDataTable(records.iteminventory),
-                ItemAvailableInv = JsonHelper.ToDataTable(records.itemavailableinv),
-                ItemProduction = JsonHelper.ToDataTable(records.itemproduction)
+                Items = Helpers.SafeTable(records.items),
+                ItemSpecs = Helpers.SafeTable(records.itemspecs),
+                AdditionalSpecs = Helpers.SafeTable(records.additionalspecs),
+                ItemImages = Helpers.SafeTable(records.itemimages),
+                ItemPurchasing = Helpers.SafeTable(records.itempurchasing),
+                ItemSales = Helpers.SafeTable(records.itemsales),
+                ItemInventory = Helpers.SafeTable(records.iteminventory),
+                ItemAvailableInv = Helpers.SafeTable(records.itemavailableinv),
+                ItemProduction = Helpers.SafeTable(records.itemproduction)
             });
+
 
             items = tables.Items;
             itemspecs = tables.ItemSpecs;

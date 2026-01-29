@@ -561,7 +561,7 @@ namespace smpc_inventory_app.Pages.Purchasing
 
         private void btn_save_Click(object sender, EventArgs e)
         {
-            BtnToggle(false);
+            
             btn_save.Enabled = false;
 
             try
@@ -575,6 +575,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             finally
             {
                 btn_save.Enabled = true;
+                
             }
         }
         private (Dictionary<string, dynamic>, bool) GetPurchaseOrder()
@@ -687,9 +688,9 @@ namespace smpc_inventory_app.Pages.Purchasing
                 Helpers.ShowDialogMessage("error", $"Failed to {(isInsert ? "save" : "update")} Purchase Order.");
                 return;
             }
-
             // 7. UI feedback
             Helpers.ShowDialogMessage("success", $"Purchase Order {(isInsert ? "saved" : "updated")} successfully.");
+            BtnToggle(false);
 
             if (isInsert)
             {
