@@ -592,7 +592,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.dgv_main.TabIndex = 0;
             this.dgv_main.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_main_CellClick);
             this.dgv_main.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_main_CellValueChanged);
-            this.dgv_main.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_main_DataError);
             this.dgv_main.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dgv_main_RowPostPaint);
             // 
             // number
