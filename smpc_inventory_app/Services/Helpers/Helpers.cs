@@ -617,6 +617,31 @@ namespace smpc_app.Services.Helpers
             }
         }
 
+        public static void ResetControls(Panel[] pnls)
+        {
+            foreach (Panel pnl in pnls)
+            {
+                foreach (Control control in pnl.Controls)
+                {
+                    // Check if the control is a TextBox
+                    if (control is TextBox textBox)
+                    {
+                        // Reset the TextBox's text
+                        textBox.Text = "";
+                    }
+                    else if (control is ComboBox combobox)
+                    {
+                        combobox.SelectedIndex = -1;
+                    }
+                    // Reset DateTimePicker to current date
+                    else if (control is DateTimePicker datePicker)
+                    {
+                        datePicker.Value = DateTime.Now;   // or DateTime.Today
+                    }
+                }
+            }
+        }
+
         public static void ResetControls(Panel pnl)
         {
             foreach (Control control in pnl.Controls)
