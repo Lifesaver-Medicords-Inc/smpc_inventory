@@ -789,6 +789,7 @@
             this.txt_additional_specs_id.Name = "txt_additional_specs_id";
             this.txt_additional_specs_id.Size = new System.Drawing.Size(65, 20);
             this.txt_additional_specs_id.TabIndex = 123;
+            this.txt_additional_specs_id.Visible = false;
             // 
             // txt_additional_specs_based_id
             // 
@@ -796,6 +797,7 @@
             this.txt_additional_specs_based_id.Name = "txt_additional_specs_based_id";
             this.txt_additional_specs_based_id.Size = new System.Drawing.Size(65, 20);
             this.txt_additional_specs_based_id.TabIndex = 124;
+            this.txt_additional_specs_based_id.Visible = false;
             // 
             // txt_long_description
             // 

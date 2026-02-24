@@ -42,7 +42,7 @@ namespace Inventory_SMPC.Pages.Setup
             this.btn_delete = new System.Windows.Forms.ToolStripButton();
             this.btn_save = new System.Windows.Forms.ToolStripButton();
             this.btn_cancel = new System.Windows.Forms.ToolStripButton();
-            this.panel_records = new System.Windows.Forms.Panel();
+            this.pnl_input = new System.Windows.Forms.Panel();
             this.txt_id = new System.Windows.Forms.TextBox();
             this.dataSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataSet = new System.Data.DataSet();
@@ -61,7 +61,7 @@ namespace Inventory_SMPC.Pages.Setup
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel_header.SuspendLayout();
             this.toolStrip2.SuspendLayout();
-            this.panel_records.SuspendLayout();
+            this.pnl_input.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
@@ -106,7 +106,6 @@ namespace Inventory_SMPC.Pages.Setup
             this.panel_header.Name = "panel_header";
             this.panel_header.Size = new System.Drawing.Size(634, 63);
             this.panel_header.TabIndex = 24;
-            this.panel_header.Paint += new System.Windows.Forms.PaintEventHandler(this.panel5_Paint);
             // 
             // label6
             // 
@@ -178,21 +177,20 @@ namespace Inventory_SMPC.Pages.Setup
             this.btn_cancel.Visible = false;
             this.btn_cancel.Click += new System.EventHandler(this.btn_cancel_Click_1);
             // 
-            // panel_records
+            // pnl_input
             // 
-            this.panel_records.Controls.Add(this.txt_id);
-            this.panel_records.Controls.Add(this.lbl_id);
-            this.panel_records.Controls.Add(this.txt_name);
-            this.panel_records.Controls.Add(this.txt_code);
-            this.panel_records.Controls.Add(this.label4);
-            this.panel_records.Controls.Add(this.label5);
-            this.panel_records.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel_records.Enabled = false;
-            this.panel_records.Location = new System.Drawing.Point(0, 88);
-            this.panel_records.Name = "panel_records";
-            this.panel_records.Size = new System.Drawing.Size(634, 86);
-            this.panel_records.TabIndex = 26;
-            this.panel_records.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_records_Paint_1);
+            this.pnl_input.Controls.Add(this.txt_id);
+            this.pnl_input.Controls.Add(this.lbl_id);
+            this.pnl_input.Controls.Add(this.txt_name);
+            this.pnl_input.Controls.Add(this.txt_code);
+            this.pnl_input.Controls.Add(this.label4);
+            this.pnl_input.Controls.Add(this.label5);
+            this.pnl_input.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnl_input.Enabled = false;
+            this.pnl_input.Location = new System.Drawing.Point(0, 88);
+            this.pnl_input.Name = "pnl_input";
+            this.pnl_input.Size = new System.Drawing.Size(634, 86);
+            this.pnl_input.TabIndex = 26;
             // 
             // txt_id
             // 
@@ -201,7 +199,6 @@ namespace Inventory_SMPC.Pages.Setup
             this.txt_id.Name = "txt_id";
             this.txt_id.Size = new System.Drawing.Size(200, 20);
             this.txt_id.TabIndex = 12;
-            this.txt_id.Visible = false;
             // 
             // dataSource
             // 
@@ -306,7 +303,7 @@ namespace Inventory_SMPC.Pages.Setup
             this.dg_brands.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dg_brands.Size = new System.Drawing.Size(634, 473);
             this.dg_brands.TabIndex = 27;
-            this.dg_brands.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_brands_CellContentClick);
+            this.dg_brands.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_brands_CellClick);
             this.dg_brands.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dg_brands_ColumnHeaderMouseClick);
             // 
             // id
@@ -338,7 +335,7 @@ namespace Inventory_SMPC.Pages.Setup
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.dg_brands);
-            this.Controls.Add(this.panel_records);
+            this.Controls.Add(this.pnl_input);
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.panel_header);
             this.Controls.Add(this.pnl_page_title);
@@ -351,8 +348,8 @@ namespace Inventory_SMPC.Pages.Setup
             this.panel_header.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
-            this.panel_records.ResumeLayout(false);
-            this.panel_records.PerformLayout();
+            this.pnl_input.ResumeLayout(false);
+            this.pnl_input.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
@@ -375,7 +372,7 @@ namespace Inventory_SMPC.Pages.Setup
         private System.Windows.Forms.ToolStripButton btn_delete;
         private System.Windows.Forms.ToolStripButton btn_save;
         private System.Windows.Forms.ToolStripButton btn_cancel;
-        private System.Windows.Forms.Panel panel_records;
+        private System.Windows.Forms.Panel pnl_input;
         private System.Windows.Forms.TextBox txt_id;
         private System.Windows.Forms.Label lbl_id;
         private System.Windows.Forms.TextBox txt_name;

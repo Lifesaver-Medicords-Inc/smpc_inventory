@@ -18,6 +18,7 @@ namespace Inventory_SMPC.Pages.Setup
         public frm_item_brand_setup()
         {
             InitializeComponent();
+            dg_brands.AutoGenerateColumns = false;
         }
        
 
@@ -25,15 +26,16 @@ namespace Inventory_SMPC.Pages.Setup
         {
             GetBrand();
         }
-        private void BtnToogle(bool isEdit)
+        private void BtnToggle(bool isEdit)
         {
             btn_new.Visible = !isEdit;
-            btn_edit.Visible = !isEdit;
             btn_delete.Visible = !isEdit;
+            btn_edit.Visible = !isEdit;
 
             btn_save.Visible = isEdit;
             btn_cancel.Visible = isEdit;
-            panel_records.Enabled = isEdit;
+            pnl_input.Enabled = isEdit;
+            dg_brands.Enabled = !isEdit;
         }
 
 
@@ -46,13 +48,11 @@ namespace Inventory_SMPC.Pages.Setup
 
         private void panel_records_Paint(object sender, PaintEventArgs e)
         {
-            BtnToogle(false);
+            BtnToggle(false);
 
         }
-
-
-          private bool ValidateField(out string messages) {
-
+        private bool ValidateField(out string messages) 
+        {
             bool isValid = false ;
             messages= string.Empty;
 
@@ -68,120 +68,112 @@ namespace Inventory_SMPC.Pages.Setup
 
             return isValid;
         }
-
-
- 
-
         private void btn_edit_Click(object sender, EventArgs e)
         {
-            BtnToogle(true);
+            BtnToggle(true);
         }
 
         private void btn_delete_Click(object sender, EventArgs e)
         {
-            BtnToogle(false);
+            BtnToggle(false);
         }
-
-
-
         private void btn_cancel_Click(object sender, EventArgs e)
         {
-            BtnToogle(false);
+            BtnToggle(false);
         }
-
-        private void dg_brands_CellClick_1(object sender, DataGridViewCellEventArgs e)
-        {
-            
-        }
-
-
-
-
         private void btn_new_Click_1(object sender, EventArgs e)
         {
-            Helpers.ResetControls(panel_records);
+            Helpers.ResetControls(pnl_input);
             dg_brands.ClearSelection(); 
-            BtnToogle(true);
+            BtnToggle(true);
 
         }
 
         private void btn_cancel_Click_1(object sender, EventArgs e)
         {
 
-            Helpers.ResetControls(panel_records);
-            BtnToogle(false);
+            Helpers.ResetControls(pnl_input);
+            BtnToggle(false);
         }
 
         private void btn_edit_Click_1(object sender, EventArgs e)
         {
-            BtnToogle(true);
+            BtnToggle(true);
             dg_brands.ClearSelection();
         }
 
         private async void btn_save_Click(object sender, EventArgs e)
         {
-            string message;
-          //  bool isSuccess;
-            string errorFieldMessage;
+            // Get input values
+            var data = Helpers.GetControlsValues(pnl_input);
             ApiResponseModel response = new ApiResponseModel();
-            
 
-            bool isErrorField = ValidateField(out errorFieldMessage);
-            
-            if (isErrorField)
+            // Validate required fields
+            string errorMessage =
+                string.IsNullOrWhiteSpace(txt_code.Text) && string.IsNullOrWhiteSpace(txt_name.Text) ? "Code and Name cannot be empty." :
+                string.IsNullOrWhiteSpace(txt_code.Text) ? "Code cannot be empty." :
+                string.IsNullOrWhiteSpace(txt_name.Text) ? "Name cannot be empty." : null;
+
+            if (!string.IsNullOrEmpty(errorMessage))
             {
-                Helpers.ShowDialogMessage("error", errorFieldMessage);
+                Helpers.ShowDialogMessage("error", errorMessage);
                 return;
             }
 
-            var data = Helpers.GetControlsValues(panel_records);
-
-            if (txt_id.Text.Equals(""))
+            // Insert or update data
+            bool isNewRecord = string.IsNullOrWhiteSpace(txt_id.Text);
+            if (isNewRecord)
             {
                 data.Remove("id");
-                response = await ItemBrandServices.Insert(data);
-                message = response.Success ? "Insert Data Succesfully" : "Failed to add brand\n" +  response.message ;
-            }
-            else
-            {
-                response = await ItemBrandServices.Update(data);
-                message = response.Success ? "Update Data Succesfully" : "Failed to update Brand";
             }
 
-            if (!response.Success)
+            response = isNewRecord
+                ? await ItemBrandServices.Insert(data)
+                : await ItemBrandServices.Update(data);
+
+            // Handle result
+            if (response.Success)
             {
-                Helpers.ShowDialogMessage("error", message);
-                return;
+                Helpers.ResetControls(pnl_input);
+                GetBrand();
+                BtnToggle(false);
             }
-         
-            Helpers.ShowDialogMessage("success", message);
-            Helpers.ResetControls(panel_records);
-            GetBrand();
-            BtnToogle(false);
+
+            string message = response.Success
+                ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
+                : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
+
+            Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
 
         }
 
         private async void btn_delete_Click_1(object sender, EventArgs e)
         {
-           var data = Helpers.GetControlsValues(panel_records);
+            DialogResult result = MessageBox.Show(
+                 "Are you sure you want to delete this item?",
+                 "Confirm Deletion",
+                 MessageBoxButtons.YesNo,
+                 MessageBoxIcon.Question
+             );
 
-           DialogResult result =  MessageBox.Show("Are you sure you want to delete this data? ", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ;
-           
-            if(result == DialogResult.Yes) {
+            if (result == DialogResult.Yes)
+            {
+                var data = Helpers.GetControlsValues(pnl_input);
+
                 bool isSuccess = await ItemBrandServices.Delete(data);
 
-                if (!isSuccess)
+                if (isSuccess)
                 {
-                    Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
-                    return;
+                    Helpers.ResetControls(pnl_input);
+                    Helpers.ShowDialogMessage("success", "Item deleted successfully.");
+                    GetBrand();
+                    BtnToggle(false);
                 }
-                Helpers.ResetControls(panel_records);
-                Helpers.ShowDialogMessage("success", "Delete Brand Succesfully");
-                GetBrand();
-                BtnToogle(false);
+                else
+                {
+                    Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                }
             }
-
-
         }
 
         private void SortDataGridView(int columnIndex)
@@ -190,10 +182,6 @@ namespace Inventory_SMPC.Pages.Setup
             // Example: Sort the column by ascending order
             var column = dg_brands.Columns[columnIndex];
             dg_brands.Sort(column, ListSortDirection.Ascending);
-        }
-        private void panel5_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void dg_brands_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -205,14 +193,14 @@ namespace Inventory_SMPC.Pages.Setup
             }
         }
 
-        private void dg_brands_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dg_brands_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-
-        }
-
-        private void panel_records_Paint_1(object sender, PaintEventArgs e)
-        {
-
+            if (e.RowIndex < 0) return;
+            Panel[] pnlList = { pnl_input };
+            DataTable dt = Helpers.ConvertDataGridViewToDataTable(dg_brands);
+            Helpers.BindControls(pnlList, dt, e.RowIndex);
+            btn_edit.Enabled = true;
+            btn_delete.Enabled = true;
         }
     }
 }

@@ -647,31 +647,31 @@ namespace smpc_inventory_app.Pages.Purchasing
         }
         private async void SavePurchaseorder()
         {
-            // 1. Fetch latest purchase orders
+            // Fetch latest purchase orders
             var newresponse = await RequestToApi<ApiResponseModel<PurchaseOrdersWithDetails>>.Get(ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);
             records = newresponse.Data;
             updatedpurchaseorder = JsonHelper.ToDataTable(records.purchaseorder);
 
-            // 2. Collect order header values
+            // Collect order header values
 
             var (order, isNewRecord) = GetPurchaseOrder();
 
-            // 3. Extract order detail rows
+            // Extract order detail rows
             var (orderRow, statusUpdateRow, orderType) = GetPurchaseOrderDetails();
 
-            // 4. Validate order type
+            // Validate order type
             if (orderType != "SO" && orderType != "PR")
             {
                 Helpers.ShowDialogMessage("error", "Invalid order type selected.");
                 return;
             }
 
-            // 5. Prepare payload
+            // Prepare payload
             order["purchase_order_details"] = orderRow;
             string detailKey = orderType == "SO" ? "sales_order_details" : "purchase_requisition_details";
             order[detailKey] = statusUpdateRow;
 
-            // 6. Insert or update
+            // Insert or update
             bool isValidId = int.TryParse(txt_id.Text, out int recordId);
             bool isInsert = isNewRecord || !isValidId;
             order["id"] = recordId;
@@ -688,7 +688,7 @@ namespace smpc_inventory_app.Pages.Purchasing
                 Helpers.ShowDialogMessage("error", $"Failed to {(isInsert ? "save" : "update")} Purchase Order.");
                 return;
             }
-            // 7. UI feedback
+            // UI feedback
             Helpers.ShowDialogMessage("success", $"Purchase Order {(isInsert ? "saved" : "updated")} successfully.");
             BtnToggle(false);
 

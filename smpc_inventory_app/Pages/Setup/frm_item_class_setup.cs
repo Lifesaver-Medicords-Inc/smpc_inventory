@@ -31,11 +31,6 @@ namespace Inventory_SMPC.Pages.Setup
             btn_delete.Enabled = false;
         }
 
-        private void pnl_body_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private async void btn_save_Click(object sender, EventArgs e)
         {
             // Get input values
@@ -122,33 +117,9 @@ namespace Inventory_SMPC.Pages.Setup
             BtnToggle(false);
         }
 
-        private async void btn_delete_Click(object sender, EventArgs e)
+        private void btn_delete_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(
-                "Are you sure you want to delete this item?",
-                "Confirm Deletion",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-
-            if (result == DialogResult.Yes)
-            {
-                var data = Helpers.GetControlsValues(pnl_input);
-
-                bool isSuccess = await ItemClassServices.Delete(data);
-
-                if (isSuccess)
-                {
-                    Helpers.ResetControls(pnl_input);
-                    Helpers.ShowDialogMessage("success", "Item deleted successfully.");
-                    GetData();
-                    BtnToggle(false);
-                }
-                else
-                {
-                    Helpers.ShowDialogMessage("error", "Failed to delete item.");
-                }
-            }
+            BtnToggle(false);
         }
     }
 }
