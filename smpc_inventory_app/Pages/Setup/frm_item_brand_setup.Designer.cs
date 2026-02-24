@@ -199,6 +199,7 @@ namespace Inventory_SMPC.Pages.Setup
             this.txt_id.Name = "txt_id";
             this.txt_id.Size = new System.Drawing.Size(200, 20);
             this.txt_id.TabIndex = 12;
+            this.txt_id.Visible = false;
             // 
             // dataSource
             // 
