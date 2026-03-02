@@ -67,7 +67,7 @@ namespace smpc_inventory_app.Services.Setup.Inventory
         }
 
         // CREATE
-        public static async Task<object> CreateRRRecord(ReceivingReportPayload payload)
+        public static async Task<ApiResponseModel<object>> CreateRRRecord(ReceivingReportPayload payload)
         {
             var response = await RequestToApi<ApiResponseModel<object>>.Post(ENUM_ENDPOINT.RECEIVING_REPORT2, new Dictionary<string, dynamic>
                 {
@@ -76,11 +76,11 @@ namespace smpc_inventory_app.Services.Setup.Inventory
                 }
             );
 
-            return response.Data;
+            return response;
         }
 
         // UPDATE
-        public static async Task<object> UpdateRRRecord(ReceivingReportPayload payload)
+        public static async Task<ApiResponseModel<object>> UpdateRRRecord(ReceivingReportPayload payload)
         {
             var response = await RequestToApi<ApiResponseModel<object>>.Put(ENUM_ENDPOINT.RECEIVING_REPORT2, new Dictionary<string, dynamic>
                 {
@@ -89,11 +89,11 @@ namespace smpc_inventory_app.Services.Setup.Inventory
                 }
             );
 
-            return response.Data;
+            return response;
         }
 
         // DELETE
-        public static async Task<object> DeleteRRRecord(ReceivingReportPayload payload)
+        public static async Task<ApiResponseModel<object>> DeleteRRRecord(ReceivingReportPayload payload)
         {
             var response = await RequestToApi<ApiResponseModel<object>>.Delete(ENUM_ENDPOINT.RECEIVING_REPORT2, new Dictionary<string, dynamic>
                 {
@@ -102,7 +102,7 @@ namespace smpc_inventory_app.Services.Setup.Inventory
                 }
             );
 
-            return response.Data;
+            return response;
         }
     }
 }

@@ -424,11 +424,25 @@ namespace smpc_inventory_app.Pages.Inventory
                 if (_isNewMode) // CREATE
                 {
                     var result = await ReceivingReportService.CreateRRRecord(rrPayload);
+
+                    if (!result.Success)
+                    {
+                        Helpers.ShowDialogMessage("error", "Receiving Report not created.");
+                        return;
+                    }
+
                     Helpers.ShowDialogMessage("success", "Receiving Report created successfully.");
                 }
                 else // UPDATE
                 {
                     var result = await ReceivingReportService.UpdateRRRecord(rrPayload);
+
+                    if (!result.Success)
+                    {
+                        Helpers.ShowDialogMessage("error", "Receiving Report not updated.");
+                        return;
+                    }
+
                     Helpers.ShowDialogMessage("success", "Receiving Report updated successfully.");
                 }
             }
@@ -503,7 +517,13 @@ namespace smpc_inventory_app.Pages.Inventory
                 };
 
                 // Call delete using the same JSON shape as save
-                await ReceivingReportService.DeleteRRRecord(rrPayload);
+                var result = await ReceivingReportService.DeleteRRRecord(rrPayload);
+
+                if (!result.Success)
+                {
+                    Helpers.ShowDialogMessage("error", "Receiving Report not created.");
+                    return;
+                }
 
                 Helpers.ShowDialogMessage("success", "Receiving Report deleted successfully.");
 

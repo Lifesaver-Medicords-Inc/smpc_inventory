@@ -403,6 +403,13 @@ namespace smpc_inventory_app.Pages
                     {
                         Helpers.Loading.ShowLoading(dgv_inventory_item, "Saving data...");
                         var response = await InventoryTrackerService.CreateInvTracker(data);
+
+                        if (!response.Success)
+                        {
+                            Helpers.ShowDialogMessage("error", "Remarks not created.");
+                            return;
+                        }
+
                         Helpers.ShowDialogMessage("success", "Remarks created successfully!");
                     }
                     catch (Exception ex)
@@ -426,6 +433,13 @@ namespace smpc_inventory_app.Pages
                     }
 
                     var response = await InventoryTrackerService.UpdateInvTracker(data);
+
+                    if (!response.Success)
+                    {
+                        Helpers.ShowDialogMessage("error", "Remarks not updated.");
+                        return;
+                    }
+
                     Helpers.ShowDialogMessage("success", "Remarks updated successfully!");
                 }
                 // Case 3: Initially filled → now empty → DELETE
@@ -442,6 +456,12 @@ namespace smpc_inventory_app.Pages
                             {
                                 { "id", id }
                             });
+
+                            if (!response.Success)
+                            {
+                                Helpers.ShowDialogMessage("error", "Remarks not deleted.");
+                                return;
+                            }
 
                             Helpers.ShowDialogMessage("success", "Remarks deleted successfully!");
                         }
