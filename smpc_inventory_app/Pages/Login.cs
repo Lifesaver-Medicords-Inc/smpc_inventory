@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace smpc_inventory_app.Pages
 {
-    internal partial class Login : Form
+    public partial class Login : Form
     {
         public Login()
         { 
@@ -84,10 +84,25 @@ namespace smpc_inventory_app.Pages
 
 
         }
-
-        private void pnl_auth_Paint(object sender, PaintEventArgs e)
+        public async void LoginFromSales(Dictionary<string, dynamic> data)
         {
 
+            var currentUser = await AuthServices.Login(data);
+
+            if (currentUser.Success)
+            {
+                CacheData.CurrentUser = currentUser.Data;
+                //smpc_sales_system.Services.Sales.Models
+                //CacheData.ShipTypeSetup = await ShipService.GetAsDatatable();s
+                //CacheData.PaymentTerms = await PaymentTermsServices.GetAsDatatable();
+                //CacheData.ApplicationSetup = await ApplicationService.GetAsDatatable();
+                //CacheData.UoM = await UnitOfMeasurementServices.GetAsDatatable();
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                Helpers.ShowDialogMessage("error", "Invalid Credentials");
+            }
         }
     }
 }
