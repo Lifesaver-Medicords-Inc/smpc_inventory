@@ -60,8 +60,7 @@ namespace smpc_inventory_app.Services.Helpers
             { "WAREHOUSE", new frm_warehouse_name_setup() },
             { "INVENTORY TRACKER", new InventoryTracker() },
             { "INVENTORY LOGBOOK", new InventoryLogbook() },
-            { "RECEIVING REPORT", new frm_receiving_report_setup() },
-            { "RECEIVING REPORT2", new ReceivingReport() }
+            { "RECEIVING REPORT", new ReceivingReport() }
         };
 
         private string _selectedRoute;

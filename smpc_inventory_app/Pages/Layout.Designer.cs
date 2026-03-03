@@ -80,14 +80,12 @@ namespace Inventory_SMPC.Pages
             treeNode26,
             treeNode27});
             System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Receiving Report");
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Receiving Report2");
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Inventory Logbook");
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Inventory Tracker");
-            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Inventory Logbook");
+            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Inventory Tracker");
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
             treeNode29,
             treeNode30,
-            treeNode31,
-            treeNode32});
+            treeNode31});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SMPC));
             this.MainPanel = new System.Windows.Forms.Panel();
             this.container = new System.Windows.Forms.Panel();
@@ -110,9 +108,9 @@ namespace Inventory_SMPC.Pages
             this.toolStripStatusLabel7 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbl_department = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel8 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbl_date_time = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel8 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbl_status = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainPanel.SuspendLayout();
             this.container.SuspendLayout();
@@ -291,14 +289,12 @@ namespace Inventory_SMPC.Pages
             treeNode28.Text = "Setup";
             treeNode29.Name = "RECEIVING REPORT";
             treeNode29.Text = "Receiving Report";
-            treeNode30.Name = "RECEIVING REPORT2";
-            treeNode30.Text = "Receiving Report2";
-            treeNode31.Name = "INVENTORY LOGBOOK";
-            treeNode31.Text = "Inventory Logbook";
-            treeNode32.Name = "INVENTORY TRACKER";
-            treeNode32.Text = "Inventory Tracker";
-            treeNode33.Name = "parent";
-            treeNode33.Text = "Inventory";
+            treeNode30.Name = "INVENTORY LOGBOOK";
+            treeNode30.Text = "Inventory Logbook";
+            treeNode31.Name = "INVENTORY TRACKER";
+            treeNode31.Text = "Inventory Tracker";
+            treeNode32.Name = "parent";
+            treeNode32.Text = "Inventory";
             this.Sidebar.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2,
@@ -306,7 +302,7 @@ namespace Inventory_SMPC.Pages
             treeNode8,
             treeNode11,
             treeNode28,
-            treeNode33});
+            treeNode32});
             this.Sidebar.ShowNodeToolTips = true;
             this.Sidebar.Size = new System.Drawing.Size(235, 637);
             this.Sidebar.TabIndex = 0;
@@ -388,6 +384,12 @@ namespace Inventory_SMPC.Pages
             this.toolStripStatusLabel4.Size = new System.Drawing.Size(55, 17);
             this.toolStripStatusLabel4.Text = "                ";
             // 
+            // toolStripStatusLabel8
+            // 
+            this.toolStripStatusLabel8.Name = "toolStripStatusLabel8";
+            this.toolStripStatusLabel8.Size = new System.Drawing.Size(42, 17);
+            this.toolStripStatusLabel8.Text = "Status:";
+            // 
             // toolStripStatusLabel5
             // 
             this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
@@ -402,12 +404,6 @@ namespace Inventory_SMPC.Pages
             this.lbl_date_time.Size = new System.Drawing.Size(124, 17);
             this.lbl_date_time.Text = "Feb 7, 2025 11:02AM";
             this.lbl_date_time.Visible = false;
-            // 
-            // toolStripStatusLabel8
-            // 
-            this.toolStripStatusLabel8.Name = "toolStripStatusLabel8";
-            this.toolStripStatusLabel8.Size = new System.Drawing.Size(42, 17);
-            this.toolStripStatusLabel8.Text = "Status:";
             // 
             // lbl_status
             // 
