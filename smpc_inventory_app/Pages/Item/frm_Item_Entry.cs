@@ -990,6 +990,8 @@ namespace smpc_inventory_app.Pages.Item
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_CLASS);
             CacheData.ItemClass = await serviceSetup.GetAsDatatable();
 
+            if (CacheData.ItemClass == null) return;
+
             AddCmbDefaultVal(CacheData.ItemClass);
 
             BindCmbValues(cmb_item_class, CacheData.ItemClass);
@@ -998,6 +1000,8 @@ namespace smpc_inventory_app.Pages.Item
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_NAME);
             CacheData.ItemName = await serviceSetup.GetAsDatatable();
+
+            if (CacheData.ItemName == null) return;
 
             AddCmbDefaultVal(CacheData.ItemName);
 
@@ -1010,6 +1014,8 @@ namespace smpc_inventory_app.Pages.Item
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.BRAND);
             CacheData.ItemBrand = await serviceSetup.GetAsDatatable();
 
+            if (CacheData.ItemBrand == null) return;
+
             AddCmbDefaultVal(CacheData.ItemBrand);
 
             cmb_item_brand.DataSource = CacheData.ItemBrand;
@@ -1020,6 +1026,8 @@ namespace smpc_inventory_app.Pages.Item
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.UNIT_OF_MEASURMENT);
             DataTable originalData = await serviceSetup.GetAsDatatable();
+
+            if (originalData == null) return;
 
             CacheData.UnitOfMeasurement = originalData;
 
@@ -1039,11 +1047,15 @@ namespace smpc_inventory_app.Pages.Item
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_TYPE);
             CacheData.ItemType = await serviceSetup.GetAsDatatable();
+
+            if (CacheData.ItemType == null) return;
         }
         private async void FetchMaterialSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_MATERIAL);
             CacheData.Material = await serviceSetup.GetAsDatatable();
+
+            if (CacheData.Material == null) return;
 
             AddCmbDefaultVal(CacheData.Material);
             BindCmbValues(cmb_material, CacheData.Material);
@@ -1053,11 +1065,14 @@ namespace smpc_inventory_app.Pages.Item
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_PUMP_TYPE);
             CacheData.PumpType = await serviceSetup.GetAsDatatable();
 
+            if (CacheData.PumpType == null) return;
         }
         private async void FetchPumpCountSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_PUMP_COUNT);
             CacheData.PumpCount = await serviceSetup.GetAsDatatable();
+
+            if (CacheData.PumpCount == null) return;
 
             AddCmbDefaultVal(CacheData.PumpCount);
 
@@ -1068,6 +1083,8 @@ namespace smpc_inventory_app.Pages.Item
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.VALUATIONMETHOD);
             CacheData.ValuationMethod = await serviceSetup.GetAsDatatable();
 
+            if (CacheData.ValuationMethod == null) return;
+
             AddCmbDefaultVal(CacheData.ValuationMethod);
 
             BindCmbValues(cmb_valuation_method, CacheData.ValuationMethod);
@@ -1075,6 +1092,8 @@ namespace smpc_inventory_app.Pages.Item
         private async void FetchWarehouse()
         {
             _warehouseData = await ReceivingReportService.GetWarehouseDetails();
+
+            if (_warehouseData == null) return;
 
             // Convert the list to DataTable for binding
             warehouseName = JsonHelper.ToDataTable(_warehouseData.warehouse_name);

@@ -19,10 +19,9 @@ namespace smpc_inventory_app.Services.Helpers
     internal class RequestToApi<T> where T : class
     {
         //DEV ENV
-        static string baseUrl =  Settings.Default.BaseUrl + "/api";
+        //static string baseUrl =  Settings.Default.BaseUrl + "/api";
         //PROD ENV
-        //static string baseUrl = "http://52.76.70.203:8000/api";
-        //static string baseUrl = "https://b088-2001-4451-83a9-cd00-d35-514e-7116-c76a.ngrok-free.app/api";
+        static string baseUrl = "https://disordered-wilhelmina-nondetrimentally.ngrok-free.dev/api";
         static Uri baseUri = new Uri(baseUrl);
         // Create a CookieContainer to store cookies
         static CookieContainer cookieContainer = new CookieContainer();
