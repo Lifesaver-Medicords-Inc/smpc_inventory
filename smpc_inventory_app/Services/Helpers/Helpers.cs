@@ -239,6 +239,17 @@ namespace smpc_app.Services.Helpers
 
         private static void DrawGroupHeaders(DataGridView dgv, PaintEventArgs e, Dictionary<string, string[]> groups)
         {
+            // Determine frozen column boundary
+            int frozenBoundary = 0;
+            foreach (DataGridViewColumn col in dgv.Columns)
+            {
+                if (col.Frozen)
+                {
+                    Rectangle rect = dgv.GetCellDisplayRectangle(col.Index, -1, true);
+                    frozenBoundary = Math.Max(frozenBoundary, rect.Right);
+                }
+            }
+
             foreach (var group in groups)
             {
                 string groupName = group.Key;
@@ -253,19 +264,38 @@ namespace smpc_app.Services.Helpers
                 Rectangle r1 = dgv.GetCellDisplayRectangle(firstCol.Index, -1, true);
                 Rectangle r2 = dgv.GetCellDisplayRectangle(lastCol.Index, -1, true);
 
-                if (r1.IsEmpty || r2.IsEmpty) continue;
+                if (r1.Width <= 0 || r2.Width <= 0)
+                    continue;
 
-                Rectangle headerRect = new Rectangle(r1.X, r1.Y, r2.Right - r1.X, r1.Height / 2);
+                // If the first column is hidden behind frozen columns, don't draw the group text
+                bool firstColumnHiddenByFrozen = r1.X < frozenBoundary;
+
+                Rectangle headerRect = new Rectangle(
+                    Math.Max(r1.X, frozenBoundary),
+                    r1.Y,
+                    r2.Right - Math.Max(r1.X, frozenBoundary),
+                    r1.Height / 2
+                );
+
+                if (headerRect.Width <= 0)
+                    continue;
 
                 using (Brush b = new SolidBrush(SystemColors.Control))
                     e.Graphics.FillRectangle(b, headerRect);
 
                 e.Graphics.DrawRectangle(Pens.Gray, headerRect);
 
-                TextRenderer.DrawText(e.Graphics, groupName,
-                    dgv.ColumnHeadersDefaultCellStyle.Font,
-                    headerRect, Color.Black,
-                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                if (!firstColumnHiddenByFrozen)
+                {
+                    TextRenderer.DrawText(
+                        e.Graphics,
+                        groupName,
+                        dgv.ColumnHeadersDefaultCellStyle.Font,
+                        headerRect,
+                        Color.Black,
+                        TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter
+                    );
+                }
             }
         }
 
@@ -273,20 +303,49 @@ namespace smpc_app.Services.Helpers
         {
             if (e.RowIndex == -1 && e.ColumnIndex >= 0)
             {
+                Rectangle rect = dgv.GetCellDisplayRectangle(e.ColumnIndex, -1, true);
+
+                // Determine frozen boundary
+                int frozenBoundary = 0;
+                foreach (DataGridViewColumn col in dgv.Columns)
+                {
+                    if (col.Frozen)
+                    {
+                        Rectangle r = dgv.GetCellDisplayRectangle(col.Index, -1, true);
+                        frozenBoundary = Math.Max(frozenBoundary, r.Right);
+                    }
+                }
+
+                // If column header is completely behind frozen columns, skip drawing
+                if (rect.Right <= frozenBoundary)
+                    return;
+
                 e.PaintBackground(e.CellBounds, true);
 
-                Rectangle fullRect = e.CellBounds;
+                Rectangle textRect = e.CellBounds;
+
+                // Prevent drawing behind frozen area
+                if (textRect.X < frozenBoundary)
+                {
+                    int diff = frozenBoundary - textRect.X;
+                    textRect.X += diff;
+                    textRect.Width -= diff;
+                }
 
                 // Bottom half for column text
-                Rectangle textRect = fullRect;
                 textRect.Y += textRect.Height / 2;
                 textRect.Height /= 2;
 
-                TextRenderer.DrawText(e.Graphics,
+                TextRenderer.DrawText(
+                    e.Graphics,
                     e.FormattedValue?.ToString() ?? "",
-                    e.CellStyle.Font, textRect,
+                    e.CellStyle.Font,
+                    textRect,
                     e.CellStyle.ForeColor,
-                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                    TextFormatFlags.HorizontalCenter |
+                    TextFormatFlags.VerticalCenter |
+                    TextFormatFlags.EndEllipsis
+                );
 
                 e.Handled = true;
             }
