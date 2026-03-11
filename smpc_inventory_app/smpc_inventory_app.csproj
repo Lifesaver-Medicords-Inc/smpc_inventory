@@ -13,7 +13,10 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>D:\LEM\Publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -23,13 +26,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +51,18 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>636AE3313A968D1361B5F8DE050ACCC114216616</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>smpc_inventory_app_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML, Version=0.105.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
@@ -457,17 +471,17 @@
     <Compile Include="Pages\Purchasing\PurchaseList\SOPurchaseItemCard.Designer.cs">
       <DependentUpon>SOPurchaseItemCard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Purchasing\PurchaseOrder\frm_PurchaseOrder.cs">
+    <Compile Include="Pages\Purchasing\PurchaseList\PurchaseOrder\frm_PurchaseOrder.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Pages\Purchasing\PurchaseOrder\frm_PurchaseOrder.Designer.cs">
+    <Compile Include="Pages\Purchasing\PurchaseList\PurchaseOrder\frm_PurchaseOrder.Designer.cs">
       <DependentUpon>frm_PurchaseOrder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Purchasing\PurchaseOrder\PrintPreviewForm.cs" />
-    <Compile Include="Pages\Purchasing\PurchaseOrder\PurchasingPrintModal.cs">
+    <Compile Include="Pages\Purchasing\PurchaseList\PurchaseOrder\PrintPreviewForm.cs" />
+    <Compile Include="Pages\Purchasing\PurchaseList\PurchaseOrder\PurchasingPrintModal.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Pages\Purchasing\PurchaseOrder\PurchasingPrintModal.Designer.cs">
+    <Compile Include="Pages\Purchasing\PurchaseList\PurchaseOrder\PurchasingPrintModal.Designer.cs">
       <DependentUpon>PurchasingPrintModal.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Purchasing\Redbox\PurchaseRequisitionCard.cs">
@@ -897,10 +911,10 @@
     <EmbeddedResource Include="Pages\Purchasing\PurchaseList\SOPurchaseItemCard.resx">
       <DependentUpon>SOPurchaseItemCard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Pages\Purchasing\PurchaseOrder\frm_PurchaseOrder.resx">
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseList\PurchaseOrder\frm_PurchaseOrder.resx">
       <DependentUpon>frm_PurchaseOrder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Pages\Purchasing\PurchaseOrder\PurchasingPrintModal.resx">
+    <EmbeddedResource Include="Pages\Purchasing\PurchaseList\PurchaseOrder\PurchasingPrintModal.resx">
       <DependentUpon>PurchasingPrintModal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Purchasing\Redbox\PurchaseRequisitionCard.resx">
@@ -1029,6 +1043,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="smpc_inventory_app_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

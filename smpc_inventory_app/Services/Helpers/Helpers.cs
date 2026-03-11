@@ -662,30 +662,30 @@ namespace smpc_app.Services.Helpers
                 }
             }
         }
-        public static void ResetControls(Panel[] pnls)
-        {
-            foreach (Panel pnl in pnls)
-            {
-                foreach (Control control in pnl.Controls)
-                {
-                    // Reset TextBox
-                    if (control is TextBox textBox)
-                    {
-                        textBox.Text = "";
-                    }
-                    // Reset ComboBox
-                    else if (control is ComboBox combobox)
-                    {
-                        combobox.SelectedIndex = -1;
-                    }
-                    // Reset DateTimePicker
-                    else if (control is DateTimePicker datePicker)
-                    {
-                        datePicker.Value = DateTime.Now;   // or DateTime.Today
-                    }
-                }
-            }
-        }
+        //public static void ResetControls(Panel[] pnls)
+        //{
+        //    foreach (Panel pnl in pnls)
+        //    {
+        //        foreach (Control control in pnl.Controls)
+        //        {
+        //            // Reset TextBox
+        //            if (control is TextBox textBox)
+        //            {
+        //                textBox.Text = "";
+        //            }
+        //            // Reset ComboBox
+        //            else if (control is ComboBox combobox)
+        //            {
+        //                combobox.SelectedIndex = -1;
+        //            }
+        //            // Reset DateTimePicker
+        //            else if (control is DateTimePicker datePicker)
+        //            {
+        //                datePicker.Value = DateTime.Now;   // or DateTime.Today
+        //            }
+        //        }
+        //    }
+        //}
 
         public static Dictionary<string, dynamic> GetControlsValues(Panel pnl)
         {

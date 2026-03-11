@@ -31,10 +31,10 @@ namespace smpc_inventory_app.Pages.Purchasing
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_PurchaseOrder));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_header = new System.Windows.Forms.Panel();
             this.txt_id = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
@@ -81,9 +81,9 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_edit = new System.Windows.Forms.ToolStripButton();
             this.btn_save = new System.Windows.Forms.ToolStripButton();
             this.btn_cancel = new System.Windows.Forms.ToolStripButton();
+            this.btn_prev = new System.Windows.Forms.ToolStripButton();
             this.btn_close = new System.Windows.Forms.ToolStripButton();
             this.btn_print = new System.Windows.Forms.ToolStripButton();
-            this.btn_prev = new System.Windows.Forms.ToolStripButton();
             this.btn_next = new System.Windows.Forms.ToolStripButton();
             this.pnl_page_title = new System.Windows.Forms.Panel();
             this.title = new System.Windows.Forms.Label();
@@ -559,10 +559,10 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_search,
             this.btn_edit,
             this.btn_save,
+            this.btn_print,
             this.btn_cancel,
             this.btn_prev,
             this.btn_close,
-            this.btn_print,
             this.btn_next});
             this.toolStrip1.Location = new System.Drawing.Point(0, 29);
             this.toolStrip1.Name = "toolStrip1";
@@ -608,6 +608,15 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_cancel.Visible = false;
             this.btn_cancel.Click += new System.EventHandler(this.btn_cancel_Click);
             // 
+            // btn_prev
+            // 
+            this.btn_prev.Image = ((System.Drawing.Image)(resources.GetObject("btn_prev.Image")));
+            this.btn_prev.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_prev.Name = "btn_prev";
+            this.btn_prev.Size = new System.Drawing.Size(72, 22);
+            this.btn_prev.Text = "Previous";
+            this.btn_prev.Click += new System.EventHandler(this.btn_prev_Click);
+            // 
             // btn_close
             // 
             this.btn_close.Image = ((System.Drawing.Image)(resources.GetObject("btn_close.Image")));
@@ -626,15 +635,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_print.Size = new System.Drawing.Size(52, 22);
             this.btn_print.Text = "Print";
             this.btn_print.Click += new System.EventHandler(this.btn_print_Click);
-            // 
-            // btn_prev
-            // 
-            this.btn_prev.Image = ((System.Drawing.Image)(resources.GetObject("btn_prev.Image")));
-            this.btn_prev.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_prev.Name = "btn_prev";
-            this.btn_prev.Size = new System.Drawing.Size(72, 22);
-            this.btn_prev.Text = "Previous";
-            this.btn_prev.Click += new System.EventHandler(this.btn_prev_Click);
             // 
             // btn_next
             // 
@@ -863,9 +863,9 @@ namespace smpc_inventory_app.Pages.Purchasing
             // unit_price
             // 
             this.unit_price.DataPropertyName = "unit_price";
-            dataGridViewCellStyle5.Format = "C2";
-            dataGridViewCellStyle5.NullValue = null;
-            this.unit_price.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Format = "C2";
+            dataGridViewCellStyle1.NullValue = null;
+            this.unit_price.DefaultCellStyle = dataGridViewCellStyle1;
             this.unit_price.HeaderText = "UNIT PRICE";
             this.unit_price.Name = "unit_price";
             this.unit_price.ReadOnly = true;
@@ -880,9 +880,9 @@ namespace smpc_inventory_app.Pages.Purchasing
             // discounted_price
             // 
             this.discounted_price.DataPropertyName = "discounted_price";
-            dataGridViewCellStyle6.Format = "C2";
-            dataGridViewCellStyle6.NullValue = null;
-            this.discounted_price.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Format = "C2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.discounted_price.DefaultCellStyle = dataGridViewCellStyle2;
             this.discounted_price.HeaderText = "DISCOUNTED PRICE";
             this.discounted_price.Name = "discounted_price";
             this.discounted_price.ReadOnly = true;
@@ -890,9 +890,9 @@ namespace smpc_inventory_app.Pages.Purchasing
             // total_price
             // 
             this.total_price.DataPropertyName = "total_price";
-            dataGridViewCellStyle7.Format = "C2";
-            dataGridViewCellStyle7.NullValue = null;
-            this.total_price.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Format = "C2";
+            dataGridViewCellStyle3.NullValue = null;
+            this.total_price.DefaultCellStyle = dataGridViewCellStyle3;
             this.total_price.HeaderText = "TOTAL PRICE";
             this.total_price.Name = "total_price";
             this.total_price.ReadOnly = true;
@@ -924,9 +924,9 @@ namespace smpc_inventory_app.Pages.Purchasing
             // details
             // 
             this.details.DataPropertyName = "details";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.NullValue = ">>";
-            this.details.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.NullValue = ">>";
+            this.details.DefaultCellStyle = dataGridViewCellStyle4;
             this.details.HeaderText = "VIEW DETAILS";
             this.details.Name = "details";
             this.details.ReadOnly = true;
