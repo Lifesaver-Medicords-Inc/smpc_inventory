@@ -73,6 +73,8 @@ namespace smpc_inventory_app.Pages.Inventory
             //Get inventory data
             _rawData = await InventoryLogbookService.GetAsDatatable();
 
+            AdjustColumnsIfNoData();
+
             // Disable auto column generation
             dgv_inventory_item.AutoGenerateColumns = false;
 
@@ -90,6 +92,21 @@ namespace smpc_inventory_app.Pages.Inventory
 
             //Bind grouped data
             dgv_inventory_item.DataSource = groupedData;
+        }
+
+        private void AdjustColumnsIfNoData()
+        {
+            if (_rawData == null || _rawData.Rows.Count == 0)
+            {
+                if (dgv_inventory_item.Columns.Contains("general_name"))
+                    dgv_inventory_item.Columns["general_name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+                if (dgv_inventory_item.Columns.Contains("brand"))
+                    dgv_inventory_item.Columns["brand"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+                if (dgv_inventory_item.Columns.Contains("item_description"))
+                    dgv_inventory_item.Columns["item_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
         }
 
         private void StyleInOutColumns()
@@ -341,7 +358,7 @@ namespace smpc_inventory_app.Pages.Inventory
             foreach (DataRow row in _rawData.Rows)
             {
                 string dateStr = row["date"]?.ToString();
-                if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture,
+                if (DateTime.TryParseExact(dateStr, "M/d/yyyy", CultureInfo.InvariantCulture,
                                            DateTimeStyles.None, out DateTime parsedDate))
                 {
                     validDates.Add(parsedDate);
@@ -387,7 +404,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 .Select(row =>
                 {
                     string dateStr = row["date"]?.ToString();
-                    if (DateTime.TryParseExact(dateStr, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+                    if (DateTime.TryParseExact(dateStr, "M/d/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
                     {
                         return dt.Year == selectedYear ? dt.Month : (int?)null;
                     }
@@ -423,7 +440,12 @@ namespace smpc_inventory_app.Pages.Inventory
 
             foreach (DataRow row in _rawData.Rows)
             {
-                DateTime transDate = DateTime.Parse(row["date"].ToString());
+                if (!DateTime.TryParseExact(row["date"].ToString(), "M/d/yyyy",
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime transDate))
+                {
+                    continue;
+                }
+
                 if (transDate.Year.ToString() == selectedYear &&
                     transDate.ToString("MMMM") == selectedMonth)
                 {
