@@ -67,6 +67,7 @@ namespace smpc_inventory_app.Pages
             this.dg_setup.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_setup.Location = new System.Drawing.Point(0, 0);
             this.dg_setup.Name = "dg_setup";
+            this.dg_setup.ReadOnly = true;
             this.dg_setup.RowHeadersVisible = false;
             this.dg_setup.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dg_setup.Size = new System.Drawing.Size(400, 459);
@@ -79,6 +80,7 @@ namespace smpc_inventory_app.Pages
             this.id.DataPropertyName = "id";
             this.id.HeaderText = "ID";
             this.id.Name = "id";
+            this.id.ReadOnly = true;
             this.id.Visible = false;
             // 
             // code
@@ -87,6 +89,7 @@ namespace smpc_inventory_app.Pages
             this.code.DataPropertyName = "code";
             this.code.HeaderText = "CODE";
             this.code.Name = "code";
+            this.code.ReadOnly = true;
             // 
             // name
             // 
@@ -94,6 +97,7 @@ namespace smpc_inventory_app.Pages
             this.name.DataPropertyName = "name";
             this.name.HeaderText = "NAME";
             this.name.Name = "name";
+            this.name.ReadOnly = true;
             // 
             // panel_header
             // 
