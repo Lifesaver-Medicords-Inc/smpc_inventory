@@ -29,8 +29,11 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.txt_search = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.dgv_rr_search = new System.Windows.Forms.DataGridView();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -38,23 +41,42 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.warehouse_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.prepared_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ref_doc = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txt_search = new System.Windows.Forms.TextBox();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_rr_search)).BeginInit();
             this.SuspendLayout();
+            // 
+            // txt_search
+            // 
+            this.txt_search.Location = new System.Drawing.Point(0, 0);
+            this.txt_search.Name = "txt_search";
+            this.txt_search.Size = new System.Drawing.Size(100, 20);
+            this.txt_search.TabIndex = 3;
+            this.txt_search.TextChanged += new System.EventHandler(this.txt_search_TextChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.dgv_rr_search);
+            this.panel1.Controls.Add(this.txt_search);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(800, 358);
+            this.panel1.TabIndex = 4;
             // 
             // dgv_rr_search
             // 
             this.dgv_rr_search.AllowUserToAddRows = false;
             this.dgv_rr_search.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv_rr_search.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.dgv_rr_search.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_rr_search.AllowUserToResizeColumns = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_rr_search.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgv_rr_search.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgv_rr_search.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
             this.supplier_name,
@@ -63,11 +85,20 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.warehouse_name,
             this.prepared_by,
             this.ref_doc});
-            this.dgv_rr_search.Location = new System.Drawing.Point(-1, 31);
+            this.dgv_rr_search.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv_rr_search.EnableHeadersVisualStyles = false;
+            this.dgv_rr_search.Location = new System.Drawing.Point(0, 0);
             this.dgv_rr_search.Name = "dgv_rr_search";
-            this.dgv_rr_search.Size = new System.Drawing.Size(802, 389);
-            this.dgv_rr_search.TabIndex = 2;
-            this.dgv_rr_search.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_rr_search_CellClick);
+            this.dgv_rr_search.Size = new System.Drawing.Size(800, 358);
+            this.dgv_rr_search.TabIndex = 4;
+            // 
+            // panel2
+            // 
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 364);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(800, 86);
+            this.panel2.TabIndex = 5;
             // 
             // id
             // 
@@ -81,21 +112,19 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             // 
             // supplier_name
             // 
-            this.supplier_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.supplier_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.supplier_name.DataPropertyName = "supplier_name";
             this.supplier_name.HeaderText = "SUPPLIER NAME";
             this.supplier_name.Name = "supplier_name";
             this.supplier_name.ReadOnly = true;
-            this.supplier_name.Width = 140;
             // 
             // supplier_code
             // 
-            this.supplier_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.supplier_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.supplier_code.DataPropertyName = "supplier_code";
             this.supplier_code.HeaderText = "SUPPLIER CODE";
             this.supplier_code.Name = "supplier_code";
             this.supplier_code.ReadOnly = true;
-            this.supplier_code.Width = 140;
             // 
             // date_received
             // 
@@ -108,57 +137,53 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             // 
             // warehouse_name
             // 
+            this.warehouse_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.warehouse_name.DataPropertyName = "warehouse_name";
             this.warehouse_name.HeaderText = "WAREHOUSE NAME";
             this.warehouse_name.Name = "warehouse_name";
             this.warehouse_name.ReadOnly = true;
-            this.warehouse_name.Width = 140;
             // 
             // prepared_by
             // 
-            this.prepared_by.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.prepared_by.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.prepared_by.DataPropertyName = "prepared_by";
             this.prepared_by.HeaderText = "PREPARED BY";
             this.prepared_by.Name = "prepared_by";
             this.prepared_by.ReadOnly = true;
-            this.prepared_by.Width = 140;
             // 
             // ref_doc
             // 
+            this.ref_doc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ref_doc.DataPropertyName = "ref_doc";
             this.ref_doc.HeaderText = "REFERENCE DOC";
             this.ref_doc.Name = "ref_doc";
             this.ref_doc.ReadOnly = true;
-            this.ref_doc.Width = 140;
-            // 
-            // txt_search
-            // 
-            this.txt_search.Location = new System.Drawing.Point(350, 215);
-            this.txt_search.Name = "txt_search";
-            this.txt_search.Size = new System.Drawing.Size(100, 20);
-            this.txt_search.TabIndex = 3;
-            this.txt_search.TextChanged += new System.EventHandler(this.txt_search_TextChanged);
             // 
             // ReceivingReportSearch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.dgv_rr_search);
-            this.Controls.Add(this.txt_search);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "ReceivingReportSearch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Receiving Report Search";
             this.Load += new System.EventHandler(this.ReceivingReportSearch_Load);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_rr_search)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
+        private System.Windows.Forms.TextBox txt_search;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.DataGridView dgv_rr_search;
+        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn supplier_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn supplier_code;
@@ -166,6 +191,5 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         private System.Windows.Forms.DataGridViewTextBoxColumn warehouse_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn prepared_by;
         private System.Windows.Forms.DataGridViewTextBoxColumn ref_doc;
-        private System.Windows.Forms.TextBox txt_search;
     }
 }
