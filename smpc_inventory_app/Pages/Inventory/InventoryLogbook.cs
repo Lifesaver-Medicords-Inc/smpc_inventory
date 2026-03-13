@@ -29,7 +29,7 @@ namespace smpc_inventory_app.Pages.Inventory
             InitializeComponent();
 
             Helpers.EnableGroupHeaders(dgv_inventory_item, columnGroups);
-            Helpers.FreezeVisibleColumns(dgv_inventory_item, 8);
+
         }
 
         private async void InventoryLogbook_Load(object sender, EventArgs e)

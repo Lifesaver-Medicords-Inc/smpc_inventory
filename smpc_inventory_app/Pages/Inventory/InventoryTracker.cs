@@ -34,8 +34,8 @@ namespace smpc_inventory_app.Pages
             InitializeComponent();
 
             dgv_inventory_item.AutoGenerateColumns = false;
-            Helpers.EnableGroupHeaders(dgv_inventory_item, columnGroups);
             Helpers.FreezeVisibleColumns(dgv_inventory_item, 3);
+            Helpers.EnableGroupHeaders(dgv_inventory_item, columnGroups);
         }
 
         private async void InventoryTracker_Load(object sender, EventArgs e)

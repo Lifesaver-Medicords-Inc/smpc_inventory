@@ -122,7 +122,9 @@ namespace smpc_app.Services.Helpers
             if (dgv == null || dgv.Columns.Count == 0)
                 return;
 
-            // Reset all frozen states and dividers
+            dgv.SuspendLayout();
+
+            // Reset frozen state
             foreach (DataGridViewColumn col in dgv.Columns)
             {
                 col.Frozen = false;
@@ -132,23 +134,32 @@ namespace smpc_app.Services.Helpers
             int frozen = 0;
             DataGridViewColumn lastFrozen = null;
 
-            foreach (DataGridViewColumn col in dgv.Columns)
+            // Freeze first visible columns only
+            foreach (DataGridViewColumn col in dgv.Columns
+                         .Cast<DataGridViewColumn>()
+                         .OrderBy(c => c.DisplayIndex))
             {
-                if (col.Visible)
-                {
-                    col.Frozen = true;
-                    lastFrozen = col;
-                    frozen++;
-                    if (frozen >= count)
-                        break;
-                }
+                if (!col.Visible)
+                    continue;
+
+                col.Frozen = true;
+                lastFrozen = col;
+
+                frozen++;
+
+                if (frozen >= count)
+                    break;
             }
 
-            //Add a visual gap between frozen and unfrozen columns
+            // Add visual divider
             if (lastFrozen != null)
-            {
-                lastFrozen.DividerWidth = 2; // try 2–5 pixels for clarity
-            }
+                lastFrozen.DividerWidth = 3;
+
+            dgv.ResumeLayout();
+
+            // VERY IMPORTANT
+            dgv.Invalidate();          // redraw headers
+            dgv.Refresh();
         }
 
         public static void RestrictColumnsToNumbers(DataGridView dgv, params string[] columnNames)
