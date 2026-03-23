@@ -320,7 +320,7 @@ namespace smpc_inventory_app.Pages.Item
                 dgv_template.Columns.Clear();
                 dgv_template.DataSource = templateRows?.Count > 0 ? templateRows : null;
 
-                //HideColumns(dgv_template, "id", "based_id");
+                HideColumns(dgv_template, "id", "based_id");
 
                 string phase = templateRows?
                     .FirstOrDefault(x => x.title == "PHASE (1 OR 3)")?.value ?? "";
@@ -786,6 +786,11 @@ namespace smpc_inventory_app.Pages.Item
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+            if (CacheData.ItemClass == null) return;
+
+>>>>>>> c84c1247c4b72bc40208b620f39d27435e6c2fb3
             CacheData.ItemClass = result;
 =======
             if (CacheData.ItemClass == null) return;
