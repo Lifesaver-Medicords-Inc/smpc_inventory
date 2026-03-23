@@ -785,11 +785,16 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             CacheData.ItemClass = result;
 =======
             if (CacheData.ItemClass == null) return;
 
 >>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
+=======
+            if (CacheData.ItemClass == null) return;
+
+>>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.ItemClass);
             BindCmbValues(cmb_item_class, CacheData.ItemClass);
         }
@@ -800,11 +805,16 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             CacheData.ItemName = result;
 =======
             if (CacheData.ItemName == null) return;
 
 >>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
+=======
+            if (CacheData.ItemName == null) return;
+
+>>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.ItemName);
             cmb_item_name.DataSource = CacheData.ItemName;
             cmb_item_name.ValueMember = "id";
@@ -817,11 +827,16 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             CacheData.ItemBrand = result;
 =======
             if (CacheData.ItemBrand == null) return;
 
 >>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
+=======
+            if (CacheData.ItemBrand == null) return;
+
+>>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.ItemBrand);
             cmb_item_brand.DataSource = CacheData.ItemBrand;
             cmb_item_brand.ValueMember = "id";
@@ -836,6 +851,8 @@ namespace smpc_inventory_app.Pages.Item
 <<<<<<< HEAD
             CacheData.UnitOfMeasurement = result;
 =======
+            if (originalData == null) return;
+
             if (originalData == null) return;
 
             CacheData.UnitOfMeasurement = originalData;
@@ -865,7 +882,10 @@ namespace smpc_inventory_app.Pages.Item
             CacheData.ItemType = await serviceSetup.GetAsDatatable();
 
             if (CacheData.ItemType == null) return;
+<<<<<<< HEAD
 >>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
+=======
+>>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
         }
         private async void FetchMaterialSetup()
         {
@@ -886,6 +906,8 @@ namespace smpc_inventory_app.Pages.Item
 =======
             if (CacheData.Material == null) return;
 
+            if (CacheData.Material == null) return;
+
             AddCmbDefaultVal(CacheData.Material);
             BindCmbValues(cmb_material, CacheData.Material);
 >>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
@@ -897,10 +919,14 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             CacheData.PumpType = result;
 =======
             if (CacheData.PumpType == null) return;
 >>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
+=======
+            if (CacheData.PumpType == null) return;
+>>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
         }
         private async void FetchPumpCountSetup()
         {
@@ -909,11 +935,16 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             CacheData.PumpCount = result;
 =======
             if (CacheData.PumpCount == null) return;
 
 >>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
+=======
+            if (CacheData.PumpCount == null) return;
+
+>>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.PumpCount);
             BindCmbValues(cmb_pump_count_compatability, CacheData.PumpCount);
         }
@@ -924,11 +955,16 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             CacheData.ValuationMethod = result;
 =======
             if (CacheData.ValuationMethod == null) return;
 
 >>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
+=======
+            if (CacheData.ValuationMethod == null) return;
+
+>>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.ValuationMethod);
             BindCmbValues(cmb_valuation_method, CacheData.ValuationMethod);
         }
@@ -939,6 +975,8 @@ namespace smpc_inventory_app.Pages.Item
 
 <<<<<<< HEAD
 =======
+            if (_warehouseData == null) return;
+
             if (_warehouseData == null) return;
 
             // Convert the list to DataTable for binding
