@@ -34,6 +34,9 @@ namespace smpc_inventory_app.Pages
             this.code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel_header = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.txt_search = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.lbl_setup_title = new System.Windows.Forms.Label();
             this.panel_button = new System.Windows.Forms.Panel();
             this.btn_cancel = new System.Windows.Forms.Button();
@@ -48,8 +51,11 @@ namespace smpc_inventory_app.Pages
             this.label27 = new System.Windows.Forms.Label();
             this.lbl_code = new System.Windows.Forms.Label();
             this.panel_dg = new System.Windows.Forms.Panel();
+            this.btn_delete = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dg_setup)).BeginInit();
             this.panel_header.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.panel_button.SuspendLayout();
             this.panel_records.SuspendLayout();
             this.panel_dg.SuspendLayout();
@@ -70,10 +76,9 @@ namespace smpc_inventory_app.Pages
             this.dg_setup.ReadOnly = true;
             this.dg_setup.RowHeadersVisible = false;
             this.dg_setup.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dg_setup.Size = new System.Drawing.Size(400, 459);
+            this.dg_setup.Size = new System.Drawing.Size(400, 387);
             this.dg_setup.TabIndex = 0;
             this.dg_setup.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_setup_CellClick);
-            this.dg_setup.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_setup_CellContentClick);
             // 
             // id
             // 
@@ -101,32 +106,64 @@ namespace smpc_inventory_app.Pages
             // 
             // panel_header
             // 
-            this.panel_header.Controls.Add(this.lbl_setup_title);
+            this.panel_header.Controls.Add(this.panel2);
+            this.panel_header.Controls.Add(this.panel1);
             this.panel_header.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel_header.Location = new System.Drawing.Point(0, 0);
             this.panel_header.Name = "panel_header";
-            this.panel_header.Size = new System.Drawing.Size(400, 47);
+            this.panel_header.Size = new System.Drawing.Size(400, 62);
             this.panel_header.TabIndex = 4;
-            this.panel_header.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_header_Paint);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.txt_search);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 34);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(400, 28);
+            this.panel2.TabIndex = 1;
+            // 
+            // txt_search
+            // 
+            this.txt_search.Location = new System.Drawing.Point(0, 0);
+            this.txt_search.Name = "txt_search";
+            this.txt_search.Size = new System.Drawing.Size(400, 20);
+            this.txt_search.TabIndex = 0;
+            this.txt_search.TextChanged += new System.EventHandler(this.txt_search_TextChanged);
+            this.txt_search.Enter += new System.EventHandler(this.txt_search_Enter);
+            this.txt_search.Leave += new System.EventHandler(this.txt_search_Leave);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lbl_setup_title);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(400, 34);
+            this.panel1.TabIndex = 0;
             // 
             // lbl_setup_title
             // 
+            this.lbl_setup_title.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_setup_title.AutoSize = true;
-            this.lbl_setup_title.Font = new System.Drawing.Font("Microsoft Tai Le", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_setup_title.Location = new System.Drawing.Point(12, 12);
+            this.lbl_setup_title.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_setup_title.Location = new System.Drawing.Point(159, 7);
             this.lbl_setup_title.Name = "lbl_setup_title";
-            this.lbl_setup_title.Size = new System.Drawing.Size(55, 23);
-            this.lbl_setup_title.TabIndex = 1;
-            this.lbl_setup_title.Text = "Label";
+            this.lbl_setup_title.Size = new System.Drawing.Size(96, 20);
+            this.lbl_setup_title.TabIndex = 0;
+            this.lbl_setup_title.Text = "Modal Title";
             // 
             // panel_button
             // 
+            this.panel_button.Controls.Add(this.btn_delete);
             this.panel_button.Controls.Add(this.btn_cancel);
             this.panel_button.Controls.Add(this.btn_save);
             this.panel_button.Controls.Add(this.btn_edit);
             this.panel_button.Controls.Add(this.btn_new);
             this.panel_button.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel_button.Location = new System.Drawing.Point(0, 398);
+            this.panel_button.Location = new System.Drawing.Point(0, 449);
             this.panel_button.Name = "panel_button";
             this.panel_button.Size = new System.Drawing.Size(400, 37);
             this.panel_button.TabIndex = 5;
@@ -191,7 +228,7 @@ namespace smpc_inventory_app.Pages
             this.panel_records.Controls.Add(this.lbl_code);
             this.panel_records.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel_records.Enabled = false;
-            this.panel_records.Location = new System.Drawing.Point(0, 435);
+            this.panel_records.Location = new System.Drawing.Point(0, 486);
             this.panel_records.Name = "panel_records";
             this.panel_records.Size = new System.Drawing.Size(400, 71);
             this.panel_records.TabIndex = 6;
@@ -250,28 +287,48 @@ namespace smpc_inventory_app.Pages
             // 
             this.panel_dg.Controls.Add(this.dg_setup);
             this.panel_dg.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_dg.Location = new System.Drawing.Point(0, 47);
+            this.panel_dg.Location = new System.Drawing.Point(0, 62);
             this.panel_dg.Name = "panel_dg";
-            this.panel_dg.Size = new System.Drawing.Size(400, 459);
+            this.panel_dg.Size = new System.Drawing.Size(400, 387);
             this.panel_dg.TabIndex = 7;
+            // 
+            // btn_delete
+            // 
+            this.btn_delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_delete.BackColor = System.Drawing.Color.LightCoral;
+            this.btn_delete.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btn_delete.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.btn_delete.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.btn_delete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_delete.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_delete.ForeColor = System.Drawing.Color.Black;
+            this.btn_delete.Location = new System.Drawing.Point(155, 8);
+            this.btn_delete.Name = "btn_delete";
+            this.btn_delete.Size = new System.Drawing.Size(73, 22);
+            this.btn_delete.TabIndex = 116;
+            this.btn_delete.Text = "DELETE";
+            this.btn_delete.UseVisualStyleBackColor = false;
+            this.btn_delete.Click += new System.EventHandler(this.btn_delete_Click);
             // 
             // SetupModal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(400, 506);
+            this.ClientSize = new System.Drawing.Size(400, 557);
+            this.Controls.Add(this.panel_dg);
             this.Controls.Add(this.panel_button);
             this.Controls.Add(this.panel_records);
-            this.Controls.Add(this.panel_dg);
             this.Controls.Add(this.panel_header);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "SetupModal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Setup";
             this.Load += new System.EventHandler(this.SetupModal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dg_setup)).EndInit();
             this.panel_header.ResumeLayout(false);
-            this.panel_header.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.panel_button.ResumeLayout(false);
             this.panel_records.ResumeLayout(false);
             this.panel_records.PerformLayout();
@@ -284,7 +341,6 @@ namespace smpc_inventory_app.Pages
 
         private System.Windows.Forms.DataGridView dg_setup;
         private System.Windows.Forms.Panel panel_header;
-        private System.Windows.Forms.Label lbl_setup_title;
         private System.Windows.Forms.Panel panel_button;
         private System.Windows.Forms.Button btn_edit;
         private System.Windows.Forms.Button btn_new;
@@ -301,5 +357,10 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn code;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.TextBox txt_search;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lbl_setup_title;
+        private System.Windows.Forms.Button btn_delete;
     }
 }

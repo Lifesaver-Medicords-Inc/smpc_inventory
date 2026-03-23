@@ -815,8 +815,6 @@ namespace smpc_inventory_app.Pages.Purchasing
 
         private async void btn_print_Click(object sender, EventArgs e)
         {
-            //if (cmb_status.Text != "APPROVED") return;
-
             if (string.IsNullOrWhiteSpace(txt_id.Text))
             {
                 MessageBox.Show("No Purchase Order selected.",
@@ -833,7 +831,7 @@ namespace smpc_inventory_app.Pages.Purchasing
 
             var provider = new PurchaseOrderReportProvider(poId);
 
-            await provider.InitializeAsync();   // ✅ allowed now
+            await provider.InitializeAsync();  
 
             using (var preview = new PrintPreview(provider))
             {

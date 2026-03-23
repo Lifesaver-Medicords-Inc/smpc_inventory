@@ -357,7 +357,7 @@
                       </Paragraph>
                     </Paragraphs>
                     <Top>1.37519cm</Top>
-                    <Left>3.12997cm</Left>
+                    <Left>3.09686cm</Left>
                     <Height>0.48976cm</Height>
                     <Width>8.14917cm</Width>
                     <ZIndex>4</ZIndex>
@@ -453,7 +453,7 @@
                       </Paragraph>
                     </Paragraphs>
                     <Top>1.37519cm</Top>
-                    <Left>0.05175cm</Left>
+                    <Left>0.01864cm</Left>
                     <Height>0.44566cm</Height>
                     <Width>2.56614cm</Width>
                     <ZIndex>7</ZIndex>
@@ -486,7 +486,7 @@
                     </Paragraphs>
                     <rd:DefaultName>Textbox7</rd:DefaultName>
                     <Top>1.82085cm</Top>
-                    <Left>0.05175cm</Left>
+                    <Left>0.01864cm</Left>
                     <Height>0.44566cm</Height>
                     <Width>2.56614cm</Width>
                     <ZIndex>8</ZIndex>
@@ -650,7 +650,7 @@
                     </Paragraphs>
                     <rd:DefaultName>Textbox7</rd:DefaultName>
                     <Top>1.3752cm</Top>
-                    <Left>2.65317cm</Left>
+                    <Left>2.62006cm</Left>
                     <Height>0.44565cm</Height>
                     <Width>0.37097cm</Width>
                     <ZIndex>13</ZIndex>
@@ -1110,7 +1110,7 @@
                     </Paragraphs>
                     <rd:DefaultName>Textbox7</rd:DefaultName>
                     <Top>1.82085cm</Top>
-                    <Left>2.65317cm</Left>
+                    <Left>2.62006cm</Left>
                     <Height>0.44566cm</Height>
                     <Width>0.37097cm</Width>
                     <ZIndex>27</ZIndex>
@@ -3069,7 +3069,7 @@
                 </Paragraph>
               </Paragraphs>
               <Top>0.48396in</Top>
-              <Left>0.70594in</Left>
+              <Left>2.19526in</Left>
               <Height>0.40851in</Height>
               <Width>5.85828in</Width>
               <Style>
@@ -3223,8 +3223,8 @@
                 </Image>
               </ReportItems>
               <KeepTogether>true</KeepTogether>
-              <Top>0.04284in</Top>
-              <Left>0.70594in</Left>
+              <Top>0.02778in</Top>
+              <Left>2.19526in</Left>
               <Height>0.36413in</Height>
               <Width>5.85828in</Width>
               <ZIndex>1</ZIndex>

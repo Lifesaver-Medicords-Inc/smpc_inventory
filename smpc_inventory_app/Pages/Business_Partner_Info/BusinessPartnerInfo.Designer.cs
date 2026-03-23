@@ -40,7 +40,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_new = new System.Windows.Forms.ToolStripButton();
             this.btn_search = new System.Windows.Forms.ToolStripButton();
             this.btn_edit = new System.Windows.Forms.ToolStripButton();
-            this.btn_print = new System.Windows.Forms.ToolStripButton();
             this.btn_save = new System.Windows.Forms.ToolStripButton();
             this.btn_revise = new System.Windows.Forms.ToolStripButton();
             this.btn_close = new System.Windows.Forms.ToolStripButton();
@@ -366,7 +365,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_new,
             this.btn_search,
             this.btn_edit,
-            this.btn_print,
             this.btn_save,
             this.btn_revise,
             this.btn_close,
@@ -406,14 +404,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_edit.Size = new System.Drawing.Size(47, 22);
             this.btn_edit.Text = "Edit";
             this.btn_edit.Click += new System.EventHandler(this.btn_edit_Click);
-            // 
-            // btn_print
-            // 
-            this.btn_print.Image = ((System.Drawing.Image)(resources.GetObject("btn_print.Image")));
-            this.btn_print.ImageTransparentColor = System.Drawing.Color.LightBlue;
-            this.btn_print.Name = "btn_print";
-            this.btn_print.Size = new System.Drawing.Size(52, 22);
-            this.btn_print.Text = "Print";
             // 
             // btn_save
             // 
@@ -2490,7 +2480,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.ToolStripButton btn_search;
         private System.Windows.Forms.ToolStripButton btn_prev;
         private System.Windows.Forms.ToolStripButton btn_next;
-        private System.Windows.Forms.ToolStripButton btn_print;
         private System.Windows.Forms.Panel panel_header_records;
         private System.Windows.Forms.TextBox txt_sales_id;
         private System.Windows.Forms.TextBox txt_main_tel_no;

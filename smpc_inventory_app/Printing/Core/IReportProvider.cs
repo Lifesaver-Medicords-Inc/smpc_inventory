@@ -10,7 +10,7 @@ namespace smpc_inventory_app.Printing.Core
     public interface IReportProvider
     {
         string ReportPath { get; }
-
+        Task InitializeAsync();
         IEnumerable<ReportDataSource> GetDataSources();
 
         IEnumerable<ReportParameter> GetParameters();

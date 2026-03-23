@@ -12,7 +12,7 @@ namespace smpc_inventory_app.Data
 
         public static string ITEM = setupItem;
         public static string ITEM_IMAGE = setupItem + "item_image";
-        public static string BRAND = setupItem + "brand";
+        public static string ITEM_BRAND = setupItem + "brand";
         public static string ITEM_TYPE = setupItem + "type";
         public static string ITEM_CLASS = setupItem + "class";
         public static string ITEM_NAME = setupItem + "name";

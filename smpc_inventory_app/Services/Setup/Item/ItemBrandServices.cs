@@ -19,7 +19,7 @@ namespace smpc_inventory_app.Services.Setup
 
         public static async Task<DataTable> GetAsDatatable()
         {
-            var response = await RequestToApi<ApiResponseModel<List<BrandModel>>>.Get(ENUM_ENDPOINT.BRAND);
+            var response = await RequestToApi<ApiResponseModel<List<BrandModel>>>.Get(ENUM_ENDPOINT.ITEM_BRAND);
             DataTable itemBrands = JsonHelper.ToDataTable(response.Data);
 
             return itemBrands;  
@@ -27,7 +27,7 @@ namespace smpc_inventory_app.Services.Setup
 
         public static async Task<ApiResponseModel> Insert(Dictionary<string, dynamic> data)
         {   
-           var response = await RequestToApi<ApiResponseModel>.Post(ENUM_ENDPOINT.BRAND, data);
+           var response = await RequestToApi<ApiResponseModel>.Post(ENUM_ENDPOINT.ITEM_BRAND, data);
           
            return response;
         }
@@ -35,7 +35,7 @@ namespace smpc_inventory_app.Services.Setup
 
         public static async Task<bool> Delete(Dictionary<string, dynamic> data)
         {
-            var response = await RequestToApi<ApiResponseModel<BrandModel>>.Delete(ENUM_ENDPOINT.BRAND, data);
+            var response = await RequestToApi<ApiResponseModel<BrandModel>>.Delete(ENUM_ENDPOINT.ITEM_BRAND, data);
             bool isSucccess = response.Success;
         
             return isSucccess;
@@ -44,7 +44,7 @@ namespace smpc_inventory_app.Services.Setup
         public static async Task<ApiResponseModel> Update(Dictionary<string, dynamic> data)
         {
 
-            var response = await RequestToApi<ApiResponseModel>.Put(ENUM_ENDPOINT.BRAND, data);
+            var response = await RequestToApi<ApiResponseModel>.Put(ENUM_ENDPOINT.ITEM_BRAND, data);
             return response;
         }
 
@@ -52,7 +52,7 @@ namespace smpc_inventory_app.Services.Setup
 
         public static async Task<BrandModel[]> GetBrand()
         {
-            var response = await RequestToApi<ApiResponseModel<BrandModel[]>>.Get(ENUM_ENDPOINT.BRAND);
+            var response = await RequestToApi<ApiResponseModel<BrandModel[]>>.Get(ENUM_ENDPOINT.ITEM_BRAND);
             var itemBrands = response.Data;
 
             return itemBrands;

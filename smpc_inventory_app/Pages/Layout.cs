@@ -161,7 +161,7 @@ namespace Inventory_SMPC.Pages
 
             WebSocketServices.OnError += (msg) =>
             {
-                Invoke((Action)(() => MessageBox.Show("WebSocket Error: " + msg)));
+                Invoke((Action)(() => MessageBox.Show("Websocket Error: " + msg)));
             };
 
             WebSocketServices.OnDisconnected += () =>
