@@ -130,7 +130,7 @@ namespace smpc_inventory_app.Pages.Item
             InitializeContextMenu();
             SpecsTemplateVisibility();
         }
-        
+
         private void frm_Item_Entry_Load(object sender, EventArgs e)
         {
             try
@@ -162,8 +162,8 @@ namespace smpc_inventory_app.Pages.Item
 
             }
         }
-        
-        
+
+
         #region "Bind Records"
         private void Bind(bool isBind = false)
         {
@@ -183,7 +183,7 @@ namespace smpc_inventory_app.Pages.Item
                 // ---- Items ----
                 Panel[] pnlItem = { pnl_header, pnl_sales };
 
-               
+
 
                 Helpers.BindControls(pnlItem, items, this.selectedRecord);
                 foreach (var pnl in pnlItem)
@@ -223,7 +223,7 @@ namespace smpc_inventory_app.Pages.Item
                                                     .Select(int.Parse)
                                                     .ToList();
                 txt_trade_type.Tag = currentSelectedTradeTypeIds;
-                              
+
 
                 var matchingAdditionalSpec = records.additionalspecs.FirstOrDefault(spec => spec.based_id == currentItemId);
 
@@ -257,7 +257,7 @@ namespace smpc_inventory_app.Pages.Item
                     cmb_calibration.Text = "";
                 }
 
-                
+
                 // Bind Inventory
                 //var matchingInventory = records.iteminventory.FirstOrDefault(spec => spec.based_id == currentItemId);
 
@@ -301,7 +301,7 @@ namespace smpc_inventory_app.Pages.Item
             // ---- Item Specs ----
             ItemSpecsModel currentSpec = records.itemspecs?.FirstOrDefault(x => x.based_id == currentItemId);
             DataTable dtCurrentSpecs = Helpers.ToDataTable(new List<ItemSpecsModel> { currentSpec });
-            
+
 
 
             if (dtCurrentSpecs != null)
@@ -310,7 +310,7 @@ namespace smpc_inventory_app.Pages.Item
                 dtCurrentSpecs.Columns["based_id"].ColumnName = "item_specs_based_id";
 
                 Helpers.BindControls(pnlItemSpecs, dtCurrentSpecs);
-               
+
                 var templateRows = currentSpec.item_specs_template?
                     .Where(x => x.based_id == currentSpec.id)
                     .ToList();
@@ -320,7 +320,7 @@ namespace smpc_inventory_app.Pages.Item
                 dgv_template.Columns.Clear();
                 dgv_template.DataSource = templateRows?.Count > 0 ? templateRows : null;
 
-                HideColumns(dgv_template, "id", "based_id");
+                //HideColumns(dgv_template, "id", "based_id");
 
                 string phase = templateRows?
                     .FirstOrDefault(x => x.title == "PHASE (1 OR 3)")?.value ?? "";
@@ -444,7 +444,7 @@ namespace smpc_inventory_app.Pages.Item
 
             DisbleAutoColumnGeneration(DgvList);
 
-            
+
 
             //Fetch Additional Specs
             DataView dataViewAdditionalSpecs = new DataView(additionalspecs);
@@ -680,7 +680,7 @@ namespace smpc_inventory_app.Pages.Item
         }
         #endregion
         #region "Setups"
-        private void SetComboBoxValue( DataTable table, string filterColumn, int filterValue, ComboBox combo, string valueColumn)
+        private void SetComboBoxValue(DataTable table, string filterColumn, int filterValue, ComboBox combo, string valueColumn)
         {
             // Helper: select "-- SELECT --" if it exists
             void SelectDefault()
@@ -751,7 +751,7 @@ namespace smpc_inventory_app.Pages.Item
             cmb_item_class.SelectedValue = records.items[this.selectedRecord].item_class_id;
             cmb_item_class.SelectedItem = records.items[this.selectedRecord].item_class_id;
 
-            
+
 
         }
         private static void AddCmbDefaultVal(DataTable dt)
@@ -784,22 +784,7 @@ namespace smpc_inventory_app.Pages.Item
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-            if (CacheData.ItemClass == null) return;
-
->>>>>>> c84c1247c4b72bc40208b620f39d27435e6c2fb3
             CacheData.ItemClass = result;
-=======
-            if (CacheData.ItemClass == null) return;
-
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
-=======
-            if (CacheData.ItemClass == null) return;
-
->>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.ItemClass);
             BindCmbValues(cmb_item_class, CacheData.ItemClass);
         }
@@ -809,17 +794,7 @@ namespace smpc_inventory_app.Pages.Item
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
             CacheData.ItemName = result;
-=======
-            if (CacheData.ItemName == null) return;
-
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
-=======
-            if (CacheData.ItemName == null) return;
-
->>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.ItemName);
             cmb_item_name.DataSource = CacheData.ItemName;
             cmb_item_name.ValueMember = "id";
@@ -831,17 +806,7 @@ namespace smpc_inventory_app.Pages.Item
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
             CacheData.ItemBrand = result;
-=======
-            if (CacheData.ItemBrand == null) return;
-
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
-=======
-            if (CacheData.ItemBrand == null) return;
-
->>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.ItemBrand);
             cmb_item_brand.DataSource = CacheData.ItemBrand;
             cmb_item_brand.ValueMember = "id";
@@ -853,15 +818,7 @@ namespace smpc_inventory_app.Pages.Item
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
-<<<<<<< HEAD
             CacheData.UnitOfMeasurement = result;
-=======
-            if (originalData == null) return;
-
-            if (originalData == null) return;
-
-            CacheData.UnitOfMeasurement = originalData;
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
 
             DataView dvUnit = new DataView(result.Copy());
             DataView dvWeight = new DataView(result.Copy());
@@ -878,19 +835,10 @@ namespace smpc_inventory_app.Pages.Item
         private async void FetchItemTradeType()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_TYPE);
-<<<<<<< HEAD
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
             CacheData.ItemType = result;
-=======
-            CacheData.ItemType = await serviceSetup.GetAsDatatable();
-
-            if (CacheData.ItemType == null) return;
-<<<<<<< HEAD
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
-=======
->>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
         }
         private async void FetchMaterialSetup()
         {
@@ -898,7 +846,6 @@ namespace smpc_inventory_app.Pages.Item
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
-<<<<<<< HEAD
             CacheData.Material = result;
 
             DataView dvImpeller = new DataView(result.Copy());
@@ -908,14 +855,6 @@ namespace smpc_inventory_app.Pages.Item
 
             BindCmbValues(cmb_impeller, dvImpeller);
             BindCmbValues(cmb_material, dvMaterial);
-=======
-            if (CacheData.Material == null) return;
-
-            if (CacheData.Material == null) return;
-
-            AddCmbDefaultVal(CacheData.Material);
-            BindCmbValues(cmb_material, CacheData.Material);
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
         }
         private async void FetchPumpTypeSetup()
         {
@@ -923,15 +862,7 @@ namespace smpc_inventory_app.Pages.Item
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
             CacheData.PumpType = result;
-=======
-            if (CacheData.PumpType == null) return;
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
-=======
-            if (CacheData.PumpType == null) return;
->>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
         }
         private async void FetchPumpCountSetup()
         {
@@ -939,17 +870,7 @@ namespace smpc_inventory_app.Pages.Item
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
             CacheData.PumpCount = result;
-=======
-            if (CacheData.PumpCount == null) return;
-
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
-=======
-            if (CacheData.PumpCount == null) return;
-
->>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.PumpCount);
             BindCmbValues(cmb_pump_count_compatability, CacheData.PumpCount);
         }
@@ -959,17 +880,7 @@ namespace smpc_inventory_app.Pages.Item
             var result = await serviceSetup.GetAsDatatable();
             if (result == null) return;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
             CacheData.ValuationMethod = result;
-=======
-            if (CacheData.ValuationMethod == null) return;
-
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
-=======
-            if (CacheData.ValuationMethod == null) return;
-
->>>>>>> 496eaab (bugfix(item entry): guard setups from null cache values)
             AddCmbDefaultVal(CacheData.ValuationMethod);
             BindCmbValues(cmb_valuation_method, CacheData.ValuationMethod);
         }
@@ -978,14 +889,6 @@ namespace smpc_inventory_app.Pages.Item
             _warehouseData = await ReceivingReportService.GetWarehouseDetails();
             if (_warehouseData == null) return;
 
-<<<<<<< HEAD
-=======
-            if (_warehouseData == null) return;
-
-            if (_warehouseData == null) return;
-
-            // Convert the list to DataTable for binding
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
             warehouseName = JsonHelper.ToDataTable(_warehouseData.warehouse_name);
             warehouseArea = JsonHelper.ToDataTable(_warehouseData.warehouse_area);
 
@@ -1042,7 +945,7 @@ namespace smpc_inventory_app.Pages.Item
                     CacheData.UnitOfMeasurement = result;
                     break;
                 default:
-                    return; 
+                    return;
             }
 
             // Bind the corresponding ComboBox after cache update
@@ -2052,8 +1955,8 @@ namespace smpc_inventory_app.Pages.Item
         {
             ToggleItemPages(txt_trade_type.Text, cmb_item_tangibility_type.Text);
         }
-        
-        
+
+
         private void btn_add_supplier_Click(object sender, EventArgs e)
         {
             BusnessPartnerInfoModal modal = new BusnessPartnerInfoModal();
@@ -2662,7 +2565,7 @@ namespace smpc_inventory_app.Pages.Item
                 if (dialog.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.InputText))
                 {
                     string newFileNameWithoutSuffix = dialog.InputText.Trim();
-                    string newFileName = $"{newFileNameWithoutSuffix}{itemSuffix}{extension}"; 
+                    string newFileName = $"{newFileNameWithoutSuffix}{itemSuffix}{extension}";
                     string newFilePath = Path.Combine(GetCurrentDirectory(), newFileName);
 
                     try
@@ -2776,7 +2679,7 @@ namespace smpc_inventory_app.Pages.Item
                                         .ToArray();
 
                     string currentItemCode = txt_item_code.Text;
-                    string rrSuffix = $"_{currentItemCode}"; 
+                    string rrSuffix = $"_{currentItemCode}";
 
                     foreach (var file in files)
                     {
@@ -2910,7 +2813,7 @@ namespace smpc_inventory_app.Pages.Item
                     string newFolderName = dialog.InputText.Trim();
 
                     string itemCode = txt_item_code.Text;
-                    newFolderName = $"{newFolderName}_{itemCode}"; 
+                    newFolderName = $"{newFolderName}_{itemCode}";
 
                     string newFolderPath = Path.Combine(parentPath, newFolderName);
 
@@ -2947,7 +2850,7 @@ namespace smpc_inventory_app.Pages.Item
             string currentFolderName = Path.GetFileName(currentPath);
 
             string currentItemCode = txt_item_code.Text;
-            string itemSuffix = $"_{currentItemCode}"; 
+            string itemSuffix = $"_{currentItemCode}";
 
             // If folder doesn't have suffix, do not allow renaming
             if (!currentFolderName.EndsWith(itemSuffix, StringComparison.OrdinalIgnoreCase))
@@ -3115,8 +3018,8 @@ namespace smpc_inventory_app.Pages.Item
             }
         }
 
-        
-        
+
+
     }
     #endregion
 }

@@ -18,16 +18,7 @@ namespace smpc_inventory_app.Services.Helpers
 {
     internal class RequestToApi<T> where T : class
     {
-<<<<<<< HEAD
         static string baseUrl => Program.ApiBaseUrl ?? "http://127.0.0.1:3000/api";
-=======
-        //DEV ENV
-        //static string baseUrl =  Settings.Default.BaseUrl + "/api";
-        //PROD ENV
-        static string baseUrl = "https://disordered-wilhelmina-nondetrimentally.ngrok-free.dev/api";
-        static Uri baseUri = new Uri(baseUrl);
-        // Create a CookieContainer to store cookies
->>>>>>> 9428bcd (bugfix(item entry): guard setups from null cache values)
         static CookieContainer cookieContainer = new CookieContainer();
 
         static private async Task<T> SendRequestAsync(string url, HttpMethod method, string body = null)
