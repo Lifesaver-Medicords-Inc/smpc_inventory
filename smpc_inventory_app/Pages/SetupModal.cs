@@ -15,28 +15,25 @@ namespace smpc_inventory_app.Pages
 {
     public partial class SetupModal : Form
     {
-
-        GeneralSetupServices serviceSetup;
+        public event Action OnDataChanged;
+        private GeneralSetupServices _serviceSetup;
         private string url { get; }
         private string title { get; }
-        private bool showSelectedField; 
-        private DataTable dataTable { get; set; }
+        private bool showSelectedField;
+        private string placeHolderText = "Search...";
+        private DataTable _data;
 
         public SetupModal(string setupTitle, string api, DataTable dt, bool isVisible = false)
         {
             InitializeComponent();
-            lbl_setup_title.Text = setupTitle;
             this.url = api;
             this.title = setupTitle;
             this.showSelectedField = isVisible;
-            //if (dt != null){
-            //    if (dt.Columns["select"] != null) {    // Check if select column already exist
-            //        dt.Columns.Remove("select");            // Remove select column if exist 
-            //        return;
-            //    }
-            //}
-            this.dataTable = dt;
+            this._data = dt;
 
+            txt_search.Text = placeHolderText;
+            lbl_setup_title.Text = setupTitle;
+            _serviceSetup = new GeneralSetupServices(this.url);
 
         }
 
@@ -44,8 +41,11 @@ namespace smpc_inventory_app.Pages
         //Load of Data
         private void SetupModal_Load(object sender, EventArgs e)
         {
-            dg_setup.DataSource = this.dataTable;
-            dg_setup.Columns["is_selected"].Visible = this.showSelectedField;
+            dg_setup.DataSource = this._data;
+            Console.WriteLine("datatable" + _data);
+
+            if (dg_setup.Columns["is_selected"] != null)
+                dg_setup.Columns["is_selected"].Visible = this.showSelectedField;
 
         }
 
@@ -53,15 +53,15 @@ namespace smpc_inventory_app.Pages
         // Fetch Setup
         private async void GetSetup()
         {
-            serviceSetup = new GeneralSetupServices(this.url);
-            var data = await serviceSetup.GetAsDatatable();
-            dg_setup.DataSource = data;
+            _data = await _serviceSetup.GetAsDatatable();
+            dg_setup.DataSource = _data;
 
         }
-        private void  BtnToogle(bool isEdit)
+        private void  BtnToggle(bool isEdit)
         {
             btn_new.Visible = !isEdit;
             btn_edit.Visible = !isEdit;
+            btn_delete.Visible = !isEdit;
             btn_save.Visible = isEdit;
             btn_cancel.Visible = isEdit;
             panel_records.Enabled = isEdit;
@@ -91,27 +91,34 @@ namespace smpc_inventory_app.Pages
             if (e.RowIndex == -1) return;
 
             Panel[] pnlList = { panel_records };
-            DataTable dt = Helpers.ConvertDataGridViewToDataTable(dg_setup);
-            Helpers.BindControls(pnlList, dt, e.RowIndex);
+
+            // Get the actual DataRow from the clicked row (works with filters too)
+            DataRowView rowView = dg_setup.Rows[e.RowIndex].DataBoundItem as DataRowView;
+            if (rowView == null) return;
+
+            DataTable singleRow = rowView.Row.Table.Clone();
+            singleRow.ImportRow(rowView.Row);
+
+            Helpers.BindControls(pnlList, singleRow, 0); // always row 0 since it's a single row
             btn_edit.Enabled = true;
         }
 
         private void btn_new_Click(object sender, EventArgs e)
         {
             Helpers.ResetControls(panel_records);
-            BtnToogle(true);
+            BtnToggle(true);
             dg_setup.ClearSelection();
         }
 
         private void btn_edit_Click(object sender, EventArgs e)
         {
-            BtnToogle(true);
+            BtnToggle(true);
         }
 
         private void btn_cancel_Click(object sender, EventArgs e)
         {
             Helpers.ResetControls(panel_records);
-            BtnToogle(false);
+            BtnToggle(false);
         }
 
         private async void btn_save_Click(object sender, EventArgs e)
@@ -120,7 +127,7 @@ namespace smpc_inventory_app.Pages
            
             string errorFieldMessage;
             ApiResponseModel response = new ApiResponseModel();
-            serviceSetup = new GeneralSetupServices(this.url);
+            
 
 
             bool isErrorField = ValidateField(out errorFieldMessage);
@@ -136,12 +143,12 @@ namespace smpc_inventory_app.Pages
             if (txt_id.Text.Equals(""))
             {
                 data.Remove("id");
-                response = await serviceSetup.Insert(data);
+                response = await _serviceSetup.Insert(data);
                 message = response.Success ? "Insert Data Succesfully" : "Failed to add" + this.title +"\n" + response.message;
             }
             else
             {
-                response = await serviceSetup.Update(data);
+                response = await _serviceSetup.Update(data);
                 message = response.Success ? "Update Data Succesfully" : "Failed to update " + this.title;
             }
 
@@ -153,18 +160,94 @@ namespace smpc_inventory_app.Pages
             Helpers.ShowDialogMessage("success", message);
             Helpers.ResetControls(panel_records);
             GetSetup();
-            BtnToogle(false);
+            BtnToggle(false);
+
+            OnDataChanged?.Invoke();
 
         }
-
-        private void panel_header_Paint(object sender, PaintEventArgs e)
+        private void txt_search_TextChanged(object sender, EventArgs e)
         {
+            string searchText = txt_search.Text.Trim();
 
+            if (string.IsNullOrEmpty(searchText) || searchText == placeHolderText)
+            {
+                dg_setup.DataSource = _data;
+            }
+            else
+            {
+                ApplySearchFilter(searchText.ToLower());
+            }
+        }
+        private void ApplySearchFilter(string searchText)
+        {
+            _data.DefaultView.RowFilter =
+                $"CONVERT(code, 'System.String') LIKE '%{searchText}%' OR " +
+                $"CONVERT(name, 'System.String') LIKE '%{searchText}%'";
+
+            dg_setup.DataSource = _data.DefaultView;
         }
 
-        private void dg_setup_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void txt_search_Enter(object sender, EventArgs e)
         {
+            if (txt_search.Text == placeHolderText)
+            {
+                txt_search.Text = "";
+                txt_search.ForeColor = Color.Black;
+            }
+        }
 
+        private void txt_search_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txt_search.Text))
+            {
+                txt_search.Text = placeHolderText;
+                txt_search.ForeColor = Color.Gray;
+            }
+        }
+
+        private async void btn_delete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(txt_name.Text) && string.IsNullOrEmpty(txt_code.Text))
+                {
+                    Helpers.ShowDialogMessage("warning", "Select items to delete first.");
+                    return;
+                }
+
+                DialogResult result = MessageBox.Show(
+                "Are you sure you want to delete this item?",
+                "Confirm Deletion",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+                if (result == DialogResult.Yes)
+                {
+                    var data = Helpers.GetControlsValues(panel_records);
+
+                    bool isSuccess = await _serviceSetup.Delete(data);
+
+                    if (isSuccess)
+                    {
+                        Helpers.ResetControls(panel_records);
+                        Helpers.ShowDialogMessage("success", "Item deleted successfully.");
+                        GetSetup();
+                        BtnToggle(false);
+
+                        OnDataChanged?.Invoke();
+                    }
+                    else
+                    {
+                        Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ShowDialogMessage("error", $"An error occurred: {ex.Message}");
+            }
+           
         }
     }
 }

@@ -22,12 +22,14 @@ namespace smpc_inventory_app.Services.Helpers
         public static event Action OnDisconnected;
 
         public static bool IsConnected => _ws?.State == WebSocketState.Open;
+        static string wssUrl => Program.WssBaseUrl ?? "ws://127.0.0.1:3000/api/ws";
 
         public static async Task ConnectAndDeserialize<T>(string endpoint, Action<T> onDeserialized)
         {
             string token = CacheData.SessionToken;
             //string url = $"ws://94e9-112-201-111-220.ngrok-free.app/api/ws{endpoint}?Authorization={token}";
-            string url = $"ws://127.0.0.1:3000/api/ws{endpoint}?Authorization={token}";
+            
+            string url = $"{wssUrl}{endpoint}?Authorization={token}";
 
             if (IsConnected) return;
 

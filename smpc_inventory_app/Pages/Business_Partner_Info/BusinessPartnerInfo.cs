@@ -71,9 +71,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             InitializeComponent();
             Helpers.Placeholder.SetPlaceholder(txt_main_tel_no, "XXX-XXX-XXX-XXX");
             Helpers.Placeholder.SetPlaceholder(txt_main_tel_no, "09XX-XXX-XXXX / (0XX) XXXX-XXXX");
-            //Helpers.Placeholder.SetPlaceholder(txt_branch_tel_no, "09XX-XXX-XXXX / (0XX) XXXX-XXXX");
-            //tabItemPages = tabControl2.TabPages["ITEMS"];
-            //tabFinancePages = tabControl2.TabPages["FINANCE"];
+            
+
 
             debounceTimer.Interval = DebounceDelay;
             debounceTimer.Tick += debounceTimer_Tick;
@@ -782,7 +781,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         // toggle which branch to show??
         private void BpiBranchToggle(bool isVisible = true)
         {
-
+            // HIDE DETAILS FROM 0THER SALES PERSON
             panel_general.Visible = isVisible;
             pnl_new_added_item.Visible = isVisible;
             //panel_accreditation.Visible = isVisible;
@@ -874,7 +873,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             btn_prev.Visible = !isEdit;
             btn_next.Visible = !isEdit;
             btn_edit.Visible = !isEdit;
-            btn_print.Visible = !isEdit;
 
             btn_save.Visible = isEdit;
             btn_revise.Visible = isEdit;

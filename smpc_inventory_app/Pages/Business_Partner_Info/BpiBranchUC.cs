@@ -92,7 +92,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             txt_branch_name.Text = TabTitle;
             //GetIndustriesSetup();
-            GetPositionSetup();
+            await GetPositionSetup();
             GetTaxCode();
             await GetPayments();
             await GetSocialMediaSetup();
@@ -608,7 +608,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             tabControl_Finance.Visible = isVisible;
 
 
-            AddOwnedByOtherSalesLabel();
+            ShowOtherSalesNotice(!isVisible);
 
         }
        
@@ -908,7 +908,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             itemList.Rows.Add(addedRow);
             dataBindingItems.DataSource = itemList;
         }
-       
+
         private void btn_upload_image_Click(object sender, EventArgs e)
         {
             string fname = CacheData.CurrentUser.first_name;
@@ -916,27 +916,34 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             var userAdded = $"{fname[0].ToString().ToUpper()}. {lname}";
             DateTime now = DateTime.Now;
             var dataSource = Helpers.ConvertDataGridViewToDataTable(dg_accreditations);
+
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = "c:Downloads\\";
+                openFileDialog.InitialDirectory = @"C:\Downloads\";
                 openFileDialog.RestoreDirectory = true;
                 openFileDialog.Multiselect = true;
+                openFileDialog.Filter =
+                    "All Supported Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp;" +
+                                       "*.docx;*.doc;*.xlsx;*.xls;*.pptx;*.ppt|" +
+                    "Images|*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp|" +
+                    "Word Documents|*.docx;*.doc|" +
+                    "Excel Spreadsheets|*.xlsx;*.xls|" +
+                    "PowerPoint Presentations|*.pptx;*.ppt|" +
+                    "All Files|*.*";
+                openFileDialog.FilterIndex = 1;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-
                     foreach (string files in openFileDialog.FileNames)
                     {
-
                         string fileName = Path.GetFileName(files);
-
                         dataSource.Rows.Add(now, fileName, userAdded, files);
                         databindingAccreditation.DataSource = dataSource;
                     }
                 }
             }
         }
-        
+
         private void btn_get_entity_Click(object sender, EventArgs e)
         {
             txt_customer_code.Text = "";
@@ -1852,9 +1859,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 string addedBy = row["accreditation_added_by"].ToString();
                 string date_added = row["date_added"].ToString();
+
                 if (!row["file_path"].ToString().StartsWith("./"))
                 {
-                    file_path = ConvertImageToBase64(row["file_path"].ToString());
+                    file_path = ConvertFileToBase64(row["file_path"].ToString());
                 }
                 else
                 {
@@ -1934,7 +1942,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             return listItem;
         }
-        private string ConvertImageToBase64(string imagePath)
+        private string ConvertFileToBase64(string imagePath)
         {
             byte[] imageBytes = File.ReadAllBytes(imagePath);
             return Convert.ToBase64String(imageBytes);
@@ -2007,24 +2015,53 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 Console.WriteLine($"- Control Name: {ctrl.Name}, Type: {ctrl.GetType().Name}, Visible: {ctrl.Visible}");
             }
         }
-        private void AddOwnedByOtherSalesLabel()
+        private void ShowOtherSalesNotice(bool isVisible)
         {
-            // Create the label
-            Label lblOwnedByOtherSales = new Label();
-            lblOwnedByOtherSales.Name = "lblOwnedByOtherSales";  // optional but useful
-            lblOwnedByOtherSales.Text = "Owned by other sales";
-            lblOwnedByOtherSales.AutoSize = true; // adjusts size to fit text
-            lblOwnedByOtherSales.ForeColor = Color.Red; // optional styling
-            lblOwnedByOtherSales.Font = new Font("Segoe UI", 9, FontStyle.Bold); // optional styling
+            // Find existing notice panel to avoid duplicates
+            Panel existingNotice = this.Controls.OfType<Panel>()
+                .FirstOrDefault(p => p.Name == "pnl_other_sales_notice");
 
-            // Set the position inside panel_general
-            lblOwnedByOtherSales.Location = new Point(20, 300); // adjust X,Y as needed
+            if (existingNotice != null)
+            {
+                existingNotice.Visible = isVisible;
+                return;
+            }
 
-            // Add to panel_general
-            panel_general.Controls.Add(lblOwnedByOtherSales);
+            // Only create if needed
+            if (!isVisible) return;
 
-            // Make sure the panel is visible
-            lblOwnedByOtherSales.Visible = true;
+            // Look up the owner's name from Users if available
+            string ownerName = "another sales representative";
+            if (Users != null)
+            {
+                var owner = Users.FirstOrDefault(u => u.employee_id == SalesId);
+                if (owner != null)
+                    ownerName = $"{owner.first_name} {owner.last_name}";
+            }
+
+            Panel noticePanel = new Panel
+            {
+                Name = "pnl_other_sales_notice",
+                BackColor = Color.FromArgb(255, 243, 205), // soft yellow
+                Dock = DockStyle.Top,
+                Height = 50,
+                Visible = true
+            };
+
+            Label lbl = new Label
+            {
+                AutoSize = false,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
+                ForeColor = Color.FromArgb(133, 77, 14), // dark amber
+                Padding = new Padding(10, 0, 0, 0),
+                Text = $"⚠  This record belongs to {ownerName}. Details are restricted."
+            };
+
+            noticePanel.Controls.Add(lbl);
+            this.Controls.Add(noticePanel);
+            this.Controls.SetChildIndex(noticePanel, 0); // place it at the top
         }
         private void DisbleAutoColumnGeneration(List<DataGridView> dgvs)
         {

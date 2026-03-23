@@ -70,8 +70,6 @@ namespace smpc_inventory_app.Data
         {
             IEnumerable<string> data = new List<String>()
             {
-                "FLA",
-                "VOLTAGE",
                 "HORESEPOWER",
                 "KILOWATT",
                 "SUCTION SIZE",

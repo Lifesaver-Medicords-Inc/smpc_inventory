@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace smpc_inventory_app.Services.Setup.Item
 {
@@ -17,13 +18,23 @@ namespace smpc_inventory_app.Services.Setup.Item
         {
             this.EndPoint = api;
         }
-      
-        public  async Task<DataTable> GetAsDatatable()
-        {      
-            var response = await RequestToApi<ApiResponseModel<List<GeneralSetupModel>>>.Get(this.EndPoint);
-            DataTable responseData = JsonHelper.ToDataTable(response.Data);
 
-            return responseData;
+        public async Task<DataTable> GetAsDatatable()
+        {
+            try
+            {
+                var response = await RequestToApi<ApiResponseModel<List<GeneralSetupModel>>>.Get(this.EndPoint);
+
+                if (response == null || response.Data == null) return null;
+
+                DataTable responseData = JsonHelper.ToDataTable(response.Data);
+                return responseData;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[GeneralSetupServices.GetAsDatatable] {this.EndPoint} - {ex.Message}");
+                return null;
+            }
         }
 
         public async Task<ApiResponseModel> Insert(Dictionary<string, dynamic> data)

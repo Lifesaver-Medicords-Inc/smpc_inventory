@@ -18,9 +18,7 @@ namespace smpc_inventory_app.Printing
         private readonly int PoId;
         PurchaseOrdersWithDetails records;
         DataTable purchaseorder;
-        DataTable updatedpurchaseorder;
         DataTable purchaseorderdetails;
-        DataTable activePO;
         public PurchaseOrderReportProvider(int poId)
         {
             PoId = poId;
@@ -31,7 +29,7 @@ namespace smpc_inventory_app.Printing
 
 
         public string ReportPath =>
-        Path.Combine(Settings.Default.REPORTPATH, "PurchaseOrderReport.rdlc");
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Printing", "PurchaseOrderReport.rdlc");
 
         public async Task InitializeAsync()
         {

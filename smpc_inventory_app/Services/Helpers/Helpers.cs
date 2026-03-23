@@ -1568,6 +1568,24 @@ namespace smpc_app.Services.Helpers
 
             return JsonHelper.ToDataTable(list);
         }
+        public static void ConvertColumnToInt(DataTable dt, string columnName)
+        {
+            if (!dt.Columns.Contains(columnName)) return;
 
+            DataColumn oldCol = dt.Columns[columnName];
+            int ordinal = oldCol.Ordinal;
+
+            DataColumn newCol = new DataColumn(columnName + "_temp", typeof(int));
+            dt.Columns.Add(newCol);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                row[newCol] = int.TryParse(row[oldCol]?.ToString(), out int val) ? val : 0;
+            }
+
+            dt.Columns.Remove(oldCol);
+            newCol.ColumnName = columnName;
+            newCol.SetOrdinal(ordinal);
+        }
     }
 } 

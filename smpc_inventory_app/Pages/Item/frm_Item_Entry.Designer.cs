@@ -98,8 +98,17 @@
             this.img_preview = new System.Windows.Forms.PictureBox();
             this.label10 = new System.Windows.Forms.Label();
             this.pnl_item_specs = new System.Windows.Forms.Panel();
+            this.btn_add_impeller = new System.Windows.Forms.Button();
+            this.cmb_impeller = new System.Windows.Forms.ComboBox();
             this.txt_manufacturer_origin = new System.Windows.Forms.TextBox();
-            this.label38 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.lbl_fla = new System.Windows.Forms.Label();
+            this.lbl_volt = new System.Windows.Forms.Label();
+            this.txt_volt_2 = new System.Windows.Forms.TextBox();
+            this.txt_volt_1 = new System.Windows.Forms.TextBox();
+            this.txt_fla_2 = new System.Windows.Forms.TextBox();
+            this.txt_fla_1 = new System.Windows.Forms.TextBox();
+            this.lbl_impeller = new System.Windows.Forms.Label();
             this.txt_item_specs_id = new System.Windows.Forms.TextBox();
             this.txt_item_specs_based_id = new System.Windows.Forms.TextBox();
             this.dgv_template = new System.Windows.Forms.DataGridView();
@@ -279,6 +288,13 @@
             this.btn_add_class = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.treeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ds_specs_template = new System.Data.DataSet();
+            this.dataTable4 = new System.Data.DataTable();
+            this.dataColumn16 = new System.Data.DataColumn();
+            this.dataColumn17 = new System.Data.DataColumn();
+            this.dataColumn18 = new System.Data.DataColumn();
+            this.dataColumn19 = new System.Data.DataColumn();
+            this.bindingSourceSpecsTemplate = new System.Windows.Forms.BindingSource(this.components);
             this.pnl_page_title.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnl_child.SuspendLayout();
@@ -358,6 +374,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.salesBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource)).BeginInit();
             this.pnl_header.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_specs_template)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceSpecsTemplate)).BeginInit();
             this.SuspendLayout();
             // 
             // pnl_page_title
@@ -480,7 +499,7 @@
             this.pnl_footer.AutoScroll = true;
             this.pnl_footer.AutoSize = true;
             this.pnl_footer.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnl_footer.Location = new System.Drawing.Point(0, 750);
+            this.pnl_footer.Location = new System.Drawing.Point(0, 860);
             this.pnl_footer.Name = "pnl_footer";
             this.pnl_footer.Size = new System.Drawing.Size(1237, 0);
             this.pnl_footer.TabIndex = 14;
@@ -491,7 +510,7 @@
             this.pnl_child.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_child.Location = new System.Drawing.Point(0, 209);
             this.pnl_child.Name = "pnl_child";
-            this.pnl_child.Size = new System.Drawing.Size(1237, 541);
+            this.pnl_child.Size = new System.Drawing.Size(1237, 651);
             this.pnl_child.TabIndex = 15;
             // 
             // tabcontrol1
@@ -506,7 +525,7 @@
             this.tabcontrol1.Location = new System.Drawing.Point(0, 0);
             this.tabcontrol1.Name = "tabcontrol1";
             this.tabcontrol1.SelectedIndex = 0;
-            this.tabcontrol1.Size = new System.Drawing.Size(1237, 541);
+            this.tabcontrol1.Size = new System.Drawing.Size(1237, 651);
             this.tabcontrol1.TabIndex = 4;
             // 
             // tab_item_specs
@@ -517,7 +536,7 @@
             this.tab_item_specs.Location = new System.Drawing.Point(4, 22);
             this.tab_item_specs.Name = "tab_item_specs";
             this.tab_item_specs.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_item_specs.Size = new System.Drawing.Size(1229, 515);
+            this.tab_item_specs.Size = new System.Drawing.Size(1229, 625);
             this.tab_item_specs.TabIndex = 0;
             this.tab_item_specs.Text = "ITEM SPECS";
             this.tab_item_specs.UseVisualStyleBackColor = true;
@@ -568,7 +587,7 @@
             this.pnl_additional_specs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_additional_specs.Location = new System.Drawing.Point(338, 3);
             this.pnl_additional_specs.Name = "pnl_additional_specs";
-            this.pnl_additional_specs.Size = new System.Drawing.Size(422, 509);
+            this.pnl_additional_specs.Size = new System.Drawing.Size(422, 619);
             this.pnl_additional_specs.TabIndex = 4;
             // 
             // cmb_calibration
@@ -738,7 +757,9 @@
             this.cmb_connection_type.Items.AddRange(new object[] {
             "--SELECT--",
             "FLANGED",
-            "THREADED"});
+            "THREADED",
+            "OVAL FLANGE",
+            "SCREWED"});
             this.cmb_connection_type.Location = new System.Drawing.Point(188, 198);
             this.cmb_connection_type.Name = "cmb_connection_type";
             this.cmb_connection_type.Size = new System.Drawing.Size(168, 21);
@@ -767,6 +788,7 @@
             // 
             // cmb_weight_unit_of_measure
             // 
+            this.cmb_weight_unit_of_measure.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_weight_unit_of_measure.FormattingEnabled = true;
             this.cmb_weight_unit_of_measure.Location = new System.Drawing.Point(299, 306);
             this.cmb_weight_unit_of_measure.Name = "cmb_weight_unit_of_measure";
@@ -776,6 +798,7 @@
             // 
             // cmb_volume_unit_of_measure
             // 
+            this.cmb_volume_unit_of_measure.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_volume_unit_of_measure.FormattingEnabled = true;
             this.cmb_volume_unit_of_measure.Location = new System.Drawing.Point(299, 284);
             this.cmb_volume_unit_of_measure.Name = "cmb_volume_unit_of_measure";
@@ -789,7 +812,6 @@
             this.txt_additional_specs_id.Name = "txt_additional_specs_id";
             this.txt_additional_specs_id.Size = new System.Drawing.Size(65, 20);
             this.txt_additional_specs_id.TabIndex = 123;
-            this.txt_additional_specs_id.Visible = false;
             // 
             // txt_additional_specs_based_id
             // 
@@ -797,7 +819,6 @@
             this.txt_additional_specs_based_id.Name = "txt_additional_specs_based_id";
             this.txt_additional_specs_based_id.Size = new System.Drawing.Size(65, 20);
             this.txt_additional_specs_based_id.TabIndex = 124;
-            this.txt_additional_specs_based_id.Visible = false;
             // 
             // txt_long_description
             // 
@@ -969,7 +990,7 @@
             this.pnl_item_image.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnl_item_image.Location = new System.Drawing.Point(760, 3);
             this.pnl_item_image.Name = "pnl_item_image";
-            this.pnl_item_image.Size = new System.Drawing.Size(466, 509);
+            this.pnl_item_image.Size = new System.Drawing.Size(466, 619);
             this.pnl_item_image.TabIndex = 3;
             // 
             // lbl_filename
@@ -1058,8 +1079,17 @@
             // 
             // pnl_item_specs
             // 
+            this.pnl_item_specs.Controls.Add(this.btn_add_impeller);
+            this.pnl_item_specs.Controls.Add(this.cmb_impeller);
             this.pnl_item_specs.Controls.Add(this.txt_manufacturer_origin);
-            this.pnl_item_specs.Controls.Add(this.label38);
+            this.pnl_item_specs.Controls.Add(this.label46);
+            this.pnl_item_specs.Controls.Add(this.lbl_fla);
+            this.pnl_item_specs.Controls.Add(this.lbl_volt);
+            this.pnl_item_specs.Controls.Add(this.txt_volt_2);
+            this.pnl_item_specs.Controls.Add(this.txt_volt_1);
+            this.pnl_item_specs.Controls.Add(this.txt_fla_2);
+            this.pnl_item_specs.Controls.Add(this.txt_fla_1);
+            this.pnl_item_specs.Controls.Add(this.lbl_impeller);
             this.pnl_item_specs.Controls.Add(this.txt_item_specs_id);
             this.pnl_item_specs.Controls.Add(this.txt_item_specs_based_id);
             this.pnl_item_specs.Controls.Add(this.dgv_template);
@@ -1068,24 +1098,106 @@
             this.pnl_item_specs.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnl_item_specs.Location = new System.Drawing.Point(3, 3);
             this.pnl_item_specs.Name = "pnl_item_specs";
-            this.pnl_item_specs.Size = new System.Drawing.Size(335, 509);
+            this.pnl_item_specs.Size = new System.Drawing.Size(335, 619);
             this.pnl_item_specs.TabIndex = 2;
+            // 
+            // btn_add_impeller
+            // 
+            this.btn_add_impeller.BackColor = System.Drawing.Color.Transparent;
+            this.btn_add_impeller.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_add_impeller.BackgroundImage")));
+            this.btn_add_impeller.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_add_impeller.Location = new System.Drawing.Point(267, 329);
+            this.btn_add_impeller.Name = "btn_add_impeller";
+            this.btn_add_impeller.Size = new System.Drawing.Size(30, 22);
+            this.btn_add_impeller.TabIndex = 145;
+            this.btn_add_impeller.UseVisualStyleBackColor = false;
+            this.btn_add_impeller.Click += new System.EventHandler(this.btn_add_impeller_Click);
+            // 
+            // cmb_impeller
+            // 
+            this.cmb_impeller.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_impeller.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmb_impeller.FormattingEnabled = true;
+            this.cmb_impeller.Location = new System.Drawing.Point(172, 330);
+            this.cmb_impeller.Name = "cmb_impeller";
+            this.cmb_impeller.Size = new System.Drawing.Size(90, 21);
+            this.cmb_impeller.TabIndex = 132;
+            this.cmb_impeller.Tag = "DYNAMIC";
             // 
             // txt_manufacturer_origin
             // 
-            this.txt_manufacturer_origin.Location = new System.Drawing.Point(183, 393);
+            this.txt_manufacturer_origin.Location = new System.Drawing.Point(172, 352);
             this.txt_manufacturer_origin.Name = "txt_manufacturer_origin";
-            this.txt_manufacturer_origin.Size = new System.Drawing.Size(139, 20);
-            this.txt_manufacturer_origin.TabIndex = 102;
+            this.txt_manufacturer_origin.Size = new System.Drawing.Size(120, 20);
+            this.txt_manufacturer_origin.TabIndex = 110;
             // 
-            // label38
+            // label46
             // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(36, 396);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(141, 13);
-            this.label38.TabIndex = 101;
-            this.label38.Text = "MANUFACTURER ORIGIN:";
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(31, 355);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(141, 13);
+            this.label46.TabIndex = 109;
+            this.label46.Text = "MANUFACTURER ORIGIN:";
+            // 
+            // lbl_fla
+            // 
+            this.lbl_fla.AutoSize = true;
+            this.lbl_fla.Location = new System.Drawing.Point(31, 55);
+            this.lbl_fla.Name = "lbl_fla";
+            this.lbl_fla.Size = new System.Drawing.Size(29, 13);
+            this.lbl_fla.TabIndex = 108;
+            this.lbl_fla.Text = "FLA:";
+            // 
+            // lbl_volt
+            // 
+            this.lbl_volt.AutoSize = true;
+            this.lbl_volt.Location = new System.Drawing.Point(30, 75);
+            this.lbl_volt.Name = "lbl_volt";
+            this.lbl_volt.Size = new System.Drawing.Size(60, 13);
+            this.lbl_volt.TabIndex = 107;
+            this.lbl_volt.Text = "VOLTAGE:";
+            // 
+            // txt_volt_2
+            // 
+            this.txt_volt_2.Location = new System.Drawing.Point(231, 73);
+            this.txt_volt_2.Name = "txt_volt_2";
+            this.txt_volt_2.Size = new System.Drawing.Size(68, 20);
+            this.txt_volt_2.TabIndex = 106;
+            this.txt_volt_2.Visible = false;
+            // 
+            // txt_volt_1
+            // 
+            this.txt_volt_1.Location = new System.Drawing.Point(163, 73);
+            this.txt_volt_1.Name = "txt_volt_1";
+            this.txt_volt_1.Size = new System.Drawing.Size(68, 20);
+            this.txt_volt_1.TabIndex = 105;
+            this.txt_volt_1.Visible = false;
+            // 
+            // txt_fla_2
+            // 
+            this.txt_fla_2.Location = new System.Drawing.Point(231, 53);
+            this.txt_fla_2.Name = "txt_fla_2";
+            this.txt_fla_2.Size = new System.Drawing.Size(68, 20);
+            this.txt_fla_2.TabIndex = 104;
+            this.txt_fla_2.Visible = false;
+            // 
+            // txt_fla_1
+            // 
+            this.txt_fla_1.Location = new System.Drawing.Point(163, 53);
+            this.txt_fla_1.Name = "txt_fla_1";
+            this.txt_fla_1.Size = new System.Drawing.Size(68, 20);
+            this.txt_fla_1.TabIndex = 103;
+            this.txt_fla_1.Visible = false;
+            // 
+            // lbl_impeller
+            // 
+            this.lbl_impeller.AutoSize = true;
+            this.lbl_impeller.Location = new System.Drawing.Point(32, 331);
+            this.lbl_impeller.Name = "lbl_impeller";
+            this.lbl_impeller.Size = new System.Drawing.Size(63, 13);
+            this.lbl_impeller.TabIndex = 101;
+            this.lbl_impeller.Text = "IMPELLER:";
             // 
             // txt_item_specs_id
             // 
@@ -1093,7 +1205,6 @@
             this.txt_item_specs_id.Name = "txt_item_specs_id";
             this.txt_item_specs_id.Size = new System.Drawing.Size(65, 20);
             this.txt_item_specs_id.TabIndex = 95;
-            this.txt_item_specs_id.Visible = false;
             // 
             // txt_item_specs_based_id
             // 
@@ -1101,7 +1212,6 @@
             this.txt_item_specs_based_id.Name = "txt_item_specs_based_id";
             this.txt_item_specs_based_id.Size = new System.Drawing.Size(65, 20);
             this.txt_item_specs_based_id.TabIndex = 97;
-            this.txt_item_specs_based_id.Visible = false;
             // 
             // dgv_template
             // 
@@ -1114,10 +1224,10 @@
             this.dgv_template.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgv_template.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_template.ColumnHeadersVisible = false;
-            this.dgv_template.Location = new System.Drawing.Point(36, 71);
+            this.dgv_template.Location = new System.Drawing.Point(27, 93);
             this.dgv_template.Name = "dgv_template";
             this.dgv_template.RowHeadersVisible = false;
-            this.dgv_template.Size = new System.Drawing.Size(272, 302);
+            this.dgv_template.Size = new System.Drawing.Size(272, 232);
             this.dgv_template.TabIndex = 100;
             // 
             // cmb_template
@@ -1157,7 +1267,7 @@
             this.tab_purchasing.Location = new System.Drawing.Point(4, 22);
             this.tab_purchasing.Name = "tab_purchasing";
             this.tab_purchasing.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_purchasing.Size = new System.Drawing.Size(1229, 515);
+            this.tab_purchasing.Size = new System.Drawing.Size(1229, 625);
             this.tab_purchasing.TabIndex = 1;
             this.tab_purchasing.Text = "PURCHASING";
             this.tab_purchasing.UseVisualStyleBackColor = true;
@@ -1169,7 +1279,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1223, 509);
+            this.panel1.Size = new System.Drawing.Size(1223, 619);
             this.panel1.TabIndex = 0;
             // 
             // panel5
@@ -1179,7 +1289,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(0, 87);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1223, 422);
+            this.panel5.Size = new System.Drawing.Size(1223, 532);
             this.panel5.TabIndex = 0;
             // 
             // panel3
@@ -1188,7 +1298,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel3.Location = new System.Drawing.Point(863, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(360, 422);
+            this.panel3.Size = new System.Drawing.Size(360, 532);
             this.panel3.TabIndex = 3;
             // 
             // dgv_canvass_sheet
@@ -1200,7 +1310,7 @@
             this.dgv_canvass_sheet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_canvass_sheet.Location = new System.Drawing.Point(0, 0);
             this.dgv_canvass_sheet.Name = "dgv_canvass_sheet";
-            this.dgv_canvass_sheet.Size = new System.Drawing.Size(360, 422);
+            this.dgv_canvass_sheet.Size = new System.Drawing.Size(360, 532);
             this.dgv_canvass_sheet.TabIndex = 0;
             // 
             // canvass_sheet
@@ -1222,14 +1332,14 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(846, 422);
+            this.panel2.Size = new System.Drawing.Size(846, 532);
             this.panel2.TabIndex = 2;
             // 
             // panel22
             // 
             this.panel22.Controls.Add(this.btn_add_supplier);
             this.panel22.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel22.Location = new System.Drawing.Point(0, 374);
+            this.panel22.Location = new System.Drawing.Point(0, 484);
             this.panel22.Name = "panel22";
             this.panel22.Size = new System.Drawing.Size(846, 48);
             this.panel22.TabIndex = 2;
@@ -1250,7 +1360,7 @@
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(0, 0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(846, 422);
+            this.panel7.Size = new System.Drawing.Size(846, 532);
             this.panel7.TabIndex = 1;
             // 
             // dgv_purchasing
@@ -1268,7 +1378,7 @@
             this.dgv_purchasing.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_purchasing.Location = new System.Drawing.Point(0, 0);
             this.dgv_purchasing.Name = "dgv_purchasing";
-            this.dgv_purchasing.Size = new System.Drawing.Size(846, 422);
+            this.dgv_purchasing.Size = new System.Drawing.Size(846, 532);
             this.dgv_purchasing.TabIndex = 0;
             // 
             // suppliernameDataGridViewTextBoxColumn
@@ -1377,7 +1487,7 @@
             this.tab_sales.Location = new System.Drawing.Point(4, 22);
             this.tab_sales.Name = "tab_sales";
             this.tab_sales.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_sales.Size = new System.Drawing.Size(1229, 515);
+            this.tab_sales.Size = new System.Drawing.Size(1229, 625);
             this.tab_sales.TabIndex = 2;
             this.tab_sales.Text = "SALES";
             this.tab_sales.UseVisualStyleBackColor = true;
@@ -1389,7 +1499,7 @@
             this.pnl_sales.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_sales.Location = new System.Drawing.Point(3, 3);
             this.pnl_sales.Name = "pnl_sales";
-            this.pnl_sales.Size = new System.Drawing.Size(1223, 509);
+            this.pnl_sales.Size = new System.Drawing.Size(1223, 619);
             this.pnl_sales.TabIndex = 0;
             // 
             // dgv_sales
@@ -1408,7 +1518,7 @@
             this.dgv_sales.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_sales.Location = new System.Drawing.Point(0, 0);
             this.dgv_sales.Name = "dgv_sales";
-            this.dgv_sales.Size = new System.Drawing.Size(1029, 509);
+            this.dgv_sales.Size = new System.Drawing.Size(1029, 619);
             this.dgv_sales.TabIndex = 0;
             // 
             // Column2
@@ -1499,7 +1609,7 @@
             this.pnl_item_sales_price.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnl_item_sales_price.Location = new System.Drawing.Point(1029, 0);
             this.pnl_item_sales_price.Name = "pnl_item_sales_price";
-            this.pnl_item_sales_price.Size = new System.Drawing.Size(194, 509);
+            this.pnl_item_sales_price.Size = new System.Drawing.Size(194, 619);
             this.pnl_item_sales_price.TabIndex = 57;
             // 
             // txt_price
@@ -1525,7 +1635,7 @@
             this.tab_inventory.Location = new System.Drawing.Point(4, 22);
             this.tab_inventory.Name = "tab_inventory";
             this.tab_inventory.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_inventory.Size = new System.Drawing.Size(1229, 515);
+            this.tab_inventory.Size = new System.Drawing.Size(1229, 625);
             this.tab_inventory.TabIndex = 3;
             this.tab_inventory.Text = "INVENTORY";
             this.tab_inventory.UseVisualStyleBackColor = true;
@@ -1536,7 +1646,7 @@
             this.pnl_inventory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_inventory.Location = new System.Drawing.Point(3, 3);
             this.pnl_inventory.Name = "pnl_inventory";
-            this.pnl_inventory.Size = new System.Drawing.Size(1223, 509);
+            this.pnl_inventory.Size = new System.Drawing.Size(1223, 619);
             this.pnl_inventory.TabIndex = 1;
             // 
             // pnl_body
@@ -2018,7 +2128,7 @@
             this.tab_production.Location = new System.Drawing.Point(4, 22);
             this.tab_production.Name = "tab_production";
             this.tab_production.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_production.Size = new System.Drawing.Size(1229, 515);
+            this.tab_production.Size = new System.Drawing.Size(1229, 625);
             this.tab_production.TabIndex = 4;
             this.tab_production.Text = "PRODUCTION";
             this.tab_production.UseVisualStyleBackColor = true;
@@ -2030,7 +2140,7 @@
             this.pnl_production.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_production.Location = new System.Drawing.Point(3, 3);
             this.pnl_production.Name = "pnl_production";
-            this.pnl_production.Size = new System.Drawing.Size(1223, 509);
+            this.pnl_production.Size = new System.Drawing.Size(1223, 619);
             this.pnl_production.TabIndex = 1;
             // 
             // panel10
@@ -2041,7 +2151,7 @@
             this.panel10.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel10.Location = new System.Drawing.Point(549, 0);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(674, 509);
+            this.panel10.Size = new System.Drawing.Size(674, 619);
             this.panel10.TabIndex = 2;
             // 
             // dgv_production_request
@@ -2056,7 +2166,7 @@
             this.dgv_production_request.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_production_request.Location = new System.Drawing.Point(0, 36);
             this.dgv_production_request.Name = "dgv_production_request";
-            this.dgv_production_request.Size = new System.Drawing.Size(674, 473);
+            this.dgv_production_request.Size = new System.Drawing.Size(674, 583);
             this.dgv_production_request.TabIndex = 65;
             // 
             // Column14
@@ -2122,7 +2232,7 @@
             this.panel11.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel11.Location = new System.Drawing.Point(0, 0);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(511, 509);
+            this.panel11.Size = new System.Drawing.Size(511, 619);
             this.panel11.TabIndex = 1;
             // 
             // panel21
@@ -2131,7 +2241,7 @@
             this.panel21.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel21.Location = new System.Drawing.Point(0, 36);
             this.panel21.Name = "panel21";
-            this.panel21.Size = new System.Drawing.Size(511, 473);
+            this.panel21.Size = new System.Drawing.Size(511, 583);
             this.panel21.TabIndex = 3;
             // 
             // dgv_bom
@@ -2146,7 +2256,7 @@
             this.dgv_bom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_bom.Location = new System.Drawing.Point(0, 0);
             this.dgv_bom.Name = "dgv_bom";
-            this.dgv_bom.Size = new System.Drawing.Size(511, 473);
+            this.dgv_bom.Size = new System.Drawing.Size(511, 583);
             this.dgv_bom.TabIndex = 0;
             // 
             // itemcodeDataGridViewTextBoxColumn
@@ -2232,7 +2342,7 @@
             this.tab_attachments.Location = new System.Drawing.Point(4, 22);
             this.tab_attachments.Name = "tab_attachments";
             this.tab_attachments.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_attachments.Size = new System.Drawing.Size(1229, 515);
+            this.tab_attachments.Size = new System.Drawing.Size(1229, 625);
             this.tab_attachments.TabIndex = 5;
             this.tab_attachments.Text = "ATTACHMENTS";
             this.tab_attachments.UseVisualStyleBackColor = true;
@@ -2243,7 +2353,7 @@
             this.pnl_attachments.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_attachments.Location = new System.Drawing.Point(3, 3);
             this.pnl_attachments.Name = "pnl_attachments";
-            this.pnl_attachments.Size = new System.Drawing.Size(1223, 509);
+            this.pnl_attachments.Size = new System.Drawing.Size(1223, 619);
             this.pnl_attachments.TabIndex = 2;
             // 
             // panel8
@@ -2253,7 +2363,7 @@
             this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel8.Location = new System.Drawing.Point(0, 0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(1223, 509);
+            this.panel8.Size = new System.Drawing.Size(1223, 619);
             this.panel8.TabIndex = 1;
             // 
             // panel15
@@ -2264,7 +2374,7 @@
             this.panel15.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel15.Location = new System.Drawing.Point(573, 0);
             this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(650, 509);
+            this.panel15.Size = new System.Drawing.Size(650, 619);
             this.panel15.TabIndex = 1;
             // 
             // pnl_Receiving
@@ -2275,7 +2385,7 @@
             this.pnl_Receiving.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_Receiving.Location = new System.Drawing.Point(0, 0);
             this.pnl_Receiving.Name = "pnl_Receiving";
-            this.pnl_Receiving.Size = new System.Drawing.Size(650, 509);
+            this.pnl_Receiving.Size = new System.Drawing.Size(650, 619);
             this.pnl_Receiving.TabIndex = 29;
             this.pnl_Receiving.DoubleClick += new System.EventHandler(this.ITEM_TV_DoubleClick);
             this.pnl_Receiving.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ITEM_TV_MouseDown);
@@ -2304,7 +2414,7 @@
             // 
             this.btnUpload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnUpload.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.btnUpload.Location = new System.Drawing.Point(552, 472);
+            this.btnUpload.Location = new System.Drawing.Point(552, 582);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(75, 23);
             this.btnUpload.TabIndex = 3;
@@ -2324,7 +2434,7 @@
             this.ITEM_LV.Location = new System.Drawing.Point(0, 0);
             this.ITEM_LV.MultiSelect = false;
             this.ITEM_LV.Name = "ITEM_LV";
-            this.ITEM_LV.Size = new System.Drawing.Size(650, 509);
+            this.ITEM_LV.Size = new System.Drawing.Size(650, 619);
             this.ITEM_LV.TabIndex = 2;
             this.ITEM_LV.UseCompatibleStateImageBehavior = false;
             this.ITEM_LV.View = System.Windows.Forms.View.Details;
@@ -2337,7 +2447,7 @@
             this.panel16.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel16.Location = new System.Drawing.Point(0, 0);
             this.panel16.Name = "panel16";
-            this.panel16.Size = new System.Drawing.Size(598, 509);
+            this.panel16.Size = new System.Drawing.Size(598, 619);
             this.panel16.TabIndex = 0;
             // 
             // TV1_preview
@@ -2348,7 +2458,7 @@
             this.TV1_preview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TV1_preview.Location = new System.Drawing.Point(0, 0);
             this.TV1_preview.Name = "TV1_preview";
-            this.TV1_preview.Size = new System.Drawing.Size(598, 509);
+            this.TV1_preview.Size = new System.Drawing.Size(598, 619);
             this.TV1_preview.TabIndex = 26;
             this.TV1_preview.Visible = false;
             // 
@@ -2377,7 +2487,7 @@
             this.ITEM_TV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ITEM_TV.Location = new System.Drawing.Point(0, 0);
             this.ITEM_TV.Name = "ITEM_TV";
-            this.ITEM_TV.Size = new System.Drawing.Size(598, 509);
+            this.ITEM_TV.Size = new System.Drawing.Size(598, 619);
             this.ITEM_TV.TabIndex = 3;
             this.ITEM_TV.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ITEM_TV_AfterSelect);
             // 
@@ -2702,6 +2812,42 @@
             this.treeViewContextMenu.Name = "treeViewContextMenu";
             this.treeViewContextMenu.Size = new System.Drawing.Size(61, 4);
             // 
+            // ds_specs_template
+            // 
+            this.ds_specs_template.DataSetName = "NewDataSet";
+            this.ds_specs_template.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable4});
+            // 
+            // dataTable4
+            // 
+            this.dataTable4.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn16,
+            this.dataColumn17,
+            this.dataColumn18,
+            this.dataColumn19});
+            this.dataTable4.TableName = "Table1";
+            // 
+            // dataColumn16
+            // 
+            this.dataColumn16.ColumnName = "id";
+            // 
+            // dataColumn17
+            // 
+            this.dataColumn17.ColumnName = "based_id";
+            // 
+            // dataColumn18
+            // 
+            this.dataColumn18.ColumnName = "title";
+            // 
+            // dataColumn19
+            // 
+            this.dataColumn19.ColumnName = "value";
+            // 
+            // bindingSourceSpecsTemplate
+            // 
+            this.bindingSourceSpecsTemplate.DataMember = "Table1";
+            this.bindingSourceSpecsTemplate.DataSource = this.ds_specs_template;
+            // 
             // frm_Item_Entry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2712,7 +2858,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.pnl_page_title);
             this.Name = "frm_Item_Entry";
-            this.Size = new System.Drawing.Size(1237, 750);
+            this.Size = new System.Drawing.Size(1237, 860);
             this.Load += new System.EventHandler(this.frm_Item_Entry_Load);
             this.pnl_page_title.ResumeLayout(false);
             this.pnl_page_title.PerformLayout();
@@ -2807,6 +2953,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource)).EndInit();
             this.pnl_header.ResumeLayout(false);
             this.pnl_header.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ds_specs_template)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceSpecsTemplate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2904,8 +3053,7 @@
         private System.Windows.Forms.Panel panel22;
         private System.Windows.Forms.Button btn_add_supplier;
         private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.TextBox txt_manufacturer_origin;
-        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label lbl_impeller;
         private System.Windows.Forms.Panel pnl_item_image;
         private System.Windows.Forms.TextBox txt_item_image_id;
         private System.Windows.Forms.TextBox txt_item_image_based_id;
@@ -3063,5 +3211,22 @@
         private System.Windows.Forms.TreeView ITEM_TV;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ContextMenuStrip treeViewContextMenu;
+        private System.Windows.Forms.Label lbl_fla;
+        private System.Windows.Forms.Label lbl_volt;
+        private System.Windows.Forms.TextBox txt_volt_2;
+        private System.Windows.Forms.TextBox txt_volt_1;
+        private System.Windows.Forms.TextBox txt_fla_2;
+        private System.Windows.Forms.TextBox txt_fla_1;
+        private System.Windows.Forms.Button btn_add_impeller;
+        private System.Windows.Forms.ComboBox cmb_impeller;
+        private System.Windows.Forms.TextBox txt_manufacturer_origin;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.BindingSource bindingSourceSpecsTemplate;
+        private System.Data.DataSet ds_specs_template;
+        private System.Data.DataTable dataTable4;
+        private System.Data.DataColumn dataColumn16;
+        private System.Data.DataColumn dataColumn17;
+        private System.Data.DataColumn dataColumn18;
+        private System.Data.DataColumn dataColumn19;
     }
 }
