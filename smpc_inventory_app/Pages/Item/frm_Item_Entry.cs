@@ -183,8 +183,6 @@ namespace smpc_inventory_app.Pages.Item
                 // ---- Items ----
                 Panel[] pnlItem = { pnl_header, pnl_sales };
 
-
-
                 Helpers.BindControls(pnlItem, items, this.selectedRecord);
                 foreach (var pnl in pnlItem)
                 {

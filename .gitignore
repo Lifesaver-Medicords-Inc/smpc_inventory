@@ -1,69 +1,60 @@
-# Visual Studio user-specific files
+# Visual Studio
 .vs/
+.vs/*
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
 
-# Build results
+# Build
 bin/
 obj/
 out/
 build/
 
-# NuGet packages
+# Publish
+publish/
+dist/
+**/publish/
+
+# NuGet
+packages/
 *.nupkg
 *.snupkg
-packages/
-project.lock.json
-project.fragment.lock.json
-artifacts/
 
-# .NET
-*.dll
-*.exe
-*.pdb
-*.cache
-*.ilk
-*.meta
-*.obj
-*.iobj
-*.ipdb
-*.pgc
-*.pgd
-*.rsp
-*.sbr
-*.tlb
-*.tli
-*.tlh
-*.tmp
-*.tmp_proj
+# Logs / temp
 *.log
-*.vspscc
-*.vssscc
+logs/
+*.tmp
+*.temp
 
-# Rider (JetBrains)
+# Environment / secrets
+.env
+.env.*
+appsettings.Development.json
+secrets.json
+
+# Database
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Rider / JetBrains
 .idea/
 *.sln.iml
+*.DotSettings.user
 
 # Windows
 Thumbs.db
-ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# Publish / deploy output
-**/publish/
-*.pubxml
-*.pubxml.user
-
-# Code coverage
-*.coverage
-*.coveragexml
-
-# Test results
+# Testing
 TestResults/
 *.trx
+*.coverage
+*.coveragexml
 
 # Crash dumps
 *.dmp

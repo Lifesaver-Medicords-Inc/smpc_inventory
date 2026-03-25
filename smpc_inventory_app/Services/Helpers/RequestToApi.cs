@@ -84,7 +84,7 @@ namespace smpc_inventory_app.Services.Helpers
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Exception: " + "Call Senior Lem " + ex.Message, "Error ");
+                    MessageBox.Show("Exception: " + ex.Message, "Error ");
                     return default(T);  // Return default value of T in case of exception
                 }
                 finally
