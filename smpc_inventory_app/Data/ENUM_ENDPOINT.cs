@@ -17,6 +17,7 @@ namespace smpc_inventory_app.Data
         public static string ITEM_CLASS = setupItem + "class";
         public static string ITEM_NAME = setupItem + "name";
         public static string ITEM_MODEL = setupItem + "model";
+        public static string ITEM_IMPELLER = setupItem + "material";
         public static string ITEM_MATERIAL = setupItem + "material";
         public static string ITEM_PUMP_COUNT = setupItem + "pump_count";
         public static string ITEM_PUMP_TYPE= setupItem + "pump_type";

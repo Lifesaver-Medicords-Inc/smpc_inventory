@@ -2566,7 +2566,7 @@
             this.cmb_item_class.Name = "cmb_item_class";
             this.cmb_item_class.Size = new System.Drawing.Size(200, 21);
             this.cmb_item_class.TabIndex = 21;
-            this.cmb_item_class.Tag = "DYNAMIC";
+            this.cmb_item_class.Tag = "DYNAMIC, REQUIRED";
             // 
             // cmb_item_brand
             // 
@@ -2579,7 +2579,7 @@
             this.cmb_item_brand.Name = "cmb_item_brand";
             this.cmb_item_brand.Size = new System.Drawing.Size(200, 21);
             this.cmb_item_brand.TabIndex = 22;
-            this.cmb_item_brand.Tag = "DYNAMIC";
+            this.cmb_item_brand.Tag = "DYNAMIC, REQUIRED";
             // 
             // cmb_unit_of_measure
             // 
@@ -2590,7 +2590,7 @@
             this.cmb_unit_of_measure.Name = "cmb_unit_of_measure";
             this.cmb_unit_of_measure.Size = new System.Drawing.Size(200, 21);
             this.cmb_unit_of_measure.TabIndex = 23;
-            this.cmb_unit_of_measure.Tag = "DYNAMIC";
+            this.cmb_unit_of_measure.Tag = "DYNAMIC, REQUIRED";
             // 
             // label34
             // 
@@ -2600,7 +2600,6 @@
             this.label34.Size = new System.Drawing.Size(18, 13);
             this.label34.TabIndex = 38;
             this.label34.Text = "ID";
-            this.label34.Visible = false;
             // 
             // txt_id
             // 
@@ -2609,7 +2608,6 @@
             this.txt_id.Size = new System.Drawing.Size(54, 20);
             this.txt_id.TabIndex = 39;
             this.txt_id.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txt_id.Visible = false;
             // 
             // label36
             // 
@@ -2714,7 +2712,7 @@
             this.cmb_item_name.Name = "cmb_item_name";
             this.cmb_item_name.Size = new System.Drawing.Size(200, 21);
             this.cmb_item_name.TabIndex = 65;
-            this.cmb_item_name.Tag = "DYNAMIC";
+            this.cmb_item_name.Tag = "DYNAMIC, REQUIRED";
             // 
             // label6
             // 

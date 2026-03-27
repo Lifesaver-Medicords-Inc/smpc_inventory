@@ -38,7 +38,7 @@ namespace smpc_inventory_app.Pages.Item
         public event getBpiAddedItem OnItem;
 
         private CancellationTokenSource _imageLoadCts;
-        private Dictionary<string, ComboBox> _endpointCmbMap;
+        private Dictionary<string, List<ComboBox>> _endpointCmbMap;
         GeneralSetupServices serviceSetup;
         SetupModal modalSetup;
         TradeTypeSelectionModal tradetypemodal = new TradeTypeSelectionModal();
@@ -126,6 +126,7 @@ namespace smpc_inventory_app.Pages.Item
             ITEM_LV.DragEnter += ITEM_LV_DragEnter;
             ITEM_LV.DragDrop += ITEM_LV_DragDrop;
 
+            InitializeIdControlVisibility();
             InitializeListViewContextMenu();
             InitializeContextMenu();
             SpecsTemplateVisibility();
@@ -205,8 +206,11 @@ namespace smpc_inventory_app.Pages.Item
                 BindDataToFlowLayoutPanel(currentItemId);
                 BindDataToDataGridView();
 
-                txt_trade_type.Text = string.IsNullOrEmpty(records.items[this.selectedRecord].trade_type_names) ? "" : (records.items[this.selectedRecord].trade_type_names);
-                txt_pump_type_compatability.Text = string.IsNullOrEmpty(records.additionalspecs[this.selectedRecord].pump_type_compatability_names) ? "" : (records.additionalspecs[this.selectedRecord].pump_type_compatability_names);
+                var item = records.items?.ElementAtOrDefault(this.selectedRecord);
+                var additionalSpec = records.additionalspecs?.ElementAtOrDefault(this.selectedRecord);
+
+                txt_trade_type.Text = item?.trade_type_names ?? "";
+                txt_pump_type_compatability.Text = additionalSpec?.pump_type_compatability_names ?? "";
 
                 //Check Item Type Before Binding
                 ToggleItemPages(txt_trade_type.Text, cmb_item_tangibility_type.Text);
@@ -235,7 +239,8 @@ namespace smpc_inventory_app.Pages.Item
                 {
                     ClearTextBoxes(txt_additional_specs_id, txt_additional_specs_based_id);
                 }
-                string pumpTypeIds = string.IsNullOrEmpty(records.additionalspecs[this.selectedRecord].pump_type_compatability_id) ? "" : (records.additionalspecs[this.selectedRecord].pump_type_compatability_id);
+
+                string pumpTypeIds = additionalSpec?.pump_type_compatability_id ?? "";
 
                 //Getting the List of Ids to match in getmodal
                 currentSelectedPumpTypeIds = pumpTypeIds.Split(',')
@@ -298,60 +303,73 @@ namespace smpc_inventory_app.Pages.Item
 
             // ---- Item Specs ----
             ItemSpecsModel currentSpec = records.itemspecs?.FirstOrDefault(x => x.based_id == currentItemId);
-            DataTable dtCurrentSpecs = Helpers.ToDataTable(new List<ItemSpecsModel> { currentSpec });
 
-
-
-            if (dtCurrentSpecs != null)
+            SpecsTemplateVisibility();
+            if (currentSpec != null)
             {
-                dtCurrentSpecs.Columns["id"].ColumnName = "item_specs_id";
-                dtCurrentSpecs.Columns["based_id"].ColumnName = "item_specs_based_id";
+                DataTable dtCurrentSpecs = Helpers.ToDataTable(new List<ItemSpecsModel> { currentSpec });
 
-                Helpers.BindControls(pnlItemSpecs, dtCurrentSpecs);
-
-                var templateRows = currentSpec.item_specs_template?
-                    .Where(x => x.based_id == currentSpec.id)
-                    .ToList();
-
-                dgv_template.AutoGenerateColumns = true;
-                dgv_template.DataSource = null;
-                dgv_template.Columns.Clear();
-                dgv_template.DataSource = templateRows?.Count > 0 ? templateRows : null;
-
-                //HideColumns(dgv_template, "id", "based_id");
-
-                string phase = templateRows?
-                    .FirstOrDefault(x => x.title == "PHASE (1 OR 3)")?.value ?? "";
-
-                bool showCalibration = currentSpec.template == "PUMP" || currentSpec.template == "WATER METER";
-                cmb_calibration.Visible = showCalibration;
-                lbl_calibration.Visible = showCalibration;
-
-                if (currentSpec.template == "PUMP")
+                if (dtCurrentSpecs != null)
                 {
-                    bool isThreePhase = phase == "3";
-                    lbl_fla.Visible = true;
-                    lbl_volt.Visible = true;
-                    txt_fla_1.Visible = true;
-                    txt_volt_1.Visible = true;
-                    txt_fla_2.Visible = isThreePhase;
-                    txt_volt_2.Visible = isThreePhase;
-                    lbl_impeller.Visible = true;
-                    cmb_impeller.Visible = true;
-                    btn_add_impeller.Visible = true;
+                    dtCurrentSpecs.Columns["id"].ColumnName = "item_specs_id";
+                    dtCurrentSpecs.Columns["based_id"].ColumnName = "item_specs_based_id";
+                    Helpers.BindControls(pnlItemSpecs, dtCurrentSpecs);
+
+                    List<ItemSpecstemplate> templateRows = null;
+                    if (currentSpec.item_specs_template != null)
+                    {
+                        templateRows = currentSpec.item_specs_template
+                            .Where(x => x != null && x.based_id == currentSpec.id)
+                            .ToList();
+                    }
+
+                    dgv_template.AutoGenerateColumns = true;
+                    dgv_template.DataSource = null;
+                    dgv_template.Columns.Clear();
+                    dgv_template.DataSource = templateRows?.Count > 0 ? templateRows : null;
+
+                    string[] columnsToHide = { "id", "based_id" };
+                    HideColumns(dgv_template, columnsToHide);
+
+                    string phase = templateRows?
+                        .FirstOrDefault(x => x.title == "PHASE (1 OR 3)")?.value ?? "";
+
+                    bool showCalibration = currentSpec.template == "PUMP" || currentSpec.template == "WATER METER";
+                    cmb_calibration.Visible = showCalibration;
+                    lbl_calibration.Visible = showCalibration;
+
+                    if (currentSpec.template == "PUMP")
+                    {
+                        bool isThreePhase = phase == "3";
+                        lbl_fla.Visible = true;
+                        lbl_volt.Visible = true;
+                        txt_fla_1.Visible = true;
+                        txt_volt_1.Visible = true;
+                        txt_fla_2.Visible = isThreePhase;
+                        txt_volt_2.Visible = isThreePhase;
+                        lbl_impeller.Visible = true;
+                        cmb_impeller.Visible = true;
+                        btn_add_impeller.Visible = true;
+                    }
+                    else
+                    {
+                        SpecsTemplateVisibility();
+                    }
                 }
                 else
                 {
-                    SpecsTemplateVisibility();
+                    Helpers.ResetControls(pnl_item_specs);
+                    dgv_template.DataSource = null;
                 }
             }
             else
             {
+                // currentSpec is null — reset and fall through to bind the rest
                 Helpers.ResetControls(pnl_item_specs);
                 dgv_template.DataSource = null;
             }
 
-            // ---- Additional Specs ----
+            // ---- Additional Specs ---- (always runs)
             DataView dvAdditionalSpecs = new DataView(additionalspecs)
             {
                 RowFilter = $"based_id = {currentItemId}"
@@ -362,7 +380,6 @@ namespace smpc_inventory_app.Pages.Item
                 DataTable additionalSpecsTable = dvAdditionalSpecs.ToTable();
                 additionalSpecsTable.Columns["id"].ColumnName = "txt_additional_specs_id";
                 additionalSpecsTable.Columns["based_id"].ColumnName = "txt_additional_specs_based_id";
-
                 Helpers.BindControls(pnlAdditionalSpecs, additionalSpecsTable);
             }
             else
@@ -370,7 +387,7 @@ namespace smpc_inventory_app.Pages.Item
                 Helpers.ResetControls(pnl_additional_specs);
             }
 
-            // ---- Item Images ----
+            // ---- Item Images ---- (always runs)
             DataView dvImage = new DataView(itemimages)
             {
                 RowFilter = $"based_id = {currentItemId}"
@@ -381,7 +398,6 @@ namespace smpc_inventory_app.Pages.Item
                 DataTable imageTable = dvImage.ToTable();
                 imageTable.Columns["id"].ColumnName = "item_image_id";
                 imageTable.Columns["based_id"].ColumnName = "item_image_based_id";
-
                 Helpers.BindControls(pnlItemImages, imageTable);
             }
             else
@@ -389,7 +405,7 @@ namespace smpc_inventory_app.Pages.Item
                 Helpers.ResetControls(pnl_item_image);
             }
 
-            // ---- Inventory ----
+            // ---- Inventory ---- (always runs)
             DataView dvInventory = new DataView(iteminventory)
             {
                 RowFilter = $"based_id = {currentItemId}"
@@ -400,7 +416,6 @@ namespace smpc_inventory_app.Pages.Item
                 DataTable inventoryTable = dvInventory.ToTable();
                 inventoryTable.Columns["id"].ColumnName = "item_inventory_id";
                 inventoryTable.Columns["based_id"].ColumnName = "item_inventory_based_id";
-
                 Helpers.BindControls(pnlInventoryPanel, inventoryTable);
             }
             else
@@ -590,7 +605,7 @@ namespace smpc_inventory_app.Pages.Item
 
                 else if (control is ComboBox comboBox)
                 {
-                    if ((string.Equals(comboBox.Tag as string, "DYNAMIC", StringComparison.OrdinalIgnoreCase)
+                    if ((string.Equals(comboBox.Tag as string, "REQUIRED", StringComparison.OrdinalIgnoreCase)
                         && comboBox.SelectedIndex <= 0 && comboBox.Name != "cmb_volume_unit_of_measure" && comboBox.Name != "cmb_weight_unit_of_measure"))
                     {
                         FlashRed(comboBox);
@@ -626,24 +641,48 @@ namespace smpc_inventory_app.Pages.Item
         {
             dgv_template.EndEdit();
             dgv_template.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
             var itemspecs = Helpers.GetControlsValues(pnl_item_specs);
             var allSpecsTemplate = Helpers.ConvertDataGridViewToDataTable(dgv_template);
 
-            // Convert id and based_id columns from String to Int32
             Helpers.ConvertColumnToInt(allSpecsTemplate, "id");
             Helpers.ConvertColumnToInt(allSpecsTemplate, "based_id");
 
+            // ✅ For new template rows, clear id and based_id
+            // The backend will assign the correct based_id after insert
+            foreach (DataRow row in allSpecsTemplate.Rows)
+            {
+                int rowId = 0;
+                int.TryParse(row["id"]?.ToString(), out rowId);
+
+                if (rowId == 0) // new row
+                {
+                    row["based_id"] = 0; // backend handles this
+                }
+            }
+
             itemspecs["item_specs_template"] = allSpecsTemplate;
 
-            int basedId = 0;
-            int id = 0;
-            if (allSpecsTemplate.Rows.Count > 0)
+            // ✅ Don't pull based_id/id from the template rows —
+            // these are meaningless for new records
+            bool isNewRecord = string.IsNullOrWhiteSpace(txt_id.Text);
+            if (isNewRecord)
             {
-                int.TryParse(allSpecsTemplate.Rows[0]["based_id"]?.ToString(), out basedId);
-                int.TryParse(allSpecsTemplate.Rows[0]["id"]?.ToString(), out id);
+                itemspecs["based_id"] = 0; // backend will assign
+                itemspecs["id"] = 0;
             }
-            itemspecs["based_id"] = basedId;
-            itemspecs["id"] = id;
+            else
+            {
+                int basedId = 0;
+                int id = 0;
+                if (allSpecsTemplate.Rows.Count > 0)
+                {
+                    int.TryParse(allSpecsTemplate.Rows[0]["based_id"]?.ToString(), out basedId);
+                    int.TryParse(allSpecsTemplate.Rows[0]["id"]?.ToString(), out id);
+                }
+                itemspecs["based_id"] = basedId;
+                itemspecs["id"] = id;
+            }
 
             return itemspecs;
         }
@@ -947,20 +986,21 @@ namespace smpc_inventory_app.Pages.Item
             }
 
             // Bind the corresponding ComboBox after cache update
-            if (_endpointCmbMap.TryGetValue(api, out ComboBox cmb))
-                BindCmbValues(cmb, result);
+            if (_endpointCmbMap.TryGetValue(api, out List<ComboBox> cmbs))
+                foreach (var cmb in cmbs)
+                    BindCmbValues(cmb, result);
         }
         private void InitializeCmbMap()
         {
-            _endpointCmbMap = new Dictionary<string, ComboBox>
+            _endpointCmbMap = new Dictionary<string, List<ComboBox>>
             {
-                { ENUM_ENDPOINT.ITEM_CLASS,        cmb_item_class },
-                { ENUM_ENDPOINT.ITEM_NAME,         cmb_item_name },
-                { ENUM_ENDPOINT.ITEM_BRAND,        cmb_item_brand },
-                { ENUM_ENDPOINT.ITEM_MATERIAL,     cmb_material },
-                { ENUM_ENDPOINT.ITEM_PUMP_COUNT,   cmb_pump_count_compatability },
-                { ENUM_ENDPOINT.VALUATIONMETHOD,   cmb_valuation_method },
-                { ENUM_ENDPOINT.UNIT_OF_MEASURMENT, cmb_unit_of_measure },
+                { ENUM_ENDPOINT.ITEM_CLASS,         new List<ComboBox> { cmb_item_class } },
+                { ENUM_ENDPOINT.ITEM_NAME,          new List<ComboBox> { cmb_item_name } },
+                { ENUM_ENDPOINT.ITEM_BRAND,         new List<ComboBox> { cmb_item_brand } },
+                { ENUM_ENDPOINT.ITEM_MATERIAL,      new List<ComboBox> { cmb_impeller, cmb_material } }, // shared endpoint
+                { ENUM_ENDPOINT.ITEM_PUMP_COUNT,    new List<ComboBox> { cmb_pump_count_compatability } },
+                { ENUM_ENDPOINT.VALUATIONMETHOD,    new List<ComboBox> { cmb_valuation_method } },
+                { ENUM_ENDPOINT.UNIT_OF_MEASURMENT, new List<ComboBox> { cmb_unit_of_measure } },
             };
         }
         private void OpenSetupModal(string title, string api, DataTable cacheData)
@@ -990,7 +1030,7 @@ namespace smpc_inventory_app.Pages.Item
         private void cmb_pump_type_Click(object sender, EventArgs e) =>
             OpenSetupModal("Pump Type", ENUM_ENDPOINT.ITEM_PUMP_TYPE, CacheData.PumpType);
         private void cmb_pump_count_Click(object sender, EventArgs e) =>
-            OpenSetupModal("Pump Count", ENUM_ENDPOINT.ITEM_PUMP_COUNT, CacheData.ItemClass);
+            OpenSetupModal("Pump Count", ENUM_ENDPOINT.ITEM_PUMP_COUNT, CacheData.PumpCount);
         private void AddUOM() =>
             OpenSetupModal("Unit of Measure", ENUM_ENDPOINT.UNIT_OF_MEASURMENT, CacheData.UnitOfMeasurement);
         private void btn_add_oum_Click(object sender, EventArgs e) => AddUOM();
@@ -2420,6 +2460,18 @@ namespace smpc_inventory_app.Pages.Item
             {
                 UploadFiles(files, targetFolder);
             }
+        }
+        private void InitializeIdControlVisibility()
+        {
+            txt_id.Visible = false;
+            txt_item_specs_id.Visible = false;
+            txt_item_specs_based_id.Visible = false;
+            txt_additional_specs_id.Visible = false;
+            txt_additional_specs_based_id.Visible = false;
+            txt_item_image_id.Visible = false;
+            txt_item_image_based_id.Visible = false;
+            txt_item_inventory_id.Visible = false;
+            txt_item_inventory_based_id.Visible = false;
         }
         private void InitializeListViewContextMenu()
         {

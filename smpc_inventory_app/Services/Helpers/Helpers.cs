@@ -94,10 +94,15 @@ namespace smpc_app.Services.Helpers
 
         public static DataTable ToDataTable<T>(List<T> items)
         {
+            if (items == null || items.Count == 0) return null;
+
             var dataTable = new DataTable(typeof(T).Name);
 
-            // Get all properties of T
-            var props = typeof(T).GetProperties();
+            var props = typeof(T).GetProperties()
+                .Where(p => p.CanRead &&
+                            !p.PropertyType.IsClass ||
+                            p.PropertyType == typeof(string))
+                .ToArray();
 
             foreach (var prop in props)
             {
@@ -106,10 +111,19 @@ namespace smpc_app.Services.Helpers
 
             foreach (var item in items)
             {
+                if (item == null) continue;
+
                 var values = new object[props.Length];
                 for (int i = 0; i < props.Length; i++)
                 {
-                    values[i] = props[i].GetValue(item, null);
+                    try
+                    {
+                        values[i] = props[i].GetValue(item, null) ?? DBNull.Value;
+                    }
+                    catch
+                    {
+                        values[i] = DBNull.Value;
+                    }
                 }
                 dataTable.Rows.Add(values);
             }
@@ -231,11 +245,11 @@ namespace smpc_app.Services.Helpers
                 return;
 
             // Double buffer to reduce flickering
-            typeof(DataGridView).InvokeMember("DoubleBuffered",
-                System.Reflection.BindingFlags.NonPublic |
-                System.Reflection.BindingFlags.Instance |
-                System.Reflection.BindingFlags.SetProperty,
-                null, dgv, new object[] { true });
+            var doubleBufferedProperty = dgv.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (doubleBufferedProperty != null)
+            {
+                doubleBufferedProperty.SetValue(dgv, true);
+            }
 
             // Redraw on scroll/resize
             dgv.Scroll += (s, e) => dgv.Invalidate();
@@ -1162,6 +1176,13 @@ namespace smpc_app.Services.Helpers
 
         public static void BindControls(Panel[] pnl_list, DataTable dt, int selectedIndex = 0)
         {
+            // Guard at the top — covers all controls below
+            if (dt == null || dt.Rows.Count == 0 || selectedIndex < 0 || selectedIndex >= dt.Rows.Count)
+            {
+                Console.WriteLine("BindControls: No rows to bind.");
+                return;
+            }
+
             Dictionary<string, dynamic> values = new Dictionary<string, dynamic>();
 
             foreach (var col_name in dt.Columns)
