@@ -31,11 +31,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BpiBranchUC));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_new_brach = new System.Windows.Forms.Panel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.GENERAL = new System.Windows.Forms.TabPage();
@@ -192,6 +192,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label21 = new System.Windows.Forms.Label();
             this.ACCREDITATION = new System.Windows.Forms.TabPage();
             this.dg_accreditations = new System.Windows.Forms.DataGridView();
+            this.date_added = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.file_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.accreditation_added_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.file_path = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_accreditation_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_accreditation_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_accreditation_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.accreditation_added_by_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.databindingAccreditation = new System.Windows.Forms.BindingSource(this.components);
             this.dsAccreditations = new System.Data.DataSet();
             this.AccreditationTable = new System.Data.DataTable();
@@ -236,14 +244,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataColumn27 = new System.Data.DataColumn();
             this.dataColumn28 = new System.Data.DataColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_added = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.file_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.accreditation_added_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.file_path = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_accreditation_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_accreditation_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_accreditation_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.accreditation_added_by_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_new_brach.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.GENERAL.SuspendLayout();
@@ -633,8 +633,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.cmb_transaction_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_transaction_type.FormattingEnabled = true;
             this.cmb_transaction_type.Items.AddRange(new object[] {
-            "Trade",
-            "Non-Trade"});
+            "TRADE",
+            "NON TRADE"});
             this.cmb_transaction_type.Location = new System.Drawing.Point(135, 58);
             this.cmb_transaction_type.Name = "cmb_transaction_type";
             this.cmb_transaction_type.Size = new System.Drawing.Size(200, 21);
@@ -1417,9 +1417,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_code.DataPropertyName = "item_code";
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle21.NullValue = "SELECT";
-            this.item_code.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = "SELECT";
+            this.item_code.DefaultCellStyle = dataGridViewCellStyle1;
             this.item_code.FillWeight = 28.2083F;
             this.item_code.HeaderText = "ITEM CODE";
             this.item_code.MinimumWidth = 30;
@@ -1431,8 +1431,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.item_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_type.DataPropertyName = "item_type";
-            dataGridViewCellStyle22.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.item_type.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.item_type.DefaultCellStyle = dataGridViewCellStyle2;
             this.item_type.FillWeight = 37.78341F;
             this.item_type.HeaderText = "TYPE";
             this.item_type.MinimumWidth = 30;
@@ -1442,8 +1442,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.long_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.long_description.DataPropertyName = "long_description";
-            dataGridViewCellStyle23.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.long_description.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.long_description.DefaultCellStyle = dataGridViewCellStyle3;
             this.long_description.FillWeight = 28.2083F;
             this.long_description.HeaderText = "DESCRIPTION";
             this.long_description.MinimumWidth = 30;
@@ -1460,8 +1460,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.price.DataPropertyName = "price";
-            dataGridViewCellStyle24.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.price.DefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.price.DefaultCellStyle = dataGridViewCellStyle4;
             this.price.FillWeight = 28.2083F;
             this.price.HeaderText = "PRICE";
             this.price.MinimumWidth = 30;
@@ -1469,10 +1469,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // item_graph
             // 
-            dataGridViewCellStyle25.BackColor = System.Drawing.Color.DarkGray;
-            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DarkGray;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle5;
             this.item_graph.HeaderText = "";
             this.item_graph.MinimumWidth = 40;
             this.item_graph.Name = "item_graph";
@@ -1717,6 +1717,71 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_accreditations.Size = new System.Drawing.Size(1189, 459);
             this.dg_accreditations.TabIndex = 1;
             this.dg_accreditations.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_accreditations_DataBindingComplete);
+            // 
+            // date_added
+            // 
+            this.date_added.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.date_added.DataPropertyName = "date_added";
+            this.date_added.HeaderText = "DATE ADDED";
+            this.date_added.Name = "date_added";
+            this.date_added.ReadOnly = true;
+            // 
+            // file_name
+            // 
+            this.file_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.file_name.DataPropertyName = "file_name";
+            this.file_name.HeaderText = "FILE NAME";
+            this.file_name.Name = "file_name";
+            this.file_name.ReadOnly = true;
+            // 
+            // accreditation_added_by
+            // 
+            this.accreditation_added_by.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.accreditation_added_by.DataPropertyName = "accreditation_added_by";
+            this.accreditation_added_by.HeaderText = "ADDED BY";
+            this.accreditation_added_by.Name = "accreditation_added_by";
+            this.accreditation_added_by.ReadOnly = true;
+            // 
+            // file_path
+            // 
+            this.file_path.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.file_path.DataPropertyName = "file_path";
+            this.file_path.HeaderText = "FILE PATH";
+            this.file_path.Name = "file_path";
+            this.file_path.ReadOnly = true;
+            this.file_path.Visible = false;
+            // 
+            // bpi_accreditation_id
+            // 
+            this.bpi_accreditation_id.DataPropertyName = "bpi_accreditation_id";
+            this.bpi_accreditation_id.HeaderText = "bpi_accreditation_id";
+            this.bpi_accreditation_id.Name = "bpi_accreditation_id";
+            this.bpi_accreditation_id.ReadOnly = true;
+            this.bpi_accreditation_id.Visible = false;
+            // 
+            // bpi_accreditation_branch_id
+            // 
+            this.bpi_accreditation_branch_id.DataPropertyName = "bpi_accreditation_branch_id";
+            this.bpi_accreditation_branch_id.HeaderText = "bpi_accreditation_branch_id";
+            this.bpi_accreditation_branch_id.Name = "bpi_accreditation_branch_id";
+            this.bpi_accreditation_branch_id.ReadOnly = true;
+            this.bpi_accreditation_branch_id.Visible = false;
+            // 
+            // bpi_accreditation_based_id
+            // 
+            this.bpi_accreditation_based_id.DataPropertyName = "bpi_accreditation_based_id";
+            this.bpi_accreditation_based_id.HeaderText = "bpi_accreditation_based_id";
+            this.bpi_accreditation_based_id.Name = "bpi_accreditation_based_id";
+            this.bpi_accreditation_based_id.ReadOnly = true;
+            this.bpi_accreditation_based_id.Visible = false;
+            // 
+            // accreditation_added_by_id
+            // 
+            this.accreditation_added_by_id.DataPropertyName = "accreditation_added_by_id";
+            this.accreditation_added_by_id.HeaderText = "accreditation_added_by_id";
+            this.accreditation_added_by_id.Name = "accreditation_added_by_id";
+            this.accreditation_added_by_id.ReadOnly = true;
+            this.accreditation_added_by_id.Visible = false;
             // 
             // databindingAccreditation
             // 
@@ -2020,63 +2085,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataGridViewTextBoxColumn1.HeaderText = "branch_id";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.Visible = false;
-            // 
-            // date_added
-            // 
-            this.date_added.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.date_added.DataPropertyName = "date_added";
-            this.date_added.HeaderText = "DATE ADDED";
-            this.date_added.Name = "date_added";
-            // 
-            // file_name
-            // 
-            this.file_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.file_name.DataPropertyName = "file_name";
-            this.file_name.HeaderText = "FILE NAME";
-            this.file_name.Name = "file_name";
-            // 
-            // accreditation_added_by
-            // 
-            this.accreditation_added_by.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.accreditation_added_by.DataPropertyName = "accreditation_added_by";
-            this.accreditation_added_by.HeaderText = "ADDED BY";
-            this.accreditation_added_by.Name = "accreditation_added_by";
-            // 
-            // file_path
-            // 
-            this.file_path.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.file_path.DataPropertyName = "file_path";
-            this.file_path.HeaderText = "FILE PATH";
-            this.file_path.Name = "file_path";
-            this.file_path.Visible = false;
-            // 
-            // bpi_accreditation_id
-            // 
-            this.bpi_accreditation_id.DataPropertyName = "bpi_accreditation_id";
-            this.bpi_accreditation_id.HeaderText = "bpi_accreditation_id";
-            this.bpi_accreditation_id.Name = "bpi_accreditation_id";
-            this.bpi_accreditation_id.Visible = false;
-            // 
-            // bpi_accreditation_branch_id
-            // 
-            this.bpi_accreditation_branch_id.DataPropertyName = "bpi_accreditation_branch_id";
-            this.bpi_accreditation_branch_id.HeaderText = "bpi_accreditation_branch_id";
-            this.bpi_accreditation_branch_id.Name = "bpi_accreditation_branch_id";
-            this.bpi_accreditation_branch_id.Visible = false;
-            // 
-            // bpi_accreditation_based_id
-            // 
-            this.bpi_accreditation_based_id.DataPropertyName = "bpi_accreditation_based_id";
-            this.bpi_accreditation_based_id.HeaderText = "bpi_accreditation_based_id";
-            this.bpi_accreditation_based_id.Name = "bpi_accreditation_based_id";
-            this.bpi_accreditation_based_id.Visible = false;
-            // 
-            // accreditation_added_by_id
-            // 
-            this.accreditation_added_by_id.DataPropertyName = "accreditation_added_by_id";
-            this.accreditation_added_by_id.HeaderText = "accreditation_added_by_id";
-            this.accreditation_added_by_id.Name = "accreditation_added_by_id";
-            this.accreditation_added_by_id.Visible = false;
             // 
             // BpiBranchUC
             // 

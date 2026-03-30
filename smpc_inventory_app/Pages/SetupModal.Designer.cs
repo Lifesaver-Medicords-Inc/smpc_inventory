@@ -39,6 +39,7 @@ namespace smpc_inventory_app.Pages
             this.panel1 = new System.Windows.Forms.Panel();
             this.lbl_setup_title = new System.Windows.Forms.Label();
             this.panel_button = new System.Windows.Forms.Panel();
+            this.btn_delete = new System.Windows.Forms.Button();
             this.btn_cancel = new System.Windows.Forms.Button();
             this.btn_save = new System.Windows.Forms.Button();
             this.btn_edit = new System.Windows.Forms.Button();
@@ -51,7 +52,6 @@ namespace smpc_inventory_app.Pages
             this.label27 = new System.Windows.Forms.Label();
             this.lbl_code = new System.Windows.Forms.Label();
             this.panel_dg = new System.Windows.Forms.Panel();
-            this.btn_delete = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dg_setup)).BeginInit();
             this.panel_header.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -167,6 +167,24 @@ namespace smpc_inventory_app.Pages
             this.panel_button.Name = "panel_button";
             this.panel_button.Size = new System.Drawing.Size(400, 37);
             this.panel_button.TabIndex = 5;
+            // 
+            // btn_delete
+            // 
+            this.btn_delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_delete.BackColor = System.Drawing.Color.LightCoral;
+            this.btn_delete.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btn_delete.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.btn_delete.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.btn_delete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_delete.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_delete.ForeColor = System.Drawing.Color.Black;
+            this.btn_delete.Location = new System.Drawing.Point(155, 8);
+            this.btn_delete.Name = "btn_delete";
+            this.btn_delete.Size = new System.Drawing.Size(73, 22);
+            this.btn_delete.TabIndex = 116;
+            this.btn_delete.Text = "DELETE";
+            this.btn_delete.UseVisualStyleBackColor = false;
+            this.btn_delete.Click += new System.EventHandler(this.btn_delete_Click);
             // 
             // btn_cancel
             // 
@@ -292,24 +310,6 @@ namespace smpc_inventory_app.Pages
             this.panel_dg.Size = new System.Drawing.Size(400, 387);
             this.panel_dg.TabIndex = 7;
             // 
-            // btn_delete
-            // 
-            this.btn_delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_delete.BackColor = System.Drawing.Color.LightCoral;
-            this.btn_delete.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.btn_delete.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.btn_delete.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.btn_delete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_delete.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_delete.ForeColor = System.Drawing.Color.Black;
-            this.btn_delete.Location = new System.Drawing.Point(155, 8);
-            this.btn_delete.Name = "btn_delete";
-            this.btn_delete.Size = new System.Drawing.Size(73, 22);
-            this.btn_delete.TabIndex = 116;
-            this.btn_delete.Text = "DELETE";
-            this.btn_delete.UseVisualStyleBackColor = false;
-            this.btn_delete.Click += new System.EventHandler(this.btn_delete_Click);
-            // 
             // SetupModal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -320,6 +320,7 @@ namespace smpc_inventory_app.Pages
             this.Controls.Add(this.panel_records);
             this.Controls.Add(this.panel_header);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
             this.Name = "SetupModal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.SetupModal_Load);

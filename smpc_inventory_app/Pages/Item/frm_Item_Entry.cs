@@ -791,23 +791,6 @@ namespace smpc_inventory_app.Pages.Item
 
 
         }
-        private static void AddCmbDefaultVal(DataTable dt)
-        {
-            if (dt == null) return;
-
-            DataRow newRow = dt.NewRow();
-            newRow["id"] = DBNull.Value;
-            newRow["name"] = "-- SELECT --";
-
-            dt.Rows.InsertAt(newRow, 0);
-        }
-        private static void BindCmbValues(ComboBox cmb, DataView dv)
-        {
-            cmb.DataSource = dv;
-            cmb.ValueMember = "id";
-            cmb.DisplayMember = "name";
-            cmb.SelectedIndex = 0;
-        }
         private static void BindCmbValues(ComboBox cmb, DataTable dt)
         {
             cmb.DataSource = dt;
@@ -822,8 +805,8 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
             CacheData.ItemClass = result;
-            AddCmbDefaultVal(CacheData.ItemClass);
-            BindCmbValues(cmb_item_class, CacheData.ItemClass);
+            Helpers.AddCmbDefaultVal(CacheData.ItemClass);
+            Helpers.BindCmbValues(cmb_item_class, CacheData.ItemClass);
         }
         private async void FetchNameSetup()
         {
@@ -832,7 +815,7 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
             CacheData.ItemName = result;
-            AddCmbDefaultVal(CacheData.ItemName);
+            Helpers.AddCmbDefaultVal(CacheData.ItemName);
             cmb_item_name.DataSource = CacheData.ItemName;
             cmb_item_name.ValueMember = "id";
             cmb_item_name.DisplayMember = "name";
@@ -844,7 +827,7 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
             CacheData.ItemBrand = result;
-            AddCmbDefaultVal(CacheData.ItemBrand);
+            Helpers.AddCmbDefaultVal(CacheData.ItemBrand);
             cmb_item_brand.DataSource = CacheData.ItemBrand;
             cmb_item_brand.ValueMember = "id";
             cmb_item_brand.DisplayMember = "name";
@@ -861,13 +844,13 @@ namespace smpc_inventory_app.Pages.Item
             DataView dvWeight = new DataView(result.Copy());
             DataView dvVolume = new DataView(result.Copy());
 
-            AddCmbDefaultVal(dvUnit.Table);
-            AddCmbDefaultVal(dvWeight.Table);
-            AddCmbDefaultVal(dvVolume.Table);
+            Helpers.AddCmbDefaultVal(dvUnit.Table);
+            Helpers.AddCmbDefaultVal(dvWeight.Table);
+            Helpers.AddCmbDefaultVal(dvVolume.Table);
 
-            BindCmbValues(cmb_unit_of_measure, dvUnit);
-            BindCmbValues(cmb_weight_unit_of_measure, dvWeight);
-            BindCmbValues(cmb_volume_unit_of_measure, dvVolume);
+            Helpers.BindCmbValues(cmb_unit_of_measure, dvUnit);
+            Helpers.BindCmbValues(cmb_weight_unit_of_measure, dvWeight);
+            Helpers.BindCmbValues(cmb_volume_unit_of_measure, dvVolume);
         }
         private async void FetchItemTradeType()
         {
@@ -887,11 +870,11 @@ namespace smpc_inventory_app.Pages.Item
 
             DataView dvImpeller = new DataView(result.Copy());
             DataView dvMaterial = new DataView(result.Copy());
-            AddCmbDefaultVal(dvImpeller.Table);
-            AddCmbDefaultVal(dvMaterial.Table);
+            Helpers.AddCmbDefaultVal(dvImpeller.Table);
+            Helpers.AddCmbDefaultVal(dvMaterial.Table);
 
-            BindCmbValues(cmb_impeller, dvImpeller);
-            BindCmbValues(cmb_material, dvMaterial);
+            Helpers.BindCmbValues(cmb_impeller, dvImpeller);
+            Helpers.BindCmbValues(cmb_material, dvMaterial);
         }
         private async void FetchPumpTypeSetup()
         {
@@ -908,8 +891,8 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
             CacheData.PumpCount = result;
-            AddCmbDefaultVal(CacheData.PumpCount);
-            BindCmbValues(cmb_pump_count_compatability, CacheData.PumpCount);
+            Helpers.AddCmbDefaultVal(CacheData.PumpCount);
+            Helpers.BindCmbValues(cmb_pump_count_compatability, CacheData.PumpCount);
         }
         private async void FetchValuationMethodSetup()
         {
@@ -918,8 +901,8 @@ namespace smpc_inventory_app.Pages.Item
             if (result == null) return;
 
             CacheData.ValuationMethod = result;
-            AddCmbDefaultVal(CacheData.ValuationMethod);
-            BindCmbValues(cmb_valuation_method, CacheData.ValuationMethod);
+            Helpers.AddCmbDefaultVal(CacheData.ValuationMethod);
+            Helpers.BindCmbValues(cmb_valuation_method, CacheData.ValuationMethod);
         }
         private async void FetchWarehouse()
         {
@@ -988,7 +971,7 @@ namespace smpc_inventory_app.Pages.Item
             // Bind the corresponding ComboBox after cache update
             if (_endpointCmbMap.TryGetValue(api, out List<ComboBox> cmbs))
                 foreach (var cmb in cmbs)
-                    BindCmbValues(cmb, result);
+                    Helpers.BindCmbValues(cmb, result);
         }
         private void InitializeCmbMap()
         {
@@ -1027,8 +1010,8 @@ namespace smpc_inventory_app.Pages.Item
             OpenSetupModal("Material", ENUM_ENDPOINT.ITEM_MATERIAL, CacheData.Material);
         private void btn_add_valuation_method_Click(object sender, EventArgs e) =>
             OpenSetupModal("Valuation Method", ENUM_ENDPOINT.VALUATIONMETHOD, CacheData.ValuationMethod);
-        private void cmb_pump_type_Click(object sender, EventArgs e) =>
-            OpenSetupModal("Pump Type", ENUM_ENDPOINT.ITEM_PUMP_TYPE, CacheData.PumpType);
+        private void btn_pump_type_Click(object sender, EventArgs e) =>
+          OpenSetupModal("Pump Type", ENUM_ENDPOINT.ITEM_PUMP_TYPE, CacheData.PumpType);
         private void cmb_pump_count_Click(object sender, EventArgs e) =>
             OpenSetupModal("Pump Count", ENUM_ENDPOINT.ITEM_PUMP_COUNT, CacheData.PumpCount);
         private void AddUOM() =>
@@ -3068,8 +3051,7 @@ namespace smpc_inventory_app.Pages.Item
             }
         }
 
-
-
+      
     }
     #endregion
 }

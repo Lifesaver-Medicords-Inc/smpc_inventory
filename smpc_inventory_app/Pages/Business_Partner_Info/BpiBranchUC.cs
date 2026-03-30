@@ -49,7 +49,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         List<string> selectedPreferenceNames = new List<string>();
         List<CurrentUserModel> Users;
 
-        string REGEXPATTERN = @"^\d{4}-\d{3}-\d{4}$";
 
         TabPage tabItemPages;
         TabPage tabFinancePages;
@@ -63,18 +62,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         bool IsMain;
         private bool isUpdatingText = false;
         private bool isUpdatingTin = false;
-
+        private Dictionary<string, List<ComboBox>> _endpointCmbMap;
         public bool isUpdate { get; set; }
-
-        public BpiBranchUC(string parentId, string salesId, string tabTitle, string canvassForm, bool isExisting)
+        private Bpi_Class _preloadedData;
+        public BpiBranchUC(string parentId, string salesId, string tabTitle,
+                   string canvassForm, bool isExisting,
+                   Bpi_Class preloadedData = null)
         {
             InitializeComponent();
- 
+
             this.ParentId = parentId;
             this.SalesId = salesId;
             this.TabTitle = tabTitle;
             this.CanvassForm = canvassForm;
             this.IsExisting = isExisting;
+            this._preloadedData = preloadedData;  // <-- store it
 
             if (!string.IsNullOrEmpty(canvassForm))
                 ShowCanvassTabPage();
@@ -82,65 +84,140 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             tabItemPages = tabControl2.TabPages["ITEMS"];
             tabFinancePages = tabControl2.TabPages["FINANCE"];
 
+            if (!isExisting)
+            {
+                tabControl2.TabPages.Remove(tabItemPages);
+                tabControl2.TabPages.Remove(tabFinancePages);
+            }
             CheckPanelsInTabPage(GENERAL, panel_general);
-
-
-
         }
         private async void BpiBranchUC_Load(object sender, EventArgs e)
         {
-
             txt_branch_name.Text = TabTitle;
-            //GetIndustriesSetup();
-            await GetPositionSetup();
+            InitializeCmbMap();
+
+            // Always initialize combos first — both paths need them
+            await Task.WhenAll(
+                GetSocialMediaSetup(),
+                GetPayments(),
+                GetPositionSetup()
+            );
             GetTaxCode();
-            await GetPayments();
-            await GetSocialMediaSetup();
-            //GetEntity();
-            //GetBranchIndustries();
-            //GetPayments();
-            GetEntityCount();
-            //BindBpiGeneral(true);
-            //GetPositionSetup();
-            LoadBpidData();
-          
 
+            if (_preloadedData != null)
+                BindFromPreloadedData(_preloadedData);
+            else
+                await LoadBpidData();
         }
-        private async void LoadBpidData()
+        private void BindFromPreloadedData(Bpi_Class data)
         {
-
-            var response = await RequestToApi<ApiResponseModel<Bpi_Class>>.Get(ENUM_ENDPOINT.BPI);
-            Records = response.Data;
-
-            bpi = JsonHelper.ToDataTable(Records.bpi);
-            general = JsonHelper.ToDataTable(Records.general);
-            contacts = JsonHelper.ToDataTable(Records.contacts);
-            address = JsonHelper.ToDataTable(Records.address);
-            items = JsonHelper.ToDataTable(Records.items);
-            finance = JsonHelper.ToDataTable(Records.finance);
-            finance_pending = JsonHelper.ToDataTable(Records.finance_pending);
-            accreditations = JsonHelper.ToDataTable(Records.accreditations);
-            history = JsonHelper.ToDataTable(Records.history);
-
-            if (IsExisting)
+            try
             {
-                if (Records.bpi.Count != 0 && Records.general.Count != 0 && Records.contacts.Count != 0 && Records.address.Count != 0)
+                Records = data;
+                // In BindFromPreloadedData, after setting the tables:
+                // bpi is the full table — child UC always filters by ParentId, never by SelectedRecord index
+                bpi = Helpers.SafeTable(data.bpi);
+                general = Helpers.SafeTable(data.general);
+                contacts = Helpers.SafeTable(data.contacts);
+                address = Helpers.SafeTable(data.address);
+                items = Helpers.SafeTable(data.items);
+                finance = Helpers.SafeTable(data.finance);
+                finance_pending = Helpers.SafeTable(data.finance_pending);
+                accreditations = Helpers.SafeTable(data.accreditations);
+                history = Helpers.SafeTable(data.history);
+
+                // Filter only this branch's general row using ParentId (= general_id)
+                DataView dv = new DataView(general)
                 {
-                    BindGeneral(true);
+                    RowFilter = $"general_id = '{ParentId}'"
+                };
+
+                if (dv.Count == 0)
+                {
+                    // No matching row yet (new unsaved branch) — nothing to bind
+                    return;
+                }
+
+                if (IsExisting)
+                {
+                    if (this.InvokeRequired)
+                        this.BeginInvoke(new Action(() => BindGeneral(true)));
+                    else
+                        BindGeneral(true);
+                }
+
+                if (IsMain)
+                    chk_is_main.Checked = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[BindFromPreloadedData] {ex.Message}");
+                MessageBox.Show("Failed to bind branch data.");
+            }
+        }
+        private async Task LoadBpidData()
+        {
+            try
+            {
+                var response = await RequestToApi<ApiResponseModel<Bpi_Class>>.Get(ENUM_ENDPOINT.BPI);
+                if (response?.Data == null || response.Data.bpi == null)
+                {
+                    MessageBox.Show("No records found.");
+                    return;
+                }
+
+                Records = response.Data;
+
+                // heavy work off the UI thread
+                var tables = await Task.Run(() => new
+                {
+                    Bpi = Helpers.SafeTable(Records.bpi),
+                    General = Helpers.SafeTable(Records.general),
+                    Contacts = Helpers.SafeTable(Records.contacts),
+                    Address = Helpers.SafeTable(Records.address),
+                    Items = Helpers.SafeTable(Records.items),
+                    Finance = Helpers.SafeTable(Records.finance),
+                    FinancePending = Helpers.SafeTable(Records.finance_pending),
+                    Accreditations = Helpers.SafeTable(Records.accreditations),
+                    History = Helpers.SafeTable(Records.history),
+                });
+
+                if (tables == null) return;
+
+                bpi = tables.Bpi;
+                general = tables.General;
+                contacts = tables.Contacts;
+                address = tables.Address;
+                items = tables.Items;
+                finance = tables.Finance;
+                finance_pending = tables.FinancePending;
+                accreditations = tables.Accreditations;
+                history = tables.History;
+
+                if (Records.bpi.Count > 0 && Records.general.Count > 0
+                    && Records.contacts.Count > 0 && Records.address.Count > 0)
+                {
+                    if (IsExisting)
+                    {
+                        if (this.InvokeRequired)
+                            this.BeginInvoke(new Action(() => BindGeneral(true)));
+                        else
+                            BindGeneral(true);
+                    }
+
+                    if (IsMain)
+                        chk_is_main.Checked = true;
                 }
                 else
                 {
                     MessageBox.Show("No records found.");
                 }
             }
-            // 
-
-            if (IsMain)
+            catch (Exception ex)
             {
-                chk_is_main.Checked = true;
+                Debug.WriteLine($"[LoadBpidData] {ex.Message}");
+                MessageBox.Show("Failed to load BPI data. Please try again.");
             }
-           
-
         }
         private void LoadAllBpiChild()
         {
@@ -266,23 +343,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         private void BindGeneral(bool isBind = false)
         {
-            if (isBind)
-            {
-                var isSelectedSales = GetSelectedSales();
+            if (!isBind) return;
 
-                BpiBranchToggle(isSelectedSales);
-                LoadAllBpiChild();
-                BindDataToPanel();
-                BindDataToTable();
-                BindDataToComboBox();
-                BindMultiSelectField(Records.general);
-                //BindDataToComboBox();
+            var isSelectedSales = GetSelectedSales();
+            BpiBranchToggle(isSelectedSales);
 
-                //MessageBox.Show("Entity Type: " + txt_entity_type.Text);
-                bool isItemShow = ToogleItemPages(txt_entity_type.Text);
-                GetPaymentItemTerms(isItemShow);
-                ShowTypeOfEntity(txt_entity_type.Text);
-            }
+            // Use BindDataToTable (filters by ParentId) instead of LoadAllBpiChild
+            // LoadAllBpiChild uses SelectedRecord index which is wrong in child UC
+            BindDataToPanel();
+            BindDataToTable();       // <-- this is the correct one
+            BindDataToComboBox();
+            BindMultiSelectField(Records.general);
+
+            bool isItemShow = ToogleItemPages(txt_entity_type.Text);
+            GetPaymentItemTerms(isItemShow);
+            ShowTypeOfEntity(txt_entity_type.Text);
         }
         private void BindDataToPanel()
         {
@@ -491,38 +566,25 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         private void SetComboBoxValue(DataTable table, string filterColumn, int filterValue, ComboBox combo, string valueColumn)
         {
+            if (combo.Items.Count == 0) return; // ← guard: nothing to select
+
             var row = table.AsEnumerable()
                 .FirstOrDefault(r => Convert.ToInt32(r[filterColumn]) == filterValue);
-
 
             if (row != null && !row.IsNull(valueColumn))
             {
                 int value = row.Field<int>(valueColumn);
-                bool exists = false;
+                bool exists = combo.Items.Cast<DataRowView>()
+                    .Any(drv => Convert.ToInt32(drv[combo.ValueMember]) == value);
 
-                foreach (DataRowView drv in combo.Items)
-                {
-                    if (Convert.ToInt32(drv[combo.ValueMember]) == value)
-                    {
-                        exists = true;
-                        break;
-                    }
-                }
-
-                if (exists)
-                {
-                    combo.SelectedValue = value;
-                }
-                else
-                {
-                    combo.SelectedIndex = 0; 
-                }
+                combo.SelectedValue = exists ? (object)value : (combo.Items.Count > 0 ? combo.Items[0] : null);
+                if (!exists && combo.Items.Count > 0)
+                    combo.SelectedIndex = 0;
             }
-            else
+            else if (combo.Items.Count > 0)
             {
                 combo.SelectedIndex = 0;
             }
-
         }
         private bool GetSelectedSales()
         {
@@ -681,61 +743,72 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             IsMain = isMain;
         }
-        private void btn_add_entity_Click(object sender, EventArgs e)
+        private void OpenSetupModal(string title, string api, DataTable cacheData)
         {
-            DataTable dt = CacheData.Entity.Copy();
+            if (cacheData == null) return;
+
+            DataTable dt = cacheData.Copy();
             if (dt.Columns["select"] != null)
-            {
                 dt.Columns.Remove("select");
-            }
-            modalSetup = new SetupModal("Entity", ENUM_ENDPOINT.ENTITY, dt);
+
+            modalSetup = new SetupModal(title, api, dt);
+            modalSetup.OnDataChanged += async () => await RefreshCache(api);
             modalSetup.ShowDialog();
         }
-
-        private void btn_branch_industry_Click(object sender, EventArgs e)
+        private async Task RefreshCache(string api)
         {
-            DataTable dt = CacheData.BranchIndustries.Copy();
-            if (dt.Columns["select"] != null)
+            serviceSetup = new GeneralSetupServices(api);
+            var result = await serviceSetup.GetAsDatatable();
+            if (result == null) return;
+
+            switch (api)
             {
-                dt.Columns.Remove("select");
+                case var _ when api == ENUM_ENDPOINT.INDUSTRIES:
+                    CacheData.Industries = result;
+                    break;
+                case var _ when api == ENUM_ENDPOINT.ENTITY:
+                    CacheData.Entity = result;
+                    break;
+                case var _ when api == ENUM_ENDPOINT.SOCIALS:
+                    CacheData.SocialMedia = result;
+                    break;
+
+                default:
+                    return;
             }
-            modalSetup = new SetupModal("Branch Industries", ENUM_ENDPOINT.INDUSTRIES, dt);
-            modalSetup.ShowDialog();
-        }
 
-        private void btn_social_links_Click(object sender, EventArgs e)
-        {
-            modalSetup = new SetupModal("Social Media ", ENUM_ENDPOINT.SOCIALS, CacheData.SocialMedia);
-            modalSetup.ShowDialog();
+            // Bind the corresponding ComboBox after cache update
+            if (_endpointCmbMap.TryGetValue(api, out List<ComboBox> cmbs))
+                foreach (var cmb in cmbs)
+                    BindCmbValues(cmb, result);
         }
+        private void btn_add_entity_Click(object sender, EventArgs e) =>
+             OpenSetupModal("Entity", ENUM_ENDPOINT.ENTITY, CacheData.Entity);
 
+        private void btn_branch_industry_Click(object sender, EventArgs e) =>
+            OpenSetupModal("INDUSTRIES", ENUM_ENDPOINT.INDUSTRIES, CacheData.Industries);
+
+        private void btn_social_links_Click(object sender, EventArgs e) =>
+            OpenSetupModal("SOCIAL MEDIA", ENUM_ENDPOINT.SOCIALS, CacheData.SocialMedia);
         private void btn_get_branch_Click(object sender, EventArgs e)
         {
-            DataTable branchData;
-
-            if (string.IsNullOrEmpty(ParentId))
-            {
-                branchData = CacheData.Industries;
-            }
-            else
-            {
-                branchData = CacheData.BranchIndustries;
-            }
-
-
+            var branchData = string.IsNullOrEmpty(ParentId) ? CacheData.Industries : CacheData.BranchIndustries;
             modalSelection = new SetupSelectionModal("Branch Industries", ENUM_ENDPOINT.INDUSTRIES, branchData, currentSelectedBranchIndustryIds, new List<string>(), 0);
             DialogResult modalResult = modalSelection.ShowDialog();
-
-
             if (modalResult == DialogResult.OK)
             {
                 var result = modalSelection.GetResult();
                 Helpers.GetModalData(txt_branch_industry, result);
-
                 CopyToMainBranchField("branch_industries", txt_branch_industry.Text);
                 currentSelectedBranchIndustryIds.Clear();
-
             }
+        }
+        private void InitializeCmbMap()
+        {
+            _endpointCmbMap = new Dictionary<string, List<ComboBox>>
+            {
+                { ENUM_ENDPOINT.SOCIALS,         new List<ComboBox> { cmb_social } },
+            };
         }
         private void CopyToMainBranchField(string fieldName, string value)
         {
@@ -943,103 +1016,92 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 }
             }
         }
-
         private void btn_get_entity_Click(object sender, EventArgs e)
+        {
+            modalSelection = new SetupSelectionModal("ENTITY", ENUM_ENDPOINT.ENTITY, CacheData.Entity, currentSelectedEntityIds, new List<string>(), 0);
+            DialogResult modalResult = modalSelection.ShowDialog();
+            if (modalResult == DialogResult.OK)
+            {
+                var result = modalSelection.GetResult();
+                Helpers.GetModalData(txt_entity_type, result);
+                ProcessEntitySelection();
+                currentSelectedEntityIds.Clear();
+            }
+        }
+        private void ProcessEntitySelection()
         {
             txt_customer_code.Text = "";
             txt_supplier_code.Text = "";
             txt_non_affiliated.Text = "";
             txt_affiliated.Text = "";
 
-            modalSelection = new SetupSelectionModal("ENTITY", ENUM_ENDPOINT.ENTITY, CacheData.Entity, currentSelectedEntityIds, new List<string>(), 0);
-            DialogResult modalResult = modalSelection.ShowDialog();
+            var data = txt_entity_type.Text;
+            string[] entities = data.Split(',');
 
-            if (modalResult == DialogResult.OK)
+            bool hasBlackListed = entities.Any(n => n.Trim() == ENUM_ENTITY_TYPE.Blacklisted);
+            bool hasTempSupplier = entities.Any(n => n.Trim() == ENUM_ENTITY_TYPE.TempSupplier);
+
+            if (hasBlackListed)
             {
-                var result = modalSelection.GetResult();
+                txt_entity_type.Text = "";
+                txt_entity_type.Tag = null;
+                currentSelectedEntityIds.Clear();
+                Helpers.ShowDialogMessage("warning", "Cannot select BLACKLISTED based on your position");
+                return;
+            }
 
-                Helpers.GetModalData(txt_entity_type, result);
-                var data = txt_entity_type.Text;
+            if (CanvassForm == "" && hasTempSupplier)
+            {
+                txt_entity_type.Text = "";
+                txt_entity_type.Tag = null;
+                currentSelectedEntityIds.Clear();
+                Helpers.ShowDialogMessage("warning","You Cannot Select Temporary Supplier");
+                return;
+            }
 
-                string[] entities = data.Split(',');
-                bool hasBlackListed = entities.Any(n => n.Trim() == ENUM_ENTITY_TYPE.Blacklisted);
-                bool hasTempSupplier = entities.Any(n => n.Trim() == ENUM_ENTITY_TYPE.TempSupplier);
+            string[] valuesToCheck = { "SUPPLIER", "CUSTOMER" };
+            bool containsBoth = valuesToCheck.All(value => data.Contains(value));
 
-                if (hasBlackListed)
-                {
-                    txt_entity_type.Text = "";
-                    txt_entity_type.Tag = null;
-                    currentSelectedEntityIds.Clear();
-                    MessageBox.Show("Cannot select BLACKLISTED based on your position", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (CanvassForm == "" && hasTempSupplier)
-                {
-                    txt_entity_type.Text = "";
-                    txt_entity_type.Tag = null;
-                    currentSelectedEntityIds.Clear();
-                    MessageBox.Show("You Cannot Select Temporary Supplier", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
-                else
-                {
-                    currentSelectedEntityIds.Clear();
-                    string[] valuesToCheck = { "SUPPLIER", "CUSTOMER" };
-                    var viewData = String.Join("", txt_entity_type.Text);
-                    bool containsBoth = valuesToCheck.All(value => viewData.Contains(value));
-
-                    if (containsBoth)
-                    {
-                        DocumentCodeIncrementor("BOTH");
-                        ToogleCustomerAndSupplier(true);
-                        ShowTabPages(tabItemPages);
-                        ShowTabPages(tabFinancePages);
-                    }
-                    else if (txt_entity_type.Text.Contains(ENUM_ENTITY_TYPE.Supplier))
-                    {
-                        DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Supplier);
-                        ToogleCustomerAndSupplier(true);
-                        ShowAffiliatedAndNon(false);
-                        ShowTabPages(tabItemPages);
-                        RemoveTabPages(tabFinancePages);
-
-                        txt_customer_code.Enabled = false;
-
-                        //  txt_supplier_code.Text = "S#" + number.ToString();
-
-                    }
-
-                    else if (txt_entity_type.Text.Contains(ENUM_ENTITY_TYPE.Non_Affiliated))
-                    {
-                        // txt_non_affiliated.Text = "EN#" + number.ToString();
-                        DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Non_Affiliated);
-                        ToogleEntityField(true);
-                        ToogleCustomerAndSupplier(false);
-                        RemoveTabPages(tabFinancePages);
-                        RemoveTabPages(tabItemPages);
-
-                    }
-                    else if (txt_entity_type.Text.Contains(ENUM_ENTITY_TYPE.Affiliated))
-                    {
-                        //   txt_affiliated.Text = "EA#" + number.ToString();
-                        DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Affiliated);
-                        ToogleEntityField(false);
-                        ToogleCustomerAndSupplier(false);
-                        RemoveTabPages(tabFinancePages);
-                    }
-                    else
-                    {
-                        DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Customer);
-                        ShowAffiliatedAndNon(false);
-                        ShowTabPages(tabFinancePages);
-                        ToogleCustomerAndSupplier(true);
-                        RemoveTabPages(tabItemPages);
-                        txt_supplier_code.Enabled = false;
-                        btn_finance_payment_terms.Visible = CacheData.CurrentUser.position_id.Equals("Web Developer"); // Parameter is ready for manager position only
-
-                        //    tabControl2.TabPages.Remove(tabItemPages);
-                    }
-
-                }
+            if (containsBoth)
+            {
+                DocumentCodeIncrementor("BOTH");
+                ToogleCustomerAndSupplier(true);
+                ShowTabPages(tabItemPages);
+                ShowTabPages(tabFinancePages);
+            }
+            else if (data.Contains(ENUM_ENTITY_TYPE.Supplier))
+            {
+                DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Supplier);
+                ToogleCustomerAndSupplier(true);
+                ShowAffiliatedAndNon(false);
+                ShowTabPages(tabItemPages);
+                RemoveTabPages(tabFinancePages);
+                txt_customer_code.Enabled = false;
+            }
+            else if (data.Contains(ENUM_ENTITY_TYPE.Non_Affiliated))
+            {
+                DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Non_Affiliated);
+                ToogleEntityField(true);
+                ToogleCustomerAndSupplier(false);
+                RemoveTabPages(tabFinancePages);
+                RemoveTabPages(tabItemPages);
+            }
+            else if (data.Contains(ENUM_ENTITY_TYPE.Affiliated))
+            {
+                DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Affiliated);
+                ToogleEntityField(false);
+                ToogleCustomerAndSupplier(false);
+                RemoveTabPages(tabFinancePages);
+            }
+            else
+            {
+                DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Customer);
+                ShowAffiliatedAndNon(false);
+                ShowTabPages(tabFinancePages);
+                ToogleCustomerAndSupplier(true);
+                RemoveTabPages(tabItemPages);
+                txt_supplier_code.Enabled = false;
+                btn_finance_payment_terms.Visible = CacheData.CurrentUser.position_id.Equals("Web Developer");
             }
         }
         private void ToogleEntityField(bool isShow)
@@ -1138,9 +1200,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private int GetEntityRecordCount(string code)
         {
-            var record = entityCount.FirstOrDefault(records => records.code == code);
-            return record != null ? record.entity_count : 0;
-
+            var record = entityCount?.FirstOrDefault(records => records.code == code);
+            return record?.entity_count ?? 0;
         }
 
         private void ShowCanvassTabPage()
@@ -1190,6 +1251,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
 
                     modalSelection = new SetupSelectionModal("Preferences", ENUM_ENDPOINT.SOCIALS, filterSocialMedia, new List<int> { }, selectedPreferenceNames, index);
+
                     DialogResult modalResult = modalSelection.ShowDialog();
 
                     if (modalResult == DialogResult.OK)
@@ -1428,6 +1490,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private async Task GetPayments()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.PAYMENT_TERMS);
+            if (serviceSetup == null) return;
+
             CacheData.PaymentTerms = await serviceSetup.GetAsDatatable();
 
             AddCmbDefaultVal(CacheData.PaymentTerms);
@@ -1461,15 +1525,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             if (!isItem) return;
 
-            int bpiId = int.Parse(bpi.Rows[this.SelectedRecord]["id"].ToString());
-
+            // Filter items by this branch's ParentId instead of using SelectedRecord index
             var matchedRow = items.AsEnumerable()
-                .FirstOrDefault(r => r.Field<int>("bpi_item_based_id") == bpiId);
+                .FirstOrDefault(r => r.Field<int>("bpi_item_branch_id").ToString() == ParentId);
 
             if (matchedRow != null)
             {
                 cmb_payment_terms.SelectedValue = matchedRow.Field<int>("payment_terms_id");
-                cmb_payment_terms.SelectedItem = matchedRow;
                 cmb_tax_code.Text = matchedRow.Field<int>("payment_terms_id").ToString();
             }
         }
@@ -1968,19 +2030,22 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             dt.Rows.InsertAt(newRow, 0);
         }
-        private static void BindCmbValues(ComboBox cmb, DataView dv)
-        {
-            cmb.DataSource = dv;
-            cmb.ValueMember = "id";
-            cmb.DisplayMember = "name";
-            cmb.SelectedIndex = 0;
-        }
         private static void BindCmbValues(ComboBox cmb, DataTable dt)
         {
             cmb.DataSource = dt;
             cmb.ValueMember = "id";
             cmb.DisplayMember = "name";
-            cmb.SelectedIndex = 0;
+            if (cmb.Items.Count > 0)
+                cmb.SelectedIndex = 0;
+        }
+
+        private static void BindCmbValues(ComboBox cmb, DataView dv)
+        {
+            cmb.DataSource = dv;
+            cmb.ValueMember = "id";
+            cmb.DisplayMember = "name";
+            if (cmb.Items.Count > 0)
+                cmb.SelectedIndex = 0;
         }
         private void CheckPanelsInTabPage(TabPage tabPage, params Panel[] panels)
         {

@@ -1457,16 +1457,20 @@ namespace smpc_app.Services.Helpers
 
             foreach (DataRowView rowView in dataView)
             {
-                
-                if (textBox.Tag == "MULTI" || textBox.Tag is List<int>) {
-                    int id = Convert.ToInt32(rowView["id"]);  
+                // Always collect IDs regardless of Tag state
+                if (int.TryParse(rowView["id"]?.ToString(), out int id))
+                {
                     ids.Add(id);
                 }
-                textBox.Text += recordIndex == 0 ? rowView["name"].ToString() : ", " + rowView["name"].ToString();  
-                recordIndex++;
 
+                textBox.Text += recordIndex == 0
+                    ? rowView["code"].ToString()
+                    : ", " + rowView["code"].ToString();
+
+                recordIndex++;
             }
-            textBox.Tag = ids;
+
+            textBox.Tag = ids; // Always store as List<int>
         }
         public static DataTable FilterDataTable(DataTable dataTable, string searchTerm, params string[] columnsToSearch)
         {
@@ -1607,6 +1611,30 @@ namespace smpc_app.Services.Helpers
             dt.Columns.Remove(oldCol);
             newCol.ColumnName = columnName;
             newCol.SetOrdinal(ordinal);
+        }
+        public static void AddCmbDefaultVal(DataTable dt)
+        {
+            if (dt == null) return;
+
+            DataRow newRow = dt.NewRow();
+            newRow["id"] = DBNull.Value;
+            newRow["name"] = "-- SELECT --";
+
+            dt.Rows.InsertAt(newRow, 0);
+        }
+        public static void BindCmbValues(ComboBox cmb, DataView dv)
+        {
+            cmb.DataSource = dv;
+            cmb.ValueMember = "id";
+            cmb.DisplayMember = "name";
+            cmb.SelectedIndex = 0;
+        }
+        public static void BindCmbValues(ComboBox cmb, DataTable dt)
+        {
+            cmb.DataSource = dt;
+            cmb.ValueMember = "id";
+            cmb.DisplayMember = "name";
+            cmb.SelectedIndex = 0;
         }
     }
 } 

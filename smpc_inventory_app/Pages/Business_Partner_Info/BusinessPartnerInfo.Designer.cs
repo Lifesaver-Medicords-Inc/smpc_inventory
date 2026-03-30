@@ -31,8 +31,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BusinessPartnerInfo));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel_header = new System.Windows.Forms.Panel();
             this.BPI = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -376,7 +376,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.toolStrip1.Size = new System.Drawing.Size(1250, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
-            this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
             // 
             // btn_new
             // 
@@ -1103,7 +1102,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label15.Size = new System.Drawing.Size(66, 13);
             this.label15.TabIndex = 35;
             this.label15.Text = "ACCOUNTS";
-            this.label15.Click += new System.EventHandler(this.label15_Click);
             // 
             // cmb_item_accounts
             // 
@@ -1438,9 +1436,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.price.DataPropertyName = "price";
-            dataGridViewCellStyle1.Format = "N6";
-            dataGridViewCellStyle1.NullValue = "0";
-            this.price.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Format = "N6";
+            dataGridViewCellStyle3.NullValue = "0";
+            this.price.DefaultCellStyle = dataGridViewCellStyle3;
             this.price.HeaderText = "PRICE";
             this.price.Name = "price";
             this.price.ReadOnly = true;
@@ -1507,11 +1505,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // item_graph
             // 
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.NullValue = "GRAPH >>";
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.NullValue = "GRAPH >>";
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle4;
             this.item_graph.HeaderText = "";
             this.item_graph.MinimumWidth = 70;
             this.item_graph.Name = "item_graph";

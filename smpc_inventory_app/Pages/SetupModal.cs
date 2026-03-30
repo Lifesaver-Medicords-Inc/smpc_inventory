@@ -30,10 +30,13 @@ namespace smpc_inventory_app.Pages
             this.title = setupTitle;
             this.showSelectedField = isVisible;
             this._data = dt;
+            this.MaximizeBox = false;
 
             txt_search.Text = placeHolderText;
             lbl_setup_title.Text = setupTitle;
             _serviceSetup = new GeneralSetupServices(this.url);
+            dg_setup.AllowUserToResizeColumns = false;
+            dg_setup.AllowUserToResizeRows = false;
 
         }
 
@@ -51,11 +54,24 @@ namespace smpc_inventory_app.Pages
 
 
         // Fetch Setup
-        private async void GetSetup()
+        private async Task GetSetup()
         {
-            _data = await _serviceSetup.GetAsDatatable();
-            dg_setup.DataSource = _data;
+            try
+            {
+                var result = await _serviceSetup.GetAsDatatable();
 
+                if (result == null) return; 
+
+                _data = result;
+                dg_setup.DataSource = _data;
+
+                if (dg_setup.Columns["is_selected"] != null)
+                    dg_setup.Columns["is_selected"].Visible = this.showSelectedField;
+            }
+            catch (Exception ex)
+            {
+                Helpers.ShowDialogMessage("error", $"Failed to load data: {ex.Message}");
+            }
         }
         private void  BtnToggle(bool isEdit)
         {
@@ -66,24 +82,24 @@ namespace smpc_inventory_app.Pages
             btn_cancel.Visible = isEdit;
             panel_records.Enabled = isEdit;
         }
-        private bool ValidateField(out string messages)
+        private bool HasValidationErrors(out string messages)
         {
-            bool isValid = false;
+            bool hasError = false;
             messages = string.Empty;
 
             if (string.IsNullOrEmpty(txt_code.Text))
             {
-                messages += "Code cannot be empty \n";
-                isValid = true;
+                messages += "Code cannot be empty\n";
+                hasError = true;
             }
 
             if (string.IsNullOrEmpty(txt_name.Text))
             {
-                messages += "Name cannot be empty \n";
-                isValid = true;
+                messages += "Name cannot be empty\n";
+                hasError = true;
             }
 
-            return isValid;
+            return hasError;
         }
 
         private void dg_setup_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -130,7 +146,7 @@ namespace smpc_inventory_app.Pages
             
 
 
-            bool isErrorField = ValidateField(out errorFieldMessage);
+            bool isErrorField = HasValidationErrors(out errorFieldMessage);
 
             if (isErrorField)
             {
@@ -159,7 +175,7 @@ namespace smpc_inventory_app.Pages
             }
             Helpers.ShowDialogMessage("success", message);
             Helpers.ResetControls(panel_records);
-            GetSetup();
+            await GetSetup();
             BtnToggle(false);
 
             OnDataChanged?.Invoke();
@@ -232,7 +248,7 @@ namespace smpc_inventory_app.Pages
                     {
                         Helpers.ResetControls(panel_records);
                         Helpers.ShowDialogMessage("success", "Item deleted successfully.");
-                        GetSetup();
+                        await GetSetup();
                         BtnToggle(false);
 
                         OnDataChanged?.Invoke();

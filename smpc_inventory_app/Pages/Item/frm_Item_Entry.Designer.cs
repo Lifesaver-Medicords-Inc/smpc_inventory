@@ -682,7 +682,7 @@
             this.btn_pump_type.Size = new System.Drawing.Size(30, 22);
             this.btn_pump_type.TabIndex = 144;
             this.btn_pump_type.UseVisualStyleBackColor = false;
-            this.btn_pump_type.Click += new System.EventHandler(this.cmb_pump_type_Click);
+            this.btn_pump_type.Click += new System.EventHandler(this.btn_pump_type_Click);
             // 
             // btn_add_material
             // 

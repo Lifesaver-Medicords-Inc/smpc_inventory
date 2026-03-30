@@ -25,7 +25,6 @@ namespace smpc_inventory_app.Pages
             InitializeComponent();
        
             lbl_title.Text = title;
-           
             this.EndPoint = api;
 
 
@@ -34,6 +33,7 @@ namespace smpc_inventory_app.Pages
                    ? new List<string>(currentGridValues[recordIndex].Split(','))
                    : new List<string>();
             this.Dt = dt;
+
             if (dt != null)
             {
                 if (dt.Columns["select"] != null)    // Check if select column already exist
@@ -41,13 +41,11 @@ namespace smpc_inventory_app.Pages
                 dt.Columns.Add("select");            // Add select column if not 
             }
 
+            
+
         }
-
         private void SelectionModal_Load(object sender, EventArgs e)
-
         {
-
-
             if (this.CurrentValues.Count != 0)
             {
                 if (!this.Dt.Columns.Contains("select"))
@@ -89,9 +87,13 @@ namespace smpc_inventory_app.Pages
                     }
                 }
             }
-          
-                dg_general.DataSource = this.Dt;
+
+            dg_general.DataSource = this.Dt;
+
+            if (dg_general.Columns.Contains("is_selected"))
+            {
                 dg_general.Columns["is_selected"].Visible = false;
+            }
 
 
 

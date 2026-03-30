@@ -19,6 +19,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ApiResponseModel = smpc_inventory_app.Services.Setup.ApiResponseModel;
 
@@ -65,34 +66,41 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private int rightClickedTabIndex = -1;
         private BpiBranchUC currentBranchUC;
         private const int DebounceDelay = 300;
+        private Dictionary<string, List<ComboBox>> _endpointCmbMap;
         public BusinessPartnerInfo(string canvassForm)
         {
             this.CanvassForm = canvassForm;
             InitializeComponent();
             Helpers.Placeholder.SetPlaceholder(txt_main_tel_no, "XXX-XXX-XXX-XXX");
             Helpers.Placeholder.SetPlaceholder(txt_main_tel_no, "09XX-XXX-XXXX / (0XX) XXXX-XXXX");
-            
 
+            cmb_name.DropDownStyle = ComboBoxStyle.DropDown;
+            cmb_name.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmb_name.AutoCompleteSource = AutoCompleteSource.ListItems;
 
             debounceTimer.Interval = DebounceDelay;
             debounceTimer.Tick += debounceTimer_Tick;
-            //if (CanvassForm != "")
-            //{
-            //    ShowCanvassTabPage();
-            //}
-
         }
-        private void BusinessPartnerInfo_Load(object sender, EventArgs e)
+        private async void BusinessPartnerInfo_Load(object sender, EventArgs e)
         {
-            GetBpiUser();
-            GetIndustriesSetup();
-
-            GetSocialMediaSetup();
-            GetEntity();
-            GetBranchIndustries();
-            GetPayments();
-            GetEntityCount();
+            //GetSocialMediaSetup();
+            //GetEntity();
+            //GetBranchIndustries();
+            //GetPayments();
+            //GetEntityCount();
             //GetPositionSetup();
+            // --------------------------
+            await GetBpiUser();
+            await GetIndustriesSetup();
+            await GetSocialMediaSetup();
+            await GetEntity();
+            await GetBranchIndustries();
+            await GetPayments();
+            await GetEntityCount();
+            await GetPositionSetup();
+
+
+
 
             GetBpi();
             BtnToogle(false);
@@ -118,18 +126,20 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         //    }
         //}
 
-        private async void GetBpiUser()
+        private async Task GetBpiUser()
         {
             var response = await BpiServices.GetBpiUsers("IT");
-            Users = response;
-
+            Users = response ?? new List<CurrentUserModel>();
         }
-        private async void GetIndustriesSetup()
+
+        private async Task GetIndustriesSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.INDUSTRIES);
-            CacheData.Industries = await serviceSetup.GetAsDatatable();
+            var result = await serviceSetup.GetAsDatatable();
+            if (result == null) return;
+            CacheData.Industries = result;
         }
-        private async void GetSocialMediaSetup()
+        private async Task GetSocialMediaSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.SOCIALS);
             CacheData.SocialMedia = await serviceSetup.GetAsDatatable();
@@ -145,7 +155,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             cmb_social.DisplayMember = "name";
         }
 
-        private async void GetBranchIndustries()
+        private async Task GetBranchIndustries()
         {
 
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.INDUSTRIES);
@@ -153,13 +163,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
 
 
-        private async void GetEntity()
+        private async Task GetEntity()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ENTITY);
             CacheData.Entity = await serviceSetup.GetAsDatatable();
         }
 
-        private async void GetPayments()
+        private async Task GetPayments()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.PAYMENT_TERMS);
             CacheData.PaymentTerms = await serviceSetup.GetAsDatatable();
@@ -183,7 +193,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         
 
-        private async void GetEntityCount()
+        private async Task GetEntityCount()
         {
 
             var response = await RequestToApi<ApiResponseModel<List<BpiEntityRecords>>>.Get(ENUM_ENDPOINT.BpiEntity);
@@ -197,7 +207,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             return record != null ? record.entity_count : 0;
 
         }
-        private async void GetPositionSetup()
+        private async Task GetPositionSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.POSITION);
             CacheData.Positions = await serviceSetup.GetAsDatatable();
@@ -662,11 +672,18 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             string generalId = row["general_id"].ToString();
             bool mainBranch = Convert.ToBoolean(row["is_main"]);
 
-            BpiBranchUC branchUC = new BpiBranchUC(parentId: generalId, salesId: SalesId, tabTitle: branchName, canvassForm: "", isExisting: true);
+            // Pass the already-loaded Records down — no second API call
+            BpiBranchUC branchUC = new BpiBranchUC(
+                parentId: generalId,
+                salesId: SalesId,
+                tabTitle: branchName,
+                canvassForm: "",
+                isExisting: true,
+                preloadedData: records   // <-- pass parent's data
+            );
             branchUC.Dock = DockStyle.Fill;
 
             TabPage tab = new TabPage(branchName);
-
             tab.Tag = new
             {
                 GeneralId = generalId,
@@ -913,17 +930,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                     case "industries":
                         txt_branch_industry.Text = value;
                         txt_branch_industry.Tag = txt_industries.Tag;
-
-
-
-                        //var values = txt_industries.Tag as List<int>;
-
-                        //foreach (int newValue in values)
-                        //{
-                        //    copyBranchIds.Add(newValue);
-                        //}
-                        //txt_industries.Tag = copyBranchIds;
-                        //currentSelectedBranchIndustryIds = txt_industries.Tag as List<int>;
 
                         var selectedIndustriesID = CopySelectedIndustries(txt_industries);
                         currentSelectedBranchIndustryIds = selectedIndustriesID;
@@ -1810,9 +1816,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             if (Bpi["id"] == "")
             {
-
-                //BtnBindData();
-
                 txt_branch_name.Visible = false;
                 lbl_branch_name.Visible = false;
             }
@@ -1822,10 +1825,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 lbl_branch_name.Visible = true;
             }
         }
-
-
-
-
         private void RemoveSelectedDataTable(DataTable dt)
         {
             foreach (DataRow row in dt.Rows)
@@ -1840,24 +1839,54 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
         }
 
-        private void button12_Click(object sender, EventArgs e)
+        private async Task RefreshCache(string api)
         {
-            modalSetup = new SetupModal("Branch Industries", ENUM_ENDPOINT.INDUSTRIES, CacheData.Industries);
-            DialogResult r = modalSetup.ShowDialog();
-        }
+            serviceSetup = new GeneralSetupServices(api);
+            var result = await serviceSetup.GetAsDatatable();
+            if (result == null) return;
 
-        private void btn_add_setup_Click(object sender, EventArgs e)
-        {
-
-            DataTable dt = CacheData.Industries.Copy();
-            if (dt.Columns["select"] != null)
+            switch (api)
             {
-                dt.Columns.Remove("select");
+                case var _ when api == ENUM_ENDPOINT.INDUSTRIES:
+                    CacheData.Industries = result;
+                    break;
+                default:
+                    return;
             }
 
-            modalSetup = new SetupModal("Industries", ENUM_ENDPOINT.INDUSTRIES, dt);
-            DialogResult r = modalSetup.ShowDialog();
+            // Bind the corresponding ComboBox after cache update
+            //if (_endpointCmbMap.TryGetValue(api, out List<ComboBox> cmbs))
+            //    foreach (var cmb in cmbs)
+            //        BindCmbValues(cmb, result);
         }
+        private static void BindCmbValues(ComboBox cmb, DataView dv)
+        {
+            cmb.DataSource = dv;
+            cmb.ValueMember = "id";
+            cmb.DisplayMember = "name";
+            cmb.SelectedIndex = 0;
+        }
+        private static void BindCmbValues(ComboBox cmb, DataTable dt)
+        {
+            cmb.DataSource = dt;
+            cmb.ValueMember = "id";
+            cmb.DisplayMember = "name";
+            cmb.SelectedIndex = 0;
+        }
+        private void OpenSetupModal(string title, string api, DataTable cacheData)
+        {
+            if (cacheData == null) return;
+
+            DataTable dt = cacheData.Copy();
+            if (dt.Columns["select"] != null)
+                dt.Columns.Remove("select");
+
+            modalSetup = new SetupModal(title, api, dt);
+            modalSetup.OnDataChanged += async () => await RefreshCache(api);
+            modalSetup.ShowDialog();
+        }
+        private void btn_add_setup_Click(object sender, EventArgs e) =>
+            OpenSetupModal("Industries", ENUM_ENDPOINT.INDUSTRIES, CacheData.Industries);
 
         private void btn_branch_industry_Click(object sender, EventArgs e)
         {
@@ -1880,26 +1909,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void btn_add_industries_Click(object sender, EventArgs e)
         {
-            //DataTable branchData;
-
-            //if (string.IsNullOrEmpty(txt_id.Text))
-            //{
-            //    branchData = CacheData.Industries;
-            //}
-            //else
-            //{
-            //    branchData = CacheData.BranchIndustries;
-            //}
-
-
             modalSelection = new SetupSelectionModal("Industries", ENUM_ENDPOINT.INDUSTRIES, CacheData.Industries, currentSelectedIndustryIds, new List<string>(), 0);
             DialogResult modalResult = modalSelection.ShowDialog();
 
             if (modalResult == DialogResult.OK)
             {
-
                 var result = modalSelection.GetResult();
-
                 Helpers.GetModalData(txt_industries, result);
                 CopyToMainBranchField("industries", txt_industries.Text);
                 currentSelectedIndustryIds.Clear();
@@ -2762,21 +2777,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
         }
 
-        private void cmb_finance_payment_terms_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label15_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
         //private void dataGridView7_CellClick(object sender, DataGridViewCellEventArgs e)
         //{
         //    if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
@@ -2857,12 +2857,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void btn_edit_Click(object sender, EventArgs e)
         {
+            if (records.bpi.Count == 0)
+            {
+                Helpers.ShowDialogMessage("warning", "No records found");
+                return;
+            }
+            else if (string.IsNullOrEmpty(txt_id.Text))
+            {
+                Helpers.ShowDialogMessage("warning", "Select Records first");
+                return;
+            }
+
             var isSelectedSales = GetSelectedSales();
             BpiBranchToggle(isSelectedSales);
             BtnToogle(true);
-            //btn_add.Visible = false;
             btn_save.Visible = false;
-            //btn_update.Visible = true;
             btn_revise.Visible = true;
         }
 
@@ -3752,17 +3761,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 }
 
                 DataTable filteredGeneral = dataViewGeneral.ToTable();
-                //GetAllBpiBranch(filteredGeneral);
-
-                //btn_new.Visible = true;
-                //btn_search.Visible = true;
-                //btn_prev.Visible = true;
-                //btn_next.Visible = true;
-                //btn_edit.Visible = true;
-                //btn_save.Visible = false;
-                //btn_cancel.Visible = false;
+                // GetAllBpiBranch(filteredGeneral);
                 BtnToogle(false);
                 EnableDisabledChildPanel(false);
+
+                GetBpi();
 
             }
             else
@@ -4135,10 +4138,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             mainTab.Controls.Add(currentBranchUC);
             tab_dynamic.TabPages.Insert(0, mainTab);
             tab_dynamic.SelectedIndex = 0;
-
-            // pass data to uc
-            //currentBranchUC.UserId = txt_sales_id.Text;
-            //currentBranchUC.isUpdate = false;
         }
 
         private void cmb_name_TextChanged(object sender, EventArgs e)
@@ -4317,6 +4316,5 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
 
         }
-
     }
 }
