@@ -31,11 +31,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BpiBranchUC));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_new_brach = new System.Windows.Forms.Panel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.GENERAL = new System.Windows.Forms.TabPage();
@@ -82,23 +82,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.txt_branch_website = new System.Windows.Forms.TextBox();
             this.CONTACTS = new System.Windows.Forms.TabPage();
             this.dg_contacts = new System.Windows.Forms.DataGridView();
-            this.contacts_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.contacts_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.is_default_contact = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.preferences = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ADD_PREF = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.position = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataBindingPosition = new System.Windows.Forms.BindingSource(this.components);
             this.ds_positions = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
             this.dataColumn1 = new System.Data.DataColumn();
             this.dataColumn2 = new System.Data.DataColumn();
             this.dataColumn3 = new System.Data.DataColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.contact_notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataBindingContacts = new System.Windows.Forms.BindingSource(this.components);
             this.ds_contacts = new System.Data.DataSet();
             this.dataTable2 = new System.Data.DataTable();
@@ -244,6 +233,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataColumn27 = new System.Data.DataColumn();
             this.dataColumn28 = new System.Data.DataColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contacts_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contacts_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.is_default_contact = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.preferences = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ADD_PREF = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.position = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.contact_notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_new_brach.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.GENERAL.SuspendLayout();
@@ -780,10 +780,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.is_default_contact,
             this.number,
             this.email,
+            this.name,
             this.preferences,
             this.ADD_PREF,
             this.position,
-            this.name,
             this.contact_notes});
             this.dg_contacts.DataSource = this.dataBindingContacts;
             this.dg_contacts.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -794,86 +794,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_contacts.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dg_contacts_CellBeginEdit);
             this.dg_contacts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellClick);
             this.dg_contacts.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_contacts_CellEndEdit);
-            this.dg_contacts.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dg_contacts_CellFormatting);
             this.dg_contacts.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dg_contacts_CellValidating);
             this.dg_contacts.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_contacts_DataBindingComplete);
             this.dg_contacts.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dg_contacts_DataError);
             this.dg_contacts.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg_contacts_EditingControlShowing);
-            // 
-            // contacts_id
-            // 
-            this.contacts_id.DataPropertyName = "contacts_id";
-            this.contacts_id.HeaderText = "ID";
-            this.contacts_id.Name = "contacts_id";
-            this.contacts_id.Visible = false;
-            // 
-            // contacts_based_id
-            // 
-            this.contacts_based_id.DataPropertyName = "contacts_based_id";
-            this.contacts_based_id.HeaderText = "BASED ID";
-            this.contacts_based_id.Name = "contacts_based_id";
-            this.contacts_based_id.Visible = false;
-            // 
-            // branch_id
-            // 
-            this.branch_id.DataPropertyName = "branch_id";
-            this.branch_id.HeaderText = "BRANCH ID";
-            this.branch_id.Name = "branch_id";
-            this.branch_id.Visible = false;
-            // 
-            // is_default_contact
-            // 
-            this.is_default_contact.DataPropertyName = "is_default_contact";
-            this.is_default_contact.FillWeight = 79.09605F;
-            this.is_default_contact.HeaderText = "";
-            this.is_default_contact.Name = "is_default_contact";
-            this.is_default_contact.Width = 20;
-            // 
-            // number
-            // 
-            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.number.DataPropertyName = "number";
-            this.number.FillWeight = 103.484F;
-            this.number.HeaderText = "NUMBER";
-            this.number.Name = "number";
-            // 
-            // email
-            // 
-            this.email.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.email.DataPropertyName = "email";
-            this.email.FillWeight = 103.484F;
-            this.email.HeaderText = "EMAIL";
-            this.email.Name = "email";
-            // 
-            // preferences
-            // 
-            this.preferences.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.preferences.DataPropertyName = "preferences";
-            this.preferences.FillWeight = 103.484F;
-            this.preferences.HeaderText = "PREFERENCE";
-            this.preferences.Name = "preferences";
-            this.preferences.ReadOnly = true;
-            this.preferences.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.preferences.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // ADD_PREF
-            // 
-            this.ADD_PREF.HeaderText = "";
-            this.ADD_PREF.Name = "ADD_PREF";
-            this.ADD_PREF.Width = 20;
-            // 
-            // position
-            // 
-            this.position.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.position.DataPropertyName = "position";
-            this.position.DataSource = this.dataBindingPosition;
-            this.position.DisplayMember = "name";
-            this.position.FillWeight = 103.484F;
-            this.position.HeaderText = "POSITION";
-            this.position.Name = "position";
-            this.position.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.position.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.position.ValueMember = "id";
             // 
             // dataBindingPosition
             // 
@@ -906,22 +830,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // dataColumn3
             // 
             this.dataColumn3.ColumnName = "name";
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.name.DataPropertyName = "name";
-            this.name.FillWeight = 103.484F;
-            this.name.HeaderText = "NAME";
-            this.name.Name = "name";
-            // 
-            // contact_notes
-            // 
-            this.contact_notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.contact_notes.DataPropertyName = "contact_notes";
-            this.contact_notes.FillWeight = 103.484F;
-            this.contact_notes.HeaderText = "NOTES";
-            this.contact_notes.Name = "contact_notes";
             // 
             // dataBindingContacts
             // 
@@ -1417,9 +1325,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_code.DataPropertyName = "item_code";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.NullValue = "SELECT";
-            this.item_code.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle11.NullValue = "SELECT";
+            this.item_code.DefaultCellStyle = dataGridViewCellStyle11;
             this.item_code.FillWeight = 28.2083F;
             this.item_code.HeaderText = "ITEM CODE";
             this.item_code.MinimumWidth = 30;
@@ -1431,8 +1339,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.item_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.item_type.DataPropertyName = "item_type";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.item_type.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.item_type.DefaultCellStyle = dataGridViewCellStyle12;
             this.item_type.FillWeight = 37.78341F;
             this.item_type.HeaderText = "TYPE";
             this.item_type.MinimumWidth = 30;
@@ -1442,8 +1350,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.long_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.long_description.DataPropertyName = "long_description";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.long_description.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.long_description.DefaultCellStyle = dataGridViewCellStyle13;
             this.long_description.FillWeight = 28.2083F;
             this.long_description.HeaderText = "DESCRIPTION";
             this.long_description.MinimumWidth = 30;
@@ -1460,8 +1368,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.price.DataPropertyName = "price";
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.price.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.price.DefaultCellStyle = dataGridViewCellStyle14;
             this.price.FillWeight = 28.2083F;
             this.price.HeaderText = "PRICE";
             this.price.MinimumWidth = 30;
@@ -1469,10 +1377,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // item_graph
             // 
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DarkGray;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle15.BackColor = System.Drawing.Color.DarkGray;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle15;
             this.item_graph.HeaderText = "";
             this.item_graph.MinimumWidth = 40;
             this.item_graph.Name = "item_graph";
@@ -2086,6 +1994,97 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.Visible = false;
             // 
+            // contacts_id
+            // 
+            this.contacts_id.DataPropertyName = "contacts_id";
+            this.contacts_id.HeaderText = "ID";
+            this.contacts_id.Name = "contacts_id";
+            this.contacts_id.Visible = false;
+            // 
+            // contacts_based_id
+            // 
+            this.contacts_based_id.DataPropertyName = "contacts_based_id";
+            this.contacts_based_id.HeaderText = "BASED ID";
+            this.contacts_based_id.Name = "contacts_based_id";
+            this.contacts_based_id.Visible = false;
+            // 
+            // branch_id
+            // 
+            this.branch_id.DataPropertyName = "branch_id";
+            this.branch_id.HeaderText = "BRANCH ID";
+            this.branch_id.Name = "branch_id";
+            this.branch_id.Visible = false;
+            // 
+            // is_default_contact
+            // 
+            this.is_default_contact.DataPropertyName = "is_default_contact";
+            this.is_default_contact.FillWeight = 79.09605F;
+            this.is_default_contact.HeaderText = "";
+            this.is_default_contact.Name = "is_default_contact";
+            this.is_default_contact.Width = 20;
+            // 
+            // number
+            // 
+            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.number.DataPropertyName = "number";
+            this.number.FillWeight = 103.484F;
+            this.number.HeaderText = "NUMBER";
+            this.number.Name = "number";
+            // 
+            // email
+            // 
+            this.email.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.email.DataPropertyName = "email";
+            this.email.FillWeight = 103.484F;
+            this.email.HeaderText = "EMAIL";
+            this.email.Name = "email";
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.name.DataPropertyName = "name";
+            this.name.FillWeight = 103.484F;
+            this.name.HeaderText = "NAME";
+            this.name.Name = "name";
+            // 
+            // preferences
+            // 
+            this.preferences.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.preferences.DataPropertyName = "preferences";
+            this.preferences.FillWeight = 103.484F;
+            this.preferences.HeaderText = "PREFERENCE";
+            this.preferences.Name = "preferences";
+            this.preferences.ReadOnly = true;
+            this.preferences.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.preferences.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // ADD_PREF
+            // 
+            this.ADD_PREF.HeaderText = "";
+            this.ADD_PREF.Name = "ADD_PREF";
+            this.ADD_PREF.Width = 20;
+            // 
+            // position
+            // 
+            this.position.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.position.DataPropertyName = "position";
+            this.position.DataSource = this.dataBindingPosition;
+            this.position.DisplayMember = "name";
+            this.position.FillWeight = 103.484F;
+            this.position.HeaderText = "POSITION";
+            this.position.Name = "position";
+            this.position.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.position.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.position.ValueMember = "id";
+            // 
+            // contact_notes
+            // 
+            this.contact_notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.contact_notes.DataPropertyName = "contact_notes";
+            this.contact_notes.FillWeight = 103.484F;
+            this.contact_notes.HeaderText = "NOTES";
+            this.contact_notes.Name = "contact_notes";
+            // 
             // BpiBranchUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2316,17 +2315,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Data.DataColumn dataColumn46;
         private System.Data.DataColumn dataColumn47;
         private System.Data.DataColumn dataColumn48;
-        private System.Windows.Forms.DataGridViewTextBoxColumn contacts_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn contacts_based_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn branch_id;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn is_default_contact;
-        private System.Windows.Forms.DataGridViewTextBoxColumn number;
-        private System.Windows.Forms.DataGridViewTextBoxColumn email;
-        private System.Windows.Forms.DataGridViewTextBoxColumn preferences;
-        private System.Windows.Forms.DataGridViewButtonColumn ADD_PREF;
-        private System.Windows.Forms.DataGridViewComboBoxColumn position;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn contact_notes;
         private System.Windows.Forms.DataGridView dg_contacts;
         private System.Windows.Forms.CheckBox chk_is_main;
         private System.Windows.Forms.DataGridViewTextBoxColumn address_ids;
@@ -2362,5 +2350,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.DataGridViewTextBoxColumn bpi_accreditation_branch_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn bpi_accreditation_based_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn accreditation_added_by_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn contacts_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn contacts_based_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn branch_id;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn is_default_contact;
+        private System.Windows.Forms.DataGridViewTextBoxColumn number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn email;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn preferences;
+        private System.Windows.Forms.DataGridViewButtonColumn ADD_PREF;
+        private System.Windows.Forms.DataGridViewComboBoxColumn position;
+        private System.Windows.Forms.DataGridViewTextBoxColumn contact_notes;
     }
 }

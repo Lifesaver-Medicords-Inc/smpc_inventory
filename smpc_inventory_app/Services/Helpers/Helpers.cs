@@ -13,6 +13,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using smpc_inventory_app.Services.Helpers;
+using smpc_inventory_app.Pages.Business_Partner_Info;
 
 namespace smpc_app.Services.Helpers
 {
@@ -1464,8 +1465,8 @@ namespace smpc_app.Services.Helpers
                 }
 
                 textBox.Text += recordIndex == 0
-                    ? rowView["code"].ToString()
-                    : ", " + rowView["code"].ToString();
+                    ? rowView["name"].ToString()
+                    : ", " + rowView["name"].ToString();
 
                 recordIndex++;
             }
@@ -1636,5 +1637,74 @@ namespace smpc_app.Services.Helpers
             cmb.DisplayMember = "name";
             cmb.SelectedIndex = 0;
         }
+        public static void SetTabControlReadOnly(TabControl tabControl, bool isReadOnly)
+        {
+            foreach (TabPage tab in tabControl.TabPages)
+                foreach (Control control in tab.Controls)
+                    SetControlsReadOnly(control, isReadOnly);
+        }
+
+        private static void SetControlsReadOnly(Control parent, bool isReadOnly)
+        {
+            foreach (Control ctrl in parent.Controls)
+            {
+                switch (ctrl)
+                {
+                    case BpiBranchUC uc:
+                        uc.SetReadOnly(isReadOnly);
+                        continue; // UC handles its own internals, skip recursion
+                    case TextBox tb:
+                        tb.ReadOnly = isReadOnly;
+                        break;
+                    case ComboBox cmb:
+                        cmb.Enabled = !isReadOnly;
+                        break;
+                    case CheckBox chk:
+                        chk.Enabled = !isReadOnly;
+                        break;
+                    case DataGridView dgv:
+                        dgv.ReadOnly = isReadOnly;
+                        dgv.AllowUserToAddRows = !isReadOnly;
+                        dgv.AllowUserToDeleteRows = !isReadOnly;
+                        break;
+                    case Button btn:
+                        btn.Enabled = !isReadOnly;
+                        break;
+                }
+
+                if (ctrl.HasChildren)
+                    SetControlsReadOnly(ctrl, isReadOnly);
+            }
+        }
+        public static void DiagnoseReadOnly(Control parent, int depth = 0)
+        {
+            Console.WriteLine("Diagnosing Readonly");
+            string indent = new string('-', depth * 2);
+            foreach (Control ctrl in parent.Controls)
+            {
+                switch (ctrl)
+                {
+                    case TextBox tb:
+                        Console.WriteLine($"{indent}TextBox [{tb.Name}] ReadOnly={tb.ReadOnly}");
+                        break;
+                    case ComboBox cmb:
+                        Console.WriteLine($"{indent}ComboBox [{cmb.Name}] Enabled={cmb.Enabled}");
+                        break;
+                    case DataGridView dgv:
+                        Console.WriteLine($"{indent}DataGridView [{dgv.Name}] ReadOnly={dgv.ReadOnly}");
+                        break;
+                    case Button btn:
+                        Console.WriteLine($"{indent}Button [{btn.Name}] Enabled={btn.Enabled}");
+                        break;
+                    case CheckBox chk:
+                        Console.WriteLine($"{indent}CheckBox [{chk.Name}] Enabled={chk.Enabled}");
+                        break;
+                }
+
+                if (ctrl.HasChildren)
+                    DiagnoseReadOnly(ctrl, depth + 1);
+            }
+        }
+
     }
 } 

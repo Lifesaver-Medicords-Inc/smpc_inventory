@@ -65,6 +65,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private Dictionary<string, List<ComboBox>> _endpointCmbMap;
         public bool isUpdate { get; set; }
         private Bpi_Class _preloadedData;
+        private Panel _overlay;
         public BpiBranchUC(string parentId, string salesId, string tabTitle,
                    string canvassForm, bool isExisting,
                    Bpi_Class preloadedData = null)
@@ -351,11 +352,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // Use BindDataToTable (filters by ParentId) instead of LoadAllBpiChild
             // LoadAllBpiChild uses SelectedRecord index which is wrong in child UC
             BindDataToPanel();
-            BindDataToTable();       // <-- this is the correct one
+            BindDataToTable();
             BindDataToComboBox();
             BindMultiSelectField(Records.general);
 
-            bool isItemShow = ToogleItemPages(txt_entity_type.Text);
+            bool isItemShow = ToggleItemPages(txt_entity_type.Text);
             GetPaymentItemTerms(isItemShow);
             ShowTypeOfEntity(txt_entity_type.Text);
         }
@@ -599,13 +600,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             switch (txt)
             {
                 case "NON-AFFILIATED":
-                    ToogleEntityField(true);
-                    ToogleCustomerAndSupplier(false);
+                    ToggleEntityField(true);
+                    ToggleCustomerAndSupplier(false);
 
                     break;
                 case "AFFILIATED":
-                    ToogleEntityField(false);
-                    ToogleCustomerAndSupplier(false);
+                    ToggleEntityField(false);
+                    ToggleCustomerAndSupplier(false);
 
                     break;
 
@@ -616,7 +617,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                     break;
             }
         }
-        private bool ToogleItemPages(string text)
+        private bool ToggleItemPages(string text)
         {
             bool item = false;
             string[] valuesToCheck = { "SUPPLIER", "CUSTOMER" };
@@ -809,6 +810,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 { ENUM_ENDPOINT.SOCIALS,         new List<ComboBox> { cmb_social } },
             };
+        }
+        public void SetMainBranchFields(string telNo, string website, string industryText, List<int> industryIds)
+        {
+            txt_branch_tel_no.Text = telNo;
+            txt_branch_website.Text = website;
+            txt_branch_industry.Text = industryText;
+            txt_branch_industry.Tag = industryIds;
         }
         private void CopyToMainBranchField(string fieldName, string value)
         {
@@ -1065,14 +1073,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             if (containsBoth)
             {
                 DocumentCodeIncrementor("BOTH");
-                ToogleCustomerAndSupplier(true);
+                ToggleCustomerAndSupplier(true);
                 ShowTabPages(tabItemPages);
                 ShowTabPages(tabFinancePages);
             }
             else if (data.Contains(ENUM_ENTITY_TYPE.Supplier))
             {
                 DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Supplier);
-                ToogleCustomerAndSupplier(true);
+                ToggleCustomerAndSupplier(true);
                 ShowAffiliatedAndNon(false);
                 ShowTabPages(tabItemPages);
                 RemoveTabPages(tabFinancePages);
@@ -1081,16 +1089,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             else if (data.Contains(ENUM_ENTITY_TYPE.Non_Affiliated))
             {
                 DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Non_Affiliated);
-                ToogleEntityField(true);
-                ToogleCustomerAndSupplier(false);
+                ToggleEntityField(true);
+                ToggleCustomerAndSupplier(false);
                 RemoveTabPages(tabFinancePages);
                 RemoveTabPages(tabItemPages);
             }
             else if (data.Contains(ENUM_ENTITY_TYPE.Affiliated))
             {
                 DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Affiliated);
-                ToogleEntityField(false);
-                ToogleCustomerAndSupplier(false);
+                ToggleEntityField(false);
+                ToggleCustomerAndSupplier(false);
                 RemoveTabPages(tabFinancePages);
             }
             else
@@ -1098,13 +1106,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Customer);
                 ShowAffiliatedAndNon(false);
                 ShowTabPages(tabFinancePages);
-                ToogleCustomerAndSupplier(true);
+                ToggleCustomerAndSupplier(true);
                 RemoveTabPages(tabItemPages);
                 txt_supplier_code.Enabled = false;
                 btn_finance_payment_terms.Visible = CacheData.CurrentUser.position_id.Equals("Web Developer");
             }
         }
-        private void ToogleEntityField(bool isShow)
+        private void ToggleEntityField(bool isShow)
         {
             txt_non_affiliated.Visible = isShow;
             lbl_non_affiliated.Visible = isShow;
@@ -1112,7 +1120,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             lbl_affiliated.Visible = !isShow;
             txt_affiliated.Visible = !isShow;
         }
-        private void ToogleCustomerAndSupplier(bool isEnabled)
+        private void ToggleCustomerAndSupplier(bool isEnabled)
         {
             lbl_customer_code.Enabled = isEnabled;
             lbl_supplier_code.Enabled = isEnabled;
@@ -1221,34 +1229,29 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void dg_contacts_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            if (e.ColumnIndex == 1 && e.RowIndex >= 0)
+            // was index 1 (contacts_based_id) — fixed to 4 (number)
+            if (e.ColumnIndex == 4 && e.RowIndex >= 0)
             {
                 var cell = dg_contacts.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 string currentValue = cell.Value?.ToString();
 
                 if (!string.IsNullOrEmpty(currentValue))
                 {
-                    // Remove formatting (e.g., dashes, spaces, parentheses)
                     string unformatted = Regex.Replace(currentValue, @"[\s\-\(\)]", "");
                     cell.Value = unformatted;
                 }
             }
         }
-
         private void dg_contacts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-
                 if (dg_contacts.Columns[e.ColumnIndex].Name == "ADD_PREF")
                 {
-
                     int index = e.RowIndex;
-                    DataTable filterSocialMedia = CacheData.SocialMedia.AsEnumerable()  // it doesnt include the select field
+                    DataTable filterSocialMedia = CacheData.SocialMedia.AsEnumerable()
                         .Where(row => !row.Field<string>("name").Contains("-"))
                         .CopyToDataTable();
-
-
 
                     modalSelection = new SetupSelectionModal("Preferences", ENUM_ENDPOINT.SOCIALS, filterSocialMedia, new List<int> { }, selectedPreferenceNames, index);
 
@@ -1256,97 +1259,140 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                     if (modalResult == DialogResult.OK)
                     {
-                        DataView result = modalSelection.GetResult(); // Get the DataView
+                        DataView result = modalSelection.GetResult();
                         var selectedPreferences = result.Cast<DataRowView>()
-                       .Select(row => row["code"].ToString())
-                       .ToList();
+                            .Select(row => row["code"].ToString())
+                            .ToList();
 
                         if (selectedPreferenceNames.Count != 0)
                         {
-                            selectedPreferenceNames[index] = string.Join(",", selectedPreferences); // to change the value  selectedPreferenceNames when it adds 
+                            selectedPreferenceNames[index] = string.Join(",", selectedPreferences);
                         }
 
                         dg_contacts.Rows[e.RowIndex].Cells["preferences"].Value = string.Join(",", selectedPreferences);
-
                     }
-
-
                 }
             }
         }
-
         private void dg_contacts_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            string currentColumn = dg_contacts.Columns[e.ColumnIndex].Name;
+
+            // Only process known editable columns
+            string[] handledColumns = { "number", "email", "position", "name" };
+            if (!handledColumns.Contains(currentColumn)) return;
+
             var row = dg_contacts.Rows[e.RowIndex];
-            var contactCell = row.Cells[1];
-            var nameCell = row.Cells[2];
-            var positionNameCell = row.Cells[6];
+            var numberCell = row.Cells["number"];
+            var nameCell = row.Cells["name"];
+            var positionCell = row.Cells["position"];
+            var emailCell = row.Cells["email"];
 
-            string contactRaw = contactCell.Value?.ToString()?.Trim() ?? "";
+            string numberRaw = numberCell.Value?.ToString()?.Trim() ?? "";
             string nameRaw = nameCell.Value?.ToString()?.Trim() ?? "";
-            string positionRawName = positionNameCell.Value?.ToString()?.Trim() ?? "";
+            string positionRawName = positionCell.Value?.ToString()?.Trim() ?? "";
+            string emailRaw = emailCell.Value?.ToString()?.Trim() ?? "";
 
-            string contactUnformatted = Regex.Replace(contactRaw, @"[\s\-\(\)]", "");
+            string numberUnformatted = Regex.Replace(numberRaw, @"[\s\-\(\)]", "");
 
-            // Check if both are empty
-            if (string.IsNullOrEmpty(contactUnformatted) && string.IsNullOrEmpty(nameRaw) && string.IsNullOrEmpty(positionRawName))
+            // Check if all required fields are empty
+            if (string.IsNullOrEmpty(numberUnformatted) &&
+                string.IsNullOrEmpty(nameRaw) &&
+                string.IsNullOrEmpty(positionRawName) &&
+                string.IsNullOrEmpty(emailRaw))
             {
-                string errorMessage = "Input email , number or name to proceed.";
-                if (e.ColumnIndex == 1)
-                    contactCell.ErrorText = errorMessage;
-                if (e.ColumnIndex == 2)
-                    nameCell.ErrorText = errorMessage;
-
-                if (e.ColumnIndex == 6)
-                    positionNameCell.ErrorText = errorMessage;
+                string errorMessage = "Input number, email or name to proceed.";
+                if (currentColumn == "number") numberCell.ErrorText = errorMessage;
+                if (currentColumn == "name") nameCell.ErrorText = errorMessage;
+                if (currentColumn == "position") positionCell.ErrorText = errorMessage;
+                if (currentColumn == "email") emailCell.ErrorText = errorMessage;
                 return;
             }
 
-            // Clear error if either is valid
-            contactCell.ErrorText = "";
+            // Clear all errors
+            numberCell.ErrorText = "";
             nameCell.ErrorText = "";
-            positionNameCell.ErrorText = "";
+            positionCell.ErrorText = "";
+            emailCell.ErrorText = "";
 
-            if (e.ColumnIndex == 1)
+            // Number column validation
+            if (currentColumn == "number")
             {
-                if (!string.IsNullOrEmpty(contactUnformatted))
+                if (!string.IsNullOrEmpty(numberUnformatted))
                 {
-                    if (IsValidMobileNumber(contactUnformatted))
+                    if (IsValidMobileNumber(numberUnformatted))
                     {
-                        contactCell.Style.ForeColor = Color.Black;
-                        contactCell.Value = FormatMobileNumber(contactUnformatted);
+                        numberCell.Style.ForeColor = Color.Black;
+                        numberCell.Value = FormatMobileNumber(numberUnformatted);
                     }
-                    else if (IsValidLandlineNumber(contactUnformatted))
+                    else if (IsValidLandlineNumber(numberUnformatted))
                     {
-                        contactCell.Style.ForeColor = Color.Black;
-                        contactCell.Value = FormatLandlineNumber(contactUnformatted);
+                        numberCell.Style.ForeColor = Color.Black;
+                        numberCell.Value = FormatLandlineNumber(numberUnformatted);
                     }
                     else
                     {
-                        contactCell.Style.ForeColor = Color.Red;
-                        contactCell.Value = contactUnformatted;
-                        contactCell.ErrorText = "Invalid contact number.";
+                        numberCell.Style.ForeColor = Color.Red;
+                        numberCell.Value = numberUnformatted;
+                        numberCell.ErrorText = "Invalid telephone number.";
                     }
+                }
+                else
+                {
+                    numberCell.Style.ForeColor = Color.Black;
                 }
             }
 
-            if (e.ColumnIndex == 2)
+            // Name column
+            if (currentColumn == "name")
             {
                 nameCell.Style.ForeColor = Color.Black;
             }
 
-            if (dg_contacts.Columns[e.ColumnIndex].Name == "position")
+            // Position column
+            if (currentColumn == "position")
             {
-                var value = dg_contacts.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                MessageBox.Show(CacheData.Positions.Columns["id"].DataType.ToString());
-
-                MessageBox.Show(
-                    $"Value: {value}\n" +
-                    $"Type: {value?.GetType()}"
-                );
+                var value = positionCell.Value;
             }
 
+            // Email column validation
+            if (currentColumn == "email")
+            {
+                if (!string.IsNullOrEmpty(emailRaw))
+                {
+                    if (IsValidEmail(emailRaw))
+                    {
+                        emailCell.Style.ForeColor = Color.Black;
+                        emailCell.Value = emailRaw.ToLowerInvariant();
+                        emailCell.ErrorText = "";
+                    }
+                    else
+                    {
+                        emailCell.Style.ForeColor = Color.Red;
+                        emailCell.ErrorText = "Invalid email address.";
+                    }
+                }
+                else
+                {
+                    emailCell.Style.ForeColor = Color.Black;
+                    emailCell.ErrorText = "";
+                }
+            }
+        }
 
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email &&
+                       email.Contains('@') &&
+                       email.LastIndexOf('.') > email.IndexOf('@');
+            }
+            catch
+            {
+                return false;
+            }
         }
         private readonly string[] PhAreaCodes = new string[]
         {
@@ -1678,7 +1724,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
 
 
-            BtnToogle(true);
+            BtnToggle(true);
 
             if (isIncluded)
             {
@@ -1732,12 +1778,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             RemoveTabPages(tabItemPages);
             RemoveTabPages(tabFinancePages);
 
-            ToogleCustomerAndSupplier(true);
+            ToggleCustomerAndSupplier(true);
             ShowAffiliatedAndNon(false);
 
 
         }
-        private void BtnToogle(bool isEdit)
+        private void BtnToggle(bool isEdit)
         {
             panel_general.Enabled = isEdit;
             pnl_new_added_item.Enabled = isEdit;
@@ -2201,10 +2247,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             HideSystemColumns((DataGridView)sender, "history");
         }
-
-        private void dg_contacts_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        public void SetReadOnly(bool isReadOnly)
         {
-            
+            Helpers.SetTabControlReadOnly(tabControl2, isReadOnly);
+        }
+
+        public void DiagnoseReadOnly()
+        {
+            Helpers.DiagnoseReadOnly(tabControl2);
         }
     }
 }
