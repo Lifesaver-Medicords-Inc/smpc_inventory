@@ -2208,6 +2208,7 @@ namespace smpc_inventory_app.Pages.Item
                         imageData["deleteimages"] = deleteImages;
                     }
                 }
+                lbl_filename.Text = "";
             }
             else
             {

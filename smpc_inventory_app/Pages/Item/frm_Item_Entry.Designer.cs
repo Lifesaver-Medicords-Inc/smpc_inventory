@@ -596,9 +596,9 @@
             this.rtxt_long_description.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtxt_long_description.Location = new System.Drawing.Point(12, 380);
+            this.rtxt_long_description.Location = new System.Drawing.Point(14, 380);
             this.rtxt_long_description.Name = "rtxt_long_description";
-            this.rtxt_long_description.Size = new System.Drawing.Size(374, 121);
+            this.rtxt_long_description.Size = new System.Drawing.Size(342, 94);
             this.rtxt_long_description.TabIndex = 154;
             this.rtxt_long_description.Tag = "REQUIRED";
             this.rtxt_long_description.Text = "";
