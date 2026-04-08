@@ -3670,9 +3670,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             var Bpi = Helpers.GetControlsValues(panel_header_records);
             var Generals = bpiUC.GetGeneralData();
             var Contacts = bpiUC.GetContactData(true);
-            var Accreditations = bpiUC.GetAccreditationData(true);
             var Address = bpiUC.GetAdressData(true);
             var Items = bpiUC.GetItemsData(true);
+            var Accreditations = bpiUC.GetAccreditationData(true);
 
             //var Generals = Helpers.GetControlsValues(panel_general);
             //var Contacts = SaveContacts(true);
@@ -3683,9 +3683,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             dg_contacts.EndEdit();
             dg_contacts.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
-
-
-
             var modifiedContact = Contacts.Select(c => new
             {
                 id = c.contacts_id,  // Renaming contacts_id to id
@@ -3694,7 +3691,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 name = c.name,
                 email = c.email,
                 preferences = c.preferences,
-                position = c.position
+                position = c.position,
+                contact_notes = c.contact_notes,
+                is_default_contact = c.is_default_contact
             }).ToList();
 
             var modifiedAddress = Address.Select(c => new
@@ -3747,12 +3746,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             Generals.Remove("general_based_id");
             Generals.Remove("branch_sales_id");
 
-            if (txt_entity_type.Text.Contains("SUPPLIER"))
+            if (txt_entity_type.Text.Contains("SUP"))
             {
 
                 Bpi.Add("items", modifiedItems);
             }
-            if (txt_entity_type.Text.Contains("CUSTOMER"))
+            if (txt_entity_type.Text.Contains("CUS"))
             {
                 var Finance = bpiUC.GetFinanceData();
                 Finance["finance_id"] = financeId;
@@ -3960,7 +3959,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                             Dock = DockStyle.Fill,
                             BackColor = Color.White
                         };
-
 
                         newTab.Tag = new
                         {

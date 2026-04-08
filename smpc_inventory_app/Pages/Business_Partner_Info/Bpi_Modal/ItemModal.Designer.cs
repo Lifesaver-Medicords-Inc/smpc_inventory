@@ -167,6 +167,7 @@ namespace smpc_sales_app.Pages
             this.Controls.Add(this.pnl_dgv);
             this.Controls.Add(this.pnl_title);
             this.Name = "ItemModal";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ItemModal";
             this.Load += new System.EventHandler(this.ItemModal_Load);
             this.pnl_title.ResumeLayout(false);

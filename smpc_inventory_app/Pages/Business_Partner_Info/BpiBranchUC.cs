@@ -65,7 +65,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private Dictionary<string, List<ComboBox>> _endpointCmbMap;
         public bool isUpdate { get; set; }
         private Bpi_Class _preloadedData;
-        private Panel _overlay;
         public BpiBranchUC(string parentId, string salesId, string tabTitle,
                    string canvassForm, bool isExisting,
                    Bpi_Class preloadedData = null)
@@ -77,7 +76,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.TabTitle = tabTitle;
             this.CanvassForm = canvassForm;
             this.IsExisting = isExisting;
-            this._preloadedData = preloadedData;  // <-- store it
+            this._preloadedData = preloadedData;
 
             if (!string.IsNullOrEmpty(canvassForm))
                 ShowCanvassTabPage();
@@ -91,7 +90,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 tabControl2.TabPages.Remove(tabFinancePages);
             }
             CheckPanelsInTabPage(GENERAL, panel_general);
+
         }
+
         private async void BpiBranchUC_Load(object sender, EventArgs e)
         {
             txt_branch_name.Text = TabTitle;
@@ -620,7 +621,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private bool ToggleItemPages(string text)
         {
             bool item = false;
-            string[] valuesToCheck = { "SUPPLIER", "CUSTOMER" };
+            string[] valuesToCheck = { "SUP", "CUS" };
             var viewData = String.Join("", text);
             bool containsBoth = valuesToCheck.All(value => viewData.Contains(value));
             if (containsBoth)
@@ -628,20 +629,20 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 ShowTabPages(tabItemPages);
                 item = true;
             }
-            else if (text.Contains("SUPPLIER"))
+            else if (text.Contains("SUP"))
             {
                 ShowTabPages(tabItemPages);
                 RemoveTabPages(tabFinancePages);
                 item = true;
             }
-            else if (text.Contains("AFFILIATED"))
+            else if (text.Contains("EA"))
             {
                 RemoveTabPages(tabItemPages);
                 RemoveTabPages(tabFinancePages);
                 item = false;
             }
 
-            else if (text.Contains("NON-AFFILIATED"))
+            else if (text.Contains("EN"))
             {
                 RemoveTabPages(tabItemPages);
                 RemoveTabPages(tabFinancePages);
@@ -952,13 +953,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             CopyToMainBranchField("branch_website", branch_website);
         }
 
-        private void btn_finance_payment_terms_Click(object sender, EventArgs e)
-        {
-            bool showSelectColumn = true;
-
-            SetupModal finance_modal = new SetupModal("Payment Terms Setup", ENUM_ENDPOINT.PAYMENT_TERMS, CacheData.PaymentTerms, showSelectColumn);
-            DialogResult r = finance_modal.ShowDialog();
-        }
+        private void btn_finance_payment_terms_Click(object sender, EventArgs e) =>
+            OpenSetupModal("PAYMENT TERMS", ENUM_ENDPOINT.PAYMENT_TERMS, CacheData.PaymentTerms);
 
         private void btn_add_new_item_Click_1(object sender, EventArgs e)
         {
@@ -1560,13 +1556,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
-        private void btn_items_payment_terms_Click(object sender, EventArgs e)
-        {
-            bool showSelectColumn = true;
+        private void btn_items_payment_terms_Click(object sender, EventArgs e) =>
+            OpenSetupModal("PAYMENT TERMS", ENUM_ENDPOINT.PAYMENT_TERMS, CacheData.PaymentTerms);
 
-            SetupModal finance_modal = new SetupModal("Payment Terms Setup", ENUM_ENDPOINT.PAYMENT_TERMS, CacheData.PaymentTerms, showSelectColumn);
-            DialogResult r = finance_modal.ShowDialog();
-        }
         private void GetPaymentItemTerms(bool isItem)
         {
             if (!isItem) return;
@@ -1629,6 +1621,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void dg_items_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (!isUpdate) return;
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 if (dg_items.Columns[e.ColumnIndex].Name == "item_code")
@@ -1720,10 +1713,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // panel_general.Visible = true;
 
             BpiBranchToggle();
-
-
-
-
             BtnToggle(true);
 
             if (isIncluded)
@@ -1793,11 +1782,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             dg_address.Enabled = isEdit;
             dg_items.Enabled = isEdit;
             dg_accreditations.Enabled = isEdit;
-
-
-            
-
-
         }
         private void RemoveSelectedDataTable(DataTable dt)
         {
@@ -2230,7 +2214,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void dg_finance_transactions_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            //HideSystemColumns((DataGridView)sender, "items");
+            HideSystemColumns((DataGridView)sender, "finance");
         }
 
         private void dg_accreditations_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -2240,7 +2224,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void dg_items_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            HideSystemColumns((DataGridView)sender, "items");
+            //HideSystemColumns((DataGridView)sender, "items");
         }
 
         private void dg_history_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -2250,11 +2234,24 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         public void SetReadOnly(bool isReadOnly)
         {
             Helpers.SetTabControlReadOnly(tabControl2, isReadOnly);
-        }
+            // Set all DGVs to read-only
+            List<DataGridView> dgvList = new List<DataGridView>
+            {
+                dg_contacts,
+                dg_address,
+                dg_items,
+                dg_finance_pending,
+                dg_accreditations,
+                dg_history
+            };
 
-        public void DiagnoseReadOnly()
-        {
-            Helpers.DiagnoseReadOnly(tabControl2);
+            foreach (var dgv in dgvList)
+            {
+                dgv.ReadOnly = isReadOnly;
+                dgv.AllowUserToAddRows = !isReadOnly;
+                dgv.AllowUserToDeleteRows = !isReadOnly;
+            }
+
         }
     }
 }
