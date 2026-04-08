@@ -1000,8 +1000,8 @@
             this.lbl_filename.Name = "lbl_filename";
             this.lbl_filename.Size = new System.Drawing.Size(215, 85);
             this.lbl_filename.TabIndex = 130;
-            this.lbl_filename.Text = "Filename.jpg";
             this.lbl_filename.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lbl_filename.Click += new System.EventHandler(this.lbl_filename_Click);
             // 
             // btn_replace_image
             // 

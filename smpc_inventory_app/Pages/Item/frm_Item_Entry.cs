@@ -3051,7 +3051,10 @@ namespace smpc_inventory_app.Pages.Item
             }
         }
 
-      
+        private void lbl_filename_Click(object sender, EventArgs e)
+        {
+
+        }
     }
     #endregion
 }
