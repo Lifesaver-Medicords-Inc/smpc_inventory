@@ -745,6 +745,10 @@ namespace smpc_app.Services.Helpers
                 {
                     combobox.SelectedIndex = -1;
                 }
+                else if (control is RichTextBox richTextBox)
+                {
+                    richTextBox.Text = string.Empty;
+                }
             }
         }
         //public static void ResetControls(Panel[] pnls)
@@ -870,6 +874,16 @@ namespace smpc_app.Services.Helpers
                     string key = numericUpDown.Name.Replace("txt_", "");
                     string val = String.Format("'{0}'", numericUpDown.Value);
                     values.Add(key, val);
+                }
+
+                // Check if the control is a Rich Textbox
+                if (control is RichTextBox richTextBox)
+                {
+                    string key = richTextBox.Name.Replace("rtxt_", "");
+                    dynamic val = richTextBox.Text.ToString();
+
+                    values[key] = val;
+
                 }
             }
 
@@ -1316,6 +1330,12 @@ namespace smpc_app.Services.Helpers
                             {
                                 string key = numericUpDown.Name.Replace("txt_", "");
                                 numericUpDown.Text = (string)dt.Rows[selectedIndex][column_name].ToString();
+                            }
+                            // Check if the control is a RichTextBox
+                            if (control is RichTextBox richTextBox && richTextBox.Name.Replace("rtxt_", "") == column_name)
+                            {
+                                object rawValue = dt.Rows[selectedIndex][column_name];
+                                richTextBox.Text = rawValue != DBNull.Value ? rawValue.ToString() : string.Empty;
                             }
                         }
                     }

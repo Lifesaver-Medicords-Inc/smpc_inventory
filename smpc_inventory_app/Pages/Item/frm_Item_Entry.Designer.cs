@@ -46,6 +46,7 @@
             this.tabcontrol1 = new System.Windows.Forms.TabControl();
             this.tab_item_specs = new System.Windows.Forms.TabPage();
             this.pnl_additional_specs = new System.Windows.Forms.Panel();
+            this.rtxt_long_description = new System.Windows.Forms.RichTextBox();
             this.cmb_calibration = new System.Windows.Forms.ComboBox();
             this.lbl_calibration = new System.Windows.Forms.Label();
             this.txt_pump_type_compatability = new System.Windows.Forms.TextBox();
@@ -68,7 +69,6 @@
             this.cmb_volume_unit_of_measure = new System.Windows.Forms.ComboBox();
             this.txt_additional_specs_id = new System.Windows.Forms.TextBox();
             this.txt_additional_specs_based_id = new System.Windows.Forms.TextBox();
-            this.txt_long_description = new System.Windows.Forms.TextBox();
             this.txt_weight = new System.Windows.Forms.TextBox();
             this.txt_volume = new System.Windows.Forms.TextBox();
             this.txt_liquid_type = new System.Windows.Forms.TextBox();
@@ -295,6 +295,7 @@
             this.dataColumn18 = new System.Data.DataColumn();
             this.dataColumn19 = new System.Data.DataColumn();
             this.bindingSourceSpecsTemplate = new System.Windows.Forms.BindingSource(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pnl_page_title.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnl_child.SuspendLayout();
@@ -543,6 +544,7 @@
             // 
             // pnl_additional_specs
             // 
+            this.pnl_additional_specs.Controls.Add(this.rtxt_long_description);
             this.pnl_additional_specs.Controls.Add(this.cmb_calibration);
             this.pnl_additional_specs.Controls.Add(this.lbl_calibration);
             this.pnl_additional_specs.Controls.Add(this.txt_pump_type_compatability);
@@ -565,7 +567,6 @@
             this.pnl_additional_specs.Controls.Add(this.cmb_volume_unit_of_measure);
             this.pnl_additional_specs.Controls.Add(this.txt_additional_specs_id);
             this.pnl_additional_specs.Controls.Add(this.txt_additional_specs_based_id);
-            this.pnl_additional_specs.Controls.Add(this.txt_long_description);
             this.pnl_additional_specs.Controls.Add(this.txt_weight);
             this.pnl_additional_specs.Controls.Add(this.txt_volume);
             this.pnl_additional_specs.Controls.Add(this.txt_liquid_type);
@@ -589,6 +590,18 @@
             this.pnl_additional_specs.Name = "pnl_additional_specs";
             this.pnl_additional_specs.Size = new System.Drawing.Size(422, 619);
             this.pnl_additional_specs.TabIndex = 4;
+            // 
+            // rtxt_long_description
+            // 
+            this.rtxt_long_description.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtxt_long_description.Location = new System.Drawing.Point(12, 380);
+            this.rtxt_long_description.Name = "rtxt_long_description";
+            this.rtxt_long_description.Size = new System.Drawing.Size(374, 121);
+            this.rtxt_long_description.TabIndex = 154;
+            this.rtxt_long_description.Tag = "REQUIRED";
+            this.rtxt_long_description.Text = "";
             // 
             // cmb_calibration
             // 
@@ -808,26 +821,17 @@
             // 
             // txt_additional_specs_id
             // 
-            this.txt_additional_specs_id.Location = new System.Drawing.Point(79, 481);
+            this.txt_additional_specs_id.Location = new System.Drawing.Point(72, 548);
             this.txt_additional_specs_id.Name = "txt_additional_specs_id";
             this.txt_additional_specs_id.Size = new System.Drawing.Size(65, 20);
             this.txt_additional_specs_id.TabIndex = 123;
             // 
             // txt_additional_specs_based_id
             // 
-            this.txt_additional_specs_based_id.Location = new System.Drawing.Point(202, 481);
+            this.txt_additional_specs_based_id.Location = new System.Drawing.Point(233, 548);
             this.txt_additional_specs_based_id.Name = "txt_additional_specs_based_id";
             this.txt_additional_specs_based_id.Size = new System.Drawing.Size(65, 20);
             this.txt_additional_specs_based_id.TabIndex = 124;
-            // 
-            // txt_long_description
-            // 
-            this.txt_long_description.Location = new System.Drawing.Point(188, 393);
-            this.txt_long_description.Multiline = true;
-            this.txt_long_description.Name = "txt_long_description";
-            this.txt_long_description.Size = new System.Drawing.Size(166, 54);
-            this.txt_long_description.TabIndex = 122;
-            this.txt_long_description.Tag = "REQUIRED";
             // 
             // txt_weight
             // 
@@ -888,7 +892,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(10, 396);
+            this.label19.Location = new System.Drawing.Point(9, 355);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(116, 13);
             this.label19.TabIndex = 121;
@@ -1005,7 +1009,7 @@
             // 
             // btn_replace_image
             // 
-            this.btn_replace_image.Location = new System.Drawing.Point(266, 415);
+            this.btn_replace_image.Location = new System.Drawing.Point(315, 413);
             this.btn_replace_image.Name = "btn_replace_image";
             this.btn_replace_image.Size = new System.Drawing.Size(130, 23);
             this.btn_replace_image.TabIndex = 129;
@@ -1015,7 +1019,7 @@
             // 
             // btn_remove_image
             // 
-            this.btn_remove_image.Location = new System.Drawing.Point(266, 440);
+            this.btn_remove_image.Location = new System.Drawing.Point(315, 438);
             this.btn_remove_image.Name = "btn_remove_image";
             this.btn_remove_image.Size = new System.Drawing.Size(130, 23);
             this.btn_remove_image.TabIndex = 128;
@@ -1051,7 +1055,7 @@
             // 
             // btn_upload_image
             // 
-            this.btn_upload_image.Location = new System.Drawing.Point(266, 391);
+            this.btn_upload_image.Location = new System.Drawing.Point(315, 389);
             this.btn_upload_image.Name = "btn_upload_image";
             this.btn_upload_image.Size = new System.Drawing.Size(130, 23);
             this.btn_upload_image.TabIndex = 85;
@@ -2600,6 +2604,7 @@
             this.label34.Size = new System.Drawing.Size(18, 13);
             this.label34.TabIndex = 38;
             this.label34.Text = "ID";
+            this.label34.Visible = false;
             // 
             // txt_id
             // 
@@ -2846,6 +2851,11 @@
             this.bindingSourceSpecsTemplate.DataMember = "Table1";
             this.bindingSourceSpecsTemplate.DataSource = this.ds_specs_template;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // frm_Item_Entry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3090,7 +3100,6 @@
         private System.Windows.Forms.ComboBox cmb_volume_unit_of_measure;
         private System.Windows.Forms.TextBox txt_additional_specs_id;
         private System.Windows.Forms.TextBox txt_additional_specs_based_id;
-        private System.Windows.Forms.TextBox txt_long_description;
         private System.Windows.Forms.TextBox txt_weight;
         private System.Windows.Forms.TextBox txt_volume;
         private System.Windows.Forms.TextBox txt_liquid_type;
@@ -3226,5 +3235,7 @@
         private System.Data.DataColumn dataColumn17;
         private System.Data.DataColumn dataColumn18;
         private System.Data.DataColumn dataColumn19;
+        private System.Windows.Forms.RichTextBox rtxt_long_description;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
