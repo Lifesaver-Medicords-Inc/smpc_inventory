@@ -14,8 +14,9 @@ namespace smpc_inventory_app.Services.Helpers
     {
         private static ClientWebSocket _ws;
         private static CancellationTokenSource _cts;
-        private static string lastEndpoint;
-        private static Func<string, Task> lastCallback;
+        private static Func<Task> _reconnectAction;
+        private static Func<string, Task> _lastCallback;
+        private static bool _isReconnecting = false;
 
         public static event Action OnConnected;
         public static event Action<string> OnError;
@@ -27,16 +28,16 @@ namespace smpc_inventory_app.Services.Helpers
         public static async Task ConnectAndDeserialize<T>(string endpoint, Action<T> onDeserialized)
         {
             string token = CacheData.SessionToken;
-            //string url = $"ws://94e9-112-201-111-220.ngrok-free.app/api/ws{endpoint}?Authorization={token}";
-            
             string url = $"{wssUrl}{endpoint}?Authorization={token}";
 
             if (IsConnected) return;
 
             _ws = new ClientWebSocket();
             _cts = new CancellationTokenSource();
-            lastEndpoint = endpoint;
-            lastCallback = async (data) =>
+
+            // Store properly-typed reconnect action
+            _reconnectAction = () => ConnectAndDeserialize<T>(endpoint, onDeserialized);
+            _lastCallback = async (data) => 
             {
                 try
                 {
@@ -48,12 +49,12 @@ namespace smpc_inventory_app.Services.Helpers
                     OnError?.Invoke("Deserialization failed: " + ex.Message);
                 }
             };
-
             try
             {
                 await _ws.ConnectAsync(new Uri(url), _cts.Token);
                 OnConnected?.Invoke();
-                _ = ReceiveLoop(_cts.Token); // Start reading in background
+                _ = ReceiveLoop(_cts.Token);
+                _ = PingLoop(_cts.Token);
             }
             catch (Exception ex)
             {
@@ -61,7 +62,6 @@ namespace smpc_inventory_app.Services.Helpers
                 StartReconnect();
             }
         }
-
 
         private static async Task ReceiveLoop(CancellationToken token)
         {
@@ -90,6 +90,9 @@ namespace smpc_inventory_app.Services.Helpers
                     }
 
                     var message = Encoding.UTF8.GetString(ms.ToArray());
+                    ms.SetLength(0);
+
+                    if (message == "pong") continue; // Ignore pong responses
 
                     if (message.Length > 1_000_000)
                     {
@@ -97,10 +100,8 @@ namespace smpc_inventory_app.Services.Helpers
                         continue;
                     }
 
-                    ms.SetLength(0); // Reset for next message
-
-                    if (lastCallback != null)
-                        await lastCallback.Invoke(message);
+                    if (_lastCallback != null)
+                        await _lastCallback.Invoke(message);
                 }
             }
             catch (Exception ex)
@@ -109,18 +110,50 @@ namespace smpc_inventory_app.Services.Helpers
                 OnDisconnected?.Invoke();
                 StartReconnect();
             }
+        }
 
+        private static async Task PingLoop(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    await Task.Delay(5000, token);
+
+                    if (_ws?.State != WebSocketState.Open)
+                    {
+                        OnDisconnected?.Invoke();
+                        StartReconnect();
+                        break;
+                    }
+
+                    await _ws.SendAsync(
+                        new ArraySegment<byte>(Encoding.UTF8.GetBytes("ping")),
+                        WebSocketMessageType.Text, true, token);
+                }
+                catch (TaskCanceledException) { break; } // Normal on disconnect
+                catch
+                {
+                    OnDisconnected?.Invoke();
+                    StartReconnect();
+                    break;
+                }
+            }
         }
 
         private static void StartReconnect()
         {
+            if (_isReconnecting) return;
+            _isReconnecting = true;
+
             Task.Run(async () =>
             {
-                await Task.Delay(10000); // Wait 10 seconds
-                if (!IsConnected && lastEndpoint != null && lastCallback != null)
+                await Task.Delay(10000);
+                if (!IsConnected && _reconnectAction != null)
                 {
-                    await ConnectAndDeserialize(lastEndpoint, async (string data) => await lastCallback(data));
+                    await _reconnectAction();
                 }
+                _isReconnecting = false;
             });
         }
 
@@ -135,6 +168,7 @@ namespace smpc_inventory_app.Services.Helpers
 
         public static async Task DisconnectAsync()
         {
+            _reconnectAction = null; // Prevent reconnect on intentional disconnect
             if (_ws != null)
             {
                 try
