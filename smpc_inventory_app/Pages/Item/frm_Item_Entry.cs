@@ -1343,6 +1343,7 @@ namespace smpc_inventory_app.Pages.Item
 
             flowLayoutPanel1.Controls.Clear();
             img_preview.Image = null;
+            lbl_filename.Text = string.Empty;
             currentSelectedTradeTypeIds.Clear();
             txt_trade_type.Tag = "MULTI";
             currentSelectedPumpTypeIds.Clear();
@@ -1360,6 +1361,7 @@ namespace smpc_inventory_app.Pages.Item
             txt_trade_type.Tag = "MULTI";
             txt_pump_type_compatability.Tag = "MULTI";
             img_preview.Image = null;
+            lbl_filename.Text = string.Empty; ;
             txt_item_image_id.Text = null;
 
             if (dgv_template.Columns["title"] != null)
@@ -2091,6 +2093,7 @@ namespace smpc_inventory_app.Pages.Item
                             img_preview.Image?.Dispose();
                             img_preview.Image = (Image)image.Clone();
                             img_preview.SizeMode = PictureBoxSizeMode.Zoom;
+                            lbl_filename.Text = fileName;
 
                             string base64String = ConvertImageToBase64(image, ImageFormat.Jpeg);
 
@@ -2112,10 +2115,10 @@ namespace smpc_inventory_app.Pages.Item
                                 }
                                 else
                                 {
-                                    replaceBase64Images.RemoveAll(d => Convert.ToInt32(d["id"]) == imageId);
+                                    replaceBase64Images.RemoveAll(d => Convert.ToInt32(d["imageid"]) == imageId);
                                     replaceBase64Images.Add(new Dictionary<string, object>
                                     {
-                                        { "id", imageId },
+                                        { "imageid", imageId },
                                         { "image", base64String },
                                         { "fileName", fileName }
                                     });
@@ -2130,89 +2133,81 @@ namespace smpc_inventory_app.Pages.Item
         }
         private void btn_remove_image_Click(object sender, EventArgs e)
         {
-            Image clonedImage = null;
-            if (img_preview.Image == null || string.IsNullOrEmpty(txt_item_image_id.Text))
+            if (string.IsNullOrEmpty(txt_item_image_id.Text))
             {
                 MessageBox.Show("No image selected or image ID is missing.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            PictureBox pictureToRemove = null;
             int imageId = int.Parse(txt_item_image_id.Text);
 
-            foreach (Control control in flowLayoutPanel1.Controls)
-            {
-                if (control is PictureBox pictureBox && pictureBox.Image == img_preview.Image)
-                {
-                    pictureToRemove = pictureBox;
-                    break;
-                }
-            }
+            // Find by Tag ID instead of image reference
+            PictureBox pictureToRemove = flowLayoutPanel1.Controls
+                .OfType<PictureBox>()
+                .FirstOrDefault(pb => pb.Tag is ImageTag tag && tag.Id == imageId);
 
-            if (pictureToRemove != null)
-            {
-                DialogResult result = MessageBox.Show("Are you sure you want to remove this image?",
-                                                      "Confirm Removal",
-                                                      MessageBoxButtons.YesNo,
-                                                      MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-
-                    // Save the image data before removing
-                    removedImages[imageId] = new Bitmap(pictureToRemove.Image);
-
-
-                    clonedImage = (Image)img_preview.Image.Clone();
-                    img_preview.Image = new Bitmap(clonedImage);
-
-                    pictureToRemove.Image?.Dispose();
-                    pictureToRemove.Image = null;
-
-
-                    flowLayoutPanel1.Controls.Remove(pictureToRemove);
-                    pictureToRemove.Dispose();
-
-                    img_preview.Image = null;
-                    txt_item_image_id.Clear();
-
-                    if (imageFilePaths.ContainsKey(imageId))
-                    {
-                        imageFilePaths.Remove(imageId);
-                    }
-
-                    if (imageId < 0)
-                    {
-                        int index = temporaryImageIds.IndexOf(imageId);
-                        if (index >= 0)
-                        {
-                            temporaryImageIds.RemoveAt(index);
-                            newbase64Images.RemoveAt(index);
-                        }
-                    }
-                    else
-                    {
-                        replaceBase64Images.RemoveAll(d => (int)d["imageid"] == imageId);
-                        imageData["replaceimages"] = replaceBase64Images;
-
-                        if (!imageData.ContainsKey("deleteimages"))
-                        {
-                            imageData["deleteimages"] = new List<Dictionary<string, int>>();
-                        }
-
-                        var deleteImages = (List<Dictionary<string, int>>)imageData["deleteimages"];
-                        if (!deleteImages.Any(d => d["imageid"] == imageId))
-                        {
-                            deleteImages.Add(new Dictionary<string, int> { { "imageid", imageId } });
-                        }
-                        imageData["deleteimages"] = deleteImages;
-                    }
-                }
-                lbl_filename.Text = "";
-            }
-            else
+            if (pictureToRemove == null)
             {
                 MessageBox.Show("Image not found in the list.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult result = MessageBox.Show("Are you sure you want to remove this image?",
+                                                  "Confirm Removal",
+                                                  MessageBoxButtons.YesNo,
+                                                  MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                // Sync preview from the actual PictureBox image before anything is disposed
+                img_preview.Image = pictureToRemove.Image;
+
+                removedImages[imageId] = new Bitmap(pictureToRemove.Image);
+
+                pictureToRemove.Image?.Dispose();
+                pictureToRemove.Image = null;
+
+                flowLayoutPanel1.Controls.Remove(pictureToRemove);
+                pictureToRemove.Dispose();
+
+                img_preview.Image = null;
+                txt_item_image_id.Clear();
+                lbl_filename.Text = "";
+
+                if (imageFilePaths.ContainsKey(imageId))
+                {
+                    imageFilePaths.Remove(imageId);
+                }
+
+                if (imageId < 0)
+                {
+                    int index = temporaryImageIds.IndexOf(imageId);
+                    if (index >= 0)
+                    {
+                        temporaryImageIds.RemoveAt(index);
+                        newbase64Images.RemoveAt(index);
+                    }
+                }
+                else
+                {
+                    replaceBase64Images.RemoveAll(d => (int)d["imageid"] == imageId);
+
+                    if (imageData.ContainsKey("replaceimages"))
+                    {
+                        imageData["replaceimages"] = replaceBase64Images;
+                    }
+
+                    if (!imageData.ContainsKey("deleteimages"))
+                    {
+                        imageData["deleteimages"] = new List<Dictionary<string, int>>();
+                    }
+
+                    var deleteImages = (List<Dictionary<string, int>>)imageData["deleteimages"];
+                    if (!deleteImages.Any(d => d["imageid"] == imageId))
+                    {
+                        deleteImages.Add(new Dictionary<string, int> { { "imageid", imageId } });
+                    }
+                }
             }
         }
         private PictureBox CreatePictureBox(Image image, string filePath, int imageId, string fileName)
@@ -2452,8 +2447,8 @@ namespace smpc_inventory_app.Pages.Item
             txt_item_specs_based_id.Visible = false;
             txt_additional_specs_id.Visible = false;
             txt_additional_specs_based_id.Visible = false;
-            txt_item_image_id.Visible = false;
-            txt_item_image_based_id.Visible = false;
+            //txt_item_image_id.Visible = false;
+            //txt_item_image_based_id.Visible = false;
             txt_item_inventory_id.Visible = false;
             txt_item_inventory_based_id.Visible = false;
         }

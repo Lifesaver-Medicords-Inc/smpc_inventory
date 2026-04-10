@@ -153,31 +153,28 @@ namespace Inventory_SMPC.Pages
         }
         private async void ConnectWebSocket()
         {
+            WebSocketServices.OnConnected -= OnConnectedHandler;
+            WebSocketServices.OnError -= OnErrorHandler;
+            WebSocketServices.OnDisconnected -= OnDisconnectedHandler;
 
-            WebSocketServices.OnConnected += () =>
-            {
-                Invoke((Action)(() => lbl_status.Text = "Connected"));
-            };
-
-            WebSocketServices.OnError += (msg) =>
-            {
-                Invoke((Action)(() =>
-                {
-                    lbl_status.Text = "Error: " + msg;
-                    lbl_status.ForeColor = Color.Red;
-                }));
-            };
-
-            WebSocketServices.OnDisconnected += () =>
-            {
-                Invoke((Action)(() => lbl_status.Text = "Disconnected"));
-            };
+            WebSocketServices.OnConnected += OnConnectedHandler;
+            WebSocketServices.OnError += OnErrorHandler;
+            WebSocketServices.OnDisconnected += OnDisconnectedHandler;
 
             await WebSocketServices.ConnectAndDeserialize<RedboxPurchasingList>(
                 ENUM_ENDPOINT.WSPURCHASINGREDBOXLIST,
                 (data) => Invoke((Action)(() => LoadOrders(data)))
             );
         }
+
+        private void OnConnectedHandler() =>
+            Invoke((Action)(() => lbl_status.Text = "Connected"));
+
+        private void OnErrorHandler(string msg) =>
+            Invoke((Action)(() => { lbl_status.Text = "Error: " + msg; }));
+
+        private void OnDisconnectedHandler() =>
+            Invoke((Action)(() => lbl_status.Text = "Disconnected"));
 
         private void LoadOrders(RedboxPurchasingList response)
         {

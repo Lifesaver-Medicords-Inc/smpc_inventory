@@ -1039,19 +1039,17 @@
             // 
             // txt_item_image_id
             // 
-            this.txt_item_image_id.Location = new System.Drawing.Point(64, 481);
+            this.txt_item_image_id.Location = new System.Drawing.Point(64, 443);
             this.txt_item_image_id.Name = "txt_item_image_id";
             this.txt_item_image_id.Size = new System.Drawing.Size(65, 20);
             this.txt_item_image_id.TabIndex = 125;
-            this.txt_item_image_id.Visible = false;
             // 
             // txt_item_image_based_id
             // 
-            this.txt_item_image_based_id.Location = new System.Drawing.Point(187, 481);
+            this.txt_item_image_based_id.Location = new System.Drawing.Point(187, 443);
             this.txt_item_image_based_id.Name = "txt_item_image_based_id";
             this.txt_item_image_based_id.Size = new System.Drawing.Size(65, 20);
             this.txt_item_image_based_id.TabIndex = 126;
-            this.txt_item_image_based_id.Visible = false;
             // 
             // btn_upload_image
             // 
