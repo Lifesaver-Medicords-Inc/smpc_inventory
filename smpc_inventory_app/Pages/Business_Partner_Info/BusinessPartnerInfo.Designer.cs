@@ -411,6 +411,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_save.Name = "btn_save";
             this.btn_save.Size = new System.Drawing.Size(51, 22);
             this.btn_save.Text = "Save";
+            this.btn_save.Visible = false;
             this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
             // 
             // btn_revise

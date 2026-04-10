@@ -83,45 +83,40 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         private async void BusinessPartnerInfo_Load(object sender, EventArgs e)
         {
-            //GetSocialMediaSetup();
-            //GetEntity();
-            //GetBranchIndustries();
-            //GetPayments();
-            //GetEntityCount();
-            //GetPositionSetup();
-            // --------------------------
-            await GetBpiUser();
-            await GetIndustriesSetup();
-            await GetSocialMediaSetup();
-            await GetEntity();
-            await GetBranchIndustries();
-            await GetPayments();
-            await GetEntityCount();
-            await GetPositionSetup();
+            try
+            {
 
-            GetBpi();
-            BtnToggle(false);
+                SetLoadingState(true);
+                await GetBpiUser();
+                await GetIndustriesSetup();
+                await GetSocialMediaSetup();
+                await GetEntity();
+                await GetBranchIndustries();
+                await GetPayments();
+                await GetEntityCount();
+                await GetPositionSetup();
+
+                BtnToggle(false);
+                GetBpi();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load: {ex.Message}");
+            }
+            finally
+            {
+                SetLoadingState(false);
+            }
         }
-
-
+        private void SetLoadingState(bool isLoading)
+        {
+            toolStrip1.Enabled = !isLoading;
+            this.Cursor = isLoading ? Cursors.WaitCursor : Cursors.Default;
+        }
         public void HideButton()
         {
             btn_add_new_item.Visible = false;
         }
-        //private void ShowCanvassTabPage()
-        //{
-        //    string[] tabPageList = { "FINANCE", "ACCREDITATION", "HISTORY" };
-        //    foreach (TabPage tabPage in tabControl2.TabPages)
-
-        //    {
-
-
-        //        if (tabPageList.Contains(tabPage.Text))
-        //        {
-        //            RemoveTabPages(tabPage);
-        //        }
-        //    }
-        //}
 
         private async Task GetBpiUser()
         {
