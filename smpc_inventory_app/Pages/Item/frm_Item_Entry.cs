@@ -2442,15 +2442,15 @@ namespace smpc_inventory_app.Pages.Item
         }
         private void InitializeIdControlVisibility()
         {
-            txt_id.Visible = false;
-            txt_item_specs_id.Visible = false;
-            txt_item_specs_based_id.Visible = false;
-            txt_additional_specs_id.Visible = false;
-            txt_additional_specs_based_id.Visible = false;
-            txt_item_image_id.Visible = false;
-            txt_item_image_based_id.Visible = false;
-            txt_item_inventory_id.Visible = false;
-            txt_item_inventory_based_id.Visible = false;
+            //txt_id.Visible = false;
+            //txt_item_specs_id.Visible = false;
+            //txt_item_specs_based_id.Visible = false;
+            //txt_additional_specs_id.Visible = false;
+            //txt_additional_specs_based_id.Visible = false;
+            //txt_item_image_id.Visible = false;
+            //txt_item_image_based_id.Visible = false;
+            //txt_item_inventory_id.Visible = false;
+            //txt_item_inventory_based_id.Visible = false;
         }
         private void InitializeListViewContextMenu()
         {
