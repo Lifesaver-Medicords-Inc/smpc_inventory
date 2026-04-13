@@ -1,5 +1,5 @@
 ﻿
-namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
+namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Modals
 {
     partial class ReceivingReportSearch
     {
@@ -40,12 +40,13 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.dgv_rr_search = new System.Windows.Forms.DataGridView();
             this.txt_search = new System.Windows.Forms.TextBox();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.supplier_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.supplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date_received = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.warehouse_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.prepared_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.warehouse = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ref_doc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.doc_no = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.prepared_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_rr_search)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,16 +65,17 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.dgv_rr_search.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_rr_search.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
-            this.supplier_name,
+            this.supplier,
             this.supplier_code,
             this.date_received,
-            this.warehouse_name,
-            this.prepared_by,
-            this.ref_doc});
+            this.warehouse,
+            this.ref_doc,
+            this.doc_no,
+            this.prepared_by});
             this.dgv_rr_search.Location = new System.Drawing.Point(-1, 31);
             this.dgv_rr_search.Name = "dgv_rr_search";
             this.dgv_rr_search.Size = new System.Drawing.Size(802, 389);
-            this.dgv_rr_search.TabIndex = 4;
+            this.dgv_rr_search.TabIndex = 11;
             this.dgv_rr_search.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_rr_search_CellClick);
             // 
             // txt_search
@@ -81,36 +83,34 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.txt_search.Location = new System.Drawing.Point(350, 215);
             this.txt_search.Name = "txt_search";
             this.txt_search.Size = new System.Drawing.Size(100, 20);
-            this.txt_search.TabIndex = 5;
+            this.txt_search.TabIndex = 12;
             // 
             // id
             // 
             this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.id.DataPropertyName = "id";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gainsboro;
-            this.id.DefaultCellStyle = dataGridViewCellStyle2;
             this.id.HeaderText = "ID";
             this.id.Name = "id";
             this.id.ReadOnly = true;
             this.id.Visible = false;
             this.id.Width = 80;
             // 
-            // supplier_name
+            // supplier
             // 
-            this.supplier_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.supplier_name.DataPropertyName = "supplier_name";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
-            this.supplier_name.DefaultCellStyle = dataGridViewCellStyle3;
-            this.supplier_name.HeaderText = "SUPPLIER";
-            this.supplier_name.Name = "supplier_name";
-            this.supplier_name.ReadOnly = true;
+            this.supplier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.supplier.DataPropertyName = "supplier";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gainsboro;
+            this.supplier.DefaultCellStyle = dataGridViewCellStyle2;
+            this.supplier.HeaderText = "SUPPLIER";
+            this.supplier.Name = "supplier";
+            this.supplier.ReadOnly = true;
             // 
             // supplier_code
             // 
             this.supplier_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.supplier_code.DataPropertyName = "supplier_code";
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Gainsboro;
-            this.supplier_code.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
+            this.supplier_code.DefaultCellStyle = dataGridViewCellStyle3;
             this.supplier_code.HeaderText = "SUPPLIER CODE";
             this.supplier_code.Name = "supplier_code";
             this.supplier_code.ReadOnly = true;
@@ -119,42 +119,52 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             // 
             this.date_received.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.date_received.DataPropertyName = "date_received";
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Gainsboro;
-            this.date_received.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Gainsboro;
+            this.date_received.DefaultCellStyle = dataGridViewCellStyle4;
             this.date_received.HeaderText = "DATE RECEIVED";
             this.date_received.Name = "date_received";
             this.date_received.ReadOnly = true;
             // 
-            // warehouse_name
+            // warehouse
             // 
-            this.warehouse_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.warehouse_name.DataPropertyName = "warehouse_name";
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Gainsboro;
-            this.warehouse_name.DefaultCellStyle = dataGridViewCellStyle6;
-            this.warehouse_name.HeaderText = "WAREHOUSE NAME";
-            this.warehouse_name.MinimumWidth = 150;
-            this.warehouse_name.Name = "warehouse_name";
-            this.warehouse_name.ReadOnly = true;
-            // 
-            // prepared_by
-            // 
-            this.prepared_by.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.prepared_by.DataPropertyName = "prepared_by";
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.Gainsboro;
-            this.prepared_by.DefaultCellStyle = dataGridViewCellStyle7;
-            this.prepared_by.HeaderText = "PREPARED BY";
-            this.prepared_by.Name = "prepared_by";
-            this.prepared_by.ReadOnly = true;
+            this.warehouse.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.warehouse.DataPropertyName = "warehouse";
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Gainsboro;
+            this.warehouse.DefaultCellStyle = dataGridViewCellStyle5;
+            this.warehouse.HeaderText = "WAREHOUSE";
+            this.warehouse.MinimumWidth = 150;
+            this.warehouse.Name = "warehouse";
+            this.warehouse.ReadOnly = true;
             // 
             // ref_doc
             // 
             this.ref_doc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ref_doc.DataPropertyName = "ref_doc";
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Gainsboro;
-            this.ref_doc.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Gainsboro;
+            this.ref_doc.DefaultCellStyle = dataGridViewCellStyle6;
             this.ref_doc.HeaderText = "REFERENCE DOC";
             this.ref_doc.Name = "ref_doc";
             this.ref_doc.ReadOnly = true;
+            // 
+            // doc_no
+            // 
+            this.doc_no.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.doc_no.DataPropertyName = "doc_no";
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.Gainsboro;
+            this.doc_no.DefaultCellStyle = dataGridViewCellStyle7;
+            this.doc_no.HeaderText = "DOC NO";
+            this.doc_no.Name = "doc_no";
+            this.doc_no.ReadOnly = true;
+            // 
+            // prepared_by
+            // 
+            this.prepared_by.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.prepared_by.DataPropertyName = "prepared_by";
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Gainsboro;
+            this.prepared_by.DefaultCellStyle = dataGridViewCellStyle8;
+            this.prepared_by.HeaderText = "PREPARED BY";
+            this.prepared_by.Name = "prepared_by";
+            this.prepared_by.ReadOnly = true;
             // 
             // ReceivingReportSearch
             // 
@@ -163,11 +173,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.dgv_rr_search);
             this.Controls.Add(this.txt_search);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
             this.Name = "ReceivingReportSearch";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Receiving Report Search";
+            this.Text = "ReceivingReportSearch";
             this.Load += new System.EventHandler(this.ReceivingReportSearch_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_rr_search)).EndInit();
             this.ResumeLayout(false);
@@ -180,11 +187,12 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         private System.Windows.Forms.DataGridView dgv_rr_search;
         private System.Windows.Forms.TextBox txt_search;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn supplier_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn supplier;
         private System.Windows.Forms.DataGridViewTextBoxColumn supplier_code;
         private System.Windows.Forms.DataGridViewTextBoxColumn date_received;
-        private System.Windows.Forms.DataGridViewTextBoxColumn warehouse_name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn prepared_by;
+        private System.Windows.Forms.DataGridViewTextBoxColumn warehouse;
         private System.Windows.Forms.DataGridViewTextBoxColumn ref_doc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn doc_no;
+        private System.Windows.Forms.DataGridViewTextBoxColumn prepared_by;
     }
 }

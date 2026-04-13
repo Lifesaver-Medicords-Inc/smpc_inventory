@@ -14,7 +14,7 @@ using smpc_inventory_app.Pages.Inventory.InventoryLogbookModals;
 
 namespace smpc_inventory_app.Pages.Inventory
 {
-    public partial class InventoryLogbook : UserControl
+    public partial class InventoryLogbookPage : UserControl
     {
         Dictionary<string, string[]> columnGroups = new Dictionary<string, string[]>()
         {
@@ -24,7 +24,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private DataTable _rawData;
         private Dictionary<(int, string), List<(int qty, string rrNo, string poNo, string date, string supplierName)>> _cellMetaData = new Dictionary<(int, string), List<(int, string, string, string, string)>>();
 
-        public InventoryLogbook()
+        public InventoryLogbookPage()
         {
             InitializeComponent();
 
@@ -493,6 +493,20 @@ namespace smpc_inventory_app.Pages.Inventory
             var reportForm = new InventoryReport { _selectedYear = selectedYear, _selectedMonth = selectedMonth};
 
             reportForm.ShowDialog();
+        }
+
+        private void dgv_inventory_item_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            string columnName = dgv_inventory_item.Columns[e.ColumnIndex].Name;
+
+            if (columnName.StartsWith("IN_") || columnName.StartsWith("OUT_"))
+            {
+                e.CellStyle.BackColor = Color.Gainsboro;
+                e.CellStyle.SelectionBackColor = ControlPaint.Dark(Color.Gainsboro, 0.1f);
+            }
         }
     }
 }

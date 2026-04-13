@@ -12,6 +12,7 @@ namespace smpc_inventory_app.Services.Setup
         public T Data { get; set; }
         public string message { get; set; }
         public string token { get; set; }
+        public PaginationModel pagination { get; set; } = null;
     }
 
     internal class ApiResponseModel
@@ -20,5 +21,17 @@ namespace smpc_inventory_app.Services.Setup
         public  string message { get; set; }
         public string Message { get;  set; }
         public dynamic Data { get; set; }
+    }
+
+    public class PaginationModel
+    {
+        public bool has_next { get; set; }
+        public int page_size { get; set; }
+    }
+
+    public class PaginatedResult<T>
+    {
+        public T Data { get; set; }
+        public PaginationModel Pagination { get; set; }
     }
 }

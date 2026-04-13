@@ -92,21 +92,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
 
         private void dgv_rr_search_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0)
-                return;
 
-            var row = dgv_rr_search.Rows[e.RowIndex];
-
-            // Always get the id value from the row, regardless of which column was clicked
-            var idValue = row.Cells["id"].Value;
-
-            if (idValue != null)
-            {
-                SelectedRRId = idValue.ToString();
-
-                this.DialogResult = DialogResult.OK; // close the modal with OK
-                this.Close();
-            }
         }
     }
 }

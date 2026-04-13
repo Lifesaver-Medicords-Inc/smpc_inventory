@@ -35,6 +35,9 @@ namespace smpc_inventory_app.Data
         public static string BOQ_NOTES = "/setup/boq_notes";
         public static string SHIPTYPE = "/setup/shiptype";
 
+        //REPORTS
+        public static string REPORTS = "/setup/report";
+
         //inventory
         public static string INVENTORY = "/setup/inv";
 
@@ -52,21 +55,20 @@ namespace smpc_inventory_app.Data
         //public static string WAREHOUSE_ADDRESS = "/setup/warehouse/manager"; //unwanted child
         public static string WAREHOUSE_AREAS = "/setup/warehouse/area";
 
-        //REPORTS
-        public static string REPORTS = "/setup/report";
-
-            //receiving
-            public static string RECEIVING_REPORT = REPORTS + "/receiving"; 
-            public static string RECEIVING_REPORT_DETAILS = REPORTS + "/receiving_details"; 
-            public static string RECEIVING_REPORT_INVENTORY = REPORTS + "/receiving_inventory";
-
-        //Receiving Report
+        //Receiving Report 2
         public static string REPORTS2 = "/setup/report2";
         public static string RECEIVING_REPORT2 = REPORTS2 + "/receiving2";
         public static string PURCHASE_ORDER_VIEW = REPORTS2 + "/purchase_filter";
         public static string RECEIVING_REPORT_DETAILS2 = REPORTS2 + "/receiving_details2";
         public static string RECEIVING_REPORT_HISTORY = REPORTS2 + "/history";
         public static string PURCHASING_POD_VIEW = REPORTS2 + "/purchase_order";
+
+        //Receiving Report
+        public static string RECEIVING_REPORT = "/inventory/receiving_report";
+        public static string RECEIVING_REPORT_WAREHOUSE = "/inventory/receiving_report/warehouse";
+        public static string RECEIVING_REPORT_WAREHOUSE_AREA = "/inventory/receiving_report/warehouse_area/";
+        public static string RECEIVING_REPORT_PURCHASE_DOC = "/inventory/receiving_report/purchase_order_doc";
+        public static string RECEIVING_REPORT_PURCHASE = "/inventory/receiving_report/purchase_order/";
 
         //Users 
         public static string EmployeeUsers = "/employee_users/";

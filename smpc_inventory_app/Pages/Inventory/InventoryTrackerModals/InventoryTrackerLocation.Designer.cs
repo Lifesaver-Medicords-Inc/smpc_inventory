@@ -84,6 +84,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryTrackerModals
             this.location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.location.DataPropertyName = "location";
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gainsboro;
             this.location.DefaultCellStyle = dataGridViewCellStyle2;
             this.location.HeaderText = "LOCATION";
             this.location.Name = "location";
@@ -94,6 +95,7 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryTrackerModals
             this.qty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.qty.DataPropertyName = "qty";
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
             this.qty.DefaultCellStyle = dataGridViewCellStyle3;
             this.qty.HeaderText = "QUANTITY";
             this.qty.Name = "qty";

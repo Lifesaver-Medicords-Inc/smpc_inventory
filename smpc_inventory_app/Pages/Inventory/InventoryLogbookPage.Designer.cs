@@ -1,7 +1,7 @@
 ﻿
 namespace smpc_inventory_app.Pages.Inventory
 {
-    partial class InventoryLogbook
+    partial class InventoryLogbookPage
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,6 +30,14 @@ namespace smpc_inventory_app.Pages.Inventory
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_title = new System.Windows.Forms.Panel();
             this.cmb_month = new System.Windows.Forms.ComboBox();
             this.cmb_year = new System.Windows.Forms.ComboBox();
@@ -43,16 +51,16 @@ namespace smpc_inventory_app.Pages.Inventory
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnl_fill = new System.Windows.Forms.Panel();
             this.dgv_inventory_item = new System.Windows.Forms.DataGridView();
-            this.location = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.out_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.in_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.end = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.beg = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.brand = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.general_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.general_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.brand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.beg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.end = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.in_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.out_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.location = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_title.SuspendLayout();
             this.pnl_fill.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_inventory_item)).BeginInit();
@@ -214,79 +222,15 @@ namespace smpc_inventory_app.Pages.Inventory
             this.dgv_inventory_item.Size = new System.Drawing.Size(1285, 484);
             this.dgv_inventory_item.TabIndex = 5;
             this.dgv_inventory_item.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_inventory_item_CellClick);
+            this.dgv_inventory_item.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgv_inventory_item_CellFormatting);
             // 
-            // location
+            // id
             // 
-            this.location.DataPropertyName = "location";
-            this.location.HeaderText = "LOCATION";
-            this.location.Name = "location";
-            this.location.ReadOnly = true;
-            this.location.Visible = false;
-            // 
-            // out_total
-            // 
-            this.out_total.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.out_total.DataPropertyName = "out_total";
-            this.out_total.HeaderText = "OUT";
-            this.out_total.Name = "out_total";
-            this.out_total.ReadOnly = true;
-            this.out_total.Width = 80;
-            // 
-            // in_total
-            // 
-            this.in_total.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.in_total.DataPropertyName = "in_total";
-            this.in_total.HeaderText = "IN";
-            this.in_total.Name = "in_total";
-            this.in_total.ReadOnly = true;
-            this.in_total.Width = 80;
-            // 
-            // end
-            // 
-            this.end.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.end.DataPropertyName = "end";
-            this.end.HeaderText = "END";
-            this.end.Name = "end";
-            this.end.ReadOnly = true;
-            this.end.Width = 80;
-            // 
-            // beg
-            // 
-            this.beg.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.beg.DataPropertyName = "beg";
-            this.beg.HeaderText = "BEG";
-            this.beg.Name = "beg";
-            this.beg.ReadOnly = true;
-            this.beg.Width = 80;
-            // 
-            // item_description
-            // 
-            this.item_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.item_description.DataPropertyName = "item_description";
-            this.item_description.HeaderText = "ITEM DESCRIPTION";
-            this.item_description.MinimumWidth = 200;
-            this.item_description.Name = "item_description";
-            this.item_description.ReadOnly = true;
-            this.item_description.Width = 200;
-            // 
-            // brand
-            // 
-            this.brand.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.brand.DataPropertyName = "brand";
-            this.brand.HeaderText = "BRAND";
-            this.brand.MinimumWidth = 150;
-            this.brand.Name = "brand";
-            this.brand.ReadOnly = true;
-            this.brand.Width = 150;
-            // 
-            // general_name
-            // 
-            this.general_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.general_name.DataPropertyName = "general_name";
-            this.general_name.HeaderText = "GENERAL NAME";
-            this.general_name.Name = "general_name";
-            this.general_name.ReadOnly = true;
-            this.general_name.Width = 200;
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "ID";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            this.id.Visible = false;
             // 
             // item_id
             // 
@@ -296,13 +240,94 @@ namespace smpc_inventory_app.Pages.Inventory
             this.item_id.ReadOnly = true;
             this.item_id.Visible = false;
             // 
-            // id
+            // general_name
             // 
-            this.id.DataPropertyName = "id";
-            this.id.HeaderText = "ID";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            this.id.Visible = false;
+            this.general_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.general_name.DataPropertyName = "general_name";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gainsboro;
+            this.general_name.DefaultCellStyle = dataGridViewCellStyle2;
+            this.general_name.HeaderText = "GENERAL NAME";
+            this.general_name.Name = "general_name";
+            this.general_name.ReadOnly = true;
+            this.general_name.Width = 200;
+            // 
+            // brand
+            // 
+            this.brand.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.brand.DataPropertyName = "brand";
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
+            this.brand.DefaultCellStyle = dataGridViewCellStyle3;
+            this.brand.HeaderText = "BRAND";
+            this.brand.MinimumWidth = 150;
+            this.brand.Name = "brand";
+            this.brand.ReadOnly = true;
+            this.brand.Width = 150;
+            // 
+            // item_description
+            // 
+            this.item_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.item_description.DataPropertyName = "item_description";
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Gainsboro;
+            this.item_description.DefaultCellStyle = dataGridViewCellStyle4;
+            this.item_description.HeaderText = "ITEM DESCRIPTION";
+            this.item_description.MinimumWidth = 200;
+            this.item_description.Name = "item_description";
+            this.item_description.ReadOnly = true;
+            this.item_description.Width = 200;
+            // 
+            // beg
+            // 
+            this.beg.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.beg.DataPropertyName = "beg";
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Gainsboro;
+            this.beg.DefaultCellStyle = dataGridViewCellStyle5;
+            this.beg.HeaderText = "BEG";
+            this.beg.Name = "beg";
+            this.beg.ReadOnly = true;
+            this.beg.Width = 80;
+            // 
+            // end
+            // 
+            this.end.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.end.DataPropertyName = "end";
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Gainsboro;
+            this.end.DefaultCellStyle = dataGridViewCellStyle6;
+            this.end.HeaderText = "END";
+            this.end.Name = "end";
+            this.end.ReadOnly = true;
+            this.end.Width = 80;
+            // 
+            // in_total
+            // 
+            this.in_total.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.in_total.DataPropertyName = "in_total";
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.Gainsboro;
+            this.in_total.DefaultCellStyle = dataGridViewCellStyle7;
+            this.in_total.HeaderText = "IN";
+            this.in_total.Name = "in_total";
+            this.in_total.ReadOnly = true;
+            this.in_total.Width = 80;
+            // 
+            // out_total
+            // 
+            this.out_total.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.out_total.DataPropertyName = "out_total";
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Gainsboro;
+            this.out_total.DefaultCellStyle = dataGridViewCellStyle8;
+            this.out_total.HeaderText = "OUT";
+            this.out_total.Name = "out_total";
+            this.out_total.ReadOnly = true;
+            this.out_total.Width = 80;
+            // 
+            // location
+            // 
+            this.location.DataPropertyName = "location";
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.Gainsboro;
+            this.location.DefaultCellStyle = dataGridViewCellStyle9;
+            this.location.HeaderText = "LOCATION";
+            this.location.Name = "location";
+            this.location.ReadOnly = true;
+            this.location.Visible = false;
             // 
             // InventoryLogbook
             // 

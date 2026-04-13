@@ -16,6 +16,7 @@ using smpc_inventory_app.Pages.Inventory;
 //using smpc_sales_system.Pages.Sales;
 //using smpc_sales_app.Pages.Sales;
 using smpc_inventory_app.Pages.Item;
+using smpc_inventory_app.Pages.Inventory.ReceivingReport2;
 
 namespace smpc_inventory_app.Services.Helpers
 {
@@ -58,9 +59,10 @@ namespace smpc_inventory_app.Services.Helpers
             //{ "INVENTORY", new frm_warehouse_name_setup() },
             { "WAREHOUSE USETYPE", new frm_warehouse_usetype_setup() },
             { "WAREHOUSE", new frm_warehouse_name_setup() },
-            { "INVENTORY TRACKER", new InventoryTracker() },
-            { "INVENTORY LOGBOOK", new InventoryLogbook() },
-            { "RECEIVING REPORT", new ReceivingReport() }
+            { "INVENTORY TRACKER", new InventoryLogbookPage() },
+            { "INVENTORY LOGBOOK", new InventoryLogbookPage() },
+            { "RECEIVING REPORT", new ReceivingReport() },
+            { "Receiving Report 2", new ReceivingReport2Page() }
         };
 
         private string _selectedRoute;

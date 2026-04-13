@@ -264,6 +264,9 @@
     <Compile Include="Data\TableContentChanged.cs" />
     <Compile Include="Intefaces\ISetupService.cs" />
     <Compile Include="Model\CurrentUserModel.cs" />
+    <Compile Include="Model\ReceivingPurchaseOrderView.cs" />
+    <Compile Include="Model\ReceivingReportModel.cs" />
+    <Compile Include="Model\ReceivingWarehouseView.cs" />
     <Compile Include="Model\SetupBaseModel.cs" />
     <Compile Include="Pages\Business_Partner_Info\BpiBranchUC.cs">
       <SubType>UserControl</SubType>
@@ -355,11 +358,11 @@
     <Compile Include="Pages\Engineering\Boq\ItemSetSearch.Designer.cs">
       <DependentUpon>ItemSetSearch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Inventory\InventoryLogbook.cs">
+    <Compile Include="Pages\Inventory\InventoryLogbookPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Pages\Inventory\InventoryLogbook.Designer.cs">
-      <DependentUpon>InventoryLogbook.cs</DependentUpon>
+    <Compile Include="Pages\Inventory\InventoryLogbookPage.Designer.cs">
+      <DependentUpon>InventoryLogbookPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Inventory\InventoryLogbookModals\InventoryReport.cs">
       <SubType>Form</SubType>
@@ -373,11 +376,11 @@
     <Compile Include="Pages\Inventory\InventoryLogbookModals\ReportPreview.Designer.cs">
       <DependentUpon>ReportPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Inventory\InventoryTracker.cs">
+    <Compile Include="Pages\Inventory\InventoryTrackerPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Pages\Inventory\InventoryTracker.Designer.cs">
-      <DependentUpon>InventoryTracker.cs</DependentUpon>
+    <Compile Include="Pages\Inventory\InventoryTrackerPage.Designer.cs">
+      <DependentUpon>InventoryTrackerPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Inventory\InventoryTrackerModals\InventoryTrackerLocation.cs">
       <SubType>Form</SubType>
@@ -390,6 +393,18 @@
     </Compile>
     <Compile Include="Pages\Inventory\ReceivingReport.Designer.cs">
       <DependentUpon>ReceivingReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ReceivingReport2\ReceivingReport2Modals\ReceivingReportSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ReceivingReport2\ReceivingReport2Modals\ReceivingReportSearch.Designer.cs">
+      <DependentUpon>ReceivingReportSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ReceivingReport2\ReceivingReport2Page.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ReceivingReport2\ReceivingReport2Page.Designer.cs">
+      <DependentUpon>ReceivingReport2Page.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Inventory\ReceivingReportModals\ReceivingReportSearch.cs">
       <SubType>Form</SubType>
@@ -632,12 +647,6 @@
     <Compile Include="Pages\Setup\frm_position_setup.Designer.cs">
       <DependentUpon>frm_position_setup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Setup\frm_receiving_report_setup.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Pages\Setup\frm_receiving_report_setup.Designer.cs">
-      <DependentUpon>frm_receiving_report_setup.cs</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Setup\frm_unit_of_measure_setup.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -729,6 +738,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Auth\AuthServices.cs" />
+    <Compile Include="Services\Helpers\BinLocationComboOverlay.cs" />
     <Compile Include="Services\Helpers\Helpers.cs" />
     <Compile Include="Services\Helpers\JsonHelper.cs" />
     <Compile Include="Services\Helpers\RequestToApi.cs" />
@@ -743,6 +753,7 @@
     <Compile Include="Services\Setup\GeneralService.cs" />
     <Compile Include="Services\Setup\Inventory\InventoryLogbookService.cs" />
     <Compile Include="Services\Setup\Inventory\InventoryTrackerService.cs" />
+    <Compile Include="Services\Setup\Inventory\ReceivingReport2Service.cs" />
     <Compile Include="Services\Setup\Inventory\ReceivingReportService.cs" />
     <Compile Include="Services\Setup\Model\Inventory\InventoryList.cs" />
     <Compile Include="Services\Setup\Item\PositionServices.cs" />
@@ -760,7 +771,6 @@
     <Compile Include="Services\Setup\Item\ItemTypeServices.cs" />
     <Compile Include="Services\Setup\Item\PaymentTermsServices.cs" />
     <Compile Include="Services\Setup\Item\ShipTypeServices.cs" />
-    <Compile Include="Services\Setup\Item\ReceivingReportServices.cs" />
     <Compile Include="Services\Setup\Model\Bom\BomClass.cs" />
     <Compile Include="Services\Setup\Model\Bom\ItemBomList.cs" />
     <Compile Include="Services\Setup\Model\Boq\BoqModel.cs" />
@@ -870,8 +880,8 @@
     <EmbeddedResource Include="Pages\Engineering\Boq\ItemSetSearch.resx">
       <DependentUpon>ItemSetSearch.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Pages\Inventory\InventoryLogbook.resx">
-      <DependentUpon>InventoryLogbook.cs</DependentUpon>
+    <EmbeddedResource Include="Pages\Inventory\InventoryLogbookPage.resx">
+      <DependentUpon>InventoryLogbookPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Inventory\InventoryLogbookModals\InventoryReport.resx">
       <DependentUpon>InventoryReport.cs</DependentUpon>
@@ -879,14 +889,20 @@
     <EmbeddedResource Include="Pages\Inventory\InventoryLogbookModals\ReportPreview.resx">
       <DependentUpon>ReportPreview.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Pages\Inventory\InventoryTracker.resx">
-      <DependentUpon>InventoryTracker.cs</DependentUpon>
+    <EmbeddedResource Include="Pages\Inventory\InventoryTrackerPage.resx">
+      <DependentUpon>InventoryTrackerPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Inventory\InventoryTrackerModals\InventoryTrackerLocation.resx">
       <DependentUpon>InventoryTrackerLocation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Inventory\ReceivingReport.resx">
       <DependentUpon>ReceivingReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Inventory\ReceivingReport2\ReceivingReport2Modals\ReceivingReportSearch.resx">
+      <DependentUpon>ReceivingReportSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Inventory\ReceivingReport2\ReceivingReport2Page.resx">
+      <DependentUpon>ReceivingReport2Page.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Inventory\ReceivingReportModals\ReceivingReportSearch.resx">
       <DependentUpon>ReceivingReportSearch.cs</DependentUpon>
@@ -1007,9 +1023,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Setup\frm_position_setup.resx">
       <DependentUpon>frm_position_setup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Pages\Setup\frm_receiving_report_setup.resx">
-      <DependentUpon>frm_receiving_report_setup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Setup\frm_unit_of_measure_setup.resx">
       <DependentUpon>frm_unit_of_measure_setup.cs</DependentUpon>

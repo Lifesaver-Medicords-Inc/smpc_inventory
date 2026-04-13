@@ -14,7 +14,7 @@ using smpc_inventory_app.Pages.Inventory.InventoryTrackerModals;
 
 namespace smpc_inventory_app.Pages
 {
-    public partial class InventoryTracker : UserControl
+    public partial class InventoryTrackerPage : UserControl
     {
         private List<WarehouseName> _warehouseName = new List<WarehouseName>();
         private int currentWarehouseIndex = -1;
@@ -29,7 +29,7 @@ namespace smpc_inventory_app.Pages
             { "OUTBOUND", new string[] { "zone", "units_outbound"} },
         };
 
-        public InventoryTracker()
+        public InventoryTrackerPage()
         {
             InitializeComponent();
 
@@ -125,6 +125,16 @@ namespace smpc_inventory_app.Pages
 
         private void AddZoneColumnsToDataTable(DataTable data)
         {
+            if (data == null)
+                return;
+
+            // ALWAYS add total_stock column
+            if (!data.Columns.Contains("total_stock"))
+            {
+                data.Columns.Add("total_stock", typeof(string));
+            }
+
+            // If there are no warehouse areas, just stop here
             if (_warehouseAreas == null || _warehouseAreas.Count == 0)
                 return;
 
@@ -142,12 +152,6 @@ namespace smpc_inventory_app.Pages
                 {
                     data.Columns.Add(uomColumnName, typeof(string));
                 }
-            }
-
-            // Add total_stock column if missing
-            if (!data.Columns.Contains("total_stock"))
-            {
-                data.Columns.Add("total_stock", typeof(string));
             }
         }
 
@@ -481,6 +485,22 @@ namespace smpc_inventory_app.Pages
             catch (Exception ex)
             {
                 Helpers.ShowDialogMessage("error", $"Error: {ex.Message}");
+            }
+        }
+
+        private void dgv_inventory_item_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            string columnName = dgv_inventory_item.Columns[e.ColumnIndex].Name;
+
+            if (columnName.StartsWith("zone_") || columnName == "total_stock")
+            {
+                e.CellStyle.BackColor = Color.Gainsboro;
+                e.CellStyle.SelectionBackColor = ControlPaint.Dark(Color.Gainsboro, 0.1f);
+                e.CellStyle.ForeColor = Color.Black;
+                e.CellStyle.SelectionForeColor = Color.Black;
             }
         }
     }

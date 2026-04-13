@@ -82,10 +82,12 @@ namespace Inventory_SMPC.Pages
             System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Receiving Report");
             System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Inventory Logbook");
             System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Inventory Tracker");
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Receiving Report 2");
+            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
             treeNode29,
             treeNode30,
-            treeNode31});
+            treeNode31,
+            treeNode32});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SMPC));
             this.MainPanel = new System.Windows.Forms.Panel();
             this.container = new System.Windows.Forms.Panel();
@@ -293,8 +295,10 @@ namespace Inventory_SMPC.Pages
             treeNode30.Text = "Inventory Logbook";
             treeNode31.Name = "INVENTORY TRACKER";
             treeNode31.Text = "Inventory Tracker";
-            treeNode32.Name = "parent";
-            treeNode32.Text = "Inventory";
+            treeNode32.Name = "Receiving Report 2";
+            treeNode32.Text = "Receiving Report 2";
+            treeNode33.Name = "parent";
+            treeNode33.Text = "Inventory";
             this.Sidebar.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2,
@@ -302,7 +306,7 @@ namespace Inventory_SMPC.Pages
             treeNode8,
             treeNode11,
             treeNode28,
-            treeNode32});
+            treeNode33});
             this.Sidebar.ShowNodeToolTips = true;
             this.Sidebar.Size = new System.Drawing.Size(235, 637);
             this.Sidebar.TabIndex = 0;

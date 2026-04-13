@@ -66,8 +66,6 @@ namespace smpc_inventory_app.Pages.Inventory
             public string Rack { get; set; }
             public string Level { get; set; }
             public string Bin { get; set; }
-
-            public Stack<string> SelectionHistory { get; set; } = new Stack<string>();
         }
 
         public ReceivingReport()
@@ -131,17 +129,20 @@ namespace smpc_inventory_app.Pages.Inventory
 
         private void SetEditableColumns(bool isEdit)
         {
-            if (dgv_main.Columns.Contains("received_qty"))
-                dgv_main.Columns["received_qty"].ReadOnly = !isEdit;
+            var editableColumns = new[] { "received_qty", "rejected_qty", "reason_for_rejection", "serial_number" };
 
-            if (dgv_main.Columns.Contains("rejected_qty"))
-                dgv_main.Columns["rejected_qty"].ReadOnly = !isEdit;
+            foreach (var colName in editableColumns)
+            {
+                if (dgv_main.Columns.Contains(colName))
+                {
+                    var column = dgv_main.Columns[colName];
 
-            if (dgv_main.Columns.Contains("reason_for_rejection"))
-                dgv_main.Columns["reason_for_rejection"].ReadOnly = true;
+                    column.ReadOnly = !isEdit;
 
-            if (dgv_main.Columns.Contains("serial_number"))
-                dgv_main.Columns["serial_number"].ReadOnly = !isEdit;
+                    // Toggle background color based on readonly state
+                    column.DefaultCellStyle.BackColor = column.ReadOnly ? Color.Gainsboro : Color.White;
+                }
+            }
         }
 
         private void btn_edit_Click(object sender, EventArgs e)
@@ -267,7 +268,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 return;
             }
 
-            bool hasError = Helpers.ValidateControlsValues(pnl_main);
+            bool hasError = Helpers.ValidateControlsValues2(pnl_main);
 
             if (hasError) // if validation failed
             {
@@ -828,7 +829,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 return;
 
             //Bind controls automatically (textboxes, checkboxes, etc.)
-            Helpers.BindControls(new Panel[] { pnl_main }, rrTable, _currentRRIndex);
+            Helpers.BindControls2(new Panel[] { pnl_main }, rrTable, _currentRRIndex);
             //Handle ComboBoxes manually (need lookups)
             var current = _receivingReports[_currentRRIndex];
 

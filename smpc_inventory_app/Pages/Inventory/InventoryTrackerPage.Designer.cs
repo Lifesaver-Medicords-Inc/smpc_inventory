@@ -1,7 +1,7 @@
 ﻿
 namespace smpc_inventory_app.Pages
 {
-    partial class InventoryTracker
+    partial class InventoryTrackerPage
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,6 +30,17 @@ namespace smpc_inventory_app.Pages
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_title = new System.Windows.Forms.Panel();
             this.btn_next = new System.Windows.Forms.Button();
             this.lbl_warehouse = new System.Windows.Forms.Label();
@@ -161,6 +172,7 @@ namespace smpc_inventory_app.Pages
             this.dgv_inventory_item.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgv_inventory_item_CellBeginEdit);
             this.dgv_inventory_item.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_inventory_item_CellClick);
             this.dgv_inventory_item.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_inventory_item_CellEndEdit);
+            this.dgv_inventory_item.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgv_inventory_item_CellFormatting);
             // 
             // id
             // 
@@ -190,6 +202,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.item_code.DataPropertyName = "item_code";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gainsboro;
+            this.item_code.DefaultCellStyle = dataGridViewCellStyle2;
             this.item_code.HeaderText = "ITEM CODE";
             this.item_code.Name = "item_code";
             this.item_code.ReadOnly = true;
@@ -198,6 +212,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.general_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.general_name.DataPropertyName = "general_name";
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
+            this.general_name.DefaultCellStyle = dataGridViewCellStyle3;
             this.general_name.HeaderText = "GENERAL NAME";
             this.general_name.Name = "general_name";
             this.general_name.ReadOnly = true;
@@ -207,6 +223,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.brand.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.brand.DataPropertyName = "brand";
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Gainsboro;
+            this.brand.DefaultCellStyle = dataGridViewCellStyle4;
             this.brand.HeaderText = "BRAND";
             this.brand.Name = "brand";
             this.brand.ReadOnly = true;
@@ -216,6 +234,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.item_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.item_desc.DataPropertyName = "item_desc";
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Gainsboro;
+            this.item_desc.DefaultCellStyle = dataGridViewCellStyle5;
             this.item_desc.HeaderText = "ITEM DESCRIPTION";
             this.item_desc.Name = "item_desc";
             this.item_desc.ReadOnly = true;
@@ -225,6 +245,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.units_reserved.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.units_reserved.DataPropertyName = "units_reserved";
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Gainsboro;
+            this.units_reserved.DefaultCellStyle = dataGridViewCellStyle6;
             this.units_reserved.HeaderText = "UNITS";
             this.units_reserved.Name = "units_reserved";
             this.units_reserved.ReadOnly = true;
@@ -234,6 +256,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.details.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.details.DataPropertyName = "details";
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.Gainsboro;
+            this.details.DefaultCellStyle = dataGridViewCellStyle7;
             this.details.HeaderText = "DETAILS";
             this.details.Name = "details";
             this.details.ReadOnly = true;
@@ -242,6 +266,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.uom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.uom.DataPropertyName = "uom";
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Gainsboro;
+            this.uom.DefaultCellStyle = dataGridViewCellStyle8;
             this.uom.HeaderText = "UOM";
             this.uom.Name = "uom";
             this.uom.ReadOnly = true;
@@ -251,6 +277,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.zone.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.zone.DataPropertyName = "zone";
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.Gainsboro;
+            this.zone.DefaultCellStyle = dataGridViewCellStyle9;
             this.zone.HeaderText = "ZONE";
             this.zone.Name = "zone";
             this.zone.ReadOnly = true;
@@ -259,6 +287,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.units_outbound.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.units_outbound.DataPropertyName = "units_outbound";
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.Gainsboro;
+            this.units_outbound.DefaultCellStyle = dataGridViewCellStyle10;
             this.units_outbound.HeaderText = "UNITS";
             this.units_outbound.Name = "units_outbound";
             this.units_outbound.ReadOnly = true;
@@ -268,6 +298,8 @@ namespace smpc_inventory_app.Pages
             // 
             this.calibration.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.calibration.DataPropertyName = "calibration";
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.Gainsboro;
+            this.calibration.DefaultCellStyle = dataGridViewCellStyle11;
             this.calibration.HeaderText = "CALIBRATION";
             this.calibration.Name = "calibration";
             this.calibration.ReadOnly = true;
@@ -300,6 +332,8 @@ namespace smpc_inventory_app.Pages
             // warehouse_name
             // 
             this.warehouse_name.DataPropertyName = "warehouse_name";
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.Gainsboro;
+            this.warehouse_name.DefaultCellStyle = dataGridViewCellStyle12;
             this.warehouse_name.HeaderText = "WAREHOUSE NAME";
             this.warehouse_name.Name = "warehouse_name";
             this.warehouse_name.ReadOnly = true;
