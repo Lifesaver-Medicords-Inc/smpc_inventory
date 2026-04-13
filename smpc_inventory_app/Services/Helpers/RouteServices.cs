@@ -59,7 +59,7 @@ namespace smpc_inventory_app.Services.Helpers
             //{ "INVENTORY", new frm_warehouse_name_setup() },
             { "WAREHOUSE USETYPE", new frm_warehouse_usetype_setup() },
             { "WAREHOUSE", new frm_warehouse_name_setup() },
-            { "INVENTORY TRACKER", new InventoryLogbookPage() },
+            { "INVENTORY TRACKER", new InventoryTrackerPage() },
             { "INVENTORY LOGBOOK", new InventoryLogbookPage() },
             { "RECEIVING REPORT", new ReceivingReport2Page() }
         };
