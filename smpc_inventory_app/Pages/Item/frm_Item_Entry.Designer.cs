@@ -296,6 +296,7 @@
             this.dataColumn19 = new System.Data.DataColumn();
             this.bindingSourceSpecsTemplate = new System.Windows.Forms.BindingSource(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btn_debug_state = new System.Windows.Forms.ToolStripButton();
             this.pnl_page_title.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnl_child.SuspendLayout();
@@ -411,7 +412,8 @@
             this.btn_save,
             this.btn_close,
             this.btn_next,
-            this.btn_prev});
+            this.btn_prev,
+            this.btn_debug_state});
             this.toolStrip1.Location = new System.Drawing.Point(0, 29);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 50, 0);
@@ -2854,6 +2856,15 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
+            // btn_debug_state
+            // 
+            this.btn_debug_state.Image = ((System.Drawing.Image)(resources.GetObject("btn_debug_state.Image")));
+            this.btn_debug_state.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_debug_state.Name = "btn_debug_state";
+            this.btn_debug_state.Size = new System.Drawing.Size(62, 22);
+            this.btn_debug_state.Text = "Debug";
+            this.btn_debug_state.Click += new System.EventHandler(this.btn_debug_state_Click);
+            // 
             // frm_Item_Entry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3235,5 +3246,6 @@
         private System.Data.DataColumn dataColumn19;
         private System.Windows.Forms.RichTextBox rtxt_long_description;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripButton btn_debug_state;
     }
 }

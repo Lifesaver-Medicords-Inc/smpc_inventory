@@ -70,6 +70,7 @@ namespace smpc_inventory_app.Pages.Item
         private Dictionary<string, object> imageData = new Dictionary<string, object>();
         private List<Dictionary<string, object>> newbase64Images = new List<Dictionary<string, object>>();
         private List<Dictionary<string, object>> replaceBase64Images = new List<Dictionary<string, object>>();
+        private Dictionary<int, Dictionary<string, object>> _pendingNewImages = new Dictionary<int, Dictionary<string, object>>();
         private List<int> temporaryImageIds = new List<int>();
         private static readonly HttpClient _httpClient = new HttpClient();
         private Dictionary<int, Bitmap> removedImages = new Dictionary<int, Bitmap>();
@@ -1316,40 +1317,42 @@ namespace smpc_inventory_app.Pages.Item
             );
 
             ResetComboBoxes(
-                cmb_template,
-                cmb_item_name,
-                cmb_item_class,
-                cmb_item_brand,
-                cmb_unit_of_measure,
-                cmb_item_tangibility_type,
-                cmb_impeller,
-                cmb_material,
-                cmb_connection_type,
+                cmb_template, cmb_item_name, cmb_item_class,
+                cmb_item_brand, cmb_unit_of_measure,
+                cmb_item_tangibility_type, cmb_impeller,
+                cmb_material, cmb_connection_type,
                 cmb_pump_count_compatability,
                 cmb_volume_unit_of_measure,
-                cmb_weight_unit_of_measure,
-                cmb_calibration,
-                cmb_warehouse,
-                cmb_storage_type,
+                cmb_weight_unit_of_measure, cmb_calibration,
+                cmb_warehouse, cmb_storage_type,
                 cmb_valuation_method
             );
 
             ResetCheckboxes(chk_is_stop_selling, chk_special_item);
 
             if (dgv_template.Columns["title"] != null)
-            {
                 dgv_template.Columns["title"].ReadOnly = true;
-            }
 
             flowLayoutPanel1.Controls.Clear();
             img_preview.Image = null;
             lbl_filename.Text = string.Empty;
+
             currentSelectedTradeTypeIds.Clear();
             txt_trade_type.Tag = "MULTI";
             currentSelectedPumpTypeIds.Clear();
             txt_pump_type_compatability.Tag = "MULTI";
+
             RemoveSelectedDataTable(CacheData.PumpType);
             RemoveSelectedDataTable(CacheData.ItemType);
+
+            // Full image state reset
+            _pendingNewImages.Clear();
+            replaceBase64Images.Clear();
+            imageData.Clear();
+            removedImages.Clear();
+            imageFilePaths.Clear();
+            tempImageIdCounter = -1;
+
             ItemModelGenerator();
 
             dgv_purchasing.DataSource = null;
@@ -1376,7 +1379,7 @@ namespace smpc_inventory_app.Pages.Item
 
             bool hasError = ValidateControlsValues(pnl_header) | ValidateControlsValues(pnl_additional_specs);
 
-            if (hasError) // if validation failed
+            if (hasError)
             {
                 Helpers.ShowDialogMessage("error", "Please fill in all required fields.");
                 btn_save.Enabled = true;
@@ -1385,15 +1388,11 @@ namespace smpc_inventory_app.Pages.Item
 
             isProgrammaticChange = true;
             if (!CheckIfCalpeda())
-            {
                 return;
-            }
 
             if (currentSelectedTradeTypeIds.Count != 0 && txt_id.Text != "")
-            {
                 txt_trade_type.Tag = currentSelectedTradeTypeIds;
-            }
-            // Get Data
+
             var data = Helpers.GetControlsValues(pnl_header);
             var itemprice = Helpers.GetControlsValues(pnl_item_sales_price);
 
@@ -1405,44 +1404,41 @@ namespace smpc_inventory_app.Pages.Item
             }
 
             if (itemprice.TryGetValue("price", out var priceValue))
-            {
                 data["price"] = priceValue;
-            }
-            data["price"] = float.TryParse(data["price"]?.ToString(), out float price) ? price : 0f;
 
+            data["price"] = float.TryParse(data["price"]?.ToString(), out float price) ? price : 0f;
             data["itemspecs"] = GetItemSpecs();
 
             if (data["itemspecs"] is Dictionary<string, object> itemSpecs && itemSpecs["item_specs_template"] is DataTable dt)
             {
                 foreach (DataColumn col in dt.Columns)
-                {
                     Debug.WriteLine($"Column: {col.ColumnName} | DataType: {col.DataType}");
-                }
             }
-            //if (currentSelectedPumpTypeIds.Count != 0 && txt_id.Text != "")
-            //{
-            //    txt_pump_type_compatability.Tag = currentSelectedPumpTypeIds;
-            //}
+
             data["additionalspecs"] = GetAdditionalSpecs();
+
+            // Build imageData cleanly before attaching
+            if (_pendingNewImages.Count > 0)
+                imageData["newimages"] = _pendingNewImages.Values.ToList();
+            else
+                imageData.Remove("newimages");
+
             data["itemimages"] = imageData;
             data["iteminventory"] = GetItemInventory();
 
-            // Determine if this is a new record    
             bool isNewRecord = string.IsNullOrWhiteSpace(txt_id.Text);
             if (isNewRecord)
             {
                 data.Remove("id");
-
             }
             else if (int.TryParse(txt_id.Text, out int recordId))
             {
                 data["id"] = recordId;
-
             }
             else
             {
                 Helpers.ShowDialogMessage("error", "Invalid ID format.");
-                //update json for itemimages
+                btn_save.Enabled = true;
                 return;
             }
 
@@ -1450,22 +1446,14 @@ namespace smpc_inventory_app.Pages.Item
                 ? await ItemServices.Insert(data)
                 : await ItemServices.Update(data);
 
-            //isProgrammaticChange = false;
             string message = response.Success
                 ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
                 : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
 
             Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
 
-
             if (response.Success)
             {
-                var itemResponse = response.Data["id"];
-
-                // Invoke function of BPI 
-
-                //    OnItem.Invoke("STRINGGG");
-
                 BpiAddItem(response.Data["id"].ToString());
 
                 Helpers.ResetControls(pnl_header);
@@ -1478,16 +1466,17 @@ namespace smpc_inventory_app.Pages.Item
                 currentSelectedPumpTypeIds.Clear();
                 txt_pump_type_compatability.Tag = 0;
 
-                imageData.Clear();
-                newbase64Images.Clear();
+                // Full image state reset
+                _pendingNewImages.Clear();
                 replaceBase64Images.Clear();
                 imageData.Remove("newimages");
                 imageData.Remove("replaceimages");
-
+                imageData.Remove("deleteimages");
+                removedImages.Clear();
             }
             else
             {
-                // Restore removed images in case of failure
+                // Restore removed images on failure
                 foreach (var removedImage in removedImages)
                 {
                     PictureBox restoredPictureBox = new PictureBox
@@ -1499,17 +1488,14 @@ namespace smpc_inventory_app.Pages.Item
                         SizeMode = PictureBoxSizeMode.Zoom,
                         Margin = new Padding(5),
                     };
-
                     restoredPictureBox.Tag = new ImageTag { Id = removedImage.Key };
-
                     flowLayoutPanel1.Controls.Add(restoredPictureBox);
                     restoredPictureBox.Click += PictureBox_Clicked;
                 }
-
                 removedImages.Clear();
             }
-            btn_save.Enabled = true;
 
+            btn_save.Enabled = true;
         }
         private void btn_close_Click(object sender, EventArgs e)
         {
@@ -1517,16 +1503,15 @@ namespace smpc_inventory_app.Pages.Item
             FetchItemData();
 
             if (dgv_template.Columns["title"] != null)
-            {
                 dgv_template.Columns["title"].ReadOnly = true;
-            }
 
-            // Clear input for fields not being saved
-            newbase64Images.Clear();
+            // Full image state reset
+            _pendingNewImages.Clear();
             replaceBase64Images.Clear();
             imageData.Remove("newimages");
             imageData.Remove("replaceimages");
-
+            imageData.Remove("deleteimages");
+            removedImages.Clear();
         }
         private void ChangeRecord(int step)
         {
@@ -2026,7 +2011,7 @@ namespace smpc_inventory_app.Pages.Item
                             stream.Position = 0;
                             using (Image tempImage = Image.FromStream(stream))
                             {
-                                Image image = new Bitmap(tempImage); // <--- clone here
+                                Image image = new Bitmap(tempImage);
                                 int tempImageId = tempImageIdCounter--;
                                 imageFilePaths[tempImageId] = filePath;
                                 string fileName = Path.GetFileName(filePath);
@@ -2040,16 +2025,15 @@ namespace smpc_inventory_app.Pages.Item
                                 string base64String = ConvertImageToBase64(image, ImageFormat.Jpeg);
                                 if (!string.IsNullOrEmpty(base64String))
                                 {
-                                    newbase64Images.Add(new Dictionary<string, object> {
-                                        { "image", base64String},
-                                        { "filename", fileName}
-                                    });
+                                    _pendingNewImages[tempImageId] = new Dictionary<string, object>
+                            {
+                                { "image", base64String },
+                                { "filename", fileName }
+                            };
                                 }
-                                temporaryImageIds.Add(tempImageId);
                             }
                         }
                     }
-                    imageData["newimages"] = newbase64Images;
                 }
             }
         }
@@ -2076,9 +2060,7 @@ namespace smpc_inventory_app.Pages.Item
                         using (Image image = Image.FromFile(filePath))
                         {
                             if (imageFilePaths.ContainsKey(id))
-                            {
                                 imageFilePaths[id] = filePath;
-                            }
 
                             var existingPictureBox = flowLayoutPanel1.Controls
                                 .OfType<PictureBox>()
@@ -2088,7 +2070,6 @@ namespace smpc_inventory_app.Pages.Item
                             {
                                 existingPictureBox.Image?.Dispose();
                                 existingPictureBox.Image = (Image)image.Clone();
-
                                 existingPictureBox.Tag = new ImageTag
                                 {
                                     Id = id,
@@ -2108,32 +2089,27 @@ namespace smpc_inventory_app.Pages.Item
                             {
                                 if (id < 0)
                                 {
-                                    int index = temporaryImageIds.IndexOf(id);
-                                    if (index >= 0 && index < newbase64Images.Count)
+                                    // Temp image — update pending new images directly by key
+                                    if (_pendingNewImages.ContainsKey(id))
                                     {
-                                        newbase64Images[index] = new Dictionary<string, object>
-                                        {
-                                            { "image", base64String },
-                                            { "filename", fileName},
-                                        };
-
-                                        imageData["newimages"] = newbase64Images;
+                                        _pendingNewImages[id]["image"] = base64String;
+                                        _pendingNewImages[id]["filename"] = fileName;
                                     }
                                 }
                                 else
                                 {
+                                    // Persisted image — update replace list
                                     replaceBase64Images.RemoveAll(d => Convert.ToInt32(d["id"]) == id);
                                     replaceBase64Images.Add(new Dictionary<string, object>
-                                    {
-                                        { "id", id },
-                                        { "image", base64String },
-                                        { "fileName", fileName }
-                                    });
+                            {
+                                { "id", id },
+                                { "image", base64String },
+                                { "fileName", fileName }
+                            });
                                     imageData["replaceimages"] = replaceBase64Images;
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -2142,13 +2118,12 @@ namespace smpc_inventory_app.Pages.Item
         {
             if (string.IsNullOrEmpty(txt_item_image_id.Text))
             {
-                MessageBox.Show("No image selected or image ID is missing.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No image selected, select one to proceed.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             int id = int.Parse(txt_item_image_id.Text);
 
-            // Find by Tag ID instead of image reference
             PictureBox pictureToRemove = flowLayoutPanel1.Controls
                 .OfType<PictureBox>()
                 .FirstOrDefault(pb => pb.Tag is ImageTag tag && tag.Id == id);
@@ -2166,14 +2141,11 @@ namespace smpc_inventory_app.Pages.Item
 
             if (result == DialogResult.Yes)
             {
-                // Sync preview from the actual PictureBox image before anything is disposed
                 img_preview.Image = pictureToRemove.Image;
-
                 removedImages[id] = new Bitmap(pictureToRemove.Image);
 
                 pictureToRemove.Image?.Dispose();
                 pictureToRemove.Image = null;
-
                 flowLayoutPanel1.Controls.Remove(pictureToRemove);
                 pictureToRemove.Dispose();
 
@@ -2182,38 +2154,25 @@ namespace smpc_inventory_app.Pages.Item
                 lbl_filename.Text = "";
 
                 if (imageFilePaths.ContainsKey(id))
-                {
                     imageFilePaths.Remove(id);
-                }
 
                 if (id < 0)
                 {
-                    int index = temporaryImageIds.IndexOf(id);
-                    if (index >= 0)
-                    {
-                        temporaryImageIds.RemoveAt(index);
-                        newbase64Images.RemoveAt(index);
-                    }
+                    // Temp image — remove from pending dict directly, no delete instruction needed
+                    _pendingNewImages.Remove(id);
                 }
                 else
                 {
-                    replaceBase64Images.RemoveAll(d => (int)d["id"] == id);
-
-                    if (imageData.ContainsKey("replaceimages"))
-                    {
-                        imageData["replaceimages"] = replaceBase64Images;
-                    }
+                    // Persisted image — remove any pending replace, add to delete list
+                    replaceBase64Images.RemoveAll(d => Convert.ToInt32(d["id"]) == id);
+                    imageData["replaceimages"] = replaceBase64Images;
 
                     if (!imageData.ContainsKey("deleteimages"))
-                    {
                         imageData["deleteimages"] = new List<Dictionary<string, int>>();
-                    }
 
                     var deleteImages = (List<Dictionary<string, int>>)imageData["deleteimages"];
                     if (!deleteImages.Any(d => d["id"] == id))
-                    {
                         deleteImages.Add(new Dictionary<string, int> { { "id", id } });
-                    }
                 }
             }
         }
@@ -2458,6 +2417,9 @@ namespace smpc_inventory_app.Pages.Item
             txt_item_image_based_id.Visible = false;
             txt_item_inventory_id.Visible = false;
             txt_item_inventory_based_id.Visible = false;
+
+            // stress testing
+            btn_debug_state.Visible = false;
         }
         private void InitializeListViewContextMenu()
         {
@@ -3057,6 +3019,65 @@ namespace smpc_inventory_app.Pages.Item
         private void lbl_filename_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btn_debug_state_Click(object sender, EventArgs e)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("=== PENDING NEW IMAGES ===");
+            foreach (var kvp in _pendingNewImages)
+                sb.AppendLine($"  ID: {kvp.Key} | File: {kvp.Value["filename"]}");
+
+            sb.AppendLine("\n=== REPLACE IMAGES ===");
+            if (imageData.ContainsKey("replaceimages"))
+                foreach (var d in (List<Dictionary<string, object>>)imageData["replaceimages"])
+                    sb.AppendLine($"  ID: {d["id"]} | File: {d["fileName"]}");
+
+            sb.AppendLine("\n=== DELETE IMAGES ===");
+            if (imageData.ContainsKey("deleteimages"))
+                foreach (var d in (List<Dictionary<string, int>>)imageData["deleteimages"])
+                    sb.AppendLine($"  ID: {d["id"]}");
+
+            sb.AppendLine("\n=== FLOW PANEL PICTUREBOXES ===");
+            foreach (PictureBox pb in flowLayoutPanel1.Controls.OfType<PictureBox>())
+            {
+                var tag = pb.Tag as ImageTag;
+                sb.AppendLine($"  ID: {tag?.Id} | File: {tag?.Filename}");
+            }
+
+            sb.AppendLine("\n=== CONSISTENCY CHECK ===");
+
+            // Every negative ID in flowPanel must exist in _pendingNewImages
+            foreach (PictureBox pb in flowLayoutPanel1.Controls.OfType<PictureBox>())
+            {
+                var tag = pb.Tag as ImageTag;
+                if (tag != null && tag.Id < 0 && !_pendingNewImages.ContainsKey(tag.Id))
+                    sb.AppendLine($"  [BUG] PictureBox ID {tag.Id} has no pending data!");
+            }
+
+            // Every key in _pendingNewImages must have a matching PictureBox
+            var pbIds = flowLayoutPanel1.Controls.OfType<PictureBox>()
+                .Select(pb => (pb.Tag as ImageTag)?.Id)
+                .ToHashSet();
+
+            foreach (var key in _pendingNewImages.Keys)
+                if (!pbIds.Contains(key))
+                    sb.AppendLine($"  [BUG] Pending ID {key} has no PictureBox!");
+
+            // An ID cannot be in both replaceimages and deleteimages
+            if (imageData.ContainsKey("replaceimages") && imageData.ContainsKey("deleteimages"))
+            {
+                var replaceIds = ((List<Dictionary<string, object>>)imageData["replaceimages"])
+                    .Select(d => Convert.ToInt32(d["id"])).ToHashSet();
+                var deleteIds = ((List<Dictionary<string, int>>)imageData["deleteimages"])
+                    .Select(d => d["id"]).ToHashSet();
+
+                foreach (var id in replaceIds.Intersect(deleteIds))
+                    sb.AppendLine($"  [BUG] ID {id} exists in both replace AND delete!");
+            }
+
+            MessageBox.Show(sb.ToString(), "Image State Debug");
         }
     }
     #endregion
