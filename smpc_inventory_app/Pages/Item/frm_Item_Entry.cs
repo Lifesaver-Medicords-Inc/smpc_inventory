@@ -2055,7 +2055,7 @@ namespace smpc_inventory_app.Pages.Item
         }
         private void btn_replace_image_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txt_item_image_id.Text) || !int.TryParse(txt_item_image_id.Text, out int imageId))
+            if (string.IsNullOrWhiteSpace(txt_item_image_id.Text) || !int.TryParse(txt_item_image_id.Text, out int id))
             {
                 MessageBox.Show("Select an image to replace.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -2075,19 +2075,26 @@ namespace smpc_inventory_app.Pages.Item
                         stream.Position = 0;
                         using (Image image = Image.FromFile(filePath))
                         {
-                            if (imageFilePaths.ContainsKey(imageId))
+                            if (imageFilePaths.ContainsKey(id))
                             {
-                                imageFilePaths[imageId] = filePath;
+                                imageFilePaths[id] = filePath;
                             }
 
                             var existingPictureBox = flowLayoutPanel1.Controls
                                 .OfType<PictureBox>()
-                                .FirstOrDefault(pb => pb.Tag is ImageTag tag && tag.Id == imageId);
+                                .FirstOrDefault(pb => pb.Tag is ImageTag tag && tag.Id == id);
 
                             if (existingPictureBox != null)
                             {
                                 existingPictureBox.Image?.Dispose();
                                 existingPictureBox.Image = (Image)image.Clone();
+
+                                existingPictureBox.Tag = new ImageTag
+                                {
+                                    Id = id,
+                                    Path = filePath,
+                                    Filename = fileName
+                                };
                             }
 
                             img_preview.Image?.Dispose();
@@ -2099,9 +2106,9 @@ namespace smpc_inventory_app.Pages.Item
 
                             if (!string.IsNullOrEmpty(base64String))
                             {
-                                if (imageId < 0)
+                                if (id < 0)
                                 {
-                                    int index = temporaryImageIds.IndexOf(imageId);
+                                    int index = temporaryImageIds.IndexOf(id);
                                     if (index >= 0 && index < newbase64Images.Count)
                                     {
                                         newbase64Images[index] = new Dictionary<string, object>
@@ -2115,10 +2122,10 @@ namespace smpc_inventory_app.Pages.Item
                                 }
                                 else
                                 {
-                                    replaceBase64Images.RemoveAll(d => Convert.ToInt32(d["imageid"]) == imageId);
+                                    replaceBase64Images.RemoveAll(d => Convert.ToInt32(d["id"]) == id);
                                     replaceBase64Images.Add(new Dictionary<string, object>
                                     {
-                                        { "imageid", imageId },
+                                        { "id", id },
                                         { "image", base64String },
                                         { "fileName", fileName }
                                     });
@@ -2139,12 +2146,12 @@ namespace smpc_inventory_app.Pages.Item
                 return;
             }
 
-            int imageId = int.Parse(txt_item_image_id.Text);
+            int id = int.Parse(txt_item_image_id.Text);
 
             // Find by Tag ID instead of image reference
             PictureBox pictureToRemove = flowLayoutPanel1.Controls
                 .OfType<PictureBox>()
-                .FirstOrDefault(pb => pb.Tag is ImageTag tag && tag.Id == imageId);
+                .FirstOrDefault(pb => pb.Tag is ImageTag tag && tag.Id == id);
 
             if (pictureToRemove == null)
             {
@@ -2162,7 +2169,7 @@ namespace smpc_inventory_app.Pages.Item
                 // Sync preview from the actual PictureBox image before anything is disposed
                 img_preview.Image = pictureToRemove.Image;
 
-                removedImages[imageId] = new Bitmap(pictureToRemove.Image);
+                removedImages[id] = new Bitmap(pictureToRemove.Image);
 
                 pictureToRemove.Image?.Dispose();
                 pictureToRemove.Image = null;
@@ -2174,14 +2181,14 @@ namespace smpc_inventory_app.Pages.Item
                 txt_item_image_id.Clear();
                 lbl_filename.Text = "";
 
-                if (imageFilePaths.ContainsKey(imageId))
+                if (imageFilePaths.ContainsKey(id))
                 {
-                    imageFilePaths.Remove(imageId);
+                    imageFilePaths.Remove(id);
                 }
 
-                if (imageId < 0)
+                if (id < 0)
                 {
-                    int index = temporaryImageIds.IndexOf(imageId);
+                    int index = temporaryImageIds.IndexOf(id);
                     if (index >= 0)
                     {
                         temporaryImageIds.RemoveAt(index);
@@ -2190,7 +2197,7 @@ namespace smpc_inventory_app.Pages.Item
                 }
                 else
                 {
-                    replaceBase64Images.RemoveAll(d => (int)d["imageid"] == imageId);
+                    replaceBase64Images.RemoveAll(d => (int)d["id"] == id);
 
                     if (imageData.ContainsKey("replaceimages"))
                     {
@@ -2203,14 +2210,14 @@ namespace smpc_inventory_app.Pages.Item
                     }
 
                     var deleteImages = (List<Dictionary<string, int>>)imageData["deleteimages"];
-                    if (!deleteImages.Any(d => d["imageid"] == imageId))
+                    if (!deleteImages.Any(d => d["id"] == id))
                     {
-                        deleteImages.Add(new Dictionary<string, int> { { "imageid", imageId } });
+                        deleteImages.Add(new Dictionary<string, int> { { "id", id } });
                     }
                 }
             }
         }
-        private PictureBox CreatePictureBox(Image image, string filePath, int imageId, string fileName)
+        private PictureBox CreatePictureBox(Image image, string filePath, int id, string fileName)
         {
             PictureBox pictureBox = new PictureBox
             {
@@ -2220,7 +2227,7 @@ namespace smpc_inventory_app.Pages.Item
                 SizeMode = PictureBoxSizeMode.Zoom,
                 Image = image,
                 Margin = new Padding(5),
-                Tag = new ImageTag { Id = imageId, Path = filePath, Filename = fileName }
+                Tag = new ImageTag { Id = id, Path = filePath, Filename = fileName }
 
             };
 
