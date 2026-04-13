@@ -73,7 +73,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             this.txt_warehouse_address = new System.Windows.Forms.TextBox();
             this.txt_supplier_code = new System.Windows.Forms.TextBox();
             this.txt_supplier = new System.Windows.Forms.TextBox();
-            this.dtp_date_received = new System.Windows.Forms.DateTimePicker();
             this.cmb_warehouse = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txt_purchase_order_id = new System.Windows.Forms.TextBox();
@@ -94,22 +93,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             this.tbc_main = new System.Windows.Forms.TabControl();
             this.main = new System.Windows.Forms.TabPage();
             this.dgv_main = new System.Windows.Forms.DataGridView();
-            this.attachment = new System.Windows.Forms.TabPage();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.pnl_Receiving = new System.Windows.Forms.Panel();
-            this.label27 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnUpload = new System.Windows.Forms.Button();
-            this.RECEIVING_LV = new System.Windows.Forms.ListView();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.TV1_preview = new System.Windows.Forms.Panel();
-            this.label29 = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.RECEIVING_TV = new System.Windows.Forms.TreeView();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.treeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.renameFileItem = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.receiving_report_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -129,6 +112,23 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             this.rejected_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rejected_uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.reason_for_rejection = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.attachment = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.pnl_Receiving = new System.Windows.Forms.Panel();
+            this.label27 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnUpload = new System.Windows.Forms.Button();
+            this.RECEIVING_LV = new System.Windows.Forms.ListView();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.TV1_preview = new System.Windows.Forms.Panel();
+            this.label29 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.RECEIVING_TV = new System.Windows.Forms.TreeView();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.treeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.renameFileItem = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.dtp_date_received = new System.Windows.Forms.DateTimePicker();
             this.panel6.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnl_main.SuspendLayout();
@@ -272,6 +272,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             // 
             // pnl_main
             // 
+            this.pnl_main.Controls.Add(this.dtp_date_received);
             this.pnl_main.Controls.Add(this.txt_ref_doc);
             this.pnl_main.Controls.Add(this.label8);
             this.pnl_main.Controls.Add(this.txt_warehouse_id);
@@ -282,7 +283,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             this.pnl_main.Controls.Add(this.txt_warehouse_address);
             this.pnl_main.Controls.Add(this.txt_supplier_code);
             this.pnl_main.Controls.Add(this.txt_supplier);
-            this.pnl_main.Controls.Add(this.dtp_date_received);
             this.pnl_main.Controls.Add(this.cmb_warehouse);
             this.pnl_main.Controls.Add(this.label2);
             this.pnl_main.Controls.Add(this.txt_purchase_order_id);
@@ -416,16 +416,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             this.txt_supplier.Size = new System.Drawing.Size(289, 20);
             this.txt_supplier.TabIndex = 305;
             this.txt_supplier.Tag = "REQUIRED";
-            // 
-            // dtp_date_received
-            // 
-            this.dtp_date_received.Enabled = false;
-            this.dtp_date_received.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_date_received.Location = new System.Drawing.Point(167, 50);
-            this.dtp_date_received.Name = "dtp_date_received";
-            this.dtp_date_received.Size = new System.Drawing.Size(289, 20);
-            this.dtp_date_received.TabIndex = 304;
-            this.dtp_date_received.Tag = "REQUIRED";
             // 
             // cmb_warehouse
             // 
@@ -674,164 +664,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             this.dgv_main.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgv_main_EditingControlShowing);
             this.dgv_main.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dgv_main_RowPostPaint);
             // 
-            // attachment
-            // 
-            this.attachment.Controls.Add(this.panel1);
-            this.attachment.Location = new System.Drawing.Point(4, 22);
-            this.attachment.Name = "attachment";
-            this.attachment.Padding = new System.Windows.Forms.Padding(3);
-            this.attachment.Size = new System.Drawing.Size(1277, 290);
-            this.attachment.TabIndex = 2;
-            this.attachment.Text = "ATTACHMENT";
-            this.attachment.UseVisualStyleBackColor = true;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.panel3);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1271, 284);
-            this.panel1.TabIndex = 0;
-            this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.pnl_Receiving);
-            this.panel3.Controls.Add(this.btnUpload);
-            this.panel3.Controls.Add(this.RECEIVING_LV);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(621, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(650, 284);
-            this.panel3.TabIndex = 1;
-            // 
-            // pnl_Receiving
-            // 
-            this.pnl_Receiving.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnl_Receiving.Controls.Add(this.label27);
-            this.pnl_Receiving.Controls.Add(this.pictureBox1);
-            this.pnl_Receiving.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnl_Receiving.Location = new System.Drawing.Point(0, 0);
-            this.pnl_Receiving.Name = "pnl_Receiving";
-            this.pnl_Receiving.Size = new System.Drawing.Size(650, 284);
-            this.pnl_Receiving.TabIndex = 29;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(243, 165);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(179, 23);
-            this.label27.TabIndex = 1;
-            this.label27.Text = "Please select a folder";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::smpc_inventory_app.Properties.Resources.FolderIcon;
-            this.pictureBox1.Location = new System.Drawing.Point(263, 73);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(139, 79);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
-            // btnUpload
-            // 
-            this.btnUpload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUpload.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.btnUpload.Location = new System.Drawing.Point(552, 223);
-            this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(75, 23);
-            this.btnUpload.TabIndex = 3;
-            this.btnUpload.Text = "Upload";
-            this.btnUpload.UseVisualStyleBackColor = false;
-            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
-            // 
-            // RECEIVING_LV
-            // 
-            this.RECEIVING_LV.AllowDrop = true;
-            this.RECEIVING_LV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RECEIVING_LV.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RECEIVING_LV.FullRowSelect = true;
-            this.RECEIVING_LV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.RECEIVING_LV.HideSelection = false;
-            this.RECEIVING_LV.HoverSelection = true;
-            this.RECEIVING_LV.Location = new System.Drawing.Point(0, 0);
-            this.RECEIVING_LV.MultiSelect = false;
-            this.RECEIVING_LV.Name = "RECEIVING_LV";
-            this.RECEIVING_LV.Size = new System.Drawing.Size(650, 284);
-            this.RECEIVING_LV.TabIndex = 2;
-            this.RECEIVING_LV.UseCompatibleStateImageBehavior = false;
-            this.RECEIVING_LV.View = System.Windows.Forms.View.Details;
-            this.RECEIVING_LV.DoubleClick += new System.EventHandler(this.RECEIVING_LV_DoubleClick);
-            this.RECEIVING_LV.MouseEnter += new System.EventHandler(this.RECEIVING_LV_MouseEnter);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.TV1_preview);
-            this.panel2.Controls.Add(this.RECEIVING_TV);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(598, 284);
-            this.panel2.TabIndex = 0;
-            // 
-            // TV1_preview
-            // 
-            this.TV1_preview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TV1_preview.Controls.Add(this.label29);
-            this.TV1_preview.Controls.Add(this.pictureBox3);
-            this.TV1_preview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TV1_preview.Location = new System.Drawing.Point(0, 0);
-            this.TV1_preview.Name = "TV1_preview";
-            this.TV1_preview.Size = new System.Drawing.Size(598, 284);
-            this.TV1_preview.TabIndex = 26;
-            this.TV1_preview.Visible = false;
-            this.TV1_preview.Resize += new System.EventHandler(this.TV1_preview_Resize);
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label29.Location = new System.Drawing.Point(169, 165);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(260, 23);
-            this.label29.TabIndex = 4;
-            this.label29.Text = "Directory will open when saved";
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::smpc_inventory_app.Properties.Resources.search;
-            this.pictureBox3.Location = new System.Drawing.Point(213, 73);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(151, 79);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 3;
-            this.pictureBox3.TabStop = false;
-            // 
-            // RECEIVING_TV
-            // 
-            this.RECEIVING_TV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RECEIVING_TV.Location = new System.Drawing.Point(0, 0);
-            this.RECEIVING_TV.Name = "RECEIVING_TV";
-            this.RECEIVING_TV.Size = new System.Drawing.Size(598, 284);
-            this.RECEIVING_TV.TabIndex = 3;
-            this.RECEIVING_TV.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.RECEIVING_TV_AfterSelect);
-            this.RECEIVING_TV.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RECEIVING_TV_MouseDown);
-            // 
-            // treeViewContextMenu
-            // 
-            this.treeViewContextMenu.Name = "treeViewContextMenu";
-            this.treeViewContextMenu.Size = new System.Drawing.Size(61, 4);
-            // 
-            // renameFileItem
-            // 
-            this.renameFileItem.Name = "renameFileItem";
-            this.renameFileItem.Size = new System.Drawing.Size(61, 4);
-            // 
             // number
             // 
             this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -1021,6 +853,174 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             this.reason_for_rejection.Name = "reason_for_rejection";
             this.reason_for_rejection.ReadOnly = true;
             // 
+            // attachment
+            // 
+            this.attachment.Controls.Add(this.panel1);
+            this.attachment.Location = new System.Drawing.Point(4, 22);
+            this.attachment.Name = "attachment";
+            this.attachment.Padding = new System.Windows.Forms.Padding(3);
+            this.attachment.Size = new System.Drawing.Size(1277, 290);
+            this.attachment.TabIndex = 2;
+            this.attachment.Text = "ATTACHMENT";
+            this.attachment.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.panel3);
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1271, 284);
+            this.panel1.TabIndex = 0;
+            this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.pnl_Receiving);
+            this.panel3.Controls.Add(this.btnUpload);
+            this.panel3.Controls.Add(this.RECEIVING_LV);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel3.Location = new System.Drawing.Point(621, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(650, 284);
+            this.panel3.TabIndex = 1;
+            // 
+            // pnl_Receiving
+            // 
+            this.pnl_Receiving.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnl_Receiving.Controls.Add(this.label27);
+            this.pnl_Receiving.Controls.Add(this.pictureBox1);
+            this.pnl_Receiving.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnl_Receiving.Location = new System.Drawing.Point(0, 0);
+            this.pnl_Receiving.Name = "pnl_Receiving";
+            this.pnl_Receiving.Size = new System.Drawing.Size(650, 284);
+            this.pnl_Receiving.TabIndex = 29;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(243, 165);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(179, 23);
+            this.label27.TabIndex = 1;
+            this.label27.Text = "Please select a folder";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::smpc_inventory_app.Properties.Resources.FolderIcon;
+            this.pictureBox1.Location = new System.Drawing.Point(263, 73);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(139, 79);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // btnUpload
+            // 
+            this.btnUpload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUpload.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.btnUpload.Location = new System.Drawing.Point(552, 223);
+            this.btnUpload.Name = "btnUpload";
+            this.btnUpload.Size = new System.Drawing.Size(75, 23);
+            this.btnUpload.TabIndex = 3;
+            this.btnUpload.Text = "Upload";
+            this.btnUpload.UseVisualStyleBackColor = false;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            // 
+            // RECEIVING_LV
+            // 
+            this.RECEIVING_LV.AllowDrop = true;
+            this.RECEIVING_LV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RECEIVING_LV.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RECEIVING_LV.FullRowSelect = true;
+            this.RECEIVING_LV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.RECEIVING_LV.HideSelection = false;
+            this.RECEIVING_LV.HoverSelection = true;
+            this.RECEIVING_LV.Location = new System.Drawing.Point(0, 0);
+            this.RECEIVING_LV.MultiSelect = false;
+            this.RECEIVING_LV.Name = "RECEIVING_LV";
+            this.RECEIVING_LV.Size = new System.Drawing.Size(650, 284);
+            this.RECEIVING_LV.TabIndex = 2;
+            this.RECEIVING_LV.UseCompatibleStateImageBehavior = false;
+            this.RECEIVING_LV.View = System.Windows.Forms.View.Details;
+            this.RECEIVING_LV.DoubleClick += new System.EventHandler(this.RECEIVING_LV_DoubleClick);
+            this.RECEIVING_LV.MouseEnter += new System.EventHandler(this.RECEIVING_LV_MouseEnter);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.TV1_preview);
+            this.panel2.Controls.Add(this.RECEIVING_TV);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(598, 284);
+            this.panel2.TabIndex = 0;
+            // 
+            // TV1_preview
+            // 
+            this.TV1_preview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TV1_preview.Controls.Add(this.label29);
+            this.TV1_preview.Controls.Add(this.pictureBox3);
+            this.TV1_preview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TV1_preview.Location = new System.Drawing.Point(0, 0);
+            this.TV1_preview.Name = "TV1_preview";
+            this.TV1_preview.Size = new System.Drawing.Size(598, 284);
+            this.TV1_preview.TabIndex = 26;
+            this.TV1_preview.Visible = false;
+            this.TV1_preview.Resize += new System.EventHandler(this.TV1_preview_Resize);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(169, 165);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(260, 23);
+            this.label29.TabIndex = 4;
+            this.label29.Text = "Directory will open when saved";
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::smpc_inventory_app.Properties.Resources.search;
+            this.pictureBox3.Location = new System.Drawing.Point(213, 73);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(151, 79);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 3;
+            this.pictureBox3.TabStop = false;
+            // 
+            // RECEIVING_TV
+            // 
+            this.RECEIVING_TV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RECEIVING_TV.Location = new System.Drawing.Point(0, 0);
+            this.RECEIVING_TV.Name = "RECEIVING_TV";
+            this.RECEIVING_TV.Size = new System.Drawing.Size(598, 284);
+            this.RECEIVING_TV.TabIndex = 3;
+            this.RECEIVING_TV.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.RECEIVING_TV_AfterSelect);
+            this.RECEIVING_TV.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RECEIVING_TV_MouseDown);
+            // 
+            // treeViewContextMenu
+            // 
+            this.treeViewContextMenu.Name = "treeViewContextMenu";
+            this.treeViewContextMenu.Size = new System.Drawing.Size(61, 4);
+            // 
+            // renameFileItem
+            // 
+            this.renameFileItem.Name = "renameFileItem";
+            this.renameFileItem.Size = new System.Drawing.Size(61, 4);
+            // 
+            // dtp_date_received
+            // 
+            this.dtp_date_received.Enabled = false;
+            this.dtp_date_received.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtp_date_received.Location = new System.Drawing.Point(167, 50);
+            this.dtp_date_received.Name = "dtp_date_received";
+            this.dtp_date_received.Size = new System.Drawing.Size(289, 20);
+            this.dtp_date_received.TabIndex = 317;
+            this.dtp_date_received.Tag = "REQUIRED";
+            // 
             // ReceivingReport2Page
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1108,7 +1108,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
         private System.Windows.Forms.ComboBox cmb_warehouse;
         private System.Windows.Forms.TextBox txt_supplier_code;
         private System.Windows.Forms.TextBox txt_supplier;
-        private System.Windows.Forms.DateTimePicker dtp_date_received;
         private System.Windows.Forms.ComboBox cmb_ref_doc;
         private System.Windows.Forms.TextBox txt_doc_no;
         private System.Windows.Forms.TextBox txt_prepared_by;
@@ -1139,5 +1138,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
         private System.Windows.Forms.DataGridViewTextBoxColumn rejected_qty;
         private System.Windows.Forms.DataGridViewTextBoxColumn rejected_uom;
         private System.Windows.Forms.DataGridViewTextBoxColumn reason_for_rejection;
+        private System.Windows.Forms.DateTimePicker dtp_date_received;
     }
 }

@@ -1646,17 +1646,28 @@ namespace smpc_app.Services.Helpers
                                     return;
 
                                 object rawValue = dt.Rows[selectedIndex][column_name];
+                                string rawStr = rawValue?.ToString() ?? "";
 
-                                if (rawValue != DBNull.Value &&
-                                    DateTime.TryParse(rawValue.ToString(), out DateTime parsedDate))
+                                if (rawValue != DBNull.Value && !string.IsNullOrWhiteSpace(rawStr))
                                 {
-                                    dateTimePicker.Format = DateTimePickerFormat.Custom;
-                                    dateTimePicker.CustomFormat = "MM/dd/yyyy";   // your format
-                                    dateTimePicker.Value = parsedDate;
+                                    // Try exact format first, then fallback to general parse
+                                    if (!DateTime.TryParseExact(rawStr, "MM/dd/yyyy",
+                                            System.Globalization.CultureInfo.InvariantCulture,
+                                            System.Globalization.DateTimeStyles.None,
+                                            out DateTime parsedDate))
+                                    {
+                                        DateTime.TryParse(rawStr, out parsedDate); // fallback
+                                    }
+
+                                    if (parsedDate != default)
+                                    {
+                                        dateTimePicker.Format = DateTimePickerFormat.Custom;
+                                        dateTimePicker.CustomFormat = "MM/dd/yyyy";
+                                        dateTimePicker.Value = parsedDate;             // ← Set Value AFTER setting Format
+                                    }
                                 }
                                 else
                                 {
-                                    // Make it appear empty
                                     dateTimePicker.Format = DateTimePickerFormat.Custom;
                                     dateTimePicker.CustomFormat = " ";
                                 }
