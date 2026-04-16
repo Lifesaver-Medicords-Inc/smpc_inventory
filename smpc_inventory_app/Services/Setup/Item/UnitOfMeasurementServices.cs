@@ -16,7 +16,7 @@ namespace smpc_inventory_app.Services.Setup.Item
 
         public static async Task<DataTable> GetAsDatatable()
         {
-            var response = await RequestToApi<ApiResponseModel<List<UnitOfMeasurementModel>>>.Get(ENUM_ENDPOINT.UNIT_OF_MEASURMENT);
+            var response = await RequestToApi<ApiResponseModel<List<UnitOfMeasurementModel>>>.Get(ENUM_ENDPOINT.UNIT_OF_MEASUREMENT);
 
             DataTable itemBrands = JsonHelper.ToDataTable(response.Data);
 
@@ -24,14 +24,14 @@ namespace smpc_inventory_app.Services.Setup.Item
         }
         public static async Task<ApiResponseModel> Insert(Dictionary<string, dynamic> data)
         {
-            var response = await RequestToApi<ApiResponseModel>.Post(ENUM_ENDPOINT.UNIT_OF_MEASURMENT, data);
+            var response = await RequestToApi<ApiResponseModel>.Post(ENUM_ENDPOINT.UNIT_OF_MEASUREMENT, data);
 
             return response;
         }
 
         public static async Task<bool> Delete(Dictionary<string, dynamic> data)
         {
-            var response = await RequestToApi<ApiResponseModel<UnitOfMeasurementModel>>.Delete(ENUM_ENDPOINT.UNIT_OF_MEASURMENT, data);
+            var response = await RequestToApi<ApiResponseModel<UnitOfMeasurementModel>>.Delete(ENUM_ENDPOINT.UNIT_OF_MEASUREMENT, data);
             bool isSuccess = response.Success;
 
             return isSuccess;
@@ -40,7 +40,7 @@ namespace smpc_inventory_app.Services.Setup.Item
         public static async Task<ApiResponseModel> Update(Dictionary<string, dynamic> data)
         {
 
-            var response = await RequestToApi<ApiResponseModel>.Put(ENUM_ENDPOINT.UNIT_OF_MEASURMENT, data);
+            var response = await RequestToApi<ApiResponseModel>.Put(ENUM_ENDPOINT.UNIT_OF_MEASUREMENT, data);
             return response;
         }
 

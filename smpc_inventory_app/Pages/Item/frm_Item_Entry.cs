@@ -833,17 +833,15 @@ namespace smpc_inventory_app.Pages.Item
             cmb_item_brand.ValueMember = "id";
             cmb_item_brand.DisplayMember = "name";
         }
-        private async void FetchUOMSetup()
+        private void BindUOMComboBoxes(DataTable result)
         {
-            serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.UNIT_OF_MEASURMENT);
-            var result = await serviceSetup.GetAsDatatable();
-            if (result == null) return;
-
-            CacheData.UnitOfMeasurement = result;
-
             DataView dvUnit = new DataView(result.Copy());
             DataView dvWeight = new DataView(result.Copy());
             DataView dvVolume = new DataView(result.Copy());
+
+            // Apply your filters here if dvWeight/dvVolume are subsets
+            // e.g. dvWeight.RowFilter = "UOMType = 'Weight'";
+            //      dvVolume.RowFilter = "UOMType = 'Volume'";
 
             Helpers.AddCmbDefaultVal(dvUnit.Table);
             Helpers.AddCmbDefaultVal(dvWeight.Table);
@@ -852,6 +850,15 @@ namespace smpc_inventory_app.Pages.Item
             Helpers.BindCmbValues(cmb_unit_of_measure, dvUnit);
             Helpers.BindCmbValues(cmb_weight_unit_of_measure, dvWeight);
             Helpers.BindCmbValues(cmb_volume_unit_of_measure, dvVolume);
+        }
+
+        private async void FetchUOMSetup()
+        {
+            var serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.UNIT_OF_MEASUREMENT);
+            var result = await serviceSetup.GetAsDatatable();
+            if (result == null) return;
+            CacheData.UnitOfMeasurement = result;
+            BindUOMComboBoxes(result);
         }
         private async void FetchItemTradeType()
         {
@@ -962,8 +969,9 @@ namespace smpc_inventory_app.Pages.Item
                 case var _ when api == ENUM_ENDPOINT.VALUATIONMETHOD:
                     CacheData.ValuationMethod = result;
                     break;
-                case var _ when api == ENUM_ENDPOINT.UNIT_OF_MEASURMENT:
+                case var _ when api == ENUM_ENDPOINT.UNIT_OF_MEASUREMENT:
                     CacheData.UnitOfMeasurement = result;
+                    BindUOMComboBoxes(result);
                     break;
                 default:
                     return;
@@ -984,7 +992,7 @@ namespace smpc_inventory_app.Pages.Item
                 { ENUM_ENDPOINT.ITEM_MATERIAL,      new List<ComboBox> { cmb_impeller, cmb_material } }, // shared endpoint
                 { ENUM_ENDPOINT.ITEM_PUMP_COUNT,    new List<ComboBox> { cmb_pump_count_compatability } },
                 { ENUM_ENDPOINT.VALUATIONMETHOD,    new List<ComboBox> { cmb_valuation_method } },
-                { ENUM_ENDPOINT.UNIT_OF_MEASURMENT, new List<ComboBox> { cmb_unit_of_measure } },
+                { ENUM_ENDPOINT.UNIT_OF_MEASUREMENT, new List<ComboBox> { cmb_unit_of_measure } },
             };
         }
         private void OpenSetupModal(string title, string api, DataTable cacheData)
@@ -1016,7 +1024,7 @@ namespace smpc_inventory_app.Pages.Item
         private void cmb_pump_count_Click(object sender, EventArgs e) =>
             OpenSetupModal("Pump Count", ENUM_ENDPOINT.ITEM_PUMP_COUNT, CacheData.PumpCount);
         private void AddUOM() =>
-            OpenSetupModal("Unit of Measure", ENUM_ENDPOINT.UNIT_OF_MEASURMENT, CacheData.UnitOfMeasurement);
+            OpenSetupModal("Unit of Measure", ENUM_ENDPOINT.UNIT_OF_MEASUREMENT, CacheData.UnitOfMeasurement);
         private void btn_add_oum_Click(object sender, EventArgs e) => AddUOM();
         private void add_volume_uom_Click(object sender, EventArgs e) => AddUOM();
         private void add_weight_uom_Click(object sender, EventArgs e) => AddUOM();
