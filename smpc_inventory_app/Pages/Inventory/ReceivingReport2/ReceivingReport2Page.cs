@@ -381,7 +381,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
                 }
 
                 //Validate Datagridview columns
-                string[] columnsToValidate = { "item_code", "item_desc", "ordered_qty", "received_qty", "bin_location" };
+                string[] columnsToValidate = { "item_code", "item_desc", "ordered_qty" };
                 if (await Helpers.ValidateDataGridViewCells(dgv_main, columnsToValidate))
                     return;
 
@@ -477,6 +477,22 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
                 // Check if at least one row has received qty
                 if (receivedQty > 0)
                     hasAtLeastOneReceived = true;
+
+                // Validate: received qty requires bin_location
+                if (receivedQty > 0)
+                {
+                    var binLocationVal = row.Cells["bin_location"].Value;
+                    bool hasBinLocation = binLocationVal != null
+                        && !string.IsNullOrWhiteSpace(binLocationVal.ToString());
+
+                    if (!hasBinLocation)
+                    {
+                        string itemCode = row.Cells["item_code"].Value?.ToString() ?? $"Row {i + 1}";
+                        Helpers.ShowDialogMessage("error",
+                            $"Row {i + 1} ({itemCode}): A bin location is required when a received quantity is entered.");
+                        return false;
+                    }
+                }
 
                 // Validate: received + rejected must not exceed remaining
                 if ((receivedQty + rejectedQty) > remainingQty)
@@ -773,6 +789,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             if (cmb_ref_doc.SelectedItem is ReceivingPurchaseOrderDocView selectedPurchaseOrder)
             {
                 _purchase_order_id = selectedPurchaseOrder.purchase_order_id;
+                txt_ref_doc.Text = selectedPurchaseOrder.po_doc_no;
                 await LoadPurchaseOrders();
             }
             else
