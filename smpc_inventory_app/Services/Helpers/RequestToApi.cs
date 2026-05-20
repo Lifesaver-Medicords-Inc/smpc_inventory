@@ -2,8 +2,10 @@ using Newtonsoft.Json;
 using smpc_invemtory_app.Pages.Shared;
 using smpc_inventory_app.Data;
 using smpc_inventory_app.Properties;
+using smpc_sales_system;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Net;
@@ -18,7 +20,18 @@ namespace smpc_inventory_app.Services.Helpers
 {
     internal class RequestToApi<T> where T : class
     {
-        static string baseUrl => Program.ApiBaseUrl ?? "http://127.0.0.1:3000/api";
+        static string baseUrl
+        {
+            get
+            {
+                string env =
+                    ConfigurationManager.AppSettings["Environment"]
+                    ?? "Development";
+
+                return ConfigurationManager.AppSettings[$"ApiBaseUrl.{env}"]
+                    ?? "http://127.0.0.1:3000/api";
+            }
+        }
         static CookieContainer cookieContainer = new CookieContainer();
 
         static private async Task<T> SendRequestAsync(string url, HttpMethod method, string body = null)
@@ -50,10 +63,20 @@ namespace smpc_inventory_app.Services.Helpers
                     }
                     // Perform the HTTP request asynchronously
                     HttpResponseMessage response = await client.SendAsync(requestMessage);
+
+                    string allHeaders = string.Join("\n", response.Headers.Select(h => $"{h.Key}: {string.Join(", ", h.Value)}"));
+
+                    //testing if the token is being sent back in the response headers
+                    //MessageBox.Show("Status: " + response.StatusCode + "\n\nHeaders:\n" + allHeaders, "Response Debug");
+
+
                     // Check if the response is successful
                     if (response.IsSuccessStatusCode)
                     {
                         string responseContent = await response.Content.ReadAsStringAsync();
+
+
+
                         if (string.IsNullOrEmpty(CacheData.SessionToken))
                         {
                             List<String> tokenResponseArr = response.Headers.GetValues("Set-Cookie").ToList();
@@ -72,11 +95,6 @@ namespace smpc_inventory_app.Services.Helpers
                         // Optionally, you can parse the responseContent into an object of type T
                         T result = JsonConvert.DeserializeObject<T>(responseContent);
                         // Display the response content (for debugging purposes)
-                        //MessageBox.Show(responseContent, "API Response");
-                        //MessageBox.Show(responseContent, "API Response");
-
-                        //MessageBox.Show(responseContent, "API Response");
-
                         //MessageBox.Show(responseContent, "API Response");
 
                         return result; // Return the
