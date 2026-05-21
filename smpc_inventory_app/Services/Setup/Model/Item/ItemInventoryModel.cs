@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace smpc_inventory_app.Services.Setup.Model.Item
 {
-    class ItemInventoryModel
+    public class ItemInventoryModel
     {
         public int id { get; set; }
         public int based_id { get; set; }
@@ -18,7 +18,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Item
         public int minimum_inventory { get; set; }
         public int maximum_inventory { get; set; }
     }
-    class ItemAvailableInvModel
+    public class ItemAvailableInvModel
     {
         public int item_id { get; set; }
         public int warehouse_id { get; set; }

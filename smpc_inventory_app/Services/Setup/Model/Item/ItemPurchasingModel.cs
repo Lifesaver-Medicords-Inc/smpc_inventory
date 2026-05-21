@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace smpc_inventory_app.Services.Setup.Model.Item
 {
-    class ItemPurchasingModel
+    public class ItemPurchasingModel
     {
         public int id { get; set; }
         public int based_id { get; set; }
@@ -18,7 +18,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Item
         public string payment_terms_name { get; set; }
         public string validity_period { get; set; }
     }
-    class ItemPurchasing 
+    public class ItemPurchasing 
     {
         public List<ItemPurchasingModel> itempurchasing { get; set; }
     }

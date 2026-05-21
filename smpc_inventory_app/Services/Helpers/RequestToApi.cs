@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using smpc_invemtory_app.Pages.Shared;
 using smpc_inventory_app.Data;
 using smpc_inventory_app.Properties;
-using smpc_sales_system;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

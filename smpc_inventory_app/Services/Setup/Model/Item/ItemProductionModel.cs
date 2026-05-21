@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace smpc_inventory_app.Services.Setup.Model.Item
 {
-    class ItemProductionModel
+    public class ItemProductionModel
     {
         public int item_id { get; set; }
         public int bom_id { get; set; }
