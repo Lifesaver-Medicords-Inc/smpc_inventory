@@ -2425,6 +2425,8 @@ namespace smpc_inventory_app.Pages.Item
             txt_item_image_based_id.Visible = false;
             txt_item_inventory_id.Visible = false;
             txt_item_inventory_based_id.Visible = false;
+            lbl_inv_based_id.Visible = false;
+            lbl_inv_id.Visible = false;
 
             // stress testing
             btn_debug_state.Visible = false;

@@ -41,6 +41,7 @@
             this.btn_close = new System.Windows.Forms.ToolStripButton();
             this.btn_next = new System.Windows.Forms.ToolStripButton();
             this.btn_prev = new System.Windows.Forms.ToolStripButton();
+            this.btn_debug_state = new System.Windows.Forms.ToolStripButton();
             this.pnl_footer = new System.Windows.Forms.Panel();
             this.pnl_child = new System.Windows.Forms.Panel();
             this.tabcontrol1 = new System.Windows.Forms.TabControl();
@@ -166,8 +167,8 @@
             this.pnl_inventory = new System.Windows.Forms.Panel();
             this.pnl_body = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
+            this.lbl_inv_id = new System.Windows.Forms.Label();
+            this.lbl_inv_based_id = new System.Windows.Forms.Label();
             this.txt_default_bin_location = new System.Windows.Forms.TextBox();
             this.txt_item_inventory_id = new System.Windows.Forms.TextBox();
             this.txt_item_inventory_based_id = new System.Windows.Forms.TextBox();
@@ -296,7 +297,6 @@
             this.dataColumn19 = new System.Data.DataColumn();
             this.bindingSourceSpecsTemplate = new System.Windows.Forms.BindingSource(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.btn_debug_state = new System.Windows.Forms.ToolStripButton();
             this.pnl_page_title.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnl_child.SuspendLayout();
@@ -496,6 +496,15 @@
             this.btn_prev.Size = new System.Drawing.Size(72, 22);
             this.btn_prev.Text = "Previous";
             this.btn_prev.Click += new System.EventHandler(this.btn_prev_Click);
+            // 
+            // btn_debug_state
+            // 
+            this.btn_debug_state.Image = ((System.Drawing.Image)(resources.GetObject("btn_debug_state.Image")));
+            this.btn_debug_state.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_debug_state.Name = "btn_debug_state";
+            this.btn_debug_state.Size = new System.Drawing.Size(62, 22);
+            this.btn_debug_state.Text = "Debug";
+            this.btn_debug_state.Click += new System.EventHandler(this.btn_debug_state_Click);
             // 
             // pnl_footer
             // 
@@ -1669,8 +1678,8 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.label31);
-            this.splitContainer1.Panel1.Controls.Add(this.label30);
+            this.splitContainer1.Panel1.Controls.Add(this.lbl_inv_id);
+            this.splitContainer1.Panel1.Controls.Add(this.lbl_inv_based_id);
             this.splitContainer1.Panel1.Controls.Add(this.txt_default_bin_location);
             this.splitContainer1.Panel1.Controls.Add(this.txt_item_inventory_id);
             this.splitContainer1.Panel1.Controls.Add(this.txt_item_inventory_based_id);
@@ -1699,23 +1708,23 @@
             this.splitContainer1.SplitterDistance = 353;
             this.splitContainer1.TabIndex = 3;
             // 
-            // label31
+            // lbl_inv_id
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(42, 247);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(18, 13);
-            this.label31.TabIndex = 140;
-            this.label31.Text = "ID";
+            this.lbl_inv_id.AutoSize = true;
+            this.lbl_inv_id.Location = new System.Drawing.Point(42, 247);
+            this.lbl_inv_id.Name = "lbl_inv_id";
+            this.lbl_inv_id.Size = new System.Drawing.Size(18, 13);
+            this.lbl_inv_id.TabIndex = 140;
+            this.lbl_inv_id.Text = "ID";
             // 
-            // label30
+            // lbl_inv_based_id
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(161, 248);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(25, 13);
-            this.label30.TabIndex = 139;
-            this.label30.Text = "BID";
+            this.lbl_inv_based_id.AutoSize = true;
+            this.lbl_inv_based_id.Location = new System.Drawing.Point(161, 248);
+            this.lbl_inv_based_id.Name = "lbl_inv_based_id";
+            this.lbl_inv_based_id.Size = new System.Drawing.Size(25, 13);
+            this.lbl_inv_based_id.TabIndex = 139;
+            this.lbl_inv_based_id.Text = "BID";
             // 
             // txt_default_bin_location
             // 
@@ -2856,15 +2865,6 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // btn_debug_state
-            // 
-            this.btn_debug_state.Image = ((System.Drawing.Image)(resources.GetObject("btn_debug_state.Image")));
-            this.btn_debug_state.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_debug_state.Name = "btn_debug_state";
-            this.btn_debug_state.Size = new System.Drawing.Size(62, 22);
-            this.btn_debug_state.Text = "Debug";
-            this.btn_debug_state.Click += new System.EventHandler(this.btn_debug_state_Click);
-            // 
             // frm_Item_Entry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3202,8 +3202,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn itemidDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn stockqtyDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn stockuomDataGridViewTextBoxColumn;
-        private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label lbl_inv_id;
+        private System.Windows.Forms.Label lbl_inv_based_id;
         private System.Windows.Forms.DataGridView dgv_sales;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;

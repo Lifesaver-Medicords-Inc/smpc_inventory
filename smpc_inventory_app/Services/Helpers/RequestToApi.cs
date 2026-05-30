@@ -4,6 +4,7 @@ using smpc_inventory_app.Data;
 using smpc_inventory_app.Properties;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Net;
@@ -18,7 +19,18 @@ namespace smpc_inventory_app.Services.Helpers
 {
     internal class RequestToApi<T> where T : class
     {
-        static string baseUrl => Program.ApiBaseUrl ?? "http://127.0.0.1:3000/api";
+        static string baseUrl
+        {
+            get
+            {
+                string env =
+                    ConfigurationManager.AppSettings["Environment"]
+                    ?? "Development";
+
+                return ConfigurationManager.AppSettings[$"ApiBaseUrl.{env}"]
+                    ?? "http://127.0.0.1:3000/api";
+            }
+        }
         static CookieContainer cookieContainer = new CookieContainer();
 
         static private async Task<T> SendRequestAsync(string url, HttpMethod method, string body = null)
