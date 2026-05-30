@@ -62,10 +62,20 @@ namespace smpc_inventory_app.Services.Helpers
                     }
                     // Perform the HTTP request asynchronously
                     HttpResponseMessage response = await client.SendAsync(requestMessage);
+
+                    string allHeaders = string.Join("\n", response.Headers.Select(h => $"{h.Key}: {string.Join(", ", h.Value)}"));
+
+                    //testing if the token is being sent back in the response headers
+                    //MessageBox.Show("Status: " + response.StatusCode + "\n\nHeaders:\n" + allHeaders, "Response Debug");
+
+
                     // Check if the response is successful
                     if (response.IsSuccessStatusCode)
                     {
                         string responseContent = await response.Content.ReadAsStringAsync();
+
+
+
                         if (string.IsNullOrEmpty(CacheData.SessionToken))
                         {
                             List<String> tokenResponseArr = response.Headers.GetValues("Set-Cookie").ToList();
@@ -84,11 +94,6 @@ namespace smpc_inventory_app.Services.Helpers
                         // Optionally, you can parse the responseContent into an object of type T
                         T result = JsonConvert.DeserializeObject<T>(responseContent);
                         // Display the response content (for debugging purposes)
-                        //MessageBox.Show(responseContent, "API Response");
-                        //MessageBox.Show(responseContent, "API Response");
-
-                        //MessageBox.Show(responseContent, "API Response");
-
                         //MessageBox.Show(responseContent, "API Response");
 
                         return result; // Return the

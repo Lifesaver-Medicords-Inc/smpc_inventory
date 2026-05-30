@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace smpc_inventory_app.Services.Setup.Model.Item
 {
-    class ItemSpecsModel
+    public class ItemSpecsModel
     {
         public int id { get; set; }
         public int based_id { get; set; }
@@ -19,7 +19,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Item
         public string manufacturer_origin { get; set; }
         public ItemSpecstemplate[] item_specs_template { get; set; }
     }
-    class ItemSpecstemplate
+    public class ItemSpecstemplate
     {
         public int id { get; set; }
         public int based_id { get; set; }

@@ -29,16 +29,15 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgv_rr_search = new System.Windows.Forms.DataGridView();
-            this.txt_search = new System.Windows.Forms.TextBox();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.supplier_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,6 +46,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             this.ref_doc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.doc_no = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.prepared_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txt_search = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_rr_search)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,14 +54,14 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             // 
             this.dgv_rr_search.AllowUserToAddRows = false;
             this.dgv_rr_search.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv_rr_search.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_rr_search.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dgv_rr_search.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_rr_search.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
@@ -78,13 +78,6 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             this.dgv_rr_search.TabIndex = 11;
             this.dgv_rr_search.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_rr_search_CellClick);
             // 
-            // txt_search
-            // 
-            this.txt_search.Location = new System.Drawing.Point(350, 215);
-            this.txt_search.Name = "txt_search";
-            this.txt_search.Size = new System.Drawing.Size(100, 20);
-            this.txt_search.TabIndex = 12;
-            // 
             // id
             // 
             this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -99,8 +92,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             // 
             this.supplier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.supplier.DataPropertyName = "supplier";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gainsboro;
-            this.supplier.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.Gainsboro;
+            this.supplier.DefaultCellStyle = dataGridViewCellStyle10;
             this.supplier.HeaderText = "SUPPLIER";
             this.supplier.Name = "supplier";
             this.supplier.ReadOnly = true;
@@ -109,8 +102,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             // 
             this.supplier_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.supplier_code.DataPropertyName = "supplier_code";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
-            this.supplier_code.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.Gainsboro;
+            this.supplier_code.DefaultCellStyle = dataGridViewCellStyle11;
             this.supplier_code.HeaderText = "SUPPLIER CODE";
             this.supplier_code.Name = "supplier_code";
             this.supplier_code.ReadOnly = true;
@@ -119,8 +112,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             // 
             this.date_received.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.date_received.DataPropertyName = "date_received";
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Gainsboro;
-            this.date_received.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.Gainsboro;
+            this.date_received.DefaultCellStyle = dataGridViewCellStyle12;
             this.date_received.HeaderText = "DATE RECEIVED";
             this.date_received.Name = "date_received";
             this.date_received.ReadOnly = true;
@@ -129,8 +122,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             // 
             this.warehouse.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.warehouse.DataPropertyName = "warehouse";
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Gainsboro;
-            this.warehouse.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.Gainsboro;
+            this.warehouse.DefaultCellStyle = dataGridViewCellStyle13;
             this.warehouse.HeaderText = "WAREHOUSE";
             this.warehouse.MinimumWidth = 150;
             this.warehouse.Name = "warehouse";
@@ -140,8 +133,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             // 
             this.ref_doc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ref_doc.DataPropertyName = "ref_doc";
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Gainsboro;
-            this.ref_doc.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle14.BackColor = System.Drawing.Color.Gainsboro;
+            this.ref_doc.DefaultCellStyle = dataGridViewCellStyle14;
             this.ref_doc.HeaderText = "REFERENCE DOC";
             this.ref_doc.Name = "ref_doc";
             this.ref_doc.ReadOnly = true;
@@ -150,8 +143,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             // 
             this.doc_no.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.doc_no.DataPropertyName = "doc_no";
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.Gainsboro;
-            this.doc_no.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle15.BackColor = System.Drawing.Color.Gainsboro;
+            this.doc_no.DefaultCellStyle = dataGridViewCellStyle15;
             this.doc_no.HeaderText = "DOC NO";
             this.doc_no.Name = "doc_no";
             this.doc_no.ReadOnly = true;
@@ -160,11 +153,18 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             // 
             this.prepared_by.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.prepared_by.DataPropertyName = "prepared_by";
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Gainsboro;
-            this.prepared_by.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle16.BackColor = System.Drawing.Color.Gainsboro;
+            this.prepared_by.DefaultCellStyle = dataGridViewCellStyle16;
             this.prepared_by.HeaderText = "PREPARED BY";
             this.prepared_by.Name = "prepared_by";
             this.prepared_by.ReadOnly = true;
+            // 
+            // txt_search
+            // 
+            this.txt_search.Location = new System.Drawing.Point(350, 215);
+            this.txt_search.Name = "txt_search";
+            this.txt_search.Size = new System.Drawing.Size(100, 20);
+            this.txt_search.TabIndex = 12;
             // 
             // ReceivingReportSearch
             // 
@@ -173,6 +173,8 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.dgv_rr_search);
             this.Controls.Add(this.txt_search);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "ReceivingReportSearch";
             this.Text = "ReceivingReportSearch";
             this.Load += new System.EventHandler(this.ReceivingReportSearch_Load);

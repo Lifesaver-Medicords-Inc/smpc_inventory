@@ -14,10 +14,13 @@ using smpc_sales_app.Pages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -120,7 +123,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private async Task GetBpiUser()
         {
-            var response = await BpiServices.GetBpiUsers("IT");
+            var response = await BpiServices.GetBpiUsers(CacheData.CurrentUser.department);
+
             Users = response ?? new List<CurrentUserModel>();
         }
 

@@ -52,7 +52,7 @@ namespace smpc_inventory_app.Services.Helpers
 
             return dataTable;
         }
-                                                             //column_name = desc / col_name=asc
+        //column_name = desc / col_name=asc
         public static DataTable ToDataTable<T>(List<T> items, string sortBy = "")
         {
             var dataTable = new DataTable();
