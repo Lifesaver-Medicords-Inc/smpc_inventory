@@ -31,11 +31,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BpiBranchUC));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_new_brach = new System.Windows.Forms.Panel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.GENERAL = new System.Windows.Forms.TabPage();
@@ -155,17 +155,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.pnl_new_added_item = new System.Windows.Forms.Panel();
             this.btn_add_new_item = new System.Windows.Forms.Button();
             this.dg_items = new System.Windows.Forms.DataGridView();
-            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_item_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_code = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.item_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.long_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bpi_item_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_graph = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.item_is_deleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataBindingItems = new System.Windows.Forms.BindingSource(this.components);
             this.ds_Items = new System.Data.DataSet();
             this.dataTable4 = new System.Data.DataTable();
@@ -244,6 +233,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataColumn27 = new System.Data.DataColumn();
             this.dataColumn28 = new System.Data.DataColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_item_based_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_code = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.item_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.long_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bpi_item_branch_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_graph = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.item_is_deleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.pnl_new_brach.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.GENERAL.SuspendLayout();
@@ -1391,109 +1391,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_items.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dg_items_DataBindingComplete);
             this.dg_items.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dg_items_UserDeletingRow);
             // 
-            // item_id
-            // 
-            this.item_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.item_id.DataPropertyName = "item_id";
-            this.item_id.HeaderText = "item_id";
-            this.item_id.Name = "item_id";
-            // 
-            // bpi_item_id
-            // 
-            this.bpi_item_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.bpi_item_id.DataPropertyName = "bpi_item_id";
-            this.bpi_item_id.HeaderText = "bpi_item_id";
-            this.bpi_item_id.Name = "bpi_item_id";
-            // 
-            // bpi_item_based_id
-            // 
-            this.bpi_item_based_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.bpi_item_based_id.DataPropertyName = "bpi_item_based_id";
-            this.bpi_item_based_id.HeaderText = "bpi_item_based_id";
-            this.bpi_item_based_id.Name = "bpi_item_based_id";
-            // 
-            // item_code
-            // 
-            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.item_code.DataPropertyName = "item_code";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.NullValue = "SELECT";
-            this.item_code.DefaultCellStyle = dataGridViewCellStyle6;
-            this.item_code.FillWeight = 28.2083F;
-            this.item_code.HeaderText = "ITEM CODE";
-            this.item_code.MinimumWidth = 30;
-            this.item_code.Name = "item_code";
-            this.item_code.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.item_code.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // item_type
-            // 
-            this.item_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.item_type.DataPropertyName = "item_type";
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.item_type.DefaultCellStyle = dataGridViewCellStyle7;
-            this.item_type.FillWeight = 37.78341F;
-            this.item_type.HeaderText = "TYPE";
-            this.item_type.MinimumWidth = 30;
-            this.item_type.Name = "item_type";
-            // 
-            // long_description
-            // 
-            this.long_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.long_description.DataPropertyName = "long_description";
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.long_description.DefaultCellStyle = dataGridViewCellStyle8;
-            this.long_description.FillWeight = 28.2083F;
-            this.long_description.HeaderText = "DESCRIPTION";
-            this.long_description.MinimumWidth = 30;
-            this.long_description.Name = "long_description";
-            // 
-            // bpi_item_branch_id
-            // 
-            this.bpi_item_branch_id.DataPropertyName = "bpi_item_branch_id";
-            this.bpi_item_branch_id.HeaderText = "bpi_item_branch_id";
-            this.bpi_item_branch_id.Name = "bpi_item_branch_id";
-            this.bpi_item_branch_id.Visible = false;
-            // 
-            // price
-            // 
-            this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.price.DataPropertyName = "price";
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.price.DefaultCellStyle = dataGridViewCellStyle9;
-            this.price.FillWeight = 28.2083F;
-            this.price.HeaderText = "PRICE";
-            this.price.MinimumWidth = 30;
-            this.price.Name = "price";
-            // 
-            // item_graph
-            // 
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.DarkGray;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.White;
-            this.item_graph.DefaultCellStyle = dataGridViewCellStyle10;
-            this.item_graph.HeaderText = "";
-            this.item_graph.MinimumWidth = 40;
-            this.item_graph.Name = "item_graph";
-            this.item_graph.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.item_graph.Width = 40;
-            // 
-            // notes
-            // 
-            this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.notes.DataPropertyName = "notes";
-            this.notes.FillWeight = 37.9159F;
-            this.notes.HeaderText = "NOTES";
-            this.notes.MinimumWidth = 30;
-            this.notes.Name = "notes";
-            // 
-            // item_is_deleted
-            // 
-            this.item_is_deleted.DataPropertyName = "item_is_deleted";
-            this.item_is_deleted.HeaderText = "item_is_deleted";
-            this.item_is_deleted.Name = "item_is_deleted";
-            this.item_is_deleted.Visible = false;
-            // 
             // dataBindingItems
             // 
             this.dataBindingItems.DataMember = "ItemTable";
@@ -1680,7 +1577,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label21.Location = new System.Drawing.Point(307, 48);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(21, 16);
+            this.label21.Size = new System.Drawing.Size(20, 16);
             this.label21.TabIndex = 5;
             this.label21.Text = "%";
             // 
@@ -2086,6 +1983,112 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dataGridViewTextBoxColumn1.HeaderText = "branch_id";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // item_id
+            // 
+            this.item_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.item_id.DataPropertyName = "item_id";
+            this.item_id.HeaderText = "item_id";
+            this.item_id.Name = "item_id";
+            this.item_id.Visible = false;
+            // 
+            // bpi_item_id
+            // 
+            this.bpi_item_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.bpi_item_id.DataPropertyName = "bpi_item_id";
+            this.bpi_item_id.HeaderText = "bpi_item_id";
+            this.bpi_item_id.Name = "bpi_item_id";
+            this.bpi_item_id.Visible = false;
+            // 
+            // bpi_item_based_id
+            // 
+            this.bpi_item_based_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.bpi_item_based_id.DataPropertyName = "bpi_item_based_id";
+            this.bpi_item_based_id.HeaderText = "bpi_item_based_id";
+            this.bpi_item_based_id.Name = "bpi_item_based_id";
+            this.bpi_item_based_id.Visible = false;
+            // 
+            // item_code
+            // 
+            this.item_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.item_code.DataPropertyName = "item_code";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = "SELECT";
+            this.item_code.DefaultCellStyle = dataGridViewCellStyle1;
+            this.item_code.FillWeight = 28.2083F;
+            this.item_code.HeaderText = "ITEM CODE";
+            this.item_code.MinimumWidth = 30;
+            this.item_code.Name = "item_code";
+            this.item_code.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.item_code.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // item_type
+            // 
+            this.item_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.item_type.DataPropertyName = "item_type";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.item_type.DefaultCellStyle = dataGridViewCellStyle2;
+            this.item_type.FillWeight = 37.78341F;
+            this.item_type.HeaderText = "TYPE";
+            this.item_type.MinimumWidth = 30;
+            this.item_type.Name = "item_type";
+            // 
+            // long_description
+            // 
+            this.long_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.long_description.DataPropertyName = "long_description";
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.long_description.DefaultCellStyle = dataGridViewCellStyle3;
+            this.long_description.FillWeight = 28.2083F;
+            this.long_description.HeaderText = "DESCRIPTION";
+            this.long_description.MinimumWidth = 30;
+            this.long_description.Name = "long_description";
+            // 
+            // bpi_item_branch_id
+            // 
+            this.bpi_item_branch_id.DataPropertyName = "bpi_item_branch_id";
+            this.bpi_item_branch_id.HeaderText = "bpi_item_branch_id";
+            this.bpi_item_branch_id.Name = "bpi_item_branch_id";
+            this.bpi_item_branch_id.Visible = false;
+            // 
+            // price
+            // 
+            this.price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.price.DataPropertyName = "price";
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.price.DefaultCellStyle = dataGridViewCellStyle4;
+            this.price.FillWeight = 28.2083F;
+            this.price.HeaderText = "PRICE";
+            this.price.MinimumWidth = 30;
+            this.price.Name = "price";
+            // 
+            // item_graph
+            // 
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DarkGray;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            this.item_graph.DefaultCellStyle = dataGridViewCellStyle5;
+            this.item_graph.HeaderText = "";
+            this.item_graph.MinimumWidth = 40;
+            this.item_graph.Name = "item_graph";
+            this.item_graph.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.item_graph.Width = 40;
+            // 
+            // notes
+            // 
+            this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.notes.DataPropertyName = "notes";
+            this.notes.FillWeight = 37.9159F;
+            this.notes.HeaderText = "NOTES";
+            this.notes.MinimumWidth = 30;
+            this.notes.Name = "notes";
+            // 
+            // item_is_deleted
+            // 
+            this.item_is_deleted.DataPropertyName = "item_is_deleted";
+            this.item_is_deleted.HeaderText = "item_is_deleted";
+            this.item_is_deleted.Name = "item_is_deleted";
+            this.item_is_deleted.Visible = false;
             // 
             // BpiBranchUC
             // 

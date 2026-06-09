@@ -1621,7 +1621,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void dg_items_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (!isUpdate) return;
+            //if (!isUpdate) return;
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 if (dg_items.Columns[e.ColumnIndex].Name == "item_code")
@@ -2005,23 +2005,23 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
 
 
-                if (row.IsNull("item_id") || string.IsNullOrWhiteSpace(row["item_id"].ToString()) || row.IsNull("bpi_item_based_id") || string.IsNullOrWhiteSpace(row["bpi_item_based_id"].ToString()) || row.IsNull("bpi_item_id") || string.IsNullOrWhiteSpace(row["bpi_item_id"].ToString()))
-                {
-                    itemId = 0;
-                    basedItemId = 0;
-                    bpiItemId = 0;
-                    bpiItemBranchId = 0;
+                //if (row.IsNull("item_id") || string.IsNullOrWhiteSpace(row["item_id"].ToString()) || row.IsNull("bpi_item_based_id") || string.IsNullOrWhiteSpace(row["bpi_item_based_id"].ToString()) || row.IsNull("bpi_item_id") || string.IsNullOrWhiteSpace(row["bpi_item_id"].ToString()))
+                //{
+                //    itemId = 0;
+                //    basedItemId = 0;
+                //    bpiItemId = 0;
+                //    bpiItemBranchId = 0;
 
-                }
-                else
-                {
-                    itemId = int.Parse(row["item_id"].ToString());
-                    basedItemId = int.Parse(row["bpi_item_based_id"].ToString());
-                    bpiItemId = int.Parse(row["bpi_item_id"].ToString());
-                    bpiItemBranchId = int.Parse(row["bpi_item_branch_id"].ToString());
-                    isDeleted = bool.Parse(row["item_is_deleted"].ToString());
+                //}
+                //else
+                //{
 
-                }
+                itemId = string.IsNullOrEmpty(row["item_id"].ToString()) ? 0 : int.Parse(row["item_id"].ToString());
+                basedItemId = string.IsNullOrEmpty(row["bpi_item_based_id"].ToString()) ? 0 : int.Parse(row["bpi_item_based_id"].ToString());
+                bpiItemId = string.IsNullOrEmpty(row["bpi_item_id"].ToString()) ? 0 : int.Parse(row["bpi_item_id"].ToString());
+                bpiItemBranchId = string.IsNullOrEmpty(row["bpi_item_branch_id"].ToString()) ? 0 : int.Parse(row["bpi_item_branch_id"].ToString());
+                isDeleted = string.IsNullOrEmpty(row["item_is_deleted"].ToString()) ? false : bool.Parse(row["item_is_deleted"].ToString());
+                //}
                 //itemId = ;
                 string notes = row["notes"].ToString();
 
