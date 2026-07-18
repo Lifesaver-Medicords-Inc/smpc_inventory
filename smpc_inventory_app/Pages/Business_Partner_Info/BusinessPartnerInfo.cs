@@ -3636,10 +3636,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
 
             int generalBasedId = 0, generalId = 0;
-            int financeBasedId, financeId,
-                financePaymentTerms = 0,
-                financeAccountId = 0,
-                financeBranchId = 0;
+            int financeBasedId, financeId, financeBranchId = 0;
 
             string selectedId = bpi.Rows[this.selectedRecord]["id"].ToString();
 
@@ -3756,8 +3753,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 Finance["finance_id"] = financeId;
                 Finance["finance_based_id"] = financeBasedId;
                 Finance["finance_branch_id"] = financeBranchId;
-                Finance["finance_payment_terms_id"] = financePaymentTerms;
-                Finance["finance_account_id"] = financeAccountId;
 
                 Bpi.Add("finance", Finance);
 

@@ -67,7 +67,7 @@ namespace smpc_inventory_app.Pages
         {
             var response = await AuthServices.Login(data);
 
-            if (response.Success)
+            if (response != null && response.Success)
             {
                 CacheData.CurrentUser = response.Data;
 

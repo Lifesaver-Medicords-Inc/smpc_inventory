@@ -108,6 +108,8 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         public int finance_payment_terms_id { get; set; }
         public int finance_account_id { get; set; }
         public int finance_branch_id { get; set; }
+        public string finance_tax_code { get; set; }
+        public string finance_tax { get; set; }
 
     }
 

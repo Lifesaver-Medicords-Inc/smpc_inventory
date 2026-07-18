@@ -1549,7 +1549,9 @@ namespace smpc_inventory_app.Pages.Item
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
                 {
                     { "id", "ID" },
+                    { "item_code", "ITEM CODE" },
                     { "item_name", "ITEM NAME" },
+                    { "item_model", "MODEL" },
                     { "item_brand", "BRAND" },
                 };
 
