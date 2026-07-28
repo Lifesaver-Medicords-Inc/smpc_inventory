@@ -137,11 +137,11 @@ namespace smpc_inventory_app.Pages.Setup
             if (action == "edit")
             {
                 btn_new.Visible = false;
-                btn_edit.Visible = true;
+                btn_edit.Visible = false;
             }
             else if (action == "new")
             {
-                btn_new.Visible = true;
+                btn_new.Visible = false;
                 btn_edit.Visible = false;
             }
             else if (action == "cancel" || action == "save" || action == "delete")
@@ -210,6 +210,12 @@ namespace smpc_inventory_app.Pages.Setup
         private Dictionary<string, Color> colorDictionary = new Dictionary<string, Color>(); 
         private void cmb_bg_color_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // SelectedItem is null whenever the combo gets cleared/reset (e.g. rebinding
+            // its Items, or SelectedIndex briefly going to -1) - Color is a struct, so
+            // casting a null SelectedItem straight to (Color) throws a NullReferenceException
+            // on unboxing instead of just giving null. Bail out instead of crashing.
+            if (cmb_bg_color.SelectedItem == null) return;
+
             if (dg_warehouse_usetype != null && dg_warehouse_usetype.Rows.Count > 0)
             {
                 Color selectedColor = (Color)cmb_bg_color.SelectedItem;

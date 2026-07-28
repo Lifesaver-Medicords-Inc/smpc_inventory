@@ -1080,7 +1080,7 @@ namespace smpc_app.Services.Helpers
                         ".Enabled = " + btn.Enabled.ToString());
                 }
                 else if (control is DataGridView dgv) //datagridview is datagdrid
-                {   //not status since it is reversed no deletion : yes deletion 
+                {   //not status since it is reversed no deletion : yes deletion
                     dgv.AllowUserToAddRows = status.HasValue ? !status.Value : false; //outOfRange ex warning here if the dgv isnt visible/loaded
                     dgv.AllowUserToDeleteRows = status.HasValue ? !status.Value : false;
                     dgv.Enabled = true;
@@ -1089,13 +1089,40 @@ namespace smpc_app.Services.Helpers
                         if (!col.Visible)
                             continue; //skip hidden columns
 
-                        if (status.HasValue)
+                        try
                         {
-                            col.ReadOnly = status.Value;
+                            // A DataGridViewColumn bound (via DataPropertyName) to a DataColumn
+                            // that is itself ReadOnly (e.g. an auto-increment "id" column - which
+                            // a DataTable can end up marking ReadOnly on its own once the table is
+                            // emptied and its schema gets re-inferred/rebuilt from scratch) can
+                            // NEVER be set ReadOnly = false; WinForms throws
+                            // InvalidOperationException if you try. Once that underlying column is
+                            // read-only there's nothing this "make it editable" toggle can do about
+                            // it, so just force True and move on instead of blowing up the whole
+                            // panel toggle (which otherwise breaks Edit mode for every other field
+                            // and grid on the form too, not just this column).
+                            if (IsBoundToReadOnlyDataColumn(dgv, col))
+                            {
+                                col.ReadOnly = true;
+                            }
+                            else if (status.HasValue)
+                            {
+                                col.ReadOnly = status.Value;
+                            }
+                            else
+                            {
+                                col.ReadOnly = !col.ReadOnly;
+                            }
                         }
-                        else
+                        catch (InvalidOperationException ex)
                         {
-                            col.ReadOnly = !col.ReadOnly;
+                            // Belt-and-suspenders: if some other, not-yet-seen case still hits the
+                            // same "must have ReadOnly set to True" restriction, don't let one
+                            // column crash this shared helper for every screen that calls it -
+                            // leave it ReadOnly and keep going.
+                            col.ReadOnly = true;
+                            Console.WriteLine(" " + dgv.Name + "." + col.Name +
+                                ".ReadOnly could not be changed (" + ex.Message + "), forced to True");
                         }
                         Console.WriteLine(" " + dgv.Name + "." + col.Name +
                             ".ReadOnly = " + col.ReadOnly);
@@ -1104,6 +1131,28 @@ namespace smpc_app.Services.Helpers
             }
             pnl.Enabled = true;
             Console.WriteLine("]\n");
+        }
+
+        // Resolves the DataGridViewColumn back to the DataColumn it's bound to (walking
+        // through a BindingSource if that's how the grid is wired, which is how
+        // frm_warehouse_name_setup's dg_areas is bound - dgv.DataSource is a BindingSource
+        // wrapping a DataView over the "areas" DataTable) and reports whether that
+        // DataColumn itself is ReadOnly. Returns false (not a problem) for anything not
+        // DataTable/DataView-backed, e.g. grids bound to a List<T>/BindingList<T>, where
+        // this restriction doesn't apply.
+        private static bool IsBoundToReadOnlyDataColumn(DataGridView dgv, DataGridViewColumn col)
+        {
+            if (string.IsNullOrEmpty(col.DataPropertyName)) return false;
+
+            object source = dgv.DataSource;
+            if (source is BindingSource bs) source = bs.DataSource;
+
+            DataTable table = source as DataTable;
+            if (table == null && source is DataView dv) table = dv.Table;
+
+            if (table == null || !table.Columns.Contains(col.DataPropertyName)) return false;
+
+            return table.Columns[col.DataPropertyName].ReadOnly;
         }
 
         public static DataTable ConvertDataGridViewToDataTable(DataGridView dgv, string childName = "")

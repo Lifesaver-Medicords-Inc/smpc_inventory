@@ -449,6 +449,7 @@ namespace smpc_inventory_app.Pages.Setup
             if (action == "edit")
             {
                 btn_new.Visible = false;
+                btn_edit.Visible = false;
                 tabControl1.Enabled = true;
                 if (string.IsNullOrEmpty(txt_id.Text) && tabControl1.SelectedIndex == 1)
                 {
@@ -458,6 +459,7 @@ namespace smpc_inventory_app.Pages.Setup
             else if (action == "new")
             {
                 btn_edit.Visible = false;
+                btn_new.Visible = false;
 
                 chk_is_inactive.Checked = false;
 
