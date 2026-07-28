@@ -244,6 +244,34 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
+        // "Sales" position users may only see BPI records THEY created; every other
+        // position is exempt and sees the full list unfiltered. There's no dedicated
+        // "created_by" column - sales_id already serves that role: it's stamped to the
+        // creator's employee_id at insert time (btn_add_Click / btn_save_Click) and is
+        // deliberately excluded from the update payload in btn_revise_Click, so it never
+        // gets reassigned afterward. Blank/legacy sales_id rows are left visible rather
+        // than hidden, so older records without an owner don't just disappear.
+        private DataTable FilterBpiForCurrentUser(DataTable source)
+        {
+            string currentUserPosition = CacheData.CurrentUser?.position?.name?.Trim() ?? string.Empty;
+            if (!currentUserPosition.Equals("sales", StringComparison.OrdinalIgnoreCase))
+                return source;
+
+            string currentEmployeeId = CacheData.CurrentUser.employee_id?.Trim() ?? string.Empty;
+
+            DataTable filtered = source.Clone();
+            foreach (DataRow row in source.Rows)
+            {
+                string salesId = row["sales_id"]?.ToString()?.Trim();
+                if (string.IsNullOrEmpty(salesId) ||
+                    string.Equals(salesId, currentEmployeeId, StringComparison.OrdinalIgnoreCase))
+                {
+                    filtered.ImportRow(row);
+                }
+            }
+            return filtered;
+        }
+
         private async void GetBpi()
         {
             var response = await RequestToApi<ApiResponseModel<Bpi_Class>>.Get(ENUM_ENDPOINT.BPI);
@@ -251,6 +279,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             // Convert all API objects to DataTables
             bpi = JsonHelper.ToDataTable(records.bpi);
+            bpi = FilterBpiForCurrentUser(bpi);
             general = JsonHelper.ToDataTable(records.general);
             contacts = JsonHelper.ToDataTable(records.contacts);
             address = JsonHelper.ToDataTable(records.address);

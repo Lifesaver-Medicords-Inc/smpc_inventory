@@ -590,6 +590,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         private bool GetSelectedSales()
         {
+            // Only the "Sales" position is restricted to branches they own - every other
+            // position (admin, manager, etc.) is exempt from this check entirely, same
+            // rule as the BPI list-level filter in BusinessPartnerInfo.GetBpi(). Without
+            // this, the ownership check below ran unconditionally for every position,
+            // which is why admins were also hitting the "belongs to another sales
+            // representative" restriction.
+            string currentUserPosition = CacheData.CurrentUser?.position?.name?.Trim() ?? string.Empty;
+            if (!currentUserPosition.Equals("sales", StringComparison.OrdinalIgnoreCase))
+                return true;
+
             string currentUser = CacheData.CurrentUser.employee_id;
             //MessageBox.Show($"current: {currentUser}, owner: {SalesId}");
             // BUG -- SETS OWNER AS THE FIRST RECORD SALES ID
