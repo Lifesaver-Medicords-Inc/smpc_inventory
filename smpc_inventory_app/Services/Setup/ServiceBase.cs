@@ -56,7 +56,12 @@ namespace smpc_inventory_app.Services.Setup
             {
                 var response = await RequestToApi<ApiResponseModel<List<T>>>.Get(url);
 
-                return response.Data ?? new List<T>();
+                // RequestToApi.Get already shows an "Exception: ..." MessageBox and returns
+                // null itself when the request fails (bad JSON, network error, etc.) - without
+                // this null-check, that null response caused a second, unhandled
+                // NullReferenceException here on response.Data right after the first message
+                // box, instead of just coming back as an empty list like a failed GET should.
+                return response?.Data ?? new List<T>();
             }
             catch (Exception)
             {

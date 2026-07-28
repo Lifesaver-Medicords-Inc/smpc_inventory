@@ -63,6 +63,9 @@ namespace smpc_inventory_app.Data
         public static string RECEIVING_REPORT_HISTORY = REPORTS2 + "/history";
         public static string PURCHASING_POD_VIEW = REPORTS2 + "/purchase_order";
 
+        //Item Stocks (Inventory Item Stocks module)
+        public static string ITEM_STOCKS = "/inventory/item_stocks";
+
         //Receiving Report
         public static string RECEIVING_REPORT = "/inventory/receiving_report";
         public static string RECEIVING_REPORT_WAREHOUSE = "/inventory/receiving_report/warehouse";

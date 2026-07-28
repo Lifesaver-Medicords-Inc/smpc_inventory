@@ -16,7 +16,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>D:\Gids\Inventory\</PublishUrl>
+    <PublishUrl>D:\Gids\Publish\Inventory\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -55,6 +55,9 @@
     <GenerateManifests>true</GenerateManifests>
     <SignManifests>false</SignManifests>
     <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>download.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML, Version=0.105.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
@@ -250,6 +253,7 @@
     <Compile Include="Model\CurrentUserModel.cs" />
     <Compile Include="Model\ReceivingPurchaseOrderView.cs" />
     <Compile Include="Model\ReceivingReportModel.cs" />
+    <Compile Include="Model\ItemStockModel.cs" />
     <Compile Include="Model\ReceivingWarehouseView.cs" />
     <Compile Include="Model\SetupBaseModel.cs" />
     <Compile Include="Pages\Business_Partner_Info\BpiBranchUC.cs">
@@ -347,6 +351,27 @@
     </Compile>
     <Compile Include="Pages\Inventory\InventoryLogbookPage.Designer.cs">
       <DependentUpon>InventoryLogbookPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ItemStocksPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ItemStocksPage.Designer.cs">
+      <DependentUpon>ItemStocksPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ItemStockAdjustmentModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ItemStockAdjustmentModal.Designer.cs">
+      <DependentUpon>ItemStockAdjustmentModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ItemStockAddModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ItemStockAddModal.Designer.cs">
+      <DependentUpon>ItemStockAddModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ItemEntryHostForm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Pages\Inventory\InventoryLogbookModals\InventoryReport.cs">
       <SubType>Form</SubType>
@@ -738,6 +763,7 @@
     <Compile Include="Services\Setup\Inventory\InventoryLogbookService.cs" />
     <Compile Include="Services\Setup\Inventory\InventoryTrackerService.cs" />
     <Compile Include="Services\Setup\Inventory\ReceivingReport2Service.cs" />
+    <Compile Include="Services\Setup\Inventory\ItemStockService.cs" />
     <Compile Include="Services\Setup\Inventory\ReceivingReportService.cs" />
     <Compile Include="Services\Setup\Model\Inventory\InventoryList.cs" />
     <Compile Include="Services\Setup\Item\PositionServices.cs" />
@@ -1050,6 +1076,7 @@
     <EmbeddedResource Include="Pages\WebSocketForm.resx">
       <DependentUpon>WebSocketForm.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="download.ico" />
     <Content Include="Printing\PurchaseOrderReport.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

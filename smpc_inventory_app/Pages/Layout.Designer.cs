@@ -82,10 +82,12 @@ namespace Inventory_SMPC.Pages
             System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Receiving Report");
             System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Inventory Logbook");
             System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Inventory Tracker");
+            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Item Stocks");
             System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Inventory", new System.Windows.Forms.TreeNode[] {
             treeNode29,
             treeNode30,
-            treeNode31});
+            treeNode31,
+            treeNode33});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SMPC));
             this.MainPanel = new System.Windows.Forms.Panel();
             this.container = new System.Windows.Forms.Panel();
@@ -293,6 +295,8 @@ namespace Inventory_SMPC.Pages
             treeNode30.Text = "Inventory Logbook";
             treeNode31.Name = "INVENTORY TRACKER";
             treeNode31.Text = "Inventory Tracker";
+            treeNode33.Name = "INVENTORY ITEM STOCKS";
+            treeNode33.Text = "Item Stocks";
             treeNode32.Name = "parent";
             treeNode32.Text = "Inventory";
             this.Sidebar.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
