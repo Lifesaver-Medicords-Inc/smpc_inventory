@@ -31,11 +31,14 @@ namespace smpc_inventory_app.Services.Setup.Bpi
 
 
 
-        public static async Task<bool> Update(Dictionary<string, dynamic> data)
+        public static async Task<ApiResponseModel<dynamic>> Update(Dictionary<string, dynamic> data)
         {
+            // Bug #263: this used to collapse the response down to a bare bool, throwing away
+            // response.message - so a failed BPI update could only ever show a generic
+            // "record update failed" with no indication of which field/validation actually
+            // failed. Return the full response so the caller can surface it.
             var response = await RequestToApi<ApiResponseModel<dynamic>>.Put(ENUM_ENDPOINT.BPI, data);
-            bool responseData = response.Success;
-            return responseData;
+            return response;
         }
 
         public static async Task<bool> UpdateMainBranch(List<Dictionary<string, dynamic>> data)
