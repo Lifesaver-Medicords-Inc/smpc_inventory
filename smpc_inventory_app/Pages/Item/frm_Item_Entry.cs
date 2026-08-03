@@ -1379,8 +1379,17 @@ namespace smpc_inventory_app.Pages.Item
 
             ItemModelGenerator();
 
-            dgv_purchasing.DataSource = null;
-            dgv_sales.DataSource = null;
+            // Bug #265: dgv_purchasing/dgv_sales are bound to bindingSourcePurchasing/
+            // salesBindingSource (set at design time). Setting .DataSource directly to null
+            // here disconnects the grid from its binding source entirely, so later calls to
+            // BindDataToDataGridView() - which only reassign bindingSourcePurchasing.DataSource,
+            // never dgv_purchasing.DataSource itself - can no longer get anything to show:
+            // the grid stayed pointed at "null" instead of the binding source, so the
+            // Purchasing tab appeared empty even for records with data (Click New -> Close ->
+            // Purchasing). Clear through the binding source instead so the grid/source link
+            // stays intact for the next bind.
+            bindingSourcePurchasing.DataSource = null;
+            salesBindingSource.DataSource = null;
         }
         private void btn_edit_Click(object sender, EventArgs e)
         {
