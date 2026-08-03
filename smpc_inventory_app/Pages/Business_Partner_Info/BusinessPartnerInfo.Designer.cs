@@ -1335,16 +1335,18 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label23.Text = "ACCOUNT";
             // 
             // cmb_item_account
-            // 
+            //
+            this.cmb_item_account.Enabled = false;
             this.cmb_item_account.FormattingEnabled = true;
             this.cmb_item_account.Location = new System.Drawing.Point(552, 24);
             this.cmb_item_account.Name = "cmb_item_account";
             this.cmb_item_account.Size = new System.Drawing.Size(186, 21);
             this.cmb_item_account.TabIndex = 34;
             this.cmb_item_account.Tag = "DYNAMIC";
-            // 
+            //
             // cmb_tax_code
-            // 
+            //
+            this.cmb_tax_code.Enabled = false;
             this.cmb_tax_code.FormattingEnabled = true;
             this.cmb_tax_code.Location = new System.Drawing.Point(117, 46);
             this.cmb_tax_code.Name = "cmb_tax_code";
@@ -1352,21 +1354,23 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.cmb_tax_code.TabIndex = 33;
             this.cmb_tax_code.Tag = "";
             this.cmb_tax_code.SelectedIndexChanged += new System.EventHandler(this.cmb_tax_code_SelectedIndexChanged_1);
-            // 
+            //
             // cmb_payment_terms
-            // 
+            //
+            this.cmb_payment_terms.Enabled = false;
             this.cmb_payment_terms.FormattingEnabled = true;
             this.cmb_payment_terms.Location = new System.Drawing.Point(117, 24);
             this.cmb_payment_terms.Name = "cmb_payment_terms";
             this.cmb_payment_terms.Size = new System.Drawing.Size(186, 21);
             this.cmb_payment_terms.TabIndex = 32;
             this.cmb_payment_terms.Tag = "DYNAMIC";
-            // 
+            //
             // button9
-            // 
+            //
             this.button9.BackColor = System.Drawing.Color.Transparent;
             this.button9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button9.BackgroundImage")));
             this.button9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button9.Enabled = false;
             this.button9.Location = new System.Drawing.Point(302, 23);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(30, 22);
