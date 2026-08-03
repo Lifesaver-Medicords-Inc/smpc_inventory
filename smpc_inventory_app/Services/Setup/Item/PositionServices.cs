@@ -19,10 +19,24 @@ namespace smpc_inventory_app.Services.Setup
 
         public static async Task<DataTable> GetAsDatatable()
         {
-            var response = await RequestToApi<ApiResponseModel<List<PositionModel>>>.Get(ENUM_ENDPOINT.POSITION);
-            DataTable positions = JsonHelper.ToDataTable(response.Data);
+            try
+            {
+                var response = await RequestToApi<ApiResponseModel<List<PositionModel>>>.Get(ENUM_ENDPOINT.POSITION);
 
-            return positions;
+                // Bug #258 (Contact-Position field): response/response.Data being null (e.g. an
+                // empty database with no positions set up yet) used to throw a
+                // NullReferenceException straight out of this call with no handling at all.
+                if (response == null || response.Data == null)
+                    return JsonHelper.ToDataTable(new List<PositionModel>());
+
+                DataTable positions = JsonHelper.ToDataTable(response.Data);
+                return positions;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("PositionServices.GetAsDatatable error: " + ex);
+                return JsonHelper.ToDataTable(new List<PositionModel>());
+            }
         }
 
         public static async Task<ApiResponseModel> Insert(Dictionary<string, dynamic> data)

@@ -25,7 +25,14 @@ namespace smpc_inventory_app.Services.Setup.Item
             {
                 var response = await RequestToApi<ApiResponseModel<List<GeneralSetupModel>>>.Get(this.EndPoint);
 
-                if (response == null || response.Data == null) return null;
+                // Bug #258: this used to return null whenever the API had nothing to return
+                // (e.g. a freshly-seeded/empty database), which then got assigned straight
+                // into CacheData.Industries / CacheData.BranchIndustries - overwriting the
+                // safe empty-DataTable default those fields start with - and crashed every
+                // caller that did .Copy()/.Rows.Count/etc. on them with a NullReferenceException.
+                // Returning a properly-columned but empty table keeps that invariant intact.
+                if (response == null || response.Data == null)
+                    return JsonHelper.ToDataTable(new List<GeneralSetupModel>());
 
                 DataTable responseData = JsonHelper.ToDataTable(response.Data);
                 return responseData;
@@ -33,7 +40,7 @@ namespace smpc_inventory_app.Services.Setup.Item
             catch (Exception ex)
             {
                 Debug.WriteLine($"[GeneralSetupServices.GetAsDatatable] {this.EndPoint} - {ex.Message}");
-                return null;
+                return JsonHelper.ToDataTable(new List<GeneralSetupModel>());
             }
         }
 
