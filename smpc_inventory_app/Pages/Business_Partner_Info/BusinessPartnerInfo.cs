@@ -2227,6 +2227,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 MessageBox.Show("Bpi record added Succesfully", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                // Bug #269: entityCount (used by GetEntityRecordCount to build the next
+                // C#/S# code) is only ever fetched once, at form load, and was never
+                // refreshed after a save - so every subsequent "New" recomputed the code
+                // from the same stale count and kept generating C#1/S#1. Refresh it right
+                // after a successful insert so the next New reflects the record just created.
+                await GetEntityCount();
+
                 btn_add_page.Enabled = true;
                 txt_id.Text = data["id"];
 
@@ -2425,15 +2432,37 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                     {
                         Dictionary<string, dynamic> result = modal.GetResult();
 
-                        // Update current row in DataGridView
+                        // Bug #014: dg_items is data-bound (DataSource = dataBindingItems), so
+                        // writing straight into DataGridViewRow.Cells[...].Value only changes
+                        // what's on screen right now - the underlying DataRow behind the
+                        // binding never gets updated. The next time the grid repaints/rebinds
+                        // (e.g. after the user clicks into another field), it redraws from the
+                        // actual DataRow, which still has the old/blank values, so the just
+                        // picked item appears to vanish. Write through the bound DataRowView
+                        // instead so the change actually persists in the data source.
                         DataGridViewRow selectedRow = dg_items.Rows[e.RowIndex];
+                        DataRowView rowView = selectedRow.DataBoundItem as DataRowView;
 
-                        selectedRow.Cells["item_id"].Value = result["item_id"];
-                        selectedRow.Cells["item_code"].Value = result["item_code"];
-                        selectedRow.Cells["short_desc"].Value = result["short_desc"];
-                        selectedRow.Cells["status_tangible"].Value = result["status_tangible"];
-                        selectedRow.Cells["status_trade"].Value = result["status_trade"];
-                        selectedRow.Cells["price"].Value = result["item_price"];
+                        if (rowView != null)
+                        {
+                            rowView["item_id"] = result["item_id"];
+                            rowView["item_code"] = result["item_code"];
+                            rowView["short_desc"] = result["short_desc"];
+                            rowView["status_tangible"] = result["status_tangible"];
+                            rowView["status_trade"] = result["status_trade"];
+                            rowView["price"] = result["item_price"];
+                        }
+                        else
+                        {
+                            // Fallback in case the row somehow isn't data-bound - keeps the
+                            // previous behavior rather than silently doing nothing.
+                            selectedRow.Cells["item_id"].Value = result["item_id"];
+                            selectedRow.Cells["item_code"].Value = result["item_code"];
+                            selectedRow.Cells["short_desc"].Value = result["short_desc"];
+                            selectedRow.Cells["status_tangible"].Value = result["status_tangible"];
+                            selectedRow.Cells["status_trade"].Value = result["status_trade"];
+                            selectedRow.Cells["price"].Value = result["item_price"];
+                        }
 
                         // Add new empty row to data source (assumes DataTable binding)
 
@@ -3618,6 +3647,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 MessageBox.Show("Bpi record added Succesfully", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                // Bug #269: entityCount (used by GetEntityRecordCount to build the next
+                // C#/S# code) is only ever fetched once, at form load, and was never
+                // refreshed after a save - so every subsequent "New" recomputed the code
+                // from the same stale count and kept generating C#1/S#1. Refresh it right
+                // after a successful insert so the next New reflects the record just created.
+                await GetEntityCount();
+
                 btn_add_page.Enabled = true;
                 txt_id.Text = data["id"];
 
@@ -3792,9 +3828,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             Bpi.Add("address", modifiedAddress);
             Bpi.Add("accreditations", modifiedAccreditations);
 
-            bool response = await BpiServices.Update(Bpi);
+            var response = await BpiServices.Update(Bpi);
 
-            if (response)
+            if (response.Success)
             {
 
                 MessageBox.Show("Bpi record updated succesfully.", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -3804,7 +3840,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
             else
             {
-                MessageBox.Show("Bpi record update failed.", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Bug #263: show the actual reason from the API instead of a bare generic
+                // message, so the user knows which field/validation to fix.
+                string detail = string.IsNullOrWhiteSpace(response.message) ? "Please check the required fields and try again." : response.message;
+                MessageBox.Show("Bpi record update failed.\n" + detail, "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
