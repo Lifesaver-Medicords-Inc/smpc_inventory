@@ -107,7 +107,23 @@ namespace smpc_inventory_app.Pages.Item
         {
             InitializeComponent();
 
-            LoadDirectory(ITEM_TV, itemEntryPath);
+            try
+            {
+                // LoadDirectory creates folders on disk (Directory.CreateDirectory against
+                // Settings.ITEMENTRYPATH, e.g. "C:\Users\Public\Documents\SMPC\ITEM ENTRY").
+                // This used to run unguarded directly in the constructor - any I/O failure
+                // (missing drive, no write permission, path too long, etc.) threw out of the
+                // constructor with no message, which made the whole Item Entry module fail to
+                // open at all ("not accessible") instead of just losing the file-tree feature.
+                LoadDirectory(ITEM_TV, itemEntryPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Item Entry couldn't set up its document folder (" + itemEntryPath + ") and the file browser will be unavailable, but the rest of the module will still work." +
+                    Environment.NewLine + Environment.NewLine + "Details: " + ex.Message,
+                    "Item Entry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
             // Create ImageList
             ImageList imageList = new ImageList();
