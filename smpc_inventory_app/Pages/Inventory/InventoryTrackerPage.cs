@@ -228,6 +228,25 @@ namespace smpc_inventory_app.Pages
 
         private void AddZoneColumnsToGrid()
         {
+            // Bug #261: total_stock column used to be added at the bottom of this method,
+            // after the early-return below. With no warehouse areas set up yet (empty
+            // database), the method returned before ever reaching that code, so the Total
+            // Stock column never got created. It's always relevant regardless of whether
+            // there happen to be any zones, so add it unconditionally up front.
+            if (!dgv_inventory_item.Columns.Contains("total_stock"))
+            {
+                var totalCol = new DataGridViewTextBoxColumn
+                {
+                    Name = "total_stock",
+                    HeaderText = "TOTAL STOCK",
+                    DataPropertyName = "total_stock",
+                    ReadOnly = true
+                };
+
+                dgv_inventory_item.Columns.Add(totalCol);
+                totalCol.DisplayIndex = dgv_inventory_item.Columns.Count - 1; // put at end
+            }
+
             if (_warehouseAreas == null || _warehouseAreas.Count == 0)
                 return;
 
@@ -279,20 +298,6 @@ namespace smpc_inventory_app.Pages
 
                 // Add a new group header for this zone (QTY + UOM)
                 newColumnGroups[zone] = new string[] { qtyColumnName, uomColumnName };
-            }
-
-            if (!dgv_inventory_item.Columns.Contains("total_stock"))
-            {
-                var totalCol = new DataGridViewTextBoxColumn
-                {
-                    Name = "total_stock",
-                    HeaderText = "TOTAL STOCK",
-                    DataPropertyName = "total_stock",
-                    ReadOnly = true
-                };
-
-                dgv_inventory_item.Columns.Add(totalCol);
-                totalCol.DisplayIndex = dgv_inventory_item.Columns.Count - 1; // put at end
             }
 
             // Apply the new grouped headers
