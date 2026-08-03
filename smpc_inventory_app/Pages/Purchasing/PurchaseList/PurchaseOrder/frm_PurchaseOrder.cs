@@ -88,6 +88,11 @@ namespace smpc_inventory_app.Pages.Purchasing
 
             if (activePO != null && activePO.Rows.Count > 0 && !isCreatingNewPO)
             {
+                // Bug #270: toolStrip1.Visible was only ever set to false (below, when there
+                // are no records) and never set back to true here. Once a user hit the empty
+                // state once, the header toolbar - and every button on it - stayed hidden even
+                // after a PO was created and records existed again.
+                toolStrip1.Visible = true;
                 selectedRecord = 0;
                 Bind(true);
 
@@ -100,6 +105,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             }
             else
             {
+                toolStrip1.Visible = true;
                 BtnToggle(true);
                 IsNewPO(true);
             }
@@ -829,16 +835,19 @@ namespace smpc_inventory_app.Pages.Purchasing
                 return;
             }
 
+            // Bug #124: this used to call provider.InitializeAsync() here too, with no
+            // try/catch. PrintPreview.LoadReportAsync() already calls InitializeAsync() itself
+            // (with proper error handling, a wait cursor, and a user-facing message on
+            // failure), so this was a redundant second network round-trip - and if this
+            // unguarded first call happened to fail (a transient network blip, etc.), the
+            // exception had nowhere to go from an async void handler, so the Print button
+            // would silently do nothing instead of showing an error or the preview.
             var provider = new PurchaseOrderReportProvider(poId);
-
-            await provider.InitializeAsync();  
 
             using (var preview = new PrintPreview(provider))
             {
                 preview.ShowDialog();
             }
-
-
         }
     }
 }
