@@ -24,6 +24,9 @@ namespace Inventory_SMPC.Pages.Setup
 
         private  void frm_item_brand_setup_Load(object sender, EventArgs e)
         {
+            // Was only being set via panel_records_Paint (see note below) - moved here so it
+            // runs once at load instead of on every repaint.
+            BtnToggle(false);
             GetBrand();
         }
         private void BtnToggle(bool isEdit)
@@ -36,6 +39,16 @@ namespace Inventory_SMPC.Pages.Setup
             btn_cancel.Visible = isEdit;
             pnl_input.Enabled = isEdit;
             dg_brands.Enabled = !isEdit;
+
+            // Bug #253: re-enabling the grid (Edit -> Cancel) left it visually blank until the
+            // user resized the window or otherwise forced a repaint - a known WinForms quirk
+            // where a DataGridView doesn't always redraw its rows right after Enabled flips
+            // back to true. Force the redraw explicitly instead of leaving it to chance.
+            if (!isEdit)
+            {
+                dg_brands.Invalidate();
+                dg_brands.Refresh();
+            }
         }
 
 
@@ -48,8 +61,13 @@ namespace Inventory_SMPC.Pages.Setup
 
         private void panel_records_Paint(object sender, PaintEventArgs e)
         {
-            BtnToggle(false);
-
+            // Previously called BtnToggle(false) on every single repaint of this panel (which
+            // fires constantly - on focus changes, other dialogs closing, etc). That forced
+            // dg_brands.Enabled back to true and reset the New/Edit/Delete/Save/Cancel button
+            // visibility mid-edit, which is what produced the "data disappears" glitch in bug
+            // #253: toggling Enabled on a DataGridView from inside a Paint handler re-triggers
+            // painting before the grid finishes redrawing its rows. BtnToggle(false) now only
+            // runs once, from the Load event.
         }
         private bool ValidateField(out string messages) 
         {
