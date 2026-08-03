@@ -1573,16 +1573,18 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.txt_finance_id.TabIndex = 33;
             // 
             // cmb_finance_payment_terms
-            // 
+            //
+            this.cmb_finance_payment_terms.Enabled = false;
             this.cmb_finance_payment_terms.FormattingEnabled = true;
             this.cmb_finance_payment_terms.Location = new System.Drawing.Point(557, 16);
             this.cmb_finance_payment_terms.Name = "cmb_finance_payment_terms";
             this.cmb_finance_payment_terms.Size = new System.Drawing.Size(193, 21);
             this.cmb_finance_payment_terms.TabIndex = 32;
             this.cmb_finance_payment_terms.Tag = "DYNAMIC";
-            // 
+            //
             // cmb_finance_account
-            // 
+            //
+            this.cmb_finance_account.Enabled = false;
             this.cmb_finance_account.FormattingEnabled = true;
             this.cmb_finance_account.Location = new System.Drawing.Point(130, 16);
             this.cmb_finance_account.Name = "cmb_finance_account";
