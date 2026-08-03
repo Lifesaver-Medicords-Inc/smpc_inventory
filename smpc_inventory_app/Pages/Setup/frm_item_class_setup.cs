@@ -117,9 +117,35 @@ namespace Inventory_SMPC.Pages.Setup
             BtnToggle(false);
         }
 
-        private void btn_delete_Click(object sender, EventArgs e)
+        private async void btn_delete_Click(object sender, EventArgs e)
         {
-            BtnToggle(false);
+            // Bug #254: this handler never actually called the delete API - it just toggled
+            // the button state back, so clicking Delete appeared to do nothing.
+            DialogResult result = MessageBox.Show(
+                "Are you sure you want to delete this item?",
+                "Confirm Deletion",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result != DialogResult.Yes)
+                return;
+
+            var data = Helpers.GetControlsValues(pnl_input);
+
+            bool isSuccess = await ItemClassServices.Delete(data);
+
+            if (isSuccess)
+            {
+                Helpers.ResetControls(pnl_input);
+                Helpers.ShowDialogMessage("success", "Item deleted successfully.");
+                GetData();
+                BtnToggle(false);
+            }
+            else
+            {
+                Helpers.ShowDialogMessage("error", "Failed to delete item.");
+            }
         }
     }
 }
