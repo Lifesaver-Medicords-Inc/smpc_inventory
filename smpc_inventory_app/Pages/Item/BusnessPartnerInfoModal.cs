@@ -14,15 +14,27 @@ namespace smpc_inventory_app.Pages.Item
 {
     public partial class BusnessPartnerInfoModal : Form
     {
-        public BusnessPartnerInfoModal()
+        // Threaded straight into BusinessPartnerInfo's own constructor - a non-empty value
+        // is what unlocks picking "Temporary Supplier" as the entity type in there (see
+        // BusinessPartnerInfo.button1_Click), which is the point of opening this from a
+        // canvass sheet: registering a quick/temporary supplier just to get a quote from,
+        // without needing the full formal onboarding a regular supplier record implies.
+        private readonly string canvassForm;
+
+        public BusnessPartnerInfoModal() : this("")
+        {
+        }
+
+        public BusnessPartnerInfoModal(string canvassForm)
         {
             InitializeComponent();
+            this.canvassForm = canvassForm;
         }
 
         private void BusnessPartnerInfoModal_Load(object sender, EventArgs e)
         {
 
-            BusinessPartnerInfo BPI = new BusinessPartnerInfo("");
+            BusinessPartnerInfo BPI = new BusinessPartnerInfo(canvassForm);
 
             BPI.Dock = DockStyle.Fill;
             this.Controls.Add(BPI);
