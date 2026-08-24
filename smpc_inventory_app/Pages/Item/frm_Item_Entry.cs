@@ -608,7 +608,7 @@ namespace smpc_inventory_app.Pages.Item
                 if (control is TextBox textBox)
                 {
                     string key = textBox.Name.Replace("txt_", "");
-                    if (string.Equals(textBox.Tag as string, "REQUIRED", StringComparison.OrdinalIgnoreCase)
+                    if (IsTagRequired(textBox.Tag as string)
                         && string.IsNullOrEmpty(textBox.Text))
                     {
                         FlashRed(control);
@@ -622,7 +622,7 @@ namespace smpc_inventory_app.Pages.Item
 
                 else if (control is ComboBox comboBox)
                 {
-                    if ((string.Equals(comboBox.Tag as string, "REQUIRED", StringComparison.OrdinalIgnoreCase)
+                    if ((IsTagRequired(comboBox.Tag as string)
                         && comboBox.SelectedIndex <= 0 && comboBox.Name != "cmb_volume_unit_of_measure" && comboBox.Name != "cmb_weight_unit_of_measure"))
                     {
                         FlashRed(comboBox);
@@ -638,6 +638,17 @@ namespace smpc_inventory_app.Pages.Item
                 }
             }
             return isError;
+        }
+        // Tags can hold multiple comma-separated markers (e.g. "DYNAMIC, REQUIRED").
+        // A plain equality check against "REQUIRED" misses those, which was letting
+        // fields like Item Name / Item Brand / Item Class / Unit of Measure save blank.
+        private static bool IsTagRequired(string tag)
+        {
+            if (string.IsNullOrWhiteSpace(tag)) return false;
+
+            return tag.Split(',')
+                       .Select(t => t.Trim())
+                       .Any(t => string.Equals(t, "REQUIRED", StringComparison.OrdinalIgnoreCase));
         }
         private static void FlashRed(Control control)
         {

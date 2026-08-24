@@ -1318,6 +1318,21 @@ namespace smpc_app.Services.Helpers
         //    }
         //}
 
+        // Control.Tag can hold multiple comma-separated markers (e.g. "DYNAMIC, REQUIRED").
+        // Exact-equality checks like `Tag == "DYNAMIC"` silently fail for those compound tags,
+        // which was causing dropdowns like Item Name / Item Brand / Item Class / Unit of Measure
+        // to be sent to the API under the wrong key (e.g. "item_name" with display text) instead
+        // of "item_name_id" with the selected ID — so the backend never received the real value.
+        internal static bool TagHasMarker(object tag, string marker)
+        {
+            string tagStr = tag as string;
+            if (string.IsNullOrWhiteSpace(tagStr)) return false;
+
+            return tagStr.Split(',')
+                          .Select(t => t.Trim())
+                          .Any(t => string.Equals(t, marker, StringComparison.OrdinalIgnoreCase));
+        }
+
         public static Dictionary<string, dynamic> GetControlsValues(Panel pnl)
         {
             Dictionary<string,dynamic> values = new Dictionary<string, dynamic>();
@@ -1378,7 +1393,7 @@ namespace smpc_app.Services.Helpers
                     //    val = comboBox.Text.ToString();
                     //}
 
-                    if (comboBox.Tag == "DYNAMIC")
+                    if (TagHasMarker(comboBox.Tag, "DYNAMIC"))
                     {
                         key = key + "_id";
                         values.Add(key, comboBox.SelectedValue);
@@ -1493,7 +1508,7 @@ namespace smpc_app.Services.Helpers
                         string key = comboBox.Name.Replace("cmb_", "");
                         string val = "";
 
-                        if (comboBox.Tag == "DYNAMIC")
+                        if (TagHasMarker(comboBox.Tag, "DYNAMIC"))
                         {
                             key = key + "_id";
                             values.Add(key, comboBox.SelectedValue);
@@ -1616,7 +1631,7 @@ namespace smpc_app.Services.Helpers
                                 string key = comboBox.Name.Replace("cmb_", "") + "_id";
                                 comboBox.BackColor = Color.FromArgb(235, 235, 235);
 
-                                if (comboBox.Tag == "DYNAMIC")
+                                if (TagHasMarker(comboBox.Tag, "DYNAMIC"))
                                 {
                                     Console.WriteLine("DYNAMICS:", comboBox.Name);
                                     string rawVal = dt.Rows[selectedIndex][key].ToString();
@@ -2167,7 +2182,7 @@ namespace smpc_app.Services.Helpers
                                 Console.WriteLine($"This is a  combobox: {comboBox.Name} ");
                                 string key = comboBox.Name.Replace("cmb_", "") + "_id";
 
-                                if (comboBox.Tag == "DYNAMIC")
+                                if (TagHasMarker(comboBox.Tag, "DYNAMIC"))
                                 {
                                     Console.WriteLine("DYNAMICS:", comboBox.Name);
                                     comboBox.SelectedValue = (string)dt.Rows[selectedIndex][key].ToString();
