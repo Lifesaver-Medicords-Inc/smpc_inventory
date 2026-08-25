@@ -97,6 +97,18 @@ namespace smpc_inventory_app.Data
         public static string PURCHASINGLISTSUPPLIER = PURCHASING + "/purchase_list_supplier";
         public static string PURCHASE_REQUISITION = PURCHASING + "/purchase_requisition";
         public static string PURCHASE_REQUISITION_DETAILS = PURCHASING + "/purchase_requisition_details";
+
+        // Purchase Return (PRT#, spec section 5.8) - NOT nested under PURCHASING;
+        // the Go route is its own top-level group ("/api/purchase-returns"), same
+        // convention as the other new documents built this phase.
+        public static string PURCHASE_RETURN = "/purchase-returns";
+
+        // Invoice Receipt - read-only reuse of the existing Accounting-app
+        // endpoint. Purchase Return references an IR, never a PO (spec 5.8), and
+        // this app has no IR data of its own - it's purely an Accounting
+        // document - so this just points at the same API the Accounting client
+        // already calls.
+        public static string INVOICE_RECEIPT = "/accounting/invoice_receipt";
         public static string PURCHASING_CANVASS_SHEET = PURCHASING + "/purchase_canvass_sheet_so";
         public static string PURCHASING_PURCHASE_ORDER = PURCHASING + "/purchase_order";
         public static string PURCHASING_GUIDING_PRICE = PURCHASING + "/purchase_guiding_price";

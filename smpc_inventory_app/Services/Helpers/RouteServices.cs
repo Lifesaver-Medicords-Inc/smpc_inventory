@@ -17,6 +17,7 @@ using smpc_inventory_app.Pages.Inventory;
 //using smpc_sales_app.Pages.Sales;
 using smpc_inventory_app.Pages.Item;
 using smpc_inventory_app.Pages.Inventory.ReceivingReport2;
+using smpc_inventory_app.Pages.Purchasing.PurchaseReturn;
 
 namespace smpc_inventory_app.Services.Helpers
 {
@@ -35,6 +36,7 @@ namespace smpc_inventory_app.Services.Helpers
             { "PURCHASING LIST", new NewPurchasingList() },
             { "PURCHASE ORDER", new frm_PurchaseOrder()},
             //{ "PURCHASE REQUISITION", new PurchaseRequisition() },
+            { "PURCHASE RETURN", new PurchaseReturnPage() },
 
             { "ITEM BRAND", new frm_item_brand_setup()  },
             { "ITEM NAME", new frm_item_name_setup()},

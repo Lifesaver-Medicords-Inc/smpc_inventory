@@ -253,6 +253,8 @@
     <Compile Include="Model\CurrentUserModel.cs" />
     <Compile Include="Model\ReceivingPurchaseOrderView.cs" />
     <Compile Include="Model\ReceivingReportModel.cs" />
+    <Compile Include="Model\PurchaseReturnModel.cs" />
+    <Compile Include="Model\InvoiceReceiptModel.cs" />
     <Compile Include="Model\ItemStockModel.cs" />
     <Compile Include="Model\ReceivingWarehouseView.cs" />
     <Compile Include="Model\SetupBaseModel.cs" />
@@ -408,6 +410,18 @@
     </Compile>
     <Compile Include="Pages\Inventory\ReceivingReport2\ReceivingReport2Modals\ReceivingReportSearch.Designer.cs">
       <DependentUpon>ReceivingReportSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseReturn\PurchaseReturnPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\PurchaseReturn\PurchaseReturnPage.Designer.cs">
+      <DependentUpon>PurchaseReturnPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\InvoiceReceiptPickerModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Purchasing\Modal\InvoiceReceiptPickerModal.Designer.cs">
+      <DependentUpon>InvoiceReceiptPickerModal.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Inventory\ReceivingReport2\ReceivingReport2Page.cs">
       <SubType>UserControl</SubType>
@@ -763,6 +777,7 @@
     <Compile Include="Services\Setup\Inventory\InventoryLogbookService.cs" />
     <Compile Include="Services\Setup\Inventory\InventoryTrackerService.cs" />
     <Compile Include="Services\Setup\Inventory\ReceivingReport2Service.cs" />
+    <Compile Include="Services\Setup\Purchasing\PurchaseReturnService.cs" />
     <Compile Include="Services\Setup\Inventory\ItemStockService.cs" />
     <Compile Include="Services\Setup\Inventory\ReceivingReportService.cs" />
     <Compile Include="Services\Setup\Model\Inventory\InventoryList.cs" />

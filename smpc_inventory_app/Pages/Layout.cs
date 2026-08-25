@@ -94,7 +94,7 @@ namespace Inventory_SMPC.Pages
             
             try
             {
-                if (e.Node.Name.Contains("DASHBOARD") || e.Node.Name.Contains("PURCHASE RETURN") || e.Node.Name.Contains("PURCHASE REQUISITION"))
+                if (e.Node.Name.Contains("DASHBOARD") || e.Node.Name.Contains("PURCHASE REQUISITION"))
                 {
                     Helpers.ShowDialogMessage("error", "This module is not available at the moment!");
                     return;
