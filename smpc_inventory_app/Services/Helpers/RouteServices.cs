@@ -64,7 +64,8 @@ namespace smpc_inventory_app.Services.Helpers
             { "INVENTORY TRACKER", new InventoryTrackerPage() },
             { "INVENTORY LOGBOOK", new InventoryLogbookPage() },
             { "RECEIVING REPORT", new ReceivingReport2Page() },
-            { "INVENTORY ITEM STOCKS", new ItemStocksPage() }
+            { "INVENTORY ITEM STOCKS", new ItemStocksPage() },
+            { "PRODUCTION REPORT", new production() }
         };
 
         private string _selectedRoute;

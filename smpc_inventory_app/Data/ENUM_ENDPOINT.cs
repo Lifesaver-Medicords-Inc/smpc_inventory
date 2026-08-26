@@ -119,7 +119,13 @@ namespace smpc_inventory_app.Data
         //PURCHASING WS
         public static string WSPURCHASINGREDBOXLIST = PURCHASING + "/redboxlist";
 
-        
+        // Production Report (spec §5.23) - read-only reuse of the Engineering app's
+        // own Job Order API. This app has no Job Order data of its own; the
+        // Warehouse Manager's acknowledgement queue and the acknowledge action both
+        // live on Engineering's existing endpoints, same "point at the owning
+        // feature's endpoint" precedent as Purchase Return's Invoice Receipt above.
+        public static string PRODUCTION_PENDING_REPORTS = "/engineering/job_order/pending_production_reports";
+        public static string PRODUCTION_ACKNOWLEDGE = "/engineering/job_order/"; // + "{id}/acknowledge"
 
         //SALES 
         public static string SALES = "/sales";

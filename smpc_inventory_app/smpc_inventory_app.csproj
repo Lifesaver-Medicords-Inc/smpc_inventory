@@ -256,6 +256,7 @@
     <Compile Include="Model\PurchaseReturnModel.cs" />
     <Compile Include="Model\InvoiceReceiptModel.cs" />
     <Compile Include="Model\ItemStockModel.cs" />
+    <Compile Include="Model\ProductionReportModel.cs" />
     <Compile Include="Model\ReceivingWarehouseView.cs" />
     <Compile Include="Model\SetupBaseModel.cs" />
     <Compile Include="Pages\Business_Partner_Info\BpiBranchUC.cs">
@@ -377,6 +378,12 @@
     </Compile>
     <Compile Include="Pages\Inventory\ItemStockAddModal.Designer.cs">
       <DependentUpon>ItemStockAddModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Inventory\ProductionAcknowledgeModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ProductionAcknowledgeModal.Designer.cs">
+      <DependentUpon>ProductionAcknowledgeModal.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\Inventory\ItemEntryHostForm.cs">
       <SubType>Form</SubType>
@@ -785,6 +792,7 @@
     <Compile Include="Services\Setup\Inventory\ReceivingReport2Service.cs" />
     <Compile Include="Services\Setup\Purchasing\PurchaseReturnService.cs" />
     <Compile Include="Services\Setup\Inventory\ItemStockService.cs" />
+    <Compile Include="Services\Setup\Item\ProductionService.cs" />
     <Compile Include="Services\Setup\Inventory\ReceivingReportService.cs" />
     <Compile Include="Services\Setup\Model\Inventory\InventoryList.cs" />
     <Compile Include="Services\Setup\Item\PositionServices.cs" />
