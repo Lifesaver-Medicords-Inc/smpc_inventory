@@ -366,6 +366,12 @@
     <Compile Include="Pages\Inventory\ItemStockAdjustmentModal.Designer.cs">
       <DependentUpon>ItemStockAdjustmentModal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Inventory\ItemStockTransferModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\Inventory\ItemStockTransferModal.Designer.cs">
+      <DependentUpon>ItemStockTransferModal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Inventory\ItemStockAddModal.cs">
       <SubType>Form</SubType>
     </Compile>

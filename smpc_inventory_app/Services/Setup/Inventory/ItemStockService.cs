@@ -41,5 +41,22 @@ namespace smpc_inventory_app.Services.Setup.Inventory
 
             return response;
         }
+
+        // §10.6's Transfer function - move some or all of one bin's stock to a different
+        // bin, warehouse-to-warehouse moves included. No reference document field, by
+        // design (see StockTransferBody on the Go side).
+        public async Task<ApiResponseModel> TransferStock(int sourceStockId, int transferQty, int destWarehouseId, string destBinLocation, string remarks)
+        {
+            var response = await RequestToApi<ApiResponseModel>.Post(ENUM_ENDPOINT.ITEM_STOCKS_TRANSFER, new Dictionary<string, dynamic>
+            {
+                { "source_stock_id", sourceStockId },
+                { "transfer_qty", transferQty },
+                { "dest_warehouse_id", destWarehouseId },
+                { "dest_bin_location", destBinLocation },
+                { "remarks", remarks }
+            });
+
+            return response;
+        }
     }
 }

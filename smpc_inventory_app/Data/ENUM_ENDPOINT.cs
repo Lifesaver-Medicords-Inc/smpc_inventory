@@ -65,6 +65,7 @@ namespace smpc_inventory_app.Data
 
         //Item Stocks (Inventory Item Stocks module)
         public static string ITEM_STOCKS = "/inventory/item_stocks";
+        public static string ITEM_STOCKS_TRANSFER = "/inventory/item_stocks/transfer";
 
         //Receiving Report
         public static string RECEIVING_REPORT = "/inventory/receiving_report";

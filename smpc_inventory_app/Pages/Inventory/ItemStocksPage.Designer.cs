@@ -19,6 +19,7 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             this.pnl_top = new System.Windows.Forms.Panel();
             this.btn_adjust = new System.Windows.Forms.Button();
+            this.btn_transfer = new System.Windows.Forms.Button();
             this.btn_add = new System.Windows.Forms.Button();
             this.btn_refresh = new System.Windows.Forms.Button();
             this.txt_search = new System.Windows.Forms.TextBox();
@@ -40,6 +41,7 @@ namespace smpc_inventory_app.Pages.Inventory
             // pnl_top
             //
             this.pnl_top.Controls.Add(this.btn_adjust);
+            this.pnl_top.Controls.Add(this.btn_transfer);
             this.pnl_top.Controls.Add(this.btn_add);
             this.pnl_top.Controls.Add(this.btn_refresh);
             this.pnl_top.Controls.Add(this.txt_search);
@@ -107,6 +109,18 @@ namespace smpc_inventory_app.Pages.Inventory
             this.btn_adjust.Text = "Adjust Stock";
             this.btn_adjust.UseVisualStyleBackColor = true;
             this.btn_adjust.Click += new System.EventHandler(this.btn_adjust_Click);
+            //
+            // btn_transfer
+            //
+            // §10.6 Transfer function - Admin/Warehouse Manager gated, same as Adjust
+            // Stock (HasAdjustAuthority).
+            this.btn_transfer.Location = new System.Drawing.Point(981, 9);
+            this.btn_transfer.Name = "btn_transfer";
+            this.btn_transfer.Size = new System.Drawing.Size(110, 24);
+            this.btn_transfer.TabIndex = 6;
+            this.btn_transfer.Text = "Transfer Stock";
+            this.btn_transfer.UseVisualStyleBackColor = true;
+            this.btn_transfer.Click += new System.EventHandler(this.btn_transfer_Click);
             //
             // dgv_item_stocks
             //
@@ -223,6 +237,7 @@ namespace smpc_inventory_app.Pages.Inventory
         private System.Windows.Forms.Button btn_refresh;
         private System.Windows.Forms.Button btn_add;
         private System.Windows.Forms.Button btn_adjust;
+        private System.Windows.Forms.Button btn_transfer;
         private System.Windows.Forms.DataGridView dgv_item_stocks;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_item_code;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_item_name;
