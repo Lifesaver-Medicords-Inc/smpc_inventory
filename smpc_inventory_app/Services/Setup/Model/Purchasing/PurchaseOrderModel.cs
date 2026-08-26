@@ -53,6 +53,13 @@ namespace smpc_inventory_app.Services.Setup.Model.Purchasing
         public string qtys { get; set; }
         //public string item_description { get; set; }
 
+        // §7.1 (Phase 2 item 2.7) - "WAITING FOR DELIVERY" until this line's own
+        // order_qty is fully received, then "IN STOCK". Deliberately not the same
+        // vocabulary tbl_trans_sales_order_details.status uses - this PO line can
+        // consolidate the same item across several SOs (order_detail_ids above),
+        // each possibly at a different §7.1 state, so there's no single correct
+        // SO-line status to show here. Server-computed; never sent back on save.
+        public string delivery_status { get; set; }
     }
 
     class PurchaseOrderViewModel

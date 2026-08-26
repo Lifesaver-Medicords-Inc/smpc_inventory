@@ -111,6 +111,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.discount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.discounted_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.total_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delivery_status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.order_detail_ids = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.qtys = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.allocated_qtys = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -779,6 +780,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.discount,
             this.discounted_price,
             this.total_price,
+            this.delivery_status,
             this.order_detail_ids,
             this.qtys,
             this.allocated_qtys,
@@ -896,7 +898,14 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.total_price.HeaderText = "TOTAL PRICE";
             this.total_price.Name = "total_price";
             this.total_price.ReadOnly = true;
-            // 
+            //
+            // delivery_status
+            //
+            this.delivery_status.DataPropertyName = "delivery_status";
+            this.delivery_status.HeaderText = "DELIVERY STATUS";
+            this.delivery_status.Name = "delivery_status";
+            this.delivery_status.ReadOnly = true;
+            //
             // order_detail_ids
             // 
             this.order_detail_ids.DataPropertyName = "order_detail_ids";
@@ -1166,6 +1175,7 @@ namespace smpc_inventory_app.Pages.Purchasing
         private System.Windows.Forms.DataGridViewTextBoxColumn discount;
         private System.Windows.Forms.DataGridViewTextBoxColumn discounted_price;
         private System.Windows.Forms.DataGridViewTextBoxColumn total_price;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delivery_status;
         private System.Windows.Forms.DataGridViewTextBoxColumn order_detail_ids;
         private System.Windows.Forms.DataGridViewTextBoxColumn qtys;
         private System.Windows.Forms.DataGridViewTextBoxColumn allocated_qtys;
