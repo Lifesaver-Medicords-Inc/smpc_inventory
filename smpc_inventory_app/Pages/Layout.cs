@@ -82,12 +82,22 @@ namespace Inventory_SMPC.Pages
 
         private Control GetActiveTabPageControl()
         {
+            if (tabContainer == null) return null;
             TabPage selected = tabContainer.SelectedTab;
             return selected != null && selected.Controls.Count > 0 ? selected.Controls[0] : null;
         }
 
+        // Live crash found in smpc_sales_system: NullReferenceException on
+        // tabContainer.SelectedTab. container's Resize event can fire mid-
+        // InitializeComponent() - e.g. the moment it's docked into its own parent -
+        // which is *before* every field this method touches is necessarily assigned
+        // yet, regardless of how early each one's own "new" line appears in the
+        // Designer file. Guard against both being null rather than relying on Designer
+        // code-generation order to save us.
         private void RecalculateContentWidth()
         {
+            if (container == null || tabContainer == null) return;
+
             int availableWidth = container.ClientSize.Width;
             int cappedWidth = Math.Min(MaxContentWidth, availableWidth);
 
