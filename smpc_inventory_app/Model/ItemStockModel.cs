@@ -15,6 +15,7 @@ namespace smpc_inventory_app.Model
         public int item_id { get; set; }
         public string item_code { get; set; }
         public string item_name { get; set; }
+        public string item_model { get; set; }
         public string brand { get; set; }
         public int warehouse_id { get; set; }
         public string warehouse_name { get; set; }

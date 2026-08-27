@@ -80,6 +80,7 @@ namespace smpc_inventory_app.Pages.Inventory
                 filtered = _allStocks.Where(s =>
                     (s.item_code ?? "").ToLower().Contains(term) ||
                     (s.item_name ?? "").ToLower().Contains(term) ||
+                    (s.item_model ?? "").ToLower().Contains(term) ||
                     (s.brand ?? "").ToLower().Contains(term) ||
                     (s.warehouse_name ?? "").ToLower().Contains(term) ||
                     (s.bin_location ?? "").ToLower().Contains(term));
