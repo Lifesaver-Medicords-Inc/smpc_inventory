@@ -497,7 +497,14 @@ namespace smpc_inventory_app.Pages
             {
                 this.selectedRecord = -1; // nothing to bind
             }
-            else if (this.selectedRecord >= BomHead.Rows.Count)
+            // BUG (live crash: "There is no row at position -1"): was
+            // "this.selectedRecord >= BomHead.Rows.Count" only - catches selectedRecord
+            // being too HIGH (e.g. the list got shorter), but not too LOW. If the list
+            // was ever empty, selectedRecord gets set to -1 above; if a later
+            // load/refresh finds rows again without selectedRecord happening to still be
+            // >= the new Count, that stale -1 survives untouched and FetchAllChilds
+            // indexes BomHead.Rows[-1].
+            else if (this.selectedRecord < 0 || this.selectedRecord >= BomHead.Rows.Count)
             {
                 this.selectedRecord = 0; // fallback to first row
             }
