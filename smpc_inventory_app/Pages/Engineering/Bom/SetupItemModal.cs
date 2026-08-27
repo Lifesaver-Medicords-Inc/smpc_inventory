@@ -67,6 +67,45 @@ namespace smpc_inventory_app.Pages.Engineering.Bom
         {
             if (e.RowIndex >= 0)
             {
+                // BUG (reported live): after a search, dg_item_bom is rebound to
+                // Helpers.FilterDataTable's result - a brand-new DataTable built via
+                // CopyToDataTable(), not a view over Dt - so e.RowIndex is a position
+                // in that filtered copy, not in Dt. The caller (bom.cs's
+                // btn_get_item_Click) always indexes the ORIGINAL bomItemList/Dt with
+                // whatever GetResult() returns, so a raw filtered RowIndex silently
+                // binds the wrong row - in practice almost always row 0 of Dt, i.e.
+                // "always selects the first data" when a search narrows to one match.
+                // Fix: resolve the clicked row back to its real index in Dt via the
+                // stable item_id key before returning it, so GetResult()'s contract
+                // (an index into Dt) holds whether or not the grid is filtered.
+                DataRow clickedRow = (dg_item_bom.Rows[e.RowIndex].DataBoundItem as DataRowView)?.Row;
+
+                if (clickedRow != null && Dt.Columns.Contains("item_id"))
+                {
+                    object itemId = clickedRow["item_id"];
+                    int resolvedIndex = -1;
+
+                    for (int i = 0; i < Dt.Rows.Count; i++)
+                    {
+                        if (Equals(Dt.Rows[i]["item_id"], itemId))
+                        {
+                            resolvedIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (resolvedIndex >= 0)
+                    {
+                        this.result = resolvedIndex;
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                        return;
+                    }
+                }
+
+                // Fallback (no item_id column, or DataBoundItem unavailable): grid is
+                // presumably unfiltered and bound directly to Dt, so the clicked index
+                // already matches Dt's own row order.
                 this.result = e.RowIndex;
                 this.DialogResult = DialogResult.OK;
                 this.Close();
