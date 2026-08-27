@@ -53,8 +53,25 @@ namespace smpc_inventory_app.Pages
 
         }
 
+        // Phase 4.6 (UI uniformity): required-field validation added here, matching the
+        // other 5 apps' Login - this is the actual button handler for a standalone
+        // Inventory-app login, so this is where the raw textbox values still need
+        // checking before LoginFromSales (also reachable directly from Sales.cs's own
+        // Login, already-validated there) ever builds a request out of them.
         private async void btn_login_Click_1(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txt_employee_id.Text))
+            {
+                Helpers.ShowDialogMessage("error", "Employee ID is required.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txt_password.Text))
+            {
+                Helpers.ShowDialogMessage("error", "Password is required.");
+                return;
+            }
+
             var data = Helpers.GetControlsValues(pnl_auth);
 
             data.Add("motherboard_serial_no", Helpers.GetSerialNumber());
@@ -75,7 +92,13 @@ namespace smpc_inventory_app.Pages
             }
             else
             {
-                Helpers.ShowDialogMessage("error", "Error: " + response.message);
+                // Was always "Error: " + response.message with no fallback - if the server
+                // ever failed without a message (e.g. a network-level failure short-circuits
+                // response entirely), this showed a bare "Error: " with nothing after it.
+                // Matches the other apps' phrasing now: the server's actual reason when it
+                // sends one, a generic line when it doesn't.
+                string serverMessage = response?.message;
+                Helpers.ShowDialogMessage("error", string.IsNullOrWhiteSpace(serverMessage) ? "Invalid Credentials" : serverMessage);
             }
         }
     }

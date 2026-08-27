@@ -122,11 +122,14 @@ namespace smpc_inventory_app.Pages
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(296, 106);
             this.Controls.Add(this.pnl_auth);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            // Phase 4.6 (UI uniformity): FixedSingle + no maximize, matching the other 5
+            // apps' Login.
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Login";
+            this.Text = "Lightspeed ERP - Inventory Login";
             this.Load += new System.EventHandler(this.frm_login_Load);
             this.pnl_auth.ResumeLayout(false);
             this.pnl_auth.PerformLayout();
