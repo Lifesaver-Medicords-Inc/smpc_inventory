@@ -140,14 +140,25 @@ namespace Inventory_SMPC.Pages
             // 
             this.container.Controls.Add(this.tabContainer);
             this.container.Dock = System.Windows.Forms.DockStyle.Fill;
+            // Phase 4.6 (UI uniformity): container already sat between the sidebar/RedBox
+            // and tabContainer with no other children, so it takes on the same "capped
+            // work area" role pnl_content_capped plays in smpc_sales_system - no new
+            // wrapper panel needed here. AutoScroll owns showing a scrollbar when the
+            // active page (or tabContainer itself, on a narrower monitor) needs more
+            // width than what's available - see Layout.cs's RecalculateContentWidth.
+            this.container.AutoScroll = true;
             this.container.Location = new System.Drawing.Point(235, 0);
             this.container.Name = "container";
             this.container.Size = new System.Drawing.Size(740, 637);
             this.container.TabIndex = 5;
-            // 
+            this.container.Resize += new System.EventHandler(this.container_Resize);
+            //
             // tabContainer
-            // 
-            this.tabContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            //
+            // Phase 4.6 (UI uniformity): no longer Dock=Fill - container now sizes/
+            // centers this manually (see Layout.cs's RecalculateContentWidth) so the
+            // work area caps at 1280px on wide/ultrawide monitors instead of stretching
+            // edge to edge, matching all 6 apps' new standard.
             this.tabContainer.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tabContainer.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.tabContainer.Location = new System.Drawing.Point(0, 0);
