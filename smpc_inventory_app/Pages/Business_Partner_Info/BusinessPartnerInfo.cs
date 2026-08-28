@@ -2430,7 +2430,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                     if (r == DialogResult.OK)
                     {
-                        Dictionary<string, dynamic> result = modal.GetResult();
+                        // Multi-select (requested): ItemModal now returns every checked
+                        // item, not just one - the first fills the row that was clicked
+                        // (unchanged logic below, just looped); additional items are
+                        // NOT appended as new rows here the way BpiBranchUC.cs's sibling
+                        // handler does it, because this method was already reading
+                        // result["short_desc"]/["status_tangible"]/["status_trade"] -
+                        // keys GetResult()'s dictionary has never actually had (it only
+                        // ever provides item_id/item_type/item_code/long_description/
+                        // item_price). That mismatch predates this change and would
+                        // throw a KeyNotFoundException the moment this path runs,
+                        // multi-select or not - a separate, pre-existing bug, not
+                        // something to silently paper over while adding multi-select.
+                        List<Dictionary<string, dynamic>> results = modal.GetResult();
+                        if (results == null || results.Count == 0) return;
+                        Dictionary<string, dynamic> result = results[0];
 
                         // Bug #014: dg_items is data-bound (DataSource = dataBindingItems), so
                         // writing straight into DataGridViewRow.Cells[...].Value only changes

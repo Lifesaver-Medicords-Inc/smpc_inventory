@@ -1643,19 +1643,35 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                     if (r == DialogResult.OK)
                     {
-                        Dictionary<string, dynamic> result = modal.GetResult();
+                        // Multi-select (requested): ItemModal now returns every checked
+                        // item, not just one. The first fills the row that was clicked
+                        // (unchanged behavior); any further items get appended as new
+                        // rows, using btn_add_item_Click's own column list so a picked
+                        // item ends up shaped exactly like a manually-added one would.
+                        List<Dictionary<string, dynamic>> results = modal.GetResult();
+                        if (results == null || results.Count == 0) return;
 
-                        // Update current row in DataGridView
                         DataGridViewRow selectedRow = dg_items.Rows[e.RowIndex];
+                        selectedRow.Cells["item_id"].Value = results[0]["item_id"];
+                        selectedRow.Cells["item_type"].Value = results[0]["item_type"];
+                        selectedRow.Cells["item_code"].Value = results[0]["item_code"];
+                        selectedRow.Cells["long_description"].Value = results[0]["long_description"];
+                        selectedRow.Cells["price"].Value = results[0]["item_price"];
 
-                        selectedRow.Cells["item_id"].Value = result["item_id"];
-                        selectedRow.Cells["item_type"].Value = result["item_type"];
-                        selectedRow.Cells["item_code"].Value = result["item_code"];
-                        selectedRow.Cells["long_description"].Value = result["long_description"];
-                        selectedRow.Cells["price"].Value = result["item_price"];
+                        DataTable currentTable = dataBindingItems.DataSource as DataTable;
+                        for (int i = 1; i < results.Count; i++)
+                        {
+                            if (currentTable == null) break;
 
-                        // Add new empty row to data source (assumes DataTable binding)
-
+                            DataRow newRow = currentTable.NewRow();
+                            newRow["item_id"] = results[i]["item_id"];
+                            newRow["item_code"] = results[i]["item_code"];
+                            newRow["short_desc"] = results[i]["long_description"];
+                            newRow["status_tangible"] = "";
+                            newRow["status_trade"] = "";
+                            newRow["price"] = results[i]["item_price"];
+                            currentTable.Rows.Add(newRow);
+                        }
                     }
 
 

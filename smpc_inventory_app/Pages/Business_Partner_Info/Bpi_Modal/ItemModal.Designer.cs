@@ -31,8 +31,11 @@ namespace smpc_sales_app.Pages
         {
             this.pnl_title = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.pnl_footer = new System.Windows.Forms.Panel();
+            this.btn_add_selected = new System.Windows.Forms.Button();
             this.pnl_dgv = new System.Windows.Forms.Panel();
             this.dg_ItemList = new System.Windows.Forms.DataGridView();
+            this.selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.general_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,41 +45,64 @@ namespace smpc_sales_app.Pages
             this.long_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_title.SuspendLayout();
+            this.pnl_footer.SuspendLayout();
             this.pnl_dgv.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_ItemList)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // pnl_title
-            // 
+            //
             this.pnl_title.Controls.Add(this.label1);
             this.pnl_title.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnl_title.Location = new System.Drawing.Point(0, 0);
             this.pnl_title.Name = "pnl_title";
             this.pnl_title.Size = new System.Drawing.Size(818, 62);
             this.pnl_title.TabIndex = 0;
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 23);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "ITEM LIST";
-            // 
+            //
+            // pnl_footer
+            //
+            this.pnl_footer.Controls.Add(this.btn_add_selected);
+            this.pnl_footer.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnl_footer.Location = new System.Drawing.Point(0, 444);
+            this.pnl_footer.Name = "pnl_footer";
+            this.pnl_footer.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
+            this.pnl_footer.Size = new System.Drawing.Size(818, 46);
+            this.pnl_footer.TabIndex = 2;
+            //
+            // btn_add_selected
+            //
+            this.btn_add_selected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_add_selected.Location = new System.Drawing.Point(636, 8);
+            this.btn_add_selected.Name = "btn_add_selected";
+            this.btn_add_selected.Size = new System.Drawing.Size(158, 28);
+            this.btn_add_selected.TabIndex = 0;
+            this.btn_add_selected.Text = "Add Selected Items";
+            this.btn_add_selected.UseVisualStyleBackColor = true;
+            this.btn_add_selected.Click += new System.EventHandler(this.btn_add_selected_Click);
+            //
             // pnl_dgv
-            // 
+            //
             this.pnl_dgv.Controls.Add(this.dg_ItemList);
-            this.pnl_dgv.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnl_dgv.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_dgv.Location = new System.Drawing.Point(0, 62);
             this.pnl_dgv.Name = "pnl_dgv";
             this.pnl_dgv.Size = new System.Drawing.Size(818, 382);
             this.pnl_dgv.TabIndex = 1;
-            // 
+            //
             // dg_ItemList
-            // 
+            //
             this.dg_ItemList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_ItemList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.selected,
             this.id,
             this.general_name,
             this.item_type,
@@ -95,7 +121,17 @@ namespace smpc_sales_app.Pages
             this.dg_ItemList.TabIndex = 0;
             this.dg_ItemList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_itemList_CellClick);
             this.dg_ItemList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg_ItemList_CellContentClick);
-            // 
+            //
+            // selected
+            //
+            // Multi-select (requested): a real bool column added to the fetched
+            // DataTable in code (GetItemList) rather than left typeless - a
+            // DataGridViewCheckBoxColumn needs a bool-typed source to bind cleanly.
+            this.selected.DataPropertyName = "Selected";
+            this.selected.HeaderText = "";
+            this.selected.Name = "selected";
+            this.selected.Width = 30;
+            //
             // id
             // 
             this.id.DataPropertyName = "id";
@@ -165,6 +201,7 @@ namespace smpc_sales_app.Pages
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(818, 613);
             this.Controls.Add(this.pnl_dgv);
+            this.Controls.Add(this.pnl_footer);
             this.Controls.Add(this.pnl_title);
             this.Name = "ItemModal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -172,6 +209,7 @@ namespace smpc_sales_app.Pages
             this.Load += new System.EventHandler(this.ItemModal_Load);
             this.pnl_title.ResumeLayout(false);
             this.pnl_title.PerformLayout();
+            this.pnl_footer.ResumeLayout(false);
             this.pnl_dgv.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_ItemList)).EndInit();
             this.ResumeLayout(false);
@@ -182,8 +220,11 @@ namespace smpc_sales_app.Pages
 
         private System.Windows.Forms.Panel pnl_title;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel pnl_footer;
+        private System.Windows.Forms.Button btn_add_selected;
         private System.Windows.Forms.Panel pnl_dgv;
         private System.Windows.Forms.DataGridView dg_ItemList;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn selected;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn general_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_type;
