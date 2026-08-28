@@ -62,17 +62,20 @@ namespace smpc_inventory_app.Pages.Purchasing.Modal
                 }
             }
 
+            // Hard block, not a dismissable warning: §11.4/§14.13 - "Sigma QTY TO GIVE
+            // MUST equal the order qty - no more, no less." Over-allocation is already
+            // hard-blocked per-keystroke in OrderDistributionCard's CellValidating; this
+            // closes the other half, which previously let a user click OK past an
+            // under-allocated total.
             if (hasUnallocated)
             {
-                var confirm = MessageBox.Show(
-                    "There are remaining unallocated items. Do you want to proceed?",
-                    "Unallocated Quantity Warning",
-                    MessageBoxButtons.OKCancel,
+                MessageBox.Show(
+                    "Every unit must be allocated before continuing - the total QTY TO GIVE must equal the ORDER QTY exactly (§11.4).",
+                    "Allocation Incomplete",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
-
-                if (confirm == DialogResult.Cancel)
-                    return;
+                return;
             }
 
             DistributedResults = allResults;
