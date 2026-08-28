@@ -19,7 +19,7 @@
     <PublishUrl>D:\Gids\Publish\Inventory\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -27,7 +27,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -933,6 +933,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Inventory\InventoryTrackerModals\InventoryTrackerLocation.resx">
       <DependentUpon>InventoryTrackerLocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Inventory\ItemStocksPage.resx">
+      <DependentUpon>ItemStocksPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Inventory\ReceivingReport.resx">
       <DependentUpon>ReceivingReport.cs</DependentUpon>

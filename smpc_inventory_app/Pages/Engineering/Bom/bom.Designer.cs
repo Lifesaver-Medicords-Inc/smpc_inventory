@@ -87,10 +87,10 @@ namespace smpc_inventory_app.Pages
             this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip4 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.size = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.short_desc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_bom_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.size = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bom_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.uom_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.unit_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -160,10 +160,10 @@ namespace smpc_inventory_app.Pages
             this.dg_bom.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_bom.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.item_code,
+            this.size,
             this.short_desc,
             this.item_id,
             this.item_bom_id,
-            this.size,
             this.bom_qty,
             this.uom_name,
             this.unit_price,
@@ -589,6 +589,14 @@ namespace smpc_inventory_app.Pages
             this.item_code.Name = "item_code";
             this.item_code.ReadOnly = true;
             // 
+            // size
+            // 
+            this.size.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.size.DataPropertyName = "size";
+            this.size.HeaderText = "ITEM NAME";
+            this.size.Name = "size";
+            this.size.ReadOnly = true;
+            // 
             // short_desc
             // 
             this.short_desc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -610,14 +618,6 @@ namespace smpc_inventory_app.Pages
             this.item_bom_id.HeaderText = "item_bom_id";
             this.item_bom_id.Name = "item_bom_id";
             this.item_bom_id.Visible = false;
-            // 
-            // size
-            // 
-            this.size.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.size.DataPropertyName = "size";
-            this.size.HeaderText = "SIZE";
-            this.size.Name = "size";
-            this.size.ReadOnly = true;
             // 
             // bom_qty
             // 
@@ -750,10 +750,10 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.ToolStripButton btn_next;
         private System.Windows.Forms.DataGridView dg_bom;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn size;
         private System.Windows.Forms.DataGridViewTextBoxColumn short_desc;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_bom_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn size;
         private System.Windows.Forms.DataGridViewTextBoxColumn bom_qty;
         private System.Windows.Forms.DataGridViewTextBoxColumn uom_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn unit_price;
