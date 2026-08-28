@@ -44,6 +44,9 @@ namespace smpc_sales_app.Pages
             this.item_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.long_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.item_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.short_desc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.status_tangible = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.status_trade = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_title.SuspendLayout();
             this.pnl_footer.SuspendLayout();
             this.pnl_dgv.SuspendLayout();
@@ -110,7 +113,10 @@ namespace smpc_sales_app.Pages
             this.item_brand_name,
             this.item_code,
             this.long_description,
-            this.item_price});
+            this.item_price,
+            this.short_desc,
+            this.status_tangible,
+            this.status_trade});
             this.dg_ItemList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_ItemList.Location = new System.Drawing.Point(0, 0);
             this.dg_ItemList.MultiSelect = false;
@@ -194,7 +200,26 @@ namespace smpc_sales_app.Pages
             this.item_price.HeaderText = "PRICE";
             this.item_price.Name = "item_price";
             this.item_price.ReadOnly = true;
-            // 
+            //
+            // short_desc / status_tangible / status_trade
+            //
+            // Hidden data-carrier columns, not shown in the picker grid - they exist
+            // so GetResult() (btn_add_selected_Click) can read them into the returned
+            // dictionary for BusinessPartnerInfo.cs's dg_items, which expects exactly
+            // these three keys and previously had no source for them at all.
+            this.short_desc.DataPropertyName = "short_desc";
+            this.short_desc.Name = "short_desc";
+            this.short_desc.ReadOnly = true;
+            this.short_desc.Visible = false;
+            this.status_tangible.DataPropertyName = "status_tangible";
+            this.status_tangible.Name = "status_tangible";
+            this.status_tangible.ReadOnly = true;
+            this.status_tangible.Visible = false;
+            this.status_trade.DataPropertyName = "status_trade";
+            this.status_trade.Name = "status_trade";
+            this.status_trade.ReadOnly = true;
+            this.status_trade.Visible = false;
+            //
             // ItemModal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -233,5 +258,8 @@ namespace smpc_sales_app.Pages
         private System.Windows.Forms.DataGridViewTextBoxColumn item_code;
         private System.Windows.Forms.DataGridViewTextBoxColumn long_description;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_price;
+        private System.Windows.Forms.DataGridViewTextBoxColumn short_desc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn status_tangible;
+        private System.Windows.Forms.DataGridViewTextBoxColumn status_trade;
     }
 }

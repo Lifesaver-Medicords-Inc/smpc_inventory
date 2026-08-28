@@ -138,6 +138,15 @@ namespace smpc_sales_app.Pages
                 string item_code = row.Cells["item_code"].Value?.ToString() ?? "";
                 string long_description = row.Cells["long_description"].Value?.ToString() ?? "";
                 float.TryParse(row.Cells["item_price"].Value?.ToString(), out float item_price);
+                // Bug fix: BusinessPartnerInfo.cs's dg_items_CellClick reads
+                // result["short_desc"]/["status_tangible"]/["status_trade"] - keys
+                // this dictionary never provided, throwing KeyNotFoundException the
+                // moment that path ran. vw_bpi_item_list now returns real values for
+                // all three (see the view + BpiItemListContent for where they come
+                // from), so read them the same way as everything else here.
+                string short_desc = row.Cells["short_desc"].Value?.ToString() ?? "";
+                string status_tangible = row.Cells["status_tangible"].Value?.ToString() ?? "";
+                string status_trade = row.Cells["status_trade"].Value?.ToString() ?? "";
 
                 var data = new Dictionary<string, dynamic>();
                 data.Add("item_id", item_id);
@@ -145,6 +154,9 @@ namespace smpc_sales_app.Pages
                 data.Add("item_code", item_code);
                 data.Add("long_description", long_description);
                 data.Add("item_price", item_price);
+                data.Add("short_desc", short_desc);
+                data.Add("status_tangible", status_tangible);
+                data.Add("status_trade", status_trade);
 
                 selectedRows.Add(data);
             }

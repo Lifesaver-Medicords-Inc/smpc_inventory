@@ -16,6 +16,12 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         public string item_brand_name { get; set; }
         public string long_description { get; set; }
         public float item_price { get; set; }
+        // Fixes the BPI Item picker's KeyNotFoundException - GetResult() in
+        // ItemModal.cs never had these to read until vw_bpi_item_list picked
+        // them up.
+        public string short_desc { get; set; }
+        public string status_tangible { get; set; }
+        public string status_trade { get; set; }
 
     }
 }
