@@ -775,6 +775,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Auth\AuthServices.cs" />
     <Compile Include="Services\Helpers\BinLocationComboOverlay.cs" />
+    <Compile Include="Services\Helpers\CascadingBinLocationCombo.cs" />
     <Compile Include="Services\Helpers\Helpers.cs" />
     <Compile Include="Services\Helpers\JsonHelper.cs" />
     <Compile Include="Services\Helpers\RequestToApi.cs" />

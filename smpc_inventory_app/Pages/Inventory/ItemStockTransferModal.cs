@@ -26,9 +26,15 @@ namespace smpc_inventory_app.Pages.Inventory
         public string DestBinLocation { get; private set; }
         public string Remarks { get; private set; }
 
+        // Cascading zone->area->rack->level->bins picker, same staged behavior as
+        // Receiving Report's bin_location column (BinLocationComboOverlay) - this
+        // used to flatten every combination into one long dropdown instead.
+        private readonly CascadingBinLocationCombo _destBinLocationPicker;
+
         public ItemStockTransferModal(ItemStockModel current)
         {
             InitializeComponent();
+            _destBinLocationPicker = new CascadingBinLocationCombo(cmb_dest_bin_location);
             _current = current;
 
             lbl_info.Text =
@@ -59,13 +65,12 @@ namespace smpc_inventory_app.Pages.Inventory
             }
         }
 
-        // Same "zone-area-rack-level-bins" assembly as ItemStockAddModal's
-        // cmb_warehouse_SelectedIndexChanged, so destination values here match the format
-        // already written everywhere else.
+        // Reloads the destination picker's area data, same zone->area->rack->level->bins
+        // staged flow Receiving Report uses (§10.6) - matches ItemStockAddModal's own
+        // cmb_warehouse_SelectedIndexChanged handling.
         private async void cmb_dest_warehouse_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cmb_dest_bin_location.Items.Clear();
-            cmb_dest_bin_location.Text = string.Empty;
+            _destBinLocationPicker.Clear();
 
             if (!(cmb_dest_warehouse.SelectedItem is WarehouseNameModel selectedWarehouse)) return;
 
@@ -73,21 +78,13 @@ namespace smpc_inventory_app.Pages.Inventory
             {
                 var areaService = new GeneralService<ReceivingWarehouseAreaView>(ENUM_ENDPOINT.RECEIVING_REPORT_WAREHOUSE_AREA + selectedWarehouse.id);
                 var areas = await areaService.GetAsList() ?? new List<ReceivingWarehouseAreaView>();
-
-                var binOptions = areas
-                    .Select(a => string.Join("-", new[] { a.zone, a.area, a.rack, a.level, a.bins }.Where(p => !string.IsNullOrWhiteSpace(p))))
-                    .Where(b => !string.IsNullOrWhiteSpace(b))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .OrderBy(b => b, StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
-
-                cmb_dest_bin_location.Items.AddRange(binOptions);
+                _destBinLocationPicker.SetData(areas);
             }
             catch (Exception)
             {
                 // A warehouse with no bin-area setup yet, or a transient API hiccup, just
-                // leaves this empty - the user can still type a bin location manually
-                // since it's an editable combo.
+                // leaves the picker showing no options, same as Receiving Report's own
+                // behavior for an unconfigured warehouse.
             }
         }
 
@@ -99,14 +96,14 @@ namespace smpc_inventory_app.Pages.Inventory
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(cmb_dest_bin_location.Text))
+            if (string.IsNullOrWhiteSpace(_destBinLocationPicker.Value))
             {
-                MessageBox.Show("Please enter a destination bin location.", "Destination Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select a destination bin location.", "Destination Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmb_dest_bin_location.Focus();
                 return;
             }
 
-            string destBin = cmb_dest_bin_location.Text.Trim().ToUpper();
+            string destBin = _destBinLocationPicker.Value.Trim().ToUpper();
 
             if (selectedWarehouse.id == _current.warehouse_id
                 && string.Equals(destBin, (_current.bin_location ?? "").Trim().ToUpper(), StringComparison.OrdinalIgnoreCase))

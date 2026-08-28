@@ -36,6 +36,11 @@ namespace smpc_inventory_app.Pages.Inventory
         public int Qty { get; private set; }
         public string Uom { get; private set; }
 
+        // Cascading zone->area->rack->level->bins picker, same staged behavior as
+        // Receiving Report's bin_location column (BinLocationComboOverlay) - this
+        // used to flatten every combination into one long dropdown instead.
+        private readonly CascadingBinLocationCombo _binLocationPicker;
+
         // Full, unfiltered list - cmb_item.DataSource itself gets swapped to a filtered
         // subset as the user types (see cmb_item_TextChanged), so this is the only place
         // the complete set of items is kept.
@@ -48,6 +53,7 @@ namespace smpc_inventory_app.Pages.Inventory
         public ItemStockAddModal()
         {
             InitializeComponent();
+            _binLocationPicker = new CascadingBinLocationCombo(cmb_bin_location);
         }
 
         private async void ItemStockAddModal_Load(object sender, EventArgs e)
@@ -77,12 +83,12 @@ namespace smpc_inventory_app.Pages.Inventory
         }
 
         // Bin locations are defined per-warehouse in the Warehouse Setup module
-        // (tbl_inv_warehouse_area, edited via frm_warehouse_name_setup), not typed freely -
-        // whenever the warehouse changes, reload that warehouse's bins into cmb_bin_location.
+        // (tbl_inv_warehouse_area, edited via frm_warehouse_name_setup) - whenever the
+        // warehouse changes, reload that warehouse's areas into the cascading picker,
+        // same zone->area->rack->level->bins staged flow Receiving Report uses.
         private async void cmb_warehouse_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cmb_bin_location.Items.Clear();
-            cmb_bin_location.Text = string.Empty;
+            _binLocationPicker.Clear();
 
             if (!(cmb_warehouse.SelectedItem is WarehouseNameModel selectedWarehouse)) return;
 
@@ -90,23 +96,13 @@ namespace smpc_inventory_app.Pages.Inventory
             {
                 var areaService = new GeneralService<ReceivingWarehouseAreaView>(ENUM_ENDPOINT.RECEIVING_REPORT_WAREHOUSE_AREA + selectedWarehouse.id);
                 var areas = await areaService.GetAsList() ?? new List<ReceivingWarehouseAreaView>();
-
-                // Same "zone-area-rack-level-bins" assembly ReceivingReport2 already uses,
-                // so values picked here match the format already written elsewhere.
-                var binOptions = areas
-                    .Select(a => string.Join("-", new[] { a.zone, a.area, a.rack, a.level, a.bins }.Where(p => !string.IsNullOrWhiteSpace(p))))
-                    .Where(b => !string.IsNullOrWhiteSpace(b))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .OrderBy(b => b, StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
-
-                cmb_bin_location.Items.AddRange(binOptions);
+                _binLocationPicker.SetData(areas);
             }
             catch (Exception)
             {
                 // Don't block the modal on this - a warehouse with no bin-area setup yet
-                // (or a transient API hiccup) just leaves cmb_bin_location empty, and the
-                // user can still type a bin location manually since it's an editable combo.
+                // (or a transient API hiccup) just leaves the picker showing no options,
+                // same as Receiving Report's own behavior for an unconfigured warehouse.
             }
         }
 
@@ -259,9 +255,9 @@ namespace smpc_inventory_app.Pages.Inventory
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(cmb_bin_location.Text))
+            if (string.IsNullOrWhiteSpace(_binLocationPicker.Value))
             {
-                MessageBox.Show("Please enter a bin location.", "Bin Location Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select a bin location.", "Bin Location Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmb_bin_location.Focus();
                 return;
             }
@@ -280,7 +276,7 @@ namespace smpc_inventory_app.Pages.Inventory
 
             ItemId = selectedItem.Model.id;
             WarehouseId = selectedWarehouse.id;
-            BinLocation = cmb_bin_location.Text.Trim().ToUpper();
+            BinLocation = _binLocationPicker.Value.Trim().ToUpper();
             Qty = (int)num_qty.Value;
             Uom = cmb_uom.Text.Trim();
 
