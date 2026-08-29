@@ -107,9 +107,12 @@ namespace smpc_inventory_app.Pages.Setup
                 TableContentChanged.WarehouseUseType = true;
             }
             
+            // Bug #174 (Trello): "Usetype" ran together as one word (also misspelled
+            // "Succesfully"); same fix applied to the sibling failure/insert messages
+            // for consistency.
             string message = response.Success ?
-                (isNewRecord ? "Usetype Added Successfully" : "Usetype Updated Succesfully") :
-                (isNewRecord ? "Failed to add usetype\n" + response.message : "Failed update usetype\n" + response.message);
+                (isNewRecord ? "Use Type Added Successfully" : "Use Type Updated Successfully") :
+                (isNewRecord ? "Failed to add use type\n" + response.message : "Failed to update use type\n" + response.message);
 
             Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
         }
@@ -179,10 +182,11 @@ namespace smpc_inventory_app.Pages.Setup
 
         private async void btn_delete_Click(object sender, EventArgs e)
         {
+            // Bug #172 (Trello): "usetype" ran together as one word.
             DialogResult result = MessageBox.Show(
-                "Are you sure you want to delete this usetype", 
-                "Confirm Deletion", 
-                MessageBoxButtons.YesNo, 
+                "Are you sure you want to delete this use type",
+                "Confirm Deletion",
+                MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
                 );
 
@@ -196,12 +200,12 @@ namespace smpc_inventory_app.Pages.Setup
                 {
                     BtnToggle("delete");
                     GetData();
-                    Helpers.ShowDialogMessage("success", "Usetype deleted successfully");
+                    Helpers.ShowDialogMessage("success", "Use type deleted successfully");
                     Helpers.ResetControls(pnl_records);
                 }
                 else
                 {
-                    Helpers.ShowDialogMessage("error", "Failed to delete usetype" + isSuccess);
+                    Helpers.ShowDialogMessage("error", "Failed to delete use type" + isSuccess);
                 }
             }
         }
