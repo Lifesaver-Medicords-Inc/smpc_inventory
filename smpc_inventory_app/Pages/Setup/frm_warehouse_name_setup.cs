@@ -283,7 +283,13 @@ namespace smpc_inventory_app.Pages.Setup
                 lastName = lastName.Length > 12 ? lastName.Split()[0] : lastName;
             }
             string userFullName = firstName + " " + lastName;
-            string userPosition = CacheData.CurrentUser.position_id;
+            // Bug #175 (Trello): this used position_id (a raw id) while
+            // PopulateManagerList's own list below formats each entry with
+            // userRow["position"] (the readable name). FindStringExact against the
+            // rebuilt list could never match "Name | 3" to "Name | Manager", so the
+            // creator's own name silently failed to select on reload/edit. Use the
+            // same readable position name both places build with.
+            string userPosition = CacheData.CurrentUser.position.name;
             string userCredential = userFullName + " | " + userPosition;
 
             return userCredential;
@@ -720,6 +726,23 @@ namespace smpc_inventory_app.Pages.Setup
             string errorMessage = string.IsNullOrEmpty(txt_name.Text)
                 ? "Warehouse's 'Name' is empty"
                 : "";
+
+            // Bugs #170/#171 (Trello): neither field had any length/format check at
+            // all, so a 5-digit zip code or a 13-digit contact number saved without
+            // complaint.
+            string zipCode = txt_zip_code.Text.Trim();
+            if (string.IsNullOrEmpty(errorMessage) && !string.IsNullOrWhiteSpace(zipCode)
+                && !System.Text.RegularExpressions.Regex.IsMatch(zipCode, @"^\d{4}$"))
+            {
+                errorMessage = "Zip Code must be exactly 4 digits";
+            }
+
+            string contactNo = txt_contact_no.Text.Trim();
+            if (string.IsNullOrEmpty(errorMessage) && !string.IsNullOrWhiteSpace(contactNo)
+                && !System.Text.RegularExpressions.Regex.IsMatch(contactNo.Replace("-", "").Replace(" ", ""), @"^\d{7,11}$"))
+            {
+                errorMessage = "Contact No. must be 7 to 11 digits";
+            }
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
