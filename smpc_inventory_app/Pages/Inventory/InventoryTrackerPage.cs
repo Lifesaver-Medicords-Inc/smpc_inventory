@@ -121,6 +121,16 @@ namespace smpc_inventory_app.Pages
                 int detailsIndex = dgv_inventory_item.Columns["details"].DisplayIndex;
                 dgv_inventory_item.Columns["total_stock"].DisplayIndex = detailsIndex + 1;
             }
+
+            // Bug #226 (Trello): FreezeVisibleColumns only ever ran once, in the
+            // constructor, against whatever columns existed before any real data
+            // (and therefore before AddZoneColumnsToGrid's dynamic zone columns)
+            // ever loaded. Every reload since - including switching warehouses via
+            // Next, which can have a different number/order of zone columns per
+            // #229 - left the frozen-pane boundary out of sync with the grid's
+            // actual current layout, which is what showed up as QTY overlapping
+            // BRAND on scroll. Re-apply it after the layout is actually final.
+            Helpers.FreezeVisibleColumns(dgv_inventory_item, 3);
         }
 
         private void AddZoneColumnsToDataTable(DataTable data)
