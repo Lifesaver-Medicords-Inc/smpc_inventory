@@ -146,10 +146,12 @@ namespace smpc_inventory_app.Pages
                 errorFieldMessage += "Item Code cannot be empty.\n";
             }
 
-            if (string.IsNullOrEmpty(txt_production_qty.Text) || !int.TryParse(txt_production_qty.Text, out _))
+            // Bug #149 (Trello): this only checked that the field parsed as SOME
+            // integer, so a literal 0 passed straight through.
+            if (string.IsNullOrEmpty(txt_production_qty.Text) || !int.TryParse(txt_production_qty.Text, out int productionQtyVal) || productionQtyVal <= 0)
             {
                 isValid = false;
-                errorFieldMessage += "Production Quantity cannot be empty.\n";
+                errorFieldMessage += "Production Quantity must be greater than 0.\n";
             }
 
             if (string.IsNullOrEmpty(txt_production_cost.Text))
@@ -326,6 +328,22 @@ namespace smpc_inventory_app.Pages
 
         private async void btn_save_Click(object sender, EventArgs e)
         {
+            // Bugs #151/#152/#153 (Trello): validation used to run AFTER the form
+            // was already disabled and the loading overlay shown, and the early
+            // return on a validation failure never undid either - so a first Save
+            // attempt with an invalid field (e.g. Unit Price cleared, or QTY/Unit
+            // Price left over an edge value) left the whole form permanently
+            // disabled under "Updating data...", which is what a second Save
+            // attempt on that already-broken state was crashing into. Validate
+            // first, before touching anything.
+            string errorMessage;
+            bool isValid = ValidateFields(out errorMessage);
+
+            if (!isValid)
+            {
+                MessageBox.Show(errorMessage, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             Helpers.Loading.ShowLoading(dg_bom, "Updating data...");
             btn_close.Enabled = false;
@@ -334,17 +352,7 @@ namespace smpc_inventory_app.Pages
             pnl_components.Enabled = false;
 
             string message;
-
-            string errorMessage;
-            bool isValid = ValidateFields(out errorMessage);
-
             ApiResponseModel response = new ApiResponseModel();
-
-            if (!isValid)
-            {
-                MessageBox.Show(errorMessage, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
 
             CalculateProductionCost();
 
@@ -723,6 +731,19 @@ namespace smpc_inventory_app.Pages
                     {
 
                         Dictionary<string, dynamic> result = modal.GetResult();
+
+                        // Bug #150 (Trello): nothing stopped a BOM from listing its own
+                        // parent item as one of its components. Reject that pick here,
+                        // before any cell is populated, using the same item_id the
+                        // parent record itself is keyed on (txt_item_id).
+                        if (int.TryParse(txt_item_id.Text, out int parentItemId)
+                            && result.ContainsKey("item_id")
+                            && Convert.ToInt32(result["item_id"]) == parentItemId)
+                        {
+                            MessageBox.Show("This item is the parent BOM item and cannot be added as its own component.", "Invalid Component", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
                         this.dg_bom.Rows[e.RowIndex].Cells[0].Value = result["item_code"];
                         this.dg_bom.Rows[e.RowIndex].Cells[1].Value = result["short_desc"];
                         this.dg_bom.Rows[e.RowIndex].Cells[2].Value = result["item_id"];
