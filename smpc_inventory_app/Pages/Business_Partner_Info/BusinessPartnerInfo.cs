@@ -2074,7 +2074,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             bool checkContactError = false;
             contactsMessages = string.Empty;
-            if (records.Count == 1 && records[0].number == "")
+            // Bug #301 (Trello): this only ever caught "exactly one blank contact" -
+            // zero contacts (records.Count == 0) skipped the foreach below entirely
+            // and fell through to `return true`, so a record with no contacts at all
+            // saved successfully.
+            if (records.Count == 0 || (records.Count == 1 && records[0].number == ""))
             {
                 contactsMessages += "Contacts is required";
                 return false;
