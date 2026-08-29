@@ -735,6 +735,15 @@ namespace smpc_inventory_app.Pages.Purchasing
             {
                 flowLayoutPanel1.Controls.Clear();
                 flowLayoutPanel1.Padding = new Padding(5);
+                // Bug #097 (Trello, "There is an extra item"): unlike
+                // GetPurchaseRequisitionList's allRequisitionCards, this list was
+                // never cleared before repopulating - the visible panel looked
+                // right immediately after each reload, but allSalesOrderCards
+                // kept accumulating every card from every prior load. The search
+                // box (FilterCards) rebuilds the panel FROM this list, so typing
+                // into it after any second reload showed every stale duplicate
+                // alongside the current ones.
+                allSalesOrderCards.Clear();
 
                 foreach (DataRowView row in dv)
                 {
