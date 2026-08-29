@@ -71,6 +71,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             InitializeComponent();
 
+            // Bug #290: Branch Tel No. field had no placeholder, giving no hint of the
+            // expected format - same fix already applied to the main branch's tel no field.
+            Helpers.Placeholder.SetPlaceholder(txt_branch_tel_no, "09XX-XXX-XXXX / (0XX) XXXX-XXXX");
+
             this.ParentId = parentId;
             this.SalesId = salesId;
             this.TabTitle = tabTitle;

@@ -76,6 +76,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             InitializeComponent();
             Helpers.Placeholder.SetPlaceholder(txt_main_tel_no, "XXX-XXX-XXX-XXX");
             Helpers.Placeholder.SetPlaceholder(txt_main_tel_no, "09XX-XXX-XXXX / (0XX) XXXX-XXXX");
+            // Bug #282: TIN field had no placeholder, giving no hint of the expected format.
+            Helpers.Placeholder.SetPlaceholder(txt_tin, "000-000-000-000");
 
             cmb_name.DropDownStyle = ComboBoxStyle.DropDown;
             cmb_name.AutoCompleteMode = AutoCompleteMode.SuggestAppend;

@@ -2072,6 +2072,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.item_type.HeaderText = "TYPE";
             this.item_type.MinimumWidth = 30;
             this.item_type.Name = "item_type";
+            // Bug #296: the grey DefaultCellStyle above signals read-only, but ReadOnly
+            // itself was never set, so the cell still accepted typed input.
+            this.item_type.ReadOnly = true;
             // 
             // long_description
             // 
@@ -2083,6 +2086,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.long_description.HeaderText = "DESCRIPTION";
             this.long_description.MinimumWidth = 30;
             this.long_description.Name = "long_description";
+            // Bug #296: see item_type above - same missing ReadOnly.
+            this.long_description.ReadOnly = true;
             // 
             // bpi_item_branch_id
             // 
@@ -2101,6 +2106,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.price.HeaderText = "PRICE";
             this.price.MinimumWidth = 30;
             this.price.Name = "price";
+            // Bug #296: see item_type above - same missing ReadOnly.
+            this.price.ReadOnly = true;
             // 
             // item_graph
             // 
