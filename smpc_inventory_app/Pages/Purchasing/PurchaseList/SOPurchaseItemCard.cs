@@ -47,6 +47,13 @@ namespace smpc_inventory_app.Pages.Purchasing
         public string OrderQty { get; set; }
         public string OrderQtys { get; set; }
         public string TotalQty { get; set; }
+
+        // Spec §8.11's TOTAL STOCK for this item - physical across every bin, minus
+        // reservations. Set by the caller (NewPurchasingList) from one bulk fetch rather
+        // than looked up per card, and rendered by LoadItemDetails. Null means the fetch
+        // failed; the field shows "-" rather than a "0" that would read as "none in stock"
+        // and prompt an unnecessary purchase.
+        public int? AvailableStock { get; set; }
         public string Status { get; set; }
         public string OrderType { get; set; }
         public DataTable records;
@@ -241,6 +248,12 @@ namespace smpc_inventory_app.Pages.Purchasing
             txt_order_qty_uom.Text = UnitOfMeasure;
             txt_id.Text = ItemId;
 
+            // What the purchaser needs before deciding to buy: how much of this item is
+            // already on hand and unspoken-for. This was never populated - the field just
+            // showed the designer's placeholder "10" on every card, for every item.
+            txt_stock.Text = AvailableStock.HasValue
+                ? AvailableStock.Value.ToString()
+                : "-";
         }
         // ACTIONS
         private void ComputeDgv1(DataGridViewRow row)

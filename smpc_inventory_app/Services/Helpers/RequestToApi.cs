@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using smpc_invemtory_app.Pages.Shared;
 using smpc_inventory_app.Data;
 using smpc_inventory_app.Properties;
@@ -76,11 +76,29 @@ namespace smpc_inventory_app.Services.Helpers
 
 
 
-                        if (string.IsNullOrEmpty(CacheData.SessionToken))
+                        // Only the login endpoint issues a Set-Cookie; every other call
+                        // succeeds without one. HttpResponseHeaders.GetValues THROWS
+                        // ("The given header was not found") rather than returning null when
+                        // the header is absent, so any successful non-login response arriving
+                        // while the token was still empty - anything the login screen itself
+                        // fetches before sign-in - surfaced as a bare "Exception: The given
+                        // header was not found" dialog over the login window. TryGetValues is
+                        // the non-throwing form: take the token when it is actually there,
+                        // otherwise carry on. (Dispatching and Admin never hit this because
+                        // they already guard with Headers.Contains first; Sales, Accounting
+                        // and Engineering use this same TryGetValues form.)
+                        if (string.IsNullOrEmpty(CacheData.SessionToken)
+                            && response.Headers.TryGetValues("Set-Cookie", out var setCookieValues))
                         {
-                            List<String> tokenResponseArr = response.Headers.GetValues("Set-Cookie").ToList();
-                            string token = ExtractToken(tokenResponseArr[0]);
-                            CacheData.SessionToken = token;
+                            List<String> tokenResponseArr = setCookieValues.ToList();
+                            if (tokenResponseArr.Count > 0)
+                            {
+                                string token = ExtractToken(tokenResponseArr[0]);
+                                if (!string.IsNullOrEmpty(token))
+                                {
+                                    CacheData.SessionToken = token;
+                                }
+                            }
                         }
                         // Optionally, you can parse the responseContent into an object of type T
                         T result = JsonConvert.DeserializeObject<T>(responseContent);
@@ -153,20 +171,27 @@ namespace smpc_inventory_app.Services.Helpers
             string jsonContent = JsonConvert.SerializeObject(data);
             return await SendRequestAsync(url, HttpMethod.Delete, jsonContent);
         }
+        // Returns null when the cookie carries no Authorization value, rather than throwing.
+        // The original computed Substring BEFORE testing tokenEndIndex for -1, so a
+        // Set-Cookie without a trailing semicolon threw ArgumentOutOfRangeException - and a
+        // cookie with no "Authorization=" at all made IndexOf return -1, putting the start
+        // index at 13 and slicing from the middle of whatever was there. Both surfaced as
+        // an unexplained exception dialog on the login screen, same as the missing header.
         private static string ExtractToken(string cookieString)
         {
-            // Find the starting index of the token (after 'Authorization=')
-            int tokenStartIndex = cookieString.IndexOf("Authorization=") + "Authorization=".Length;
-            // Find the ending index of the token (before the first semicolon)
+            if (string.IsNullOrEmpty(cookieString)) return null;
+
+            const string marker = "Authorization=";
+            int markerIndex = cookieString.IndexOf(marker);
+            if (markerIndex < 0) return null;
+
+            int tokenStartIndex = markerIndex + marker.Length;
             int tokenEndIndex = cookieString.IndexOf(";", tokenStartIndex);
-            // Extract the token
-            string token = cookieString.Substring(tokenStartIndex, tokenEndIndex - tokenStartIndex);
-            // If the semicolon is not found (for example, if there is no expiry info), extract until the end of the string
-            if (tokenEndIndex == -1)
-            {
-                token = cookieString.Substring(tokenStartIndex);
-            }
-            return token;
+
+            // No semicolon means there is no expiry info after it - take the rest.
+            return tokenEndIndex < 0
+                ? cookieString.Substring(tokenStartIndex)
+                : cookieString.Substring(tokenStartIndex, tokenEndIndex - tokenStartIndex);
         }
     }
 

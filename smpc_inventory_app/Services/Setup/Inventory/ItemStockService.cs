@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using smpc_inventory_app.Model;
 using smpc_inventory_app.Data;
@@ -15,6 +15,18 @@ namespace smpc_inventory_app.Services.Setup.Inventory
     class ItemStockService : ServiceBase<ItemStockModel>
     {
         public ItemStockService() : base(ENUM_ENDPOINT.ITEM_STOCKS) { }
+
+        // Spec §8.11: "TOTAL STOCK (tracker) = Σ zone units, EXCLUDING reserved". The API
+        // does that sum and the reservation subtraction in one query for every item at
+        // once, so callers showing stock for a list of items (the Purchasing List's item
+        // cards) fetch this once rather than per row.
+        public async Task<List<ItemAvailableStockModel>> GetAvailableStock()
+        {
+            var response = await RequestToApi<ApiResponseModel<List<ItemAvailableStockModel>>>
+                .Get(ENUM_ENDPOINT.ITEM_STOCKS_AVAILABLE);
+
+            return response?.Data ?? new List<ItemAvailableStockModel>();
+        }
 
         public async Task<ApiResponseModel> AddStock(int itemId, int warehouseId, string binLocation, int qty, string uom)
         {

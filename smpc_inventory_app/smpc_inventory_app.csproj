@@ -26,7 +26,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
+    <UpdateUrl>http://localhost/smpc_inventory_app/</UpdateUrl>
+    <ApplicationRevision>1000</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -250,6 +251,7 @@
     <Compile Include="Data\ENUM_WARRANTY.cs" />
     <Compile Include="Data\TableContentChanged.cs" />
     <Compile Include="Intefaces\ISetupService.cs" />
+    <Compile Include="Model\ItemAvailableStockModel.cs" />
     <Compile Include="Model\CurrentUserModel.cs" />
     <Compile Include="Model\ReceivingPurchaseOrderView.cs" />
     <Compile Include="Model\ReceivingReportModel.cs" />

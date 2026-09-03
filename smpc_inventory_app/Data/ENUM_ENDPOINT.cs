@@ -66,6 +66,9 @@ namespace smpc_inventory_app.Data
         //Item Stocks (Inventory Item Stocks module)
         public static string ITEM_STOCKS = "/inventory/item_stocks";
         public static string ITEM_STOCKS_TRANSFER = "/inventory/item_stocks/transfer";
+        // Physical stock minus reservations, per item - spec 8.11's "TOTAL STOCK
+        // (tracker) = Sum of zone units, EXCLUDING reserved". No item_id returns every item.
+        public static string ITEM_STOCKS_AVAILABLE = "/inventory/item_stocks/available";
 
         //Receiving Report
         public static string RECEIVING_REPORT = "/inventory/receiving_report";

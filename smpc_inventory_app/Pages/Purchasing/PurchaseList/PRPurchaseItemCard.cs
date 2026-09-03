@@ -30,6 +30,12 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
         public string ItemBrand => purchasereq.item_brand;
         DataTable payment = new DataTable();
 
+        // Spec §8.11's TOTAL STOCK for this item - physical across every bin, minus
+        // reservations. Set by NewPurchasingList from one bulk fetch rather than looked up
+        // per card. Null means the fetch failed; the field shows "-" rather than a "0"
+        // that would read as "none in stock" and prompt an unnecessary purchase.
+        public int? AvailableStock { get; set; }
+
         public PRPurchaseItemCard(PRPurchasingListModel item)
         {
             InitializeComponent();
@@ -61,7 +67,13 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
             txt_req_qty_uom.Text = purchasereq.unit_of_measure;
             txt_order_qty_uom.Text = purchasereq.unit_of_measure;
             txt_id.Text = purchasereq.item_id.ToString();
-            // etc.
+
+            // What the purchaser needs before deciding to buy: how much is already on hand
+            // and unspoken-for. Never populated before - the field showed the designer's
+            // placeholder "10" on every card, for every item.
+            txt_stock.Text = AvailableStock.HasValue
+                ? AvailableStock.Value.ToString()
+                : "-";
         }
         private async Task FetchCanvassSheet(Action onComplete = null)
         {

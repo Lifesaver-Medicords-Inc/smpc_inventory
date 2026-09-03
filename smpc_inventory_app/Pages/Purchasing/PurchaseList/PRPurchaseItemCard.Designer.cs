@@ -728,7 +728,6 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseList
             this.txt_stock.Name = "txt_stock";
             this.txt_stock.Size = new System.Drawing.Size(141, 20);
             this.txt_stock.TabIndex = 73;
-            this.txt_stock.Text = "10";
             // 
             // label2
             // 

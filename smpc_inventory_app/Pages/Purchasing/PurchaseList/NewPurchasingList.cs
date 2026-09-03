@@ -5,6 +5,7 @@ using smpc_inventory_app.Pages.Purchasing.PurchaseList;
 using smpc_inventory_app.Services.Helpers;
 using smpc_inventory_app.Services.Setup;
 using smpc_inventory_app.Services.Setup.Item;
+using smpc_inventory_app.Services.Setup.Inventory;
 using smpc_inventory_app.Services.Setup.Model.Purchasing;
 using smpc_inventory_app.Services.Setup.Purchasing;
 using smpc_inventory_app.Services.Setup.Purchasing.PurchasingList;
@@ -719,6 +720,7 @@ namespace smpc_inventory_app.Pages.Purchasing
                 foreach (var item in filteredList)
                 {
                     var card = new PRPurchaseItemCard(item);
+                    card.AvailableStock = StockFor(item.item_id.ToString());
                     card.Size = new Size(1237, 130);
                     allRequisitionCards.Add(card); // cache the card
                     flowLayoutPanel2.Controls.Add(card);
@@ -788,6 +790,9 @@ namespace smpc_inventory_app.Pages.Purchasing
                       qtys,
                       totalQty,
                       this.payment);
+                    // Set before the card is added, so it is in place by the time the
+                    // control's Load event runs LoadItemDetails.
+                    orderCard.AvailableStock = StockFor(itemId);
                     orderCard.Size = new Size(1237, 130);
                     allSalesOrderCards.Add(orderCard);
                     flowLayoutPanel1.Controls.Add(orderCard);
@@ -810,9 +815,40 @@ namespace smpc_inventory_app.Pages.Purchasing
             GetUser();
             FetchPaymentTermsSetup();
             salesorders = await SOPurchasingListServices.GetAsDataTable();
+
+            // One call for every item's stock, before the cards are built. The endpoint
+            // aggregates across all bins and nets off reservations server-side (§8.11), so
+            // this is a single round trip no matter how many rows the list has - doing it
+            // per card would be one request each.
+            await FetchAvailableStock();
+
             GetSalesOrderList();
             GetPurchaseRequisitionList();
         }
+        // item_id -> available stock (§8.11: physical across every bin, minus reservations).
+        // Empty when the fetch failed, which makes StockFor return null and the cards show
+        // "-" instead of a "0" that would read as "nothing in stock, buy it".
+        private Dictionary<int, int> availableStockByItem = new Dictionary<int, int>();
+
+        private async Task FetchAvailableStock()
+        {
+            var rows = await new ItemStockService().GetAvailableStock();
+
+            availableStockByItem = new Dictionary<int, int>();
+            foreach (var row in rows)
+            {
+                availableStockByItem[row.item_id] = row.available;
+            }
+        }
+
+        // Null for an item with no stock row at all - genuinely unknown rather than zero.
+        private int? StockFor(string itemId)
+        {
+            if (!int.TryParse(itemId, out int id)) return null;
+
+            return availableStockByItem.TryGetValue(id, out int qty) ? (int?)qty : null;
+        }
+
         private void GetUser()
         {
             user = CacheData.CurrentUser.employee_id;

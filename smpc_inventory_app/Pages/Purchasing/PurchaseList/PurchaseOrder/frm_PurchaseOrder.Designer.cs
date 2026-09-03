@@ -80,10 +80,10 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_search = new System.Windows.Forms.ToolStripButton();
             this.btn_edit = new System.Windows.Forms.ToolStripButton();
             this.btn_save = new System.Windows.Forms.ToolStripButton();
+            this.btn_print = new System.Windows.Forms.ToolStripButton();
             this.btn_cancel = new System.Windows.Forms.ToolStripButton();
             this.btn_prev = new System.Windows.Forms.ToolStripButton();
             this.btn_close = new System.Windows.Forms.ToolStripButton();
-            this.btn_print = new System.Windows.Forms.ToolStripButton();
             this.btn_next = new System.Windows.Forms.ToolStripButton();
             this.pnl_page_title = new System.Windows.Forms.Panel();
             this.title = new System.Windows.Forms.Label();
@@ -111,7 +111,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.discount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.discounted_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.total_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.delivery_status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.order_detail_ids = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.qtys = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.allocated_qtys = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -324,7 +323,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.txt_bill_to.Name = "txt_bill_to";
             this.txt_bill_to.Size = new System.Drawing.Size(200, 20);
             this.txt_bill_to.TabIndex = 84;
-            this.txt_bill_to.Text = "EREN JAEGER";
             // 
             // label14
             // 
@@ -399,7 +397,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.txt_doc_no.ReadOnly = true;
             this.txt_doc_no.Size = new System.Drawing.Size(200, 20);
             this.txt_doc_no.TabIndex = 75;
-            this.txt_doc_no.Text = "PO#0000";
             // 
             // txt_supplier_name
             // 
@@ -414,7 +411,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.txt_deliver_via.Name = "txt_deliver_via";
             this.txt_deliver_via.Size = new System.Drawing.Size(249, 20);
             this.txt_deliver_via.TabIndex = 73;
-            this.txt_deliver_via.Text = "NINJA VAN";
             // 
             // label9
             // 
@@ -599,6 +595,15 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_save.Visible = false;
             this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
             // 
+            // btn_print
+            // 
+            this.btn_print.Image = ((System.Drawing.Image)(resources.GetObject("btn_print.Image")));
+            this.btn_print.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_print.Name = "btn_print";
+            this.btn_print.Size = new System.Drawing.Size(52, 22);
+            this.btn_print.Text = "Print";
+            this.btn_print.Click += new System.EventHandler(this.btn_print_Click);
+            // 
             // btn_cancel
             // 
             this.btn_cancel.Image = ((System.Drawing.Image)(resources.GetObject("btn_cancel.Image")));
@@ -628,21 +633,12 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.btn_close.Visible = false;
             this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
             // 
-            // btn_print
-            // 
-            this.btn_print.Image = ((System.Drawing.Image)(resources.GetObject("btn_print.Image")));
-            this.btn_print.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_print.Name = "btn_print";
-            this.btn_print.Size = new System.Drawing.Size(52, 22);
-            this.btn_print.Text = "Print";
-            this.btn_print.Click += new System.EventHandler(this.btn_print_Click);
-            // 
             // btn_next
             // 
             this.btn_next.Image = ((System.Drawing.Image)(resources.GetObject("btn_next.Image")));
             this.btn_next.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btn_next.Name = "btn_next";
-            this.btn_next.Size = new System.Drawing.Size(52, 22);
+            this.btn_next.Size = new System.Drawing.Size(51, 22);
             this.btn_next.Text = "Next";
             this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
             // 
@@ -780,7 +776,6 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.discount,
             this.discounted_price,
             this.total_price,
-            this.delivery_status,
             this.order_detail_ids,
             this.qtys,
             this.allocated_qtys,
@@ -898,14 +893,7 @@ namespace smpc_inventory_app.Pages.Purchasing
             this.total_price.HeaderText = "TOTAL PRICE";
             this.total_price.Name = "total_price";
             this.total_price.ReadOnly = true;
-            //
-            // delivery_status
-            //
-            this.delivery_status.DataPropertyName = "delivery_status";
-            this.delivery_status.HeaderText = "DELIVERY STATUS";
-            this.delivery_status.Name = "delivery_status";
-            this.delivery_status.ReadOnly = true;
-            //
+            // 
             // order_detail_ids
             // 
             this.order_detail_ids.DataPropertyName = "order_detail_ids";
