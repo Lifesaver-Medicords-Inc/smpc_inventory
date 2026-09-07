@@ -1,4 +1,4 @@
-namespace smpc_inventory_app.Pages.Inventory
+﻿namespace smpc_inventory_app.Pages.Inventory
 {
     partial class ItemStocksPage
     {
@@ -34,7 +34,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.col_bin_location = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_stock_qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_stock_uom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_is_active = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.pnl_top.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_item_stocks)).BeginInit();
             this.SuspendLayout();
@@ -144,8 +143,7 @@ namespace smpc_inventory_app.Pages.Inventory
             this.col_warehouse_name,
             this.col_bin_location,
             this.col_stock_qty,
-            this.col_stock_uom,
-            this.col_is_active});
+            this.col_stock_uom});
             this.dgv_item_stocks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_item_stocks.Location = new System.Drawing.Point(0, 42);
             this.dgv_item_stocks.MultiSelect = false;
@@ -213,13 +211,6 @@ namespace smpc_inventory_app.Pages.Inventory
             this.col_stock_uom.Name = "col_stock_uom";
             this.col_stock_uom.ReadOnly = true;
             //
-            // col_is_active
-            //
-            this.col_is_active.DataPropertyName = "is_active";
-            this.col_is_active.HeaderText = "Active";
-            this.col_is_active.Name = "col_is_active";
-            this.col_is_active.ReadOnly = true;
-            //
             // ItemStocksPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -255,6 +246,5 @@ namespace smpc_inventory_app.Pages.Inventory
         private System.Windows.Forms.DataGridViewTextBoxColumn col_bin_location;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_stock_qty;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_stock_uom;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn col_is_active;
     }
 }

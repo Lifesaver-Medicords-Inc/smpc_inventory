@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -73,7 +73,16 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             string term = txt_search.Text?.Trim().ToLower() ?? "";
 
-            IEnumerable<ItemStockModel> filtered = _allStocks;
+            // User decision, 2026-09-05: inactive rows are not shown here at all, and the
+            // Active column is gone with them. is_active is a maintained derived flag -
+            // SetActiveStatus (item_stock_service.go) sets it true when stock_qty > 0 and
+            // false when it hits zero, and the Receiving Report and Pick Activity paths
+            // both call it - so this screen now lists only bins that actually hold stock.
+            //
+            // Emptying a bin therefore makes its row disappear rather than lingering as a
+            // zero-quantity entry. Adding stock back is unaffected: Add Stock picks the
+            // warehouse and bin from Warehouse Setup, not from this list.
+            IEnumerable<ItemStockModel> filtered = _allStocks.Where(s => s.is_active);
 
             if (!string.IsNullOrEmpty(term))
             {
