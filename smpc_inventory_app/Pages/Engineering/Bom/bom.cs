@@ -22,8 +22,21 @@ namespace smpc_inventory_app.Pages
     public partial class bom : UserControl
     {
         BomClass records;
-        DataTable BomHead;
-        DataTable BomDetail;
+        // Initialised empty rather than left null (2026-09-05). Both are only ever
+        // assigned inside LoadAll, so any load that does not complete - a failed or
+        // unauthenticated request, or the early return when the response carries no
+        // payload - left them null while the screen stayed open and usable. Nine places
+        // dereference them without checking (BomDetail.Clone() in btn_new_Click and two
+        // other handlers, new DataView(BomDetail), BomHead.Rows.Count, BomHead.Select(...),
+        // BindControls(..., BomHead, ...)), so clicking New on a screen whose data had not
+        // loaded threw NullReferenceException.
+        //
+        // An empty DataTable satisfies every one of those: Clone() returns an empty table,
+        // DataView binds to nothing, Rows.Count is 0, Select() returns no rows. The screen
+        // shows no records instead of crashing, and a later successful LoadAll replaces
+        // both wholesale.
+        DataTable BomHead = new DataTable();
+        DataTable BomDetail = new DataTable();
         DataTable bomItemList;
         DataTable allBomItemList;
         private bool _suppressEvents = false;
@@ -495,7 +508,27 @@ namespace smpc_inventory_app.Pages
             BtnToogle(false);
 
             var response = await RequestToApi<ApiResponseModel<BomClass>>.Get(ENUM_ENDPOINT.BOM);
-            records = response.Data;
+            records = response?.Data;
+
+            // A failed or empty BOM response used to walk straight into
+            // records.bom_head, and from there into ToDataTable with a null list -
+            // NullReferenceException on opening the screen. It also left the "Fetching
+            // data..." overlay up permanently, because HideLoading only runs at the very
+            // end of this method.
+            if (records == null)
+            {
+                Helpers.Loading.HideLoading(dg_bom);
+                Helpers.ShowDialogMessage("error",
+                    "The service is busy right now, so the bill of materials could not be loaded. Please try again in a moment.");
+                return;
+            }
+
+            // The lists themselves come back null when there is no BOM data at all -
+            // a legitimate state on a fresh system, not an error. ToDataTable now
+            // tolerates null, and these keep the rest of the method working on real
+            // (empty) collections rather than nulls.
+            if (records.bom_head == null) records.bom_head = new List<BomHead>();
+            if (records.bom_details == null) records.bom_details = new List<BomDetail>();
 
             BomHead = JsonHelper.ToDataTable(records.bom_head);
             BomDetail = JsonHelper.ToDataTable(records.bom_details);

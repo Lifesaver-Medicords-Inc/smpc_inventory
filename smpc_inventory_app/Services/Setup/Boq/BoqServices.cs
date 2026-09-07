@@ -17,8 +17,12 @@ namespace smpc_inventory_app.Services.Setup.Boq
     {
         public static async Task<ProjectComponentClass> GetAsDatatable()
         {
+            // response?.Data: SendRequestAsync swallows every failure and returns
+            // default(T) - null - so a request that failed (API restarting, connection
+            // dropped) made this dereference throw. boq.cs already handles a null result
+            // ("No data available."), it just never got one because this threw first.
             var response = await RequestToApi<ApiResponseModel<ProjectComponentClass>>.Get(ENUM_ENDPOINT.BOQ);
-            ProjectComponentClass boq = response.Data;
+            ProjectComponentClass boq = response?.Data;
 
             return boq;
         }

@@ -79,8 +79,15 @@ namespace smpc_inventory_app.Pages
         {
 
             await LoadDataAsync();
+
+            // UpdateUI already calls FilterComponentsByItemSetName, but only when
+            // ProjectComponent actually has rows. A second, unguarded call used to
+            // follow it here: when the fetch came back empty (a failed request, or no
+            // BOQ data), UpdateUI correctly reported "ProjectComponent data is not
+            // available" and skipped it - and then this line ran anyway and dereferenced
+            // the null ProjectComponent. It was also redundant on the happy path, where
+            // it just did the same filtering twice.
             UpdateUI();
-            FilterComponentsByItemSetName();
             BtnToogle(false);
         }
 
@@ -257,6 +264,16 @@ namespace smpc_inventory_app.Pages
 
         private void FilterComponentsByItemSetName()
         {
+            // Three callers reach this, and selectedRecord is a field nothing validates
+            // against the CURRENT row count - it survives a reload that returns fewer
+            // rows (or none). Both the null table and the stale index are checked here
+            // rather than relying on every caller to remember.
+            if (ProjectComponent == null || ProjectComponent.Rows.Count == 0)
+                return;
+
+            if (selectedRecord < 0 || selectedRecord >= ProjectComponent.Rows.Count)
+                return;
+
             try
             {
                 string itemSetName = ProjectComponent.Rows[selectedRecord]["item_set_name"].ToString();
