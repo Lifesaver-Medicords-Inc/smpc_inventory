@@ -14,8 +14,58 @@ namespace smpc_inventory_app
 {
     static class Program
     {
-        public static string ApiBaseUrl { get; private set; }
-        public static string WssBaseUrl { get; private set; }
+        // Backing fields, so the getters below can fall back when Main() never ran.
+        private static string _apiBaseUrl;
+        private static string _wssBaseUrl;
+
+        // Resolve on read rather than only in Main().
+        //
+        // Forms from this assembly are hosted by OTHER apps - the sales app opens
+        // frm_Item_Entry through a reference to smpc_inventory_app.exe, and engineering does
+        // the same with other screens. In that case this assembly's Main() never executes, so
+        // the property stayed null and every URL built from it came out host-less:
+        // "/vfile/1788749394091360800.jpg" instead of "http://127.0.0.1:3000/api/vfile/...".
+        // Item images silently fell back to the placeholder the moment the form rebound them
+        // from the server, which is why an image looked fine until the item was saved
+        // (user-reported 2026-09-05).
+        //
+        // ConfigurationManager reads the HOST PROCESS's config, so a form running inside the
+        // sales app resolves the sales app's ApiBaseUrl - which is the correct answer, and
+        // stays correct if the host is later repointed. Main() still assigns these on startup;
+        // this only covers the case where it has not run.
+        public static string ApiBaseUrl
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_apiBaseUrl))
+                    _apiBaseUrl = ResolveFromConfig("ApiBaseUrl");
+
+                return _apiBaseUrl;
+            }
+            private set { _apiBaseUrl = value; }
+        }
+
+        public static string WssBaseUrl
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_wssBaseUrl))
+                    _wssBaseUrl = ResolveFromConfig("WssBaseUrl");
+
+                return _wssBaseUrl;
+            }
+            private set { _wssBaseUrl = value; }
+        }
+
+        // Deliberately returns null rather than throwing the way Main() does: a missing
+        // setting at startup is a fatal misconfiguration worth stopping for, but the same
+        // lookup on a property read happens deep inside a hosted form, where throwing would
+        // take down a screen the user is in the middle of.
+        private static string ResolveFromConfig(string key)
+        {
+            string env = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? "Development";
+            return System.Configuration.ConfigurationManager.AppSettings[$"{key}.{env}"];
+        }
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

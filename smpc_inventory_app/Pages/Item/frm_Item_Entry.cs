@@ -1537,6 +1537,21 @@ namespace smpc_inventory_app.Pages.Item
                     restoredPictureBox.Click += PictureBox_Clicked;
                 }
                 removedImages.Clear();
+
+                // The UI is put back above, but the INSTRUCTIONS were not - and imageData is a
+                // form-level field that outlives this save. A failed save therefore left
+                // "deleteimages" (and any "replaceimages") queued against image ids the user
+                // can no longer see, to be sent by whatever save happened next - including a
+                // save of a DIFFERENT item after paging with Previous/Next, which would delete
+                // an image nobody asked to remove.
+                //
+                // Reachable in practice: an item save that fails partway (the "failed to delete
+                // image file" error on this screen was exactly that) leaves the form in this
+                // state. Clearing them here keeps the queued instructions in step with the
+                // pictures that were just restored.
+                replaceBase64Images.Clear();
+                imageData.Remove("replaceimages");
+                imageData.Remove("deleteimages");
             }
 
             btn_save.Enabled = true;

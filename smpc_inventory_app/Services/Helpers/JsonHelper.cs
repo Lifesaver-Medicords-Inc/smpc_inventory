@@ -66,6 +66,15 @@ namespace smpc_inventory_app.Services.Helpers
                 dataTable.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
             }
 
+            // Null-guard, 2026-09-05: this threw NullReferenceException ("items was null")
+            // whenever the caller handed in a list the API had left null - an endpoint
+            // returning no payload, or a response object whose child lists are null
+            // because there is no data. Returning the empty table KEEPS the columns
+            // (built from T just above), so callers that go on to read .Rows.Count or
+            // check Columns.Contains(...) still behave, they just see zero rows.
+            // The sort below dereferences items too, so this has to come first.
+            if (items == null) return dataTable;
+
             //to auto sort
             if (!string.IsNullOrWhiteSpace(sortBy))
             {
