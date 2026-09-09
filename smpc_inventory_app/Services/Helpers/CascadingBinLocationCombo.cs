@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -38,6 +38,14 @@ namespace smpc_inventory_app.Services.Helpers
             _combo.SelectedIndexChanged += OnSelected;
             _combo.KeyDown += OnKeyDown;
             _combo.KeyPress += OnKeyPress;
+            // Committing a pick makes the ComboBox write the chosen ITEM's text into its
+            // own edit box, and it does that after SelectedIndexChanged has already run -
+            // so the accumulated "zone-area-rack-level-bins" written in PopulateCurrentStage
+            // was immediately overwritten by the single segment just picked, and the field
+            // never showed the final location. BinLocationComboOverlay never hit this
+            // because it writes the accumulated value into the grid CELL, not into the
+            // combo's Text. Re-assert it once the control has finished settling.
+            _combo.DropDownClosed += (s2, e2) => ShowAccumulatedValue();
         }
 
         /// <summary>The fully-assembled "zone-area-rack-level-bins" value so far.</summary>
@@ -63,6 +71,39 @@ namespace smpc_inventory_app.Services.Helpers
             foreach (var item in items) _combo.Items.Add(item);
             _combo.Text = Value;
             _suppress = false;
+
+            // ...and again after the current message has been processed, for the same
+            // reason as the DropDownClosed hook above: this assignment alone loses a race
+            // with the ComboBox's own post-selection text update.
+            ShowAccumulatedValue();
+        }
+
+        /// <summary>
+        /// Puts the accumulated location back in the edit box, keeping the caret at the
+        /// end so the field reads as the final value rather than a highlighted segment.
+        /// Deferred, so it runs after the ComboBox has finished handling the selection.
+        /// </summary>
+        private void ShowAccumulatedValue()
+        {
+            if (_combo.IsDisposed || !_combo.IsHandleCreated) return;
+
+            _combo.BeginInvoke(new Action(() =>
+            {
+                if (_combo.IsDisposed) return;
+                if (_combo.Text == Value) return;
+
+                _suppress = true;
+                try
+                {
+                    _combo.Text = Value;
+                    _combo.SelectionStart = _combo.Text.Length;
+                    _combo.SelectionLength = 0;
+                }
+                finally
+                {
+                    _suppress = false;
+                }
+            }));
         }
 
         private string[] BuildItems()
