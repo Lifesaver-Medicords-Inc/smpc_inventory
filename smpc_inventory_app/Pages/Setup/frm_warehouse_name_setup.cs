@@ -52,25 +52,16 @@ namespace smpc_inventory_app.Pages.Setup
                 SetCurrentUser();
                 NextAndPrevBtn();
 
-                int useTypeColIndex = -1;
-                for (int j = 0; j < dg_areas.Columns.Count; j++)
-                {
-                    if (dg_areas.Columns[j].Name == "use_type")
-                    {
-                        useTypeColIndex = j;
-                        break;
-                    }
-                }
-                if (useTypeColIndex >= 0)
-                {
-                    for (int i = 0; i < dg_areas.Rows.Count; i++)
-                    {
-                        if (dg_areas.Rows[i].IsNewRow) continue;
-
-                        dg_areas.CurrentCell = dg_areas.Rows[i].Cells[useTypeColIndex];
-                        dg_areas.BeginEdit(true);
-                    }
-                }
+                // Removed 2026-09-05: this walked CurrentCell through every row calling
+                // BeginEdit(true) and never called EndEdit, so the grid was left sitting
+                // in an edit session on the last row - which is what stopped you adding
+                // a new row or opening the USE TYPE dropdown afterwards. It existed only
+                // to force the per-cell combo population that EnsureUseTypeColumnItems
+                // now does once, on the column, for every row including the new one.
+                // (It also searched for a column named "use_type"; the column is actually
+                // named "dg_use_type", so useTypeColIndex was always -1 and the loop
+                // never ran at all on some paths - part of why the symptoms were
+                // intermittent.)
 
                 BtnToggleEnabillity("initial");
                 Cursor.Current = Cursors.Default;
@@ -188,6 +179,54 @@ namespace smpc_inventory_app.Pages.Setup
 
 
         static bool DG_eventsuppressor = false;
+        // The USE TYPE list, fetched once. Previously every row triggered its own
+        // async fetch + per-cell Items population, and the new row was explicitly
+        // skipped - so the new row's dropdown was always empty, and N overlapping
+        // async calls mutating the same grid is what made the breakage intermittent.
+        private DataTable _useTypeTable;
+
+        private async Task<DataTable> GetUseTypeTableAsync()
+        {
+            if (_useTypeTable == null)
+                _useTypeTable = await WarehouseUseTypeServices.GetDataTable();
+
+            return _useTypeTable;
+        }
+
+        /// <summary>
+        /// Puts the USE TYPE options on the COLUMN rather than on individual cells, so
+        /// every row inherits them - including the new row, which per-cell population
+        /// could never reach. Any use_type already stored but no longer in Setup is
+        /// added too, otherwise binding it raises the DataGridView "value is not valid"
+        /// error the DataError handler was written to paper over.
+        /// </summary>
+        private async Task EnsureUseTypeColumnItems()
+        {
+            var useTypeTable = await GetUseTypeTableAsync();
+            if (useTypeTable == null) return;
+
+            var items = useTypeTable.AsEnumerable()
+                .Select(r => r.Field<string>("name"))
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .ToList();
+
+            // Values already saved against this warehouse that Setup no longer offers.
+            if (areas != null && areas.Columns.Contains("use_type"))
+            {
+                items.AddRange(areas.AsEnumerable()
+                    .Select(r => r["use_type"]?.ToString())
+                    .Where(v => !string.IsNullOrWhiteSpace(v)));
+            }
+
+            var final = items
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(v => v, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            dg_use_type.Items.Clear();
+            dg_use_type.Items.AddRange(final);
+        }
+
         private async void FetchWarehouseAreas() 
         {
             DG_eventsuppressor = true;
@@ -213,36 +252,17 @@ namespace smpc_inventory_app.Pages.Setup
                     }
                 }
                  
-                for (int i = 0; i < dataViewWarehouseAreas.Count; i++)
-                {
-                    PopulateUsetype(new DataGridViewCellEventArgs(1, i), i);
-                }
-                 
-                //apply colors based on bg_color from WarehouseUseType
-                var useTypeTable = await WarehouseUseTypeServices.GetDataTable();
-                foreach (DataGridViewRow row in dg_areas.Rows)
-                {
-                    if (row.IsNewRow) continue;
+                // One call, on the column - not one per row. See EnsureUseTypeColumnItems.
+                await EnsureUseTypeColumnItems();
 
-                    string useTypeValue = row.Cells["dg_use_type"]?.Value?.ToString();
-                    if (string.IsNullOrWhiteSpace(useTypeValue))
-                        continue;
-
-                    var matches = useTypeTable.AsEnumerable()
-                        .Where(r => string.Equals(r["name"]?.ToString(), useTypeValue, StringComparison.OrdinalIgnoreCase));
-
-                    foreach (var match in matches)
-                    {
-                        string colorName = match["bg_color"]?.ToString();
-                        if (!string.IsNullOrWhiteSpace(colorName))
-                        {
-                            Color bg = Color.FromName(colorName);
-                            row.Cells["dg_use_type"].Style.BackColor = bg;
-                            row.Cells["dg_use_type"].Style.ForeColor =
-                                bg.GetBrightness() < 0.5f ? Color.White : Color.Black;
-                        }
-                    }
-                }
+                // The per-row colouring that used to sit here wrote directly to
+                // row.Cells[...].Style and never reset it. DataGridView reuses its row
+                // objects across rebinds, so a colour set for one record stayed put when
+                // a different record landed on that row - which is why identical USE TYPE
+                // values showed in different colours and the grid looked corrupted after
+                // adding a row. Colouring now happens in dg_areas_CellFormatting, which
+                // is stateless: it is asked for a colour on every paint and cannot leave
+                // anything behind.
             }
             finally
             {
@@ -985,7 +1005,13 @@ namespace smpc_inventory_app.Pages.Setup
             } 
         }
 
-        static bool isPopulatingUsetype = true;
+        // Was initialised to TRUE. isLoading() returns true while this is set, and
+        // dg_areas_CellEnter bails out when isLoading() - so until something happened to
+        // run PopulateUsetype's finally block, entering the USE TYPE cell did nothing at
+        // all and the dropdown stayed dead. It is a "currently populating" flag; it has
+        // no business being true before anything has started. (It is also static, so a
+        // form closed mid-populate poisoned the next one that opened.)
+        static bool isPopulatingUsetype = false;
         private bool isSavingRow = false;
         string columnName = "";
         private async void dg_areas_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -1053,20 +1079,56 @@ namespace smpc_inventory_app.Pages.Setup
         } 
         private void dg_areas_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dg_areas.Columns[e.ColumnIndex].Name == "dg_location_code" && e.Value != null)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            string columnName = dg_areas.Columns[e.ColumnIndex].Name;
+
+            if (columnName == "dg_location_code" && e.Value != null)
             {
                 e.CellStyle.ForeColor = Color.Red;
                 e.CellStyle.SelectionForeColor = Color.LightPink;
+                return;
             }
-            else return; //no need specific formating (auto gen = red) for other cell yet
+
+            // USE TYPE's colour comes from WarehouseUseType.bg_color. Applied here rather
+            // than written onto the cell, because CellFormatting is asked afresh on every
+            // paint - so a row that changes value, or a row reused for a different record
+            // after a rebind, always gets the right colour and can never keep a stale one.
+            if (columnName == "dg_use_type")
+            {
+                string useTypeValue = e.Value?.ToString();
+                if (string.IsNullOrWhiteSpace(useTypeValue) || _useTypeTable == null)
+                    return;
+
+                var match = _useTypeTable.AsEnumerable().FirstOrDefault(r =>
+                    string.Equals(r["name"]?.ToString(), useTypeValue, StringComparison.OrdinalIgnoreCase));
+
+                string colorName = match?["bg_color"]?.ToString();
+                if (string.IsNullOrWhiteSpace(colorName)) return;
+
+                Color bg = Color.FromName(colorName);
+                if (!bg.IsKnownColor && bg.ToArgb() == 0) return;   // unrecognised name
+
+                e.CellStyle.BackColor = bg;
+                e.CellStyle.ForeColor = bg.GetBrightness() < 0.5f ? Color.White : Color.Black;
+            }
         }
 
         private void dg_areas_DataError(object sender, DataGridViewDataErrorEventArgs e) //because the content of binded data in UseType is not in the items list., I think
         { //pucha para walang tigil tigil di nmn fatal error
             try
             {
+                // This used to `return` here WITHOUT setting ThrowException = false, so
+                // the grid fell through to its default handling and popped the
+                // "DataGridViewComboBoxCell value is not valid" dialog anyway - repeatedly.
+                // EnsureUseTypeColumnItems should now prevent the condition entirely by
+                // keeping out-of-Setup values in the list; this stays as the safety net.
                 if (dg_areas.Columns[e.ColumnIndex].Name == "dg_use_type")
+                {
+                    e.ThrowException = false;
+                    e.Cancel = false;
                     return;
+                }
             }
             catch (Exception ex) 
             {
@@ -1078,70 +1140,29 @@ namespace smpc_inventory_app.Pages.Setup
 
         private async void PopulateUsetype(DataGridViewCellEventArgs e, int rowIndex)
         {
+            // Everything this method used to do is gone, and the reasons are worth keeping:
+            //
+            //  - It populated Items on ONE cell at a time and returned early for the new
+            //    row (IsNewRow), so a freshly added row's USE TYPE dropdown was always
+            //    empty - the "won't let you pick the dropdown" symptom.
+            //  - It blanked the cell (cell.Value = "") whenever the stored use_type was
+            //    not in the Setup list, silently destroying saved data on load.
+            //  - It wrote colours straight onto row.Cells[...].Style and never reset
+            //    them. DataGridView reuses row objects across rebinds, so those colours
+            //    outlived the record they belonged to - the corrupted display.
+            //  - It is async void and was called in a loop, once per row, each call
+            //    re-fetching the use-type table and mutating the grid concurrently. That
+            //    race is why the breakage was intermittent rather than consistent.
+            //
+            // The item list now lives on the column (EnsureUseTypeColumnItems, cached and
+            // idempotent) and the colours in dg_areas_CellFormatting. The signature stays
+            // so the three existing call sites keep working.
             Cursor.Current = Cursors.WaitCursor;
             try
             {
-                DataGridViewComboBoxCell cell;
-
-                int colIndex = dg_areas.Columns["dg_use_type"].Index;
-                var useTypeTable = await WarehouseUseTypeServices.GetDataTable();
-
-                foreach (DataGridViewRow row in dg_areas.Rows)
-                {
-                    if (row.IsNewRow) continue;
-
-                    // Get use_type value from the grid
-                    string useTypeValue = row.Cells["dg_use_type"]?.Value?.ToString();
-                    if (string.IsNullOrWhiteSpace(useTypeValue))
-                        continue;
-
-                    // Find matching row in useTypeTable
-                    var matches = useTypeTable.AsEnumerable()
-                        .Where(r => string.Equals(r["name"]?.ToString(), useTypeValue, StringComparison.OrdinalIgnoreCase));
-
-                    foreach (var match in matches)
-                    {
-                        string colorName = match["bg_color"]?.ToString();
-                        if (!string.IsNullOrWhiteSpace(colorName))
-                        {
-                            Color bg = Color.FromName(colorName);
-                            row.Cells["dg_use_type"].Style.BackColor = bg;
-                            row.Cells["dg_use_type"].Style.ForeColor =
-                                bg.GetBrightness() < 0.5f ? Color.White : Color.Black;
-                        }
-                    }
-                }
-
-
-                if (rowIndex < 0 || colIndex < 0 || rowIndex >= dg_areas.Rows.Count || dg_areas.Rows[rowIndex].IsNewRow)
-                    return;
-
-                cell = dg_areas.Rows[rowIndex].Cells[colIndex] as DataGridViewComboBoxCell;
-
-                if (cell == null || cell.Items.Count > 0)
-                    return;
-
-                isPopulatingUsetype = true;
-
-
-                var useTypeList = useTypeTable
-                    .AsEnumerable()
-                    .Select(r => r.Field<string>("name"))
-                    .Where(name => !string.IsNullOrWhiteSpace(name))
-                    .Distinct()
-                    .ToArray();
-
-                var currentValue = cell.Value?.ToString();
-
-                cell.Items.Clear();
-                //cell.Items.Add("n/a"); // blank default ??
-                cell.Items.AddRange(useTypeList);
-
-                if (!string.IsNullOrWhiteSpace(currentValue) && useTypeList.Contains(currentValue))
-                    cell.Value = currentValue;
-                else
-                    cell.Value = "";
-            } 
+                await EnsureUseTypeColumnItems();
+                dg_areas.InvalidateColumn(dg_areas.Columns["dg_use_type"].Index);
+            }
             finally
             {
                 isPopulatingUsetype = false;
@@ -1152,21 +1173,42 @@ namespace smpc_inventory_app.Pages.Setup
         string beforeEditCellValue = "";
         private void dg_areas_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 
-                || e.RowIndex > dg_areas.Rows.Count 
+            // Bounds check was off by one: "> Rows.Count" lets RowIndex == Rows.Count
+            // through, and the very next line indexes Rows[RowIndex] - hence
+            // ArgumentOutOfRangeException ("Row index provided is out of range").
+            // Setting AllowUserToAddRows (Helpers.SetPanelToReadOnly) adds or removes the
+            // new row, and the CellEnter that fires during that transition carries exactly
+            // that index. It was masked until 2026-09-05 because isPopulatingUsetype was
+            // initialised to true, so isLoading() below was permanently true and this
+            // handler always bailed out - the same thing that kept the USE TYPE dropdown
+            // dead. Fixing the flag exposed this.
+            if (e.RowIndex < 0
+                || e.ColumnIndex < 0
+                || e.RowIndex >= dg_areas.Rows.Count
+                || e.ColumnIndex >= dg_areas.Columns.Count
                 //|| eventsuppressor
                 || isLoading()) return;
-            beforeEditCellValue = dg_areas.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(); 
+
+            // Null-safe: a blank cell (a just-added row, or any column never filled in)
+            // has a null Value, and .ToString() on it threw here too.
+            beforeEditCellValue = dg_areas.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? string.Empty;
+
             if (dg_areas.Columns[e.ColumnIndex].Name == "dg_use_type" /*&& e.RowIndex >= 0*/)
             {
                 if (!btn_cancel.Visible) return; //to detect if edit or adding new 
                 PopulateUsetype(e, e.RowIndex);
 
-                var value = dg_areas.CurrentCell.Value?.ToString();
+                // CurrentCell is null while the grid is still settling (and during the
+                // add/remove of the new row that triggered the crash above), and it is
+                // dereferenced three times here.
+                var currentCell = dg_areas.CurrentCell;
+                if (currentCell == null) return;
+
+                var value = currentCell.Value?.ToString();
 
                 Rectangle cellDisplayRect = dg_areas.GetCellDisplayRectangle(
-                    dg_areas.CurrentCell.ColumnIndex,
-                    dg_areas.CurrentCell.RowIndex,
+                    currentCell.ColumnIndex,
+                    currentCell.RowIndex,
                     false
                 );
 
@@ -1391,19 +1433,26 @@ namespace smpc_inventory_app.Pages.Setup
         } 
         private void dg_areas_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
+            // Same guard the lower half of this method already carries (see its
+            // "nag ka error out of nowhere - bandaid" comment - that WAS this crash).
+            // RowEnter fires while the new row is being added or removed, when e.RowIndex
+            // can be past the end of the collection, and everything below indexes
+            // Rows[e.RowIndex] unguarded.
+            if (e.RowIndex < 0 || e.RowIndex >= dg_areas.Rows.Count) return;
+
             //idForDeletion = int.Parse(dg_areas.Rows[e.RowIndex].Cells["dg_location_code"].Value?.ToString());
             currentRowDetails = "details:\n";
             currentRowDetails += dg_areas.Columns["dg_use_type"].HeaderText 
                                 + ": "
                                 + (string.IsNullOrEmpty(dg_areas.Rows[e.RowIndex].Cells["dg_use_type"].Value?.ToString())
                                     ? "n/a"
-                                    :   "'" + dg_areas.Rows[e.RowIndex].Cells[0].Value.ToString() + "'"
+                                    :   "'" + (dg_areas.Rows[e.RowIndex].Cells[0].Value?.ToString() ?? "") + "'"
                                     + " and "
                                     + dg_areas.Columns["dg_location_code"].HeaderText
                                     + "  "
                                     + (string.IsNullOrEmpty(dg_areas.Rows[e.RowIndex].Cells["dg_location_code"].Value?.ToString())
                                         ? "n/a"
-                                        : "'" + dg_areas.Rows[e.RowIndex].Cells[6].Value.ToString() + "'"));
+                                        : "'" + (dg_areas.Rows[e.RowIndex].Cells[6].Value?.ToString() ?? "") + "'"));
 
             //nag ka error out of nowhere - bandaid
             string value = null;
@@ -1428,6 +1477,8 @@ namespace smpc_inventory_app.Pages.Setup
                 || isSavingRow
                 || e.RowIndex < 0 
                 || e.ColumnIndex < 0
+                || e.RowIndex >= dg_areas.Rows.Count
+                || e.ColumnIndex >= dg_areas.Columns.Count
                 ) return;
 
             dg_areas.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dg_areas.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString().ToUpper();
