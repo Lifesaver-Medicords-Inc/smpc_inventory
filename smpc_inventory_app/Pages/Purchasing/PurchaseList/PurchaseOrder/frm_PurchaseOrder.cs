@@ -257,9 +257,24 @@ namespace smpc_inventory_app.Pages.Purchasing
             cmb_ship_type.ValueMember = "id";
             cmb_ship_type.DisplayMember = "ship_name";
         }
-        private string  DocNoGenerator()
+        // §2.5's PO# is zero-padded to four digits, and doc_no is stored as text on
+        // tbl_purchasing_purchase_order - so the padding has to be applied on every
+        // path out of here, not just the increment one.
+        //
+        // It was not: the three fallbacks all returned a bare "1", so the very first
+        // purchase order on a database (and any order following one whose doc_no
+        // failed to parse) was written as "1" while every later order was "0002",
+        // "0003", ... The live table shows exactly that - id 1 holds "1", ids 2-9
+        // hold "0002".."0009".
+        //
+        // That is not only cosmetic. MAX() over a text column is a string compare,
+        // so "1" sorts above "0009" and any MAX-based next-number logic reads the
+        // sequence as sitting at 1 rather than 9.
+        private const int DocNoDigits = 4;
+
+        private string DocNoGenerator()
         {
-            string docNo;
+            string docNo = FormatDocNo(1);
 
             if (updatedpurchaseorder.Rows.Count > 0)
             {
@@ -271,25 +286,21 @@ namespace smpc_inventory_app.Pages.Purchasing
                 {
                     if (int.TryParse(latestRow["doc_no"].ToString(), out int itemNum))
                     {
-                        docNo = (itemNum + 1).ToString().PadLeft(4, '0');
-                    }
-                    else
-                    {
-                        docNo = "1";
+                        docNo = FormatDocNo(itemNum + 1);
                     }
                 }
-                else
-                {
-                    docNo = "1";
-                }
-            }
-            else
-            {
-                docNo = "1";
             }
 
             return docNo;
         }
+
+        // One place that knows the width, so a change to it cannot apply to some
+        // paths and not others - which is how "1" and "0002" ended up side by side.
+        private static string FormatDocNo(int number)
+        {
+            return number.ToString().PadLeft(DocNoDigits, '0');
+        }
+
         private (decimal discountedPrice, decimal totalDiscountedPrice) ComputeDiscountAndTotal(decimal unitPrice, string discountText, int quantity)
         {
             try
