@@ -27,7 +27,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>http://localhost/smpc_inventory_app/</UpdateUrl>
-    <ApplicationRevision>1000</ApplicationRevision>
+    <ApplicationRevision>1006</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -774,6 +774,7 @@
     <Compile Include="Printing\Core\IReportProvider.cs" />
     <Compile Include="Printing\PurchaseOrderReportProvider .cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="SmpcEndpoints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Auth\AuthServices.cs" />
     <Compile Include="Services\Helpers\BinLocationComboOverlay.cs" />

@@ -64,7 +64,19 @@ namespace smpc_inventory_app
         private static string ResolveFromConfig(string key)
         {
             string env = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? "Development";
-            return System.Configuration.ConfigurationManager.AppSettings[$"{key}.{env}"];
+            string fromConfig = System.Configuration.ConfigurationManager.AppSettings[$"{key}.{env}"];
+
+            // This lazy path runs when an inventory form is hosted inside another
+            // app and Main() never ran, so it has to honour the override file too
+            // - otherwise a hosted screen quietly talks to a different backend
+            // than the app hosting it.
+            if (key == "ApiBaseUrl")
+                return SmpcEndpoints.Api(fromConfig);
+
+            if (key == "WssBaseUrl")
+                return SmpcEndpoints.Ws(fromConfig);
+
+            return fromConfig;
         }
         /// <summary>
         /// The main entry point for the application.
@@ -77,16 +89,22 @@ namespace smpc_inventory_app
             string env = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? "Development";
 
             // Resolve the correct API URL
-            ApiBaseUrl = System.Configuration.ConfigurationManager.AppSettings[$"ApiBaseUrl.{env}"]
+            // smpc.endpoints.xml wins when present; App.config is the fallback.
+            ApiBaseUrl = SmpcEndpoints.Api(
+                System.Configuration.ConfigurationManager.AppSettings[$"ApiBaseUrl.{env}"])
                          ?? throw new ConfigurationErrorsException($"No API URL configured for environment: {env}");
 
             // Resolve the correct API URL
-            WssBaseUrl = System.Configuration.ConfigurationManager.AppSettings[$"WssBaseUrl.{env}"]
+            WssBaseUrl = SmpcEndpoints.Ws(
+                System.Configuration.ConfigurationManager.AppSettings[$"WssBaseUrl.{env}"])
                          ?? throw new ConfigurationErrorsException($"No API URL configured for environment: {env}");
 
             Log.Information("Running in {Environment} environment", env);
             Log.Information("API URL: {Url}", ApiBaseUrl);
             Log.Information("WSS URL: {Url}", WssBaseUrl);
+            // Which file won. Without this, "pointed at the wrong server" and
+            // "override file never loaded" are indistinguishable from the UI.
+            Log.Information("Endpoints from: {Source}", SmpcEndpoints.Source);
 
             // Set application-wide currency format to Philippine Peso
             CultureInfo culture = new CultureInfo("en-PH");
