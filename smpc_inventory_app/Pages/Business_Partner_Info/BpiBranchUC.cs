@@ -594,21 +594,19 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         private bool GetSelectedSales()
         {
-            // Only the "Sales" position is restricted to branches they own - every other
-            // position (admin, manager, etc.) is exempt from this check entirely, same
-            // rule as the BPI list-level filter in BusinessPartnerInfo.GetBpi(). Without
-            // this, the ownership check below ran unconditionally for every position,
-            // which is why admins were also hitting the "belongs to another sales
-            // representative" restriction.
-            string currentUserPosition = CacheData.CurrentUser?.position?.name?.Trim() ?? string.Empty;
-            if (!currentUserPosition.Equals("sales", StringComparison.OrdinalIgnoreCase))
-                return true;
+            // Whether this branch's CONTENTS may be shown - its name always is
+            // (spec 4.1.10). SalesId is this branch's own owner (branch_sales_id);
+            // the role rules live in BpiAccess.
+            return smpc_inventory_app.Model.BpiAccess.CanView(CacheData.CurrentUser, SalesId, BranchEntityCodes());
+        }
 
-            string currentUser = CacheData.CurrentUser.employee_id;
-            //MessageBox.Show($"current: {currentUser}, owner: {SalesId}");
-            // BUG -- SETS OWNER AS THE FIRST RECORD SALES ID
-            bool isSalesOwner = currentUser == SalesId;
-            return isSalesOwner;
+        // entity_names of this branch, e.g. "SUP,CUS" - purchasing views every
+        // supplier branch.
+        private string BranchEntityCodes()
+        {
+            int id;
+            if (Records?.general == null || !int.TryParse(ParentId, out id)) return string.Empty;
+            return Records.general.FirstOrDefault(x => x.general_id == id)?.entity_names ?? string.Empty;
         }
         private void ShowTypeOfEntity(string txt)
         {
@@ -718,15 +716,20 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 var salesName = bpi.Rows[this.SelectedRecord]["sales_id"].ToString();
                 //    var matchSelectedSaless = Users.FirstOrDefault(salesUser => salesUser.employee_id == bpi.Rows[this.selectedRecord]["sales_id"].ToString());
 
-                var salesOwner = CacheData.CurrentUser.employee_id == row["branch_sales_id"].ToString();
-                var matchSelectedSales = Users.FirstOrDefault(salesUser => salesUser.employee_id == row["branch_sales_id"].ToString());
+                var salesOwner = smpc_inventory_app.Model.SalesOwner.OwnedBy(row["branch_sales_id"].ToString(), CacheData.CurrentUser);
+                var matchSelectedSales = Users.FirstOrDefault(salesUser => smpc_inventory_app.Model.SalesOwner.Same(salesUser.full_name, row["branch_sales_id"].ToString()));
                 string selectedSalesNames = "";
                 if (matchSelectedSales != null)
                 {
                     selectedSalesNames = $"({matchSelectedSales.first_name.Substring(0, 1).ToUpper()}. {matchSelectedSales.last_name})";
                     //selectedSalesNames = txt_sales_id.Text;
                 }
-                string selectedSalesName = salesOwner ? "PURCH-PO-8" : selectedSalesNames;
+                // Was: salesOwner ? "PURCH-PO-8" : selectedSalesNames - a leftover document
+                // number shown to the OWNER as their own tooltip. Now everyone sees the
+                // owner's name, falling back to the stored name when there is no user record.
+                string storedOwner = row["branch_sales_id"].ToString();
+                string selectedSalesName = !string.IsNullOrEmpty(selectedSalesNames) ? selectedSalesNames
+                    : (string.IsNullOrWhiteSpace(storedOwner) ? "" : "(" + storedOwner + ")");
 
                 Button dynamicButton = new Button
                 {
@@ -2156,13 +2159,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             if (!isVisible) return;
 
             // Look up the owner's name from Users if available
+            // SalesId holds the owner NAME. This used to look the owner up by
+            // employee_id, which after the switch to names never matched - every notice
+            // would have read "another sales representative". Prefer the matching user
+            // record; otherwise the stored name itself is the owner name.
             string ownerName = "another sales representative";
-            if (Users != null)
-            {
-                var owner = Users.FirstOrDefault(u => u.employee_id == SalesId);
-                if (owner != null)
-                    ownerName = $"{owner.first_name} {owner.last_name}";
-            }
+            var owner = Users?.FirstOrDefault(u => smpc_inventory_app.Model.SalesOwner.Same(u.full_name, SalesId));
+            if (owner != null)
+                ownerName = owner.full_name;
+            else if (!string.IsNullOrWhiteSpace(SalesId))
+                ownerName = SalesId;
 
             Panel noticePanel = new Panel
             {
@@ -2261,8 +2267,19 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             HideSystemColumns((DataGridView)sender, "history");
         }
+        // The branch's stored owner (branch_sales_id).
+        public string OwnerName => SalesId;
+
+        // Whether this user may change this branch. A branch not yet saved is
+        // the current user's own.
+        public bool CanEditThis => !IsExisting || smpc_inventory_app.Model.BpiAccess.CanEdit(CacheData.CurrentUser, SalesId);
+
         public void SetReadOnly(bool isReadOnly)
         {
+            // Edit mode never unlocks a branch this user may not edit: another
+            // executive's branch stays read-only beside the user's own (4.1.10).
+            isReadOnly = isReadOnly || !CanEditThis;
+
             Helpers.SetTabControlReadOnly(tabControl2, isReadOnly);
             // Set all DGVs to read-only
             List<DataGridView> dgvList = new List<DataGridView>

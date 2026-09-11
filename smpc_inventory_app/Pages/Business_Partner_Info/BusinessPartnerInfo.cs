@@ -85,9 +85,35 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             debounceTimer.Interval = DebounceDelay;
             debounceTimer.Tick += debounceTimer_Tick;
+
+            // Spec 4.1.10: hovering a branch tab names its owner, so a user can tell
+            // who to ask about a branch they cannot open (AddBranchTabBeforeDefault).
+            tab_dynamic.ShowToolTips = true;
+        }
+        private void ShowNoAccess()
+        {
+            foreach (Control control in Controls)
+                control.Visible = false;
+
+            Controls.Add(new System.Windows.Forms.Label
+            {
+                Text = "Business Partner Info is not available for your position.",
+                Dock = DockStyle.Fill,
+                TextAlign = System.Drawing.ContentAlignment.MiddleCenter,
+                Font = new System.Drawing.Font(Font.FontFamily, 11f),
+            });
         }
         private async void BusinessPartnerInfo_Load(object sender, EventArgs e)
         {
+            // Positions outside Sales, Purchasing, A/R, A/P and Admin have no BPI
+            // (spec 3.2). Gated here as well as in both sidebars, because the page
+            // is also opened from the canvass sheet and the quotation.
+            if (!smpc_inventory_app.Model.BpiAccess.CanOpen(CacheData.CurrentUser))
+            {
+                ShowNoAccess();
+                return;
+            }
+
             try
             {
 
@@ -246,42 +272,15 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
-        // "Sales" position users may only see BPI records THEY created; every other
-        // position is exempt and sees the full list unfiltered. There's no dedicated
-        // "created_by" column - sales_id already serves that role: it's stamped to the
-        // creator's employee_id at insert time (btn_add_Click / btn_save_Click) and is
-        // deliberately excluded from the update payload in btn_revise_Click, so it never
-        // gets reassigned afterward. Blank/legacy sales_id rows are left visible rather
-        // than hidden, so older records without an owner don't just disappear.
-        private DataTable FilterBpiForCurrentUser(DataTable source)
-        {
-            string currentUserPosition = CacheData.CurrentUser?.position?.name?.Trim() ?? string.Empty;
-            if (!currentUserPosition.Equals("sales", StringComparison.OrdinalIgnoreCase))
-                return source;
-
-            string currentEmployeeId = CacheData.CurrentUser.employee_id?.Trim() ?? string.Empty;
-
-            DataTable filtered = source.Clone();
-            foreach (DataRow row in source.Rows)
-            {
-                string salesId = row["sales_id"]?.ToString()?.Trim();
-                if (string.IsNullOrEmpty(salesId) ||
-                    string.Equals(salesId, currentEmployeeId, StringComparison.OrdinalIgnoreCase))
-                {
-                    filtered.ImportRow(row);
-                }
-            }
-            return filtered;
-        }
-
         private async void GetBpi()
         {
             var response = await RequestToApi<ApiResponseModel<Bpi_Class>>.Get(ENUM_ENDPOINT.BPI);
             records = response.Data;
 
             // Convert all API objects to DataTables
+            // Every partner is listed for everyone who can open BPI: names are
+            // always visible (spec 4.1.10). BpiAccess decides what a record SHOWS.
             bpi = JsonHelper.ToDataTable(records.bpi);
-            bpi = FilterBpiForCurrentUser(bpi);
             general = JsonHelper.ToDataTable(records.general);
             contacts = JsonHelper.ToDataTable(records.contacts);
             address = JsonHelper.ToDataTable(records.address);
@@ -291,7 +290,18 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             accreditations = JsonHelper.ToDataTable(records.accreditations);
             history = JsonHelper.ToDataTable(records.history);
 
-            if (records.bpi.Count != 0 && records.general.Count != 0 && records.contacts.Count != 0 && records.address.Count != 0)
+            // Bind whenever there are companies and branches to show. This used to
+            // also demand at least one contact and one address ANYWHERE in the
+            // database, so on a fresh or freshly-imported database - zero contacts -
+            // the form bound nothing and said nothing. Contacts and address are
+            // per-record detail; the Save validators still require them before a
+            // record can be saved.
+            //
+            // Counts the FILTERED bpi table, not records.bpi: once the per-sales
+            // filter is active a rep can own no partners at all, and BindBpiRecords
+            // indexes bpi.Rows[selectedRecord] - counting the unfiltered list would
+            // let it through to an empty table.
+            if (bpi.Rows.Count != 0 && records.general.Count != 0)
             {
 
                 BindBpiRecords(true);
@@ -547,8 +557,29 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private bool GetSelectedSales()
         {
             SalesId = bpi.Rows[this.selectedRecord]["sales_id"].ToString();
-            bool isSalesOwner = CacheData.CurrentUser.employee_id == SalesId;
-            return isSalesOwner;
+
+            // Whether the company's own record may be shown - its name always is
+            // (spec 4.1.10). The company follows its owner and its MAIN branch's
+            // entity types (purchasing views suppliers); each branch tab applies
+            // the same rules to its own owner. The rules live in BpiAccess.
+            return smpc_inventory_app.Model.BpiAccess.CanView(CacheData.CurrentUser, SalesId, MainBranchEntityCodes());
+        }
+
+        // entity_names of the selected company's MAIN branch, e.g. "SUP,CUS".
+        private string MainBranchEntityCodes()
+        {
+            if (general == null
+                || !general.Columns.Contains("entity_names")
+                || !general.Columns.Contains("general_based_id")
+                || !general.Columns.Contains("is_main"))
+                return string.Empty;
+
+            string companyId = bpi.Rows[this.selectedRecord]["id"].ToString();
+            DataRow main = general.AsEnumerable().FirstOrDefault(r =>
+                r["general_based_id"].ToString() == companyId
+                && r["is_main"] != DBNull.Value && Convert.ToBoolean(r["is_main"]));
+
+            return main == null ? string.Empty : main["entity_names"].ToString();
         }
         public void GetFilteredTabIds(DataTable table, string filterColumn, string filterValue, string column1, string column2, out int basedId, out int id)
         {
@@ -596,10 +627,19 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
 
 
-                var matchSelectedSales = Users.FirstOrDefault(salesUser => salesUser.employee_id == bpi.Rows[this.selectedRecord]["sales_id"].ToString());
+                var matchSelectedSales = Users.FirstOrDefault(salesUser => smpc_inventory_app.Model.SalesOwner.Same(salesUser.full_name, bpi.Rows[this.selectedRecord]["sales_id"].ToString()));
                 if (matchSelectedSales != null)
                 {
                     txt_sales_id.Text = $"({matchSelectedSales.first_name.Substring(0, 1).ToUpper()}. {matchSelectedSales.last_name})";
+                }
+                else
+                {
+                    // No user record for this owner - the OFFICE house account, or a sales
+                    // executive outside this user's department (Users holds only the current
+                    // department). Show the stored name instead of leaving the PREVIOUS
+                    // record's owner on screen.
+                    string ownerName = bpi.Rows[this.selectedRecord]["sales_id"].ToString();
+                    txt_sales_id.Text = string.IsNullOrWhiteSpace(ownerName) ? "" : "(" + ownerName + ")";
                 }
 
 
@@ -698,9 +738,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             string generalId = row["general_id"].ToString();
             bool mainBranch = Convert.ToBoolean(row["is_main"]);
 
+            // Each tab is locked by ITS OWN owner (branch_sales_id), not the
+            // company's: a group may hold branches of different executives (4.1.10).
+            string owner = row.Table.Columns.Contains("branch_sales_id") ? row["branch_sales_id"].ToString() : SalesId;
+
             BpiBranchUC branchUC = new BpiBranchUC(
                 parentId: generalId,
-                salesId: SalesId,
+                salesId: owner,
                 tabTitle: branchName,
                 canvassForm: "",
                 isExisting: true,
@@ -709,6 +753,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             branchUC.Dock = DockStyle.Fill;
 
             TabPage tab = new TabPage(branchName);
+            tab.ToolTipText = smpc_inventory_app.Model.BpiAccess.OwnerLabel(owner);
             tab.Tag = new
             {
                 GeneralId = generalId,
@@ -908,11 +953,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private void BtnToggle(bool isEdit)
         {
 
-            btn_new.Visible = !isEdit;
+            // A/R and A/P only view BPI: no NEW, no EDIT (BpiAccess).
+            btn_new.Visible = !isEdit && smpc_inventory_app.Model.BpiAccess.CanCreate(CacheData.CurrentUser);
             btn_search.Visible = !isEdit;
             btn_prev.Visible = !isEdit;
             btn_next.Visible = !isEdit;
-            btn_edit.Visible = !isEdit;
+            btn_edit.Visible = !isEdit && smpc_inventory_app.Model.BpiAccess.CanEditAny(CacheData.CurrentUser);
 
             btn_save.Visible = isEdit;
             btn_revise.Visible = isEdit;
@@ -922,7 +968,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             //btn_cancel.Visible = isEdit;
             btn_close.Visible = isEdit;
 
-            panel_header_records.Enabled = isEdit;
+            // The company header belongs to the company's owner; an executive
+            // editing their own branch of someone else's company leaves it as is.
+            panel_header_records.Enabled = isEdit && smpc_inventory_app.Model.BpiAccess.CanEdit(CacheData.CurrentUser, SalesId);
             buttonPanel.Enabled = isEdit;
             panel_general.Enabled = isEdit;
             pnl_new_added_item.Enabled = isEdit;
@@ -1036,7 +1084,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                     }
                     if (value != "0")
                     {
-                        var isSelectedSales = CacheData.CurrentUser.employee_id == row["branch_sales_id"].ToString();
+                        var isSelectedSales = smpc_inventory_app.Model.BpiAccess.CanView(CacheData.CurrentUser, row["branch_sales_id"].ToString(), row.Table.Columns.Contains("entity_names") ? row["entity_names"].ToString() : "");
                         BpiBranchToggle(isSelectedSales);
 
                         Helpers.BindControls(pnlGeneralPanel, filteredGeneral);
@@ -1655,6 +1703,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void btn_new_Click(object sender, EventArgs e)
         {
+            // A new record has no owner until it is saved - it then becomes the
+            // creator's - so nothing about it is locked while it is keyed in.
+            SalesId = string.Empty;
+
             AddMainBranch("MAIN");
 
             ResetData(true);
@@ -1662,7 +1714,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             txt_entity_type.Tag = "MULTI";
             //flowLayout_panel.Controls.Clear();
             txt_sales_id.Text = $"({CacheData.CurrentUser.first_name.Substring(0, 1).ToUpper()}. {CacheData.CurrentUser.last_name})";
-            txt_branch_sales_id.Text = CacheData.CurrentUser.employee_id;
+            txt_branch_sales_id.Text = CacheData.CurrentUser.full_name;
             Panel[] pnlList = { panel_header_records };
             var Bpi = Helpers.GetControlsValues(panel_header_records);
 
@@ -1999,23 +2051,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             string industries = txt_industries.Text;
             string mainTelNo = txt_main_tel_no.Text;
             string tin = txt_tin.Text;
-            if (string.IsNullOrEmpty(industries))
-            {
-                bpiMesssages += "Industries is required \n";
-                return false;
-            }
+            // Collect EVERY missing field, then report them together. This used to
+            // return on the first one, so a partner missing Industries AND TIN only
+            // ever reported Industries - the user fixed it, saved again, and only
+            // then learned about TIN. Both Save handlers already combine the four
+            // validators into one message; each validator now contributes all of
+            // its own findings instead of just the first.
+            List<string> missing = new List<string>();
+            if (string.IsNullOrWhiteSpace(industries)) missing.Add("Industries is required");
+            if (string.IsNullOrWhiteSpace(mainTelNo)) missing.Add("Main Tel No. is required");
+            if (string.IsNullOrWhiteSpace(tin)) missing.Add("Tin No. is required");
 
-            if (string.IsNullOrEmpty(mainTelNo))
+            if (missing.Count > 0)
             {
-                bpiMesssages += "Main Tel No. is required \n";
+                bpiMesssages = string.Join("\n• ", missing);
                 return false;
-
-            }
-            if (string.IsNullOrEmpty(tin))
-            {
-                bpiMesssages += "Tin No. is required \n";
-                return false;
-
             }
 
             //if (!Regex.IsMatch(mainTelNo, REGEXPATTERN))
@@ -2054,15 +2104,18 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             records.TryGetValue("branch_industry_id", out var branchIndustries);
             records.TryGetValue("branch_tel_no", out var branchTelNo);
 
-            if (entityType == null || string.IsNullOrEmpty(branchIndustries?.ToString()))
-            {
-                generalMessage += "Entity Type and Branch Industries are required \n";
-                return false;
-            }
-
+            // Same reason as AddBpiIdentificationType: report every problem at once.
+            // "Entity Type and Branch Industries are required" was also one message
+            // covering two fields, so it never said which one was actually missing.
+            List<string> problems = new List<string>();
+            if (entityType == null) problems.Add("Entity Type is required");
+            if (string.IsNullOrWhiteSpace(branchIndustries?.ToString())) problems.Add("Branch Industries is required");
             if (!string.IsNullOrEmpty(branchTelNo?.ToString()) && !Regex.IsMatch(branchTelNo.ToString(), REGEXPATTERN))
+                problems.Add("Branch Tel No. is invalid");
+
+            if (problems.Count > 0)
             {
-                generalMessage += "Branch Tel No. is invalid \n";
+                generalMessage = string.Join("\n• ", problems);
                 return false;
             }
 
@@ -2191,8 +2244,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
 
 
-            Bpi["sales_id"] = CacheData.CurrentUser.employee_id;
-            Generals["sales_id"] = CacheData.CurrentUser.employee_id;
+            Bpi["sales_id"] = CacheData.CurrentUser.full_name;
+            Generals["sales_id"] = CacheData.CurrentUser.full_name;
             int social_id = 0;
 
 
@@ -3624,8 +3677,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
 
 
-            Bpi["sales_id"] = CacheData.CurrentUser.employee_id;
-            Generals["sales_id"] = CacheData.CurrentUser.employee_id;
+            Bpi["sales_id"] = CacheData.CurrentUser.full_name;
+            Generals["sales_id"] = CacheData.CurrentUser.full_name;
             int social_id = 0;
 
 
@@ -3733,6 +3786,13 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 MessageBox.Show("Tab not found.");
                 return;
             }
+            // Only a branch this user may edit can be saved (spec 4.1.10). Its
+            // controls are read-only anyway; this stops a save being forced through.
+            if (!bpiUC.CanEditThis)
+            {
+                Helpers.ShowDialogMessage("warning", $"{tab_dynamic.SelectedTab.Text} belongs to {bpiUC.OwnerName}. You can view it but not change it.");
+                return;
+            }
             // Force dgv endedit
             bpiUC.CommitEdits();
 
@@ -3819,7 +3879,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // Generals.Add("id", int.TryParse(Generals["general_id"].ToString(), out generalId));
             // Generals.Add("based_id", int.TryParse(Generals["general_based_id"].ToString(), out generalBasedId));
 
-            Generals.Add("sales_id", CacheData.CurrentUser.employee_id);
+            // sales_id here is the EDITOR's name, not a new owner: the API records it
+            // as the history's edit_by and saves the branch with its STORED owner
+            // (UpdateBpiGeneral), so an edit never reassigns a branch (spec 4.1.10).
+            Generals.Add("sales_id", CacheData.CurrentUser.full_name);
 
             Bpi.Remove("industries");
             Bpi.Remove("sales_id");
@@ -3948,6 +4011,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                         TabPage clickedTab = tab_dynamic.TabPages[i];
 
                         if (clickedTab.Name == "tab_add_new_branch")
+                            return;
+
+                        // Rename, Delete, Set as Main and Create as BPI change the record,
+                        // so the menu follows the edit rule for this branch (BpiAccess).
+                        BpiBranchUC clickedUC = clickedTab.Controls.OfType<BpiBranchUC>().FirstOrDefault();
+                        if (clickedUC != null && !clickedUC.CanEditThis)
                             return;
 
                         // Read IsMain from Tag
