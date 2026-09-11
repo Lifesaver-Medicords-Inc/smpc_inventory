@@ -141,7 +141,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label15 = new System.Windows.Forms.Label();
             this.cmb_item_accounts = new System.Windows.Forms.ComboBox();
             this.footer_panel = new System.Windows.Forms.Panel();
-            this.btn_qoute = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -172,7 +171,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.cmb_item_account = new System.Windows.Forms.ComboBox();
             this.cmb_tax_code = new System.Windows.Forms.ComboBox();
             this.cmb_payment_terms = new System.Windows.Forms.ComboBox();
-            this.button9 = new System.Windows.Forms.Button();
             this.txt_item_tax_code = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.dg_items = new System.Windows.Forms.DataGridView();
@@ -1115,22 +1113,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // footer_panel
             // 
-            this.footer_panel.Controls.Add(this.btn_qoute);
             this.footer_panel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.footer_panel.Location = new System.Drawing.Point(0, 900);
             this.footer_panel.Name = "footer_panel";
             this.footer_panel.Size = new System.Drawing.Size(1250, 118);
             this.footer_panel.TabIndex = 5;
             this.footer_panel.Paint += new System.Windows.Forms.PaintEventHandler(this.footer_panel_Paint);
-            // 
-            // btn_qoute
-            // 
-            this.btn_qoute.Location = new System.Drawing.Point(19, 28);
-            this.btn_qoute.Name = "btn_qoute";
-            this.btn_qoute.Size = new System.Drawing.Size(75, 26);
-            this.btn_qoute.TabIndex = 11;
-            this.btn_qoute.Text = "QUOTE";
-            this.btn_qoute.UseVisualStyleBackColor = true;
             // 
             // openFileDialog1
             // 
@@ -1288,7 +1276,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_item.Controls.Add(this.cmb_item_account);
             this.panel_item.Controls.Add(this.cmb_tax_code);
             this.panel_item.Controls.Add(this.cmb_payment_terms);
-            this.panel_item.Controls.Add(this.button9);
             this.panel_item.Controls.Add(this.txt_item_tax_code);
             this.panel_item.Controls.Add(this.label21);
             this.panel_item.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1364,18 +1351,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.cmb_payment_terms.Size = new System.Drawing.Size(186, 21);
             this.cmb_payment_terms.TabIndex = 32;
             this.cmb_payment_terms.Tag = "DYNAMIC";
-            //
-            // button9
-            //
-            this.button9.BackColor = System.Drawing.Color.Transparent;
-            this.button9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button9.BackgroundImage")));
-            this.button9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button9.Enabled = false;
-            this.button9.Location = new System.Drawing.Point(302, 23);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(30, 22);
-            this.button9.TabIndex = 31;
-            this.button9.UseVisualStyleBackColor = false;
             // 
             // txt_item_tax_code
             // 
@@ -2499,7 +2474,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel main_panel;
         private System.Windows.Forms.Panel footer_panel;
-        private System.Windows.Forms.Button btn_qoute;
         private System.Windows.Forms.Button btn_get_industries;
         private System.Windows.Forms.ComboBox cmb_name;
         private System.Windows.Forms.Button btn_add_setup;
@@ -2616,7 +2590,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.ComboBox cmb_item_account;
         private System.Windows.Forms.ComboBox cmb_tax_code;
         private System.Windows.Forms.ComboBox cmb_payment_terms;
-        private System.Windows.Forms.Button button9;
         private System.Windows.Forms.TextBox txt_item_tax_code;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.DataGridView dg_items;

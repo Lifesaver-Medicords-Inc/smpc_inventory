@@ -1131,6 +1131,7 @@ namespace smpc_inventory_app.Pages
             this.btn_close.Size = new System.Drawing.Size(56, 22);
             this.btn_close.Text = "Close";
             this.btn_close.Visible = false;
+            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
             // 
             // btn_prev
             // 

@@ -1661,5 +1661,23 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
             if (_isEditing)
                 UpdateRejectionReasonReadOnly();
         }
+
+        // Prints the Receiving Report on screen on the house template (spec 2.10, 5.7).
+        private void btn_print_Click(object sender, EventArgs e)
+        {
+            if (_receivingReports == null || _currentRRIndex < 0 || _currentRRIndex >= _receivingReports.Count)
+            {
+                MessageBox.Show("No Receiving Report selected.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var report = smpc_inventory_app.Printing.ReceivingReportPrint.Build(
+                _receivingReports[_currentRRIndex], _currentDetails);
+
+            using (var preview = new smpc_inventory_app.Pages.Shared.PrintPreview(report))
+            {
+                preview.ShowDialog();
+            }
+        }
     }
 }

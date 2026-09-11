@@ -210,5 +210,28 @@ namespace smpc_inventory_app.Pages.Purchasing
             }
         }
 
+
+        // Whether this card's item or any of its order rows contains the term
+        // (case-insensitive) - the distribution popups' SEARCH. Blank matches all.
+        public bool Matches(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term)) return true;
+            term = term.Trim();
+
+            if (TextHas(txt_item_id.Text, term) || TextHas(txt_item_description.Text, term) || TextHas(txt_brand.Text, term))
+                return true;
+
+            foreach (DataGridViewRow row in dgv_distribute.Rows)
+                foreach (DataGridViewCell cell in row.Cells)
+                    if (TextHas(cell.Value?.ToString(), term))
+                        return true;
+
+            return false;
+        }
+
+        private static bool TextHas(string text, string term)
+        {
+            return text != null && text.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
     }
 }

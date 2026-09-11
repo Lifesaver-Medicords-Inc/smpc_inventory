@@ -98,6 +98,7 @@ namespace smpc_inventory_app.Pages.Purchasing.Modal
             this.btn_search.TabIndex = 89;
             this.btn_search.Text = "SEARCH";
             this.btn_search.UseVisualStyleBackColor = true;
+            this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
             // 
             // textBox1
             // 
@@ -105,6 +106,7 @@ namespace smpc_inventory_app.Pages.Purchasing.Modal
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(200, 20);
             this.textBox1.TabIndex = 88;
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // label1
             // 

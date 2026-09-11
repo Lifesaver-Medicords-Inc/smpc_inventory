@@ -102,5 +102,12 @@ namespace smpc_inventory_app.Pages.Shared
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // "Back" returns to the document the preview was opened from. The
+        // button was on the toolbar with nothing behind it.
+        private void btn_prev_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

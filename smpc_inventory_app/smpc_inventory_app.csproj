@@ -27,8 +27,8 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>http://localhost/smpc_inventory_app/</UpdateUrl>
-    <ApplicationRevision>1006</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -773,6 +773,8 @@
     <Compile Include="Printing\Core\IPrintableDocument.cs" />
     <Compile Include="Printing\Core\IReportProvider.cs" />
     <Compile Include="Printing\PurchaseOrderReportProvider .cs" />
+    <Compile Include="Printing\Core\HouseTemplateReport.cs" />
+    <Compile Include="Printing\ReceivingReportPrint.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="SmpcEndpoints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1113,6 +1115,9 @@
       <DependentUpon>WebSocketForm.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="download.ico" />
+    <Content Include="Printing\HouseTemplate.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Printing\PurchaseOrderReport.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

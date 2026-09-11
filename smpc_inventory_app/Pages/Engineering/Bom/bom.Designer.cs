@@ -52,7 +52,6 @@ namespace smpc_inventory_app.Pages
             this.dataColumn9 = new System.Data.DataColumn();
             this.dataColumn10 = new System.Data.DataColumn();
             this.pnl_footer = new System.Windows.Forms.Panel();
-            this.btn_production_order = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -258,17 +257,6 @@ namespace smpc_inventory_app.Pages
             this.pnl_footer.Name = "pnl_footer";
             this.pnl_footer.Size = new System.Drawing.Size(1279, 100);
             this.pnl_footer.TabIndex = 5;
-            // 
-            // btn_production_order
-            // 
-            this.btn_production_order.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btn_production_order.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_production_order.Location = new System.Drawing.Point(19, 566);
-            this.btn_production_order.Name = "btn_production_order";
-            this.btn_production_order.Size = new System.Drawing.Size(169, 23);
-            this.btn_production_order.TabIndex = 5;
-            this.btn_production_order.Text = "PRODUCTION ORDER";
-            this.btn_production_order.UseVisualStyleBackColor = false;
             // 
             // label2
             // 
@@ -666,7 +654,6 @@ namespace smpc_inventory_app.Pages
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.btn_production_order);
             this.Controls.Add(this.pnl_components);
             this.Controls.Add(this.pnl_label);
             this.Controls.Add(this.pnl_header);
@@ -701,7 +688,6 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.Panel pnl_components;
         private System.Windows.Forms.Panel pnl_footer;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button btn_production_order;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;

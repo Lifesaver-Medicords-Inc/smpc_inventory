@@ -1403,6 +1403,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.btn_add_new_item.TabIndex = 35;
             this.btn_add_new_item.Text = "Add New Item";
             this.btn_add_new_item.UseVisualStyleBackColor = true;
+            this.btn_add_new_item.Click += new System.EventHandler(this.btn_add_new_item_Click_1);
             // 
             // dg_items
             // 

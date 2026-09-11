@@ -69,6 +69,10 @@ namespace smpc_inventory_app.Pages.Purchasing.Modal
             // under-allocated total.
             if (hasUnallocated)
             {
+                // Show every card again, so the one still short is on screen.
+                textBox1.Clear();
+                ApplySearch(string.Empty);
+
                 MessageBox.Show(
                     "Every unit must be allocated before continuing - the total QTY TO GIVE must equal the ORDER QTY exactly (§11.4).",
                     "Allocation Incomplete",
@@ -87,6 +91,34 @@ namespace smpc_inventory_app.Pages.Purchasing.Modal
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        // SEARCH narrows the cards to those whose item or orders contain the
+        // text. Cards are hidden, never removed: DONE still reads every card, so
+        // quantities typed into a card that is filtered out are kept, and the
+        // every-unit-allocated check (spec 11.4) still covers it.
+        private void btn_search_Click(object sender, EventArgs e)
+        {
+            ApplySearch(textBox1.Text);
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+            e.SuppressKeyPress = true;
+            ApplySearch(textBox1.Text);
+        }
+
+        private void ApplySearch(string term)
+        {
+            term = (term ?? string.Empty).Trim();
+            flowLayoutPanel1.SuspendLayout();
+            foreach (Control control in flowLayoutPanel1.Controls)
+            {
+                if (control is OrderDistributionCard card)
+                    card.Visible = card.Matches(term);
+            }
+            flowLayoutPanel1.ResumeLayout();
         }
     }
 }
