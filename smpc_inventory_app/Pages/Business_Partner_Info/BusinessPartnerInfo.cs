@@ -634,7 +634,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 }
                 else
                 {
-                    // No user record for this owner - the OFFICE house account, or a sales
+                    // No user record for this owner - an owner with no user account yet, or a sales
                     // executive outside this user's department (Users holds only the current
                     // department). Show the stored name instead of leaving the PREVIOUS
                     // record's owner on screen.
@@ -2041,6 +2041,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             modalSetup.ShowDialog();
         }
 
+        // Fields that are blank but no longer block the save. Filled by the two
+        // validators below and asked about once, together, after every blocking check
+        // has passed - so the user is never made to answer this and then told about a
+        // real error.
+        private readonly List<string> _blankFieldWarnings = new List<string>();
+
+        // "No" returns to the form with nothing saved.
+        private bool ConfirmBlankFields()
+        {
+            if (_blankFieldWarnings.Count == 0) return true;
+
+            string fields = string.Join(", ", _blankFieldWarnings.Distinct());
+            return MessageBox.Show(
+                fields + " blank. Proceed?",
+                "SMPC SOFTWARE",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button1) == DialogResult.Yes;
+        }
+
         private bool AddBpiIdentificationType(Dictionary<string, dynamic> records, out string bpiMesssages)
         {
 
@@ -2057,10 +2077,30 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // then learned about TIN. Both Save handlers already combine the four
             // validators into one message; each validator now contributes all of
             // its own findings instead of just the first.
+            // The company NAME is the one field a partner record cannot exist
+            // without: nothing to file it under, nothing for 4.1.2's duplicate check
+            // to match on, nothing for a document to print. It is the only hard
+            // requirement here, and it was not being checked at all before.
+            if (string.IsNullOrWhiteSpace(cmb_name.Text))
+            {
+                bpiMesssages = "Company Name is required";
+                return false;
+            }
+
+            // Industries, Main Tel No. and TIN used to block. They now prompt instead
+            // (user decision, 2026-09-12): a partner is often created from a business
+            // card or a first phone call, before the TIN or the industry is known, and
+            // refusing the save only kept the record outside the system until someone
+            // had every field. Noted here, asked once in ConfirmBlankFields.
+            //
+            // This deviates from 4.1.3 and 4.1.4, which mark BRANCH INDUSTRY and TIN
+            // required - deliberately, on the user's instruction. Address (4.1.6) and
+            // Contacts (4.1.5) still block.
+            if (string.IsNullOrWhiteSpace(industries)) _blankFieldWarnings.Add("Industries");
+            if (string.IsNullOrWhiteSpace(mainTelNo)) _blankFieldWarnings.Add("Main Tel No.");
+            if (string.IsNullOrWhiteSpace(tin)) _blankFieldWarnings.Add("TIN");
+
             List<string> missing = new List<string>();
-            if (string.IsNullOrWhiteSpace(industries)) missing.Add("Industries is required");
-            if (string.IsNullOrWhiteSpace(mainTelNo)) missing.Add("Main Tel No. is required");
-            if (string.IsNullOrWhiteSpace(tin)) missing.Add("Tin No. is required");
 
             if (missing.Count > 0)
             {
@@ -2108,8 +2148,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // "Entity Type and Branch Industries are required" was also one message
             // covering two fields, so it never said which one was actually missing.
             List<string> problems = new List<string>();
-            if (entityType == null) problems.Add("Entity Type is required");
-            if (string.IsNullOrWhiteSpace(branchIndustries?.ToString())) problems.Add("Branch Industries is required");
+            // Blank entity type and blank branch industry prompt rather than block
+            // now - same decision and same reasoning as the header fields above.
+            if (entityType == null) _blankFieldWarnings.Add("Entity Type");
+            if (string.IsNullOrWhiteSpace(branchIndustries?.ToString())) _blankFieldWarnings.Add("Branch Industries");
+
+            // An INVALID number still blocks, and that is a different decision: 4.1.3
+            // says a blank branch telephone MUST NOT be rejected, but a number typed
+            // wrong is a mistake to correct, not information nobody has yet.
             if (!string.IsNullOrEmpty(branchTelNo?.ToString()) && !Regex.IsMatch(branchTelNo.ToString(), REGEXPATTERN))
                 problems.Add("Branch Tel No. is invalid");
 
@@ -2215,6 +2261,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             var Contacts = SaveContacts(false);
             var Address = SaveAddress(false);
 
+            // Cleared per attempt: a save the user backed out of must not carry its
+            // warnings into the next one.
+            _blankFieldWarnings.Clear();
+
             bool isBpiValidated = AddBpiIdentificationType(Bpi, out bpiGeneralMessage);
             bool isGeneralValidated = GeneralValidations(Generals, out generalMessage);
             bool isContactValidated = ContactsValidations(Contacts, out contactMessage);
@@ -2234,6 +2284,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 MessageBox.Show("Please address the following issues:\n\n• " + fullMessage, "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            // Every blocker is clear; ask about what is merely blank.
+            if (!ConfirmBlankFields()) return;
 
 
 
@@ -3647,6 +3700,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             //var Contacts = SaveContacts(false);
             //var Address = SaveAddress(false);
 
+            // Cleared per attempt: a save the user backed out of must not carry its
+            // warnings into the next one.
+            _blankFieldWarnings.Clear();
+
             bool isBpiValidated = AddBpiIdentificationType(Bpi, out bpiGeneralMessage);
             bool isGeneralValidated = GeneralValidations(Generals, out generalMessage);
             bool isContactValidated = ContactsValidations(Contacts, out contactMessage);
@@ -3666,6 +3723,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 MessageBox.Show("Please address the following issues:\n\n• " + fullMessage, "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            // Every blocker is clear; ask about what is merely blank.
+            if (!ConfirmBlankFields()) return;
 
 
             // Set parent id to 0
