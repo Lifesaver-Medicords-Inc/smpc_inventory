@@ -14,11 +14,16 @@ namespace smpc_inventory_app.Printing.Core
     // document supplies only its content (see ReceivingReportPrint), so the look
     // is set in one place.
     //
-    // The layout holds up to 8 columns and 4 signature blocks; a column shows
+    // The layout holds up to 10 columns and 4 signature blocks; a column shows
     // only when it has a header, a signature block only when it has a label.
+    //
+    // ColumnCount MUST match the number of H1..Hn parameters and C1..Cn dataset
+    // fields in HouseTemplate.rdlc. The layout was widened from 8 to 10 for the
+    // accounting list prints; leaving this at 8 supplied no H9/H10 and no C9/C10,
+    // which made every render on this template throw.
     public class HouseTemplateReport : IReportProvider
     {
-        public const int ColumnCount = 8;
+        public const int ColumnCount = 10;
         public const int SignatureCount = 4;
 
         // The company block exactly as the Purchase Order prints it. Inventory has

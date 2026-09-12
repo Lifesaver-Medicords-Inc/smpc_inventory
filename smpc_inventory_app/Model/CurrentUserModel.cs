@@ -64,11 +64,6 @@ namespace smpc_inventory_app.Model
     // renaming their partners in the same step.
     public static class SalesOwner
     {
-        // The house account on imported QERP partners. Not a person and has no
-        // login; its partners are visible to every sales executive, exactly like
-        // a partner with no owner at all.
-        public const string HouseAccount = "OFFICE";
-
         // Trims and collapses internal whitespace, so "J.  CESTONA " and
         // "J. CESTONA" compare equal.
         public static string Normalize(string name)
@@ -85,10 +80,12 @@ namespace smpc_inventory_app.Model
             return x.Length > 0 && string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
         }
 
-        // A partner every sales executive may see: no owner, or the house account.
+        // A partner with no owner at all - anyone who may edit BPI may edit it.
+        // OFFICE is NOT shared: it is a user of its own (management, 2026-09-11),
+        // so OFFICE partners belong to that user exactly like any other owner's.
         public static bool IsShared(string owner)
         {
-            return Normalize(owner).Length == 0 || Same(owner, HouseAccount);
+            return Normalize(owner).Length == 0;
         }
 
         // True when this owner value belongs to this user.
@@ -111,7 +108,7 @@ namespace smpc_inventory_app.Model
     //   anyone else  no
     //
     // Partner NAMES are always visible; these rules decide what a record shows.
-    // "Shared" is SalesOwner.IsShared - no owner, or the OFFICE house account.
+    // "Shared" is SalesOwner.IsShared - a record with no owner at all.
     // The Sales Manager's quotation customer picker is NOT widened by this: it
     // still lists only partners they own (Quotation.cs, spec 5.1).
     //
@@ -217,7 +214,6 @@ namespace smpc_inventory_app.Model
         public static string OwnerLabel(string owner)
         {
             if (SalesOwner.Normalize(owner).Length == 0) return "No sales executive";
-            if (SalesOwner.Same(owner, SalesOwner.HouseAccount)) return "Shared (" + SalesOwner.HouseAccount + ")";
             return "Sales executive: " + SalesOwner.Normalize(owner);
         }
     }
