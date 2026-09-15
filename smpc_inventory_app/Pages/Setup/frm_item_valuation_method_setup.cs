@@ -33,16 +33,24 @@ namespace smpc_inventory_app.Pages.Setup
         {
             try
             {
-                var data = await service.GetAsDataTable();
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    var data = await service.GetAsDataTable();
                 
 
-                if (data.Rows.Count > 0)
-                {
-                    dg_items.DataSource = data;
+                    if (data.Rows.Count > 0)
+                    {
+                        dg_items.DataSource = data;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No record found.");
+                    }
                 }
-                else
+                finally
                 {
-                    MessageBox.Show("No record found.");
+                    Helpers.Loading.HideLoading(this);
                 }
             }
             catch (Exception ex)
@@ -75,23 +83,31 @@ namespace smpc_inventory_app.Pages.Setup
                 data.Remove("id");
             }
 
-            response = isNewRecord
-                ? await service.Insert(data)
-                : await service.Update(data);
-
-            // Handle result
-            if (response.Success)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                Helpers.ResetControls(pnl_input);
-                GetData();
-                BtnToggle(false);
+                response = isNewRecord
+                    ? await service.Insert(data)
+                    : await service.Update(data);
+
+                // Handle result
+                if (response.Success)
+                {
+                    Helpers.ResetControls(pnl_input);
+                    GetData();
+                    BtnToggle(false);
+                }
+
+                string message = response.Success
+                    ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
+                    : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
+
+                Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
             }
-
-            string message = response.Success
-                ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
-                : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
-
-            Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
         private void BtnToggle(bool isEdit)
         {
@@ -137,18 +153,26 @@ namespace smpc_inventory_app.Pages.Setup
             {
                 var data = Helpers.GetControlsValues(pnl_input);
 
-                bool isSuccess = await service.Delete(data);
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    bool isSuccess = await service.Delete(data);
 
-                if (isSuccess)
-                {
-                    Helpers.ResetControls(pnl_input);
-                    Helpers.ShowDialogMessage("success", "Item deleted successfully.");
-                    GetData();
-                    BtnToggle(false);
+                    if (isSuccess)
+                    {
+                        Helpers.ResetControls(pnl_input);
+                        Helpers.ShowDialogMessage("success", "Item deleted successfully.");
+                        GetData();
+                        BtnToggle(false);
+                    }
+                    else
+                    {
+                        Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    }
                 }
-                else
+                finally
                 {
-                    Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    Helpers.Loading.HideLoading(this);
                 }
             }
         }

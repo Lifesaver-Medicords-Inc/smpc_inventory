@@ -34,9 +34,17 @@ namespace Inventory_SMPC.Pages.Setup
 
         private async void GetPaymentTerms()
         {
-            DataTable data = await PaymentTermsServices.GetAsDatatable();
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                DataTable data = await PaymentTermsServices.GetAsDatatable();
 
-            dataBinding_payment_terms.DataSource = data;
+                dataBinding_payment_terms.DataSource = data;
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
         }
 
@@ -84,17 +92,25 @@ namespace Inventory_SMPC.Pages.Setup
 
             if (result == DialogResult.Yes)
             {
-                bool isSuccess = await PaymentTermsServices.Delete(data);
-
-                if (!isSuccess)
+                Helpers.Loading.ShowLoading(this);
+                try
                 {
-                    Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
-                    return;
+                    bool isSuccess = await PaymentTermsServices.Delete(data);
+
+                    if (!isSuccess)
+                    {
+                        Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
+                        return;
+                    }
+                    Helpers.ResetControls(panel_records);
+                    Helpers.ShowDialogMessage("success", "Delete Payment Terms Succesfully");
+                    GetPaymentTerms();
+                    BtnToogle(false);
                 }
-                Helpers.ResetControls(panel_records);
-                Helpers.ShowDialogMessage("success", "Delete Payment Terms Succesfully");
-                GetPaymentTerms();
-                BtnToogle(false);
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
         }
 
@@ -127,31 +143,39 @@ namespace Inventory_SMPC.Pages.Setup
 
             var data = Helpers.GetControlsValues(panel_records);
 
-            if (txt_id.Text.Equals(""))
+            Helpers.Loading.ShowLoading(this);
+            try
             {
+                if (txt_id.Text.Equals(""))
+                {
 
-                data.Remove("id");
-                data.Add("is_selected", false);
-                response = await PaymentTermsServices.Insert(data);
-                message = response.Success ? "Insert Data Succesfully" : "Failed to add payment terms\n" + response.message;
+                    data.Remove("id");
+                    data.Add("is_selected", false);
+                    response = await PaymentTermsServices.Insert(data);
+                    message = response.Success ? "Insert Data Succesfully" : "Failed to add payment terms\n" + response.message;
+                }
+                else
+                {
+
+                    response = await PaymentTermsServices.Update(data);
+                    message = response.Success ? "Update Data Succesfully" : "Failed to update payment terms";
+                }
+
+                if (!response.Success)
+                {
+                    Helpers.ShowDialogMessage("error", message);
+                    return;
+                }
+
+                Helpers.ShowDialogMessage("success", message);
+                Helpers.ResetControls(panel_records);
+                GetPaymentTerms();
+                BtnToogle(false);
             }
-            else
+            finally
             {
-
-                response = await PaymentTermsServices.Update(data);
-                message = response.Success ? "Update Data Succesfully" : "Failed to update payment terms";
+                Helpers.Loading.HideLoading(this);
             }
-
-            if (!response.Success)
-            {
-                Helpers.ShowDialogMessage("error", message);
-                return;
-            }
-
-            Helpers.ShowDialogMessage("success", message);
-            Helpers.ResetControls(panel_records);
-            GetPaymentTerms();
-            BtnToogle(false);
         }
 
         private void panel_header_Paint(object sender, PaintEventArgs e)

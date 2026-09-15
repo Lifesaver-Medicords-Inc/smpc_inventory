@@ -179,12 +179,20 @@ namespace smpc_inventory_app.Pages.Inventory
 
         private async void btn_close_Click(object sender, EventArgs e)
         {
-            _isEditing = false;
-            await DisableEditMode();
-            SetEditableColumns(false);
-            cmb_ref_doc.DropDownStyle = ComboBoxStyle.DropDown;
-            await LoadReceivingReports();
-            HideAllRowCombos();
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                _isEditing = false;
+                await DisableEditMode();
+                SetEditableColumns(false);
+                cmb_ref_doc.DropDownStyle = ComboBoxStyle.DropDown;
+                await LoadReceivingReports();
+                HideAllRowCombos();
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private async Task DisableEditMode()
@@ -563,7 +571,7 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_main, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_main);
                 await LoadPODoc();
                 await LoadWarehouse();
                 await LoadReceivingReports();

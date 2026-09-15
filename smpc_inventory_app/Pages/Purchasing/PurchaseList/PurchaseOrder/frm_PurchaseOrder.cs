@@ -73,6 +73,12 @@ namespace smpc_inventory_app.Pages.Purchasing
         }
         private async void FetchExistingPurchaseOrders()
         {
+            await FetchExistingPurchaseOrdersAsync();
+        }
+
+        // Awaitable, so a save can keep the loading screen up until the list it reloads is back.
+        private async System.Threading.Tasks.Task FetchExistingPurchaseOrdersAsync()
+        {
             var response = await RequestToApi<ApiResponseModel<PurchaseOrdersWithDetails>>.Get(ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);
             records = response.Data;
 
@@ -665,61 +671,69 @@ namespace smpc_inventory_app.Pages.Purchasing
         private async void SavePurchaseorder()
         {
             // Fetch latest purchase orders
-            var newresponse = await RequestToApi<ApiResponseModel<PurchaseOrdersWithDetails>>.Get(ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);
-            records = newresponse.Data;
-            updatedpurchaseorder = JsonHelper.ToDataTable(records.purchaseorder);
-
-            // Collect order header values
-
-            var (order, isNewRecord) = GetPurchaseOrder();
-
-            // Extract order detail rows
-            var (orderRow, statusUpdateRow, orderType) = GetPurchaseOrderDetails();
-
-            // Validate order type
-            if (orderType != "SO" && orderType != "PR")
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                Helpers.ShowDialogMessage("error", "Invalid order type selected.");
-                return;
+                var newresponse = await RequestToApi<ApiResponseModel<PurchaseOrdersWithDetails>>.Get(ENUM_ENDPOINT.PURCHASING_PURCHASE_ORDER);
+                records = newresponse.Data;
+                updatedpurchaseorder = JsonHelper.ToDataTable(records.purchaseorder);
+
+                // Collect order header values
+
+                var (order, isNewRecord) = GetPurchaseOrder();
+
+                // Extract order detail rows
+                var (orderRow, statusUpdateRow, orderType) = GetPurchaseOrderDetails();
+
+                // Validate order type
+                if (orderType != "SO" && orderType != "PR")
+                {
+                    Helpers.ShowDialogMessage("error", "Invalid order type selected.");
+                    return;
+                }
+
+                // Prepare payload
+                order["purchase_order_details"] = orderRow;
+                string detailKey = orderType == "SO" ? "sales_order_details" : "purchase_requisition_details";
+                order[detailKey] = statusUpdateRow;
+
+                // Insert or update
+                bool isValidId = int.TryParse(txt_id.Text, out int recordId);
+                bool isInsert = isNewRecord || !isValidId;
+                order["id"] = recordId;
+
+                if (isInsert)
+                    order.Remove("id");
+
+                var response = isInsert
+                    ? await PurchaseOrderServices.Insert(order)
+                    : await PurchaseOrderServices.Update(order);
+
+                if (!response.Success)
+                {
+                    Helpers.ShowDialogMessage("error", $"Failed to {(isInsert ? "save" : "update")} Purchase Order.");
+                    return;
+                }
+                // UI feedback
+                Helpers.ShowDialogMessage("success", $"Purchase Order {(isInsert ? "saved" : "updated")} successfully.");
+                BtnToggle(false);
+
+                if (isInsert)
+                {
+                    if (this.FindForm() is SMPC layout)
+                        layout.RemoveTabContaining(this);
+                }
+                else
+                {
+                    Helpers.SetInputsReadOnlyState(new[] { pnl_header, pnl_footer }, true);
+
+                    await FetchExistingPurchaseOrdersAsync();
+                    selectedRecord = isNewRecord ? purchaseorder.Rows.Count - 1 : selectedRecord;
+                }
             }
-
-            // Prepare payload
-            order["purchase_order_details"] = orderRow;
-            string detailKey = orderType == "SO" ? "sales_order_details" : "purchase_requisition_details";
-            order[detailKey] = statusUpdateRow;
-
-            // Insert or update
-            bool isValidId = int.TryParse(txt_id.Text, out int recordId);
-            bool isInsert = isNewRecord || !isValidId;
-            order["id"] = recordId;
-
-            if (isInsert)
-                order.Remove("id");
-
-            var response = isInsert
-                ? await PurchaseOrderServices.Insert(order)
-                : await PurchaseOrderServices.Update(order);
-
-            if (!response.Success)
+            finally
             {
-                Helpers.ShowDialogMessage("error", $"Failed to {(isInsert ? "save" : "update")} Purchase Order.");
-                return;
-            }
-            // UI feedback
-            Helpers.ShowDialogMessage("success", $"Purchase Order {(isInsert ? "saved" : "updated")} successfully.");
-            BtnToggle(false);
-
-            if (isInsert)
-            {
-                if (this.FindForm() is SMPC layout)
-                    layout.RemoveTabContaining(this);
-            }
-            else
-            {
-                Helpers.SetInputsReadOnlyState(new[] { pnl_header, pnl_footer }, true);
-
-                FetchExistingPurchaseOrders();
-                selectedRecord = isNewRecord ? purchaseorder.Rows.Count - 1 : selectedRecord;
+                Helpers.Loading.HideLoading(this);
             }
         }
 

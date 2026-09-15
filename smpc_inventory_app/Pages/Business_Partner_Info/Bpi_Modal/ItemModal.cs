@@ -34,12 +34,17 @@ namespace smpc_sales_app.Pages
         private void InitializeSearchBox()
         {
             txt_search = Helpers.CreateSearchBox(SearchPlaceholder, txt_search_TextChanged);
-            // Docked into pnl_dgv (not the form directly): dg_ItemList is Dock=Fill
-            // inside that same panel, so a Dock=Top sibling added here sits above it
-            // and the grid automatically shrinks to fit below - no manual layout math
-            // needed, and no risk of landing above pnl_title at the form level.
+            // Docked into pnl_dgv (not the form directly), above dg_ItemList (Dock=Fill).
+            //
+            // SendToBack, not BringToFront. WinForms lays docked controls out from the
+            // back of the z-order to the front, and a Fill control takes whatever space
+            // is left when its turn comes. BringToFront put the search box at the front,
+            // so the grid docked first and filled the whole panel, and the search box
+            // was then laid over the grid's top edge - hiding its header row
+            // (user-reported 2026-09-14). At the back, the box takes the top strip
+            // first and the grid fills the space below it.
             pnl_dgv.Controls.Add(txt_search);
-            txt_search.BringToFront();
+            txt_search.SendToBack();
         }
 
         private void txt_search_TextChanged(object sender, EventArgs e)
@@ -63,24 +68,32 @@ namespace smpc_sales_app.Pages
 
         private async void GetItemList()
         {
-            var data = await ItemListBpiServices.GetAsDatatable();
-
-            // Multi-select (requested): a real bool column, not left typeless - the
-            // "selected" DataGridViewCheckBoxColumn needs a bool-typed source to bind
-            // cleanly. Columns.Add's DefaultValue only applies to rows created via
-            // NewRow() afterwards, not the rows already in `data` from the API
-            // response, so every existing row is set explicitly to false too.
-            if (data != null && !data.Columns.Contains("Selected"))
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                data.Columns.Add("Selected", typeof(bool)).DefaultValue = false;
-                foreach (DataRow row in data.Rows)
-                {
-                    row["Selected"] = false;
-                }
-            }
+                var data = await ItemListBpiServices.GetAsDatatable();
 
-            _allItems = data;
-            dg_ItemList.DataSource = data;
+                // Multi-select (requested): a real bool column, not left typeless - the
+                // "selected" DataGridViewCheckBoxColumn needs a bool-typed source to bind
+                // cleanly. Columns.Add's DefaultValue only applies to rows created via
+                // NewRow() afterwards, not the rows already in `data` from the API
+                // response, so every existing row is set explicitly to false too.
+                if (data != null && !data.Columns.Contains("Selected"))
+                {
+                    data.Columns.Add("Selected", typeof(bool)).DefaultValue = false;
+                    foreach (DataRow row in data.Rows)
+                    {
+                        row["Selected"] = false;
+                    }
+                }
+
+                _allItems = data;
+                dg_ItemList.DataSource = data;
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private void ItemModal_Load(object sender, EventArgs e)

@@ -35,9 +35,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info.Bpi_Modal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1221, 711);
             this.Name = "ItemEntryModal";
-            this.Text = "ItemEntryModal";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Item Entry";
             this.Load += new System.EventHandler(this.ItemEntryModal_Load);
             this.ResumeLayout(false);
 

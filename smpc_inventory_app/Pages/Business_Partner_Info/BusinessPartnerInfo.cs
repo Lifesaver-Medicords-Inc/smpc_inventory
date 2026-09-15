@@ -128,7 +128,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 await GetPositionSetup();
 
                 BtnToggle(false);
-                GetBpi();
+                // Awaited, unlike every other caller: this is the one that the
+                // loading screen is waiting on. GetBpi() itself is async void (six
+                // other call sites fire it and forget), so the loading state used to
+                // lift here while the partner list was still in flight - the form
+                // came back enabled with nothing in it yet.
+                await GetBpiAsync();
             }
             catch (Exception ex)
             {
@@ -139,9 +144,24 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 SetLoadingState(false);
             }
         }
+        // The one standard loading screen (spec 2.1), same as every other module.
+        //
+        // This used to disable only toolStrip1 and set a wait cursor: no overlay, no
+        // "Loading... Please wait", and the whole form - tabs, grids, every field -
+        // stayed live and editable while eight setup fetches and the partner list
+        // were still arriving. Someone could start typing into a record that was
+        // about to be replaced by the bind.
         private void SetLoadingState(bool isLoading)
         {
-            toolStrip1.Enabled = !isLoading;
+            if (isLoading)
+            {
+                Helpers.Loading.ShowLoading(this);
+            }
+            else
+            {
+                Helpers.Loading.HideLoading(this);
+            }
+
             this.Cursor = isLoading ? Cursors.WaitCursor : Cursors.Default;
         }
         public void HideButton()
@@ -272,7 +292,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         }
 
+        // Fire-and-forget entry point, kept so the six callers that do not need to
+        // wait stay exactly as they were.
         private async void GetBpi()
+        {
+            await GetBpiAsync();
+        }
+
+        private async Task GetBpiAsync()
         {
             var response = await RequestToApi<ApiResponseModel<Bpi_Class>>.Get(ENUM_ENDPOINT.BPI);
             records = response.Data;
@@ -660,12 +687,22 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 }
 
 
-                cmb_transaction_type.SelectedValue = records.general[this.selectedRecord].transaction_type;
-                cmb_class_name.SelectedItem = records.general[this.selectedRecord].class_name;
+                // TRANSACTION TYPE, CLASS and SOCIAL belong to the company's main branch. They were
+                // read from records.general[selectedRecord] - the company's position used as an
+                // index into the list of every branch, which lands on another company's branch (or
+                // past the end) once any earlier company has more than one.
+                int mainBranchBpiId = int.Parse(bpi.Rows[this.selectedRecord]["id"].ToString());
+                var mainBranch = records.general.FirstOrDefault(g => g.general_based_id == mainBranchBpiId && g.is_main)
+                              ?? records.general.FirstOrDefault(g => g.general_based_id == mainBranchBpiId);
+                if (mainBranch != null)
+                {
+                    cmb_transaction_type.SelectedValue = mainBranch.transaction_type;
+                    cmb_class_name.SelectedItem = mainBranch.class_name;
+                    cmb_social.SelectedValue = mainBranch.social_id;
+                    cmb_social.SelectedItem = mainBranch.social_id;
+                }
 
                 cmb_name.SelectedItem = listOfNames[this.selectedRecord];
-                cmb_social.SelectedValue = records.general[this.selectedRecord].social_id;
-                cmb_social.SelectedItem = records.general[this.selectedRecord].social_id;
 
                 //Getting the List of Ids to match in my getmodal
 
@@ -3771,62 +3808,70 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             Bpi.Add("accreditations", Accreditations);
             RemoveAllId(Bpi, Generals, Finance);
 
-            var response = await BpiServices.Insert(Bpi);
-
-            var data = response.Data;
-
-            if (response.Success)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
+                var response = await BpiServices.Insert(Bpi);
 
-                MessageBox.Show("Bpi record added Succesfully", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var data = response.Data;
 
-                // Bug #269: entityCount (used by GetEntityRecordCount to build the next
-                // C#/S# code) is only ever fetched once, at form load, and was never
-                // refreshed after a save - so every subsequent "New" recomputed the code
-                // from the same stale count and kept generating C#1/S#1. Refresh it right
-                // after a successful insert so the next New reflects the record just created.
-                await GetEntityCount();
-
-                btn_add_page.Enabled = true;
-                txt_id.Text = data["id"];
-
-                Generals.Add("general_id", data["general"]["id"].ToString());
-                Generals.Add("general_based_id", data["general"]["based_id"].ToString());
-                Generals["general_id"] = int.Parse(Generals["general_id"].ToString());
-                Generals["general_based_id"] = int.Parse(Generals["general_based_id"].ToString());
-                Generals.Add("branch_industry_ids", Generals["branch_industry_id"]);
-                Generals.Add("entity_ids", Generals["entity_type_id"]);
-                Generals.Add("branch_sales_id", Generals["sales_id"]);
-
-
-                // Ensure entity_type_id exists and is a list of IDs
-                GeneralMultiSelectText("entity_type_id", "entity_names", Generals, CacheData.Entity);
-                GeneralMultiSelectText("branch_industry_id", "branch_industry_names", Generals, CacheData.BranchIndustries);
-
-                DataRow rows = AddDictionaryToDataTable(general, Generals);
-                general.Rows.Add(rows);
-
-                DataView dataViewGeneral = new DataView(general);
-
-                if (dataViewGeneral.Count != 0)
+                if (response.Success)
                 {
-                    dataViewGeneral.RowFilter = "general_based_id = '" + txt_id.Text + "'";
 
-                    txt_branch_name.Visible = dataViewGeneral.Count > 1;
-                    lbl_branch_name.Visible = dataViewGeneral.Count > 1;
+                    MessageBox.Show("Bpi record added Succesfully", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Bug #269: entityCount (used by GetEntityRecordCount to build the next
+                    // C#/S# code) is only ever fetched once, at form load, and was never
+                    // refreshed after a save - so every subsequent "New" recomputed the code
+                    // from the same stale count and kept generating C#1/S#1. Refresh it right
+                    // after a successful insert so the next New reflects the record just created.
+                    await GetEntityCount();
+
+                    btn_add_page.Enabled = true;
+                    txt_id.Text = data["id"];
+
+                    Generals.Add("general_id", data["general"]["id"].ToString());
+                    Generals.Add("general_based_id", data["general"]["based_id"].ToString());
+                    Generals["general_id"] = int.Parse(Generals["general_id"].ToString());
+                    Generals["general_based_id"] = int.Parse(Generals["general_based_id"].ToString());
+                    Generals.Add("branch_industry_ids", Generals["branch_industry_id"]);
+                    Generals.Add("entity_ids", Generals["entity_type_id"]);
+                    Generals.Add("branch_sales_id", Generals["sales_id"]);
+
+
+                    // Ensure entity_type_id exists and is a list of IDs
+                    GeneralMultiSelectText("entity_type_id", "entity_names", Generals, CacheData.Entity);
+                    GeneralMultiSelectText("branch_industry_id", "branch_industry_names", Generals, CacheData.BranchIndustries);
+
+                    DataRow rows = AddDictionaryToDataTable(general, Generals);
+                    general.Rows.Add(rows);
+
+                    DataView dataViewGeneral = new DataView(general);
+
+                    if (dataViewGeneral.Count != 0)
+                    {
+                        dataViewGeneral.RowFilter = "general_based_id = '" + txt_id.Text + "'";
+
+                        txt_branch_name.Visible = dataViewGeneral.Count > 1;
+                        lbl_branch_name.Visible = dataViewGeneral.Count > 1;
+                    }
+
+                    DataTable filteredGeneral = dataViewGeneral.ToTable();
+                    // GetAllBpiBranch(filteredGeneral);
+                    BtnToggle(false);
+                    EnableDisabledChildPanel(false);
+
+                    await GetBpiAsync();
+
                 }
-
-                DataTable filteredGeneral = dataViewGeneral.ToTable();
-                // GetAllBpiBranch(filteredGeneral);
-                BtnToggle(false);
-                EnableDisabledChildPanel(false);
-
-                GetBpi();
-
+                else
+                {
+                    Helpers.ShowDialogMessage("error", string.IsNullOrEmpty(response.message) ? "Operation Fail" : response.message);
+                }
             }
-            else
+            finally
             {
-                Helpers.ShowDialogMessage("error", string.IsNullOrEmpty(response.message) ? "Operation Fail" : response.message);
+                Helpers.Loading.HideLoading(this);
             }
         }
 
@@ -3971,23 +4016,31 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             Bpi.Add("address", modifiedAddress);
             Bpi.Add("accreditations", modifiedAccreditations);
 
-            var response = await BpiServices.Update(Bpi);
-
-            if (response.Success)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
+                var response = await BpiServices.Update(Bpi);
 
-                MessageBox.Show("Bpi record updated succesfully.", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                BtnToggle(false);
+                if (response.Success)
+                {
 
-                GetBpi();
+                    MessageBox.Show("Bpi record updated succesfully.", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    BtnToggle(false);
+
+                    await GetBpiAsync();
+                }
+                else
+                {
+                    // Bug #263: show the actual reason from the API instead of a bare generic
+                    // message, so the user knows which field/validation to fix.
+                    string detail = string.IsNullOrWhiteSpace(response.message) ? "Please check the required fields and try again." : response.message;
+                    MessageBox.Show("Bpi record update failed.\n" + detail, "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
-            else
+            finally
             {
-                // Bug #263: show the actual reason from the API instead of a bare generic
-                // message, so the user knows which field/validation to fix.
-                string detail = string.IsNullOrWhiteSpace(response.message) ? "Please check the required fields and try again." : response.message;
-                MessageBox.Show("Bpi record update failed.\n" + detail, "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                Helpers.Loading.HideLoading(this);
             }
         }
 

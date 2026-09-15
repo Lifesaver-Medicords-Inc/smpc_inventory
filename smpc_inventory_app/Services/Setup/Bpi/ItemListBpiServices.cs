@@ -21,7 +21,5 @@ namespace smpc_inventory_app.Services.Setup.Bpi
             return entityType;
 
         }
-
-
     }
 }

@@ -52,7 +52,7 @@ namespace smpc_inventory_app.Pages
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_production, "Fetching pending production reports...");
+                Helpers.Loading.ShowLoading(dgv_production);
                 _allReports = await _service.GetAsList() ?? new List<ProductionReportModel>();
                 ApplyFilter();
             }

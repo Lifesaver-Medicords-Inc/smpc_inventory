@@ -618,7 +618,15 @@ namespace smpc_inventory_app.Pages.Setup
 
             if (await ConfirmDeleteAsync())
             {
-                await DeleteWarehouse();
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    await DeleteWarehouse();
+                }
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
 
             btn_delete.Enabled = true;
@@ -697,7 +705,15 @@ namespace smpc_inventory_app.Pages.Setup
                 dg_areas.EndEdit(); // commits/save dg
             }
 
-            await saveButtonFunction();
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                await saveButtonFunction();
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
 
@@ -832,16 +848,24 @@ namespace smpc_inventory_app.Pages.Setup
 
         private async void btn_cancel_Click(object sender, EventArgs e)
         {
-            if (!(WarehouseNameTable == null || WarehouseNameTable.Rows.Count == 0))
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                await GetData();
+                if (!(WarehouseNameTable == null || WarehouseNameTable.Rows.Count == 0))
+                {
+                    await GetData();
 
-                NextAndPrevBtn();
-                BtnToggleEnabillity("cancel"); 
+                    NextAndPrevBtn();
+                    BtnToggleEnabillity("cancel"); 
+                }
+                else
+                {
+                    BtnToggleEnabillity("empty");
+                }
             }
-            else
+            finally
             {
-                BtnToggleEnabillity("empty");
+                Helpers.Loading.HideLoading(this);
             }
         }
 

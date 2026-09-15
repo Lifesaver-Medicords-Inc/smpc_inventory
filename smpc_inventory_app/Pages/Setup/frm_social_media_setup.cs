@@ -40,8 +40,16 @@ namespace smpc_inventory_app.Pages.Setup
         private async void GetSocialMedia()
         {
            
-            var data = await SocialMediaServices.GetAsDatatable();
-            dg_social_media.DataSource = data;
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                var data = await SocialMediaServices.GetAsDatatable();
+                dg_social_media.DataSource = data;
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
         }
         private bool ValidateField(out string messages)
@@ -96,17 +104,25 @@ namespace smpc_inventory_app.Pages.Setup
 
             if (result == DialogResult.Yes)
             {
-                bool isSuccess = await SocialMediaServices.Delete(data);
-
-                if (!isSuccess)
+                Helpers.Loading.ShowLoading(this);
+                try
                 {
-                    Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
-                    return;
+                    bool isSuccess = await SocialMediaServices.Delete(data);
+
+                    if (!isSuccess)
+                    {
+                        Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
+                        return;
+                    }
+                    Helpers.ResetControls(panel_records);
+                    Helpers.ShowDialogMessage("success", "Delete Social Media Name Succesfully");
+                    GetSocialMedia();
+                    BtnToogle(false);
                 }
-                Helpers.ResetControls(panel_records);
-                Helpers.ShowDialogMessage("success", "Delete Social Media Name Succesfully");
-                GetSocialMedia();
-                BtnToogle(false);
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
         }
 
@@ -128,28 +144,36 @@ namespace smpc_inventory_app.Pages.Setup
 
             var data = Helpers.GetControlsValues(panel_records);
 
-            if (txt_id.Text.Equals(""))
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                data.Remove("id");
-                response = await SocialMediaServices.Insert(data);
-                message = response.Success ? "Insert Data Succesfully" : "Failed to add social media name \n" + response.message;
-            }
-            else
-            {
-                response = await SocialMediaServices.Update(data);
-                message = response.Success ? "Update Data Succesfully" : "Failed to update social media name";
-            }
+                if (txt_id.Text.Equals(""))
+                {
+                    data.Remove("id");
+                    response = await SocialMediaServices.Insert(data);
+                    message = response.Success ? "Insert Data Succesfully" : "Failed to add social media name \n" + response.message;
+                }
+                else
+                {
+                    response = await SocialMediaServices.Update(data);
+                    message = response.Success ? "Update Data Succesfully" : "Failed to update social media name";
+                }
 
-            if (!response.Success)
-            {
-                Helpers.ShowDialogMessage("error", message);
-                return;
-            }
+                if (!response.Success)
+                {
+                    Helpers.ShowDialogMessage("error", message);
+                    return;
+                }
 
-            Helpers.ShowDialogMessage("success", message);
-            Helpers.ResetControls(panel_records);
-            GetSocialMedia();
-            BtnToogle(false);
+                Helpers.ShowDialogMessage("success", message);
+                Helpers.ResetControls(panel_records);
+                GetSocialMedia();
+                BtnToogle(false);
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
         }
 

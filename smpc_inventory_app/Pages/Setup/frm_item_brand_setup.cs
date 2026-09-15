@@ -54,9 +54,17 @@ namespace Inventory_SMPC.Pages.Setup
 
         private async void GetBrand()
         {
-            var data = await ItemBrandServices.GetAsDatatable();
-            //dg_brands.DataSource = data;
-            this.dataSource.DataSource = data;
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                var data = await ItemBrandServices.GetAsDatatable();
+                //dg_brands.DataSource = data;
+                this.dataSource.DataSource = data;
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private void panel_records_Paint(object sender, PaintEventArgs e)
@@ -145,23 +153,31 @@ namespace Inventory_SMPC.Pages.Setup
                 data.Remove("id");
             }
 
-            response = isNewRecord
-                ? await ItemBrandServices.Insert(data)
-                : await ItemBrandServices.Update(data);
-
-            // Handle result
-            if (response.Success)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                Helpers.ResetControls(pnl_input);
-                GetBrand();
-                BtnToggle(false);
+                response = isNewRecord
+                    ? await ItemBrandServices.Insert(data)
+                    : await ItemBrandServices.Update(data);
+
+                // Handle result
+                if (response.Success)
+                {
+                    Helpers.ResetControls(pnl_input);
+                    GetBrand();
+                    BtnToggle(false);
+                }
+
+                string message = response.Success
+                    ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
+                    : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
+
+                Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
             }
-
-            string message = response.Success
-                ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
-                : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
-
-            Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
         }
 
@@ -178,18 +194,26 @@ namespace Inventory_SMPC.Pages.Setup
             {
                 var data = Helpers.GetControlsValues(pnl_input);
 
-                bool isSuccess = await ItemBrandServices.Delete(data);
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    bool isSuccess = await ItemBrandServices.Delete(data);
 
-                if (isSuccess)
-                {
-                    Helpers.ResetControls(pnl_input);
-                    Helpers.ShowDialogMessage("success", "Item deleted successfully.");
-                    GetBrand();
-                    BtnToggle(false);
+                    if (isSuccess)
+                    {
+                        Helpers.ResetControls(pnl_input);
+                        Helpers.ShowDialogMessage("success", "Item deleted successfully.");
+                        GetBrand();
+                        BtnToggle(false);
+                    }
+                    else
+                    {
+                        Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    }
                 }
-                else
+                finally
                 {
-                    Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    Helpers.Loading.HideLoading(this);
                 }
             }
         }

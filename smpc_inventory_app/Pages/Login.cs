@@ -1,4 +1,4 @@
-﻿using smpc_app.Services.Helpers;
+using smpc_app.Services.Helpers;
 using smpc_inventory_app.Data;
 using smpc_inventory_app.Services.Auth;
 using smpc_inventory_app.Services.Setup.Item;
@@ -17,7 +17,7 @@ namespace smpc_inventory_app.Pages
     public partial class Login : Form
     {
         public Login()
-        { 
+        {
             InitializeComponent();
         }
 
@@ -56,7 +56,7 @@ namespace smpc_inventory_app.Pages
         // Phase 4.6 (UI uniformity): required-field validation added here, matching the
         // other 5 apps' Login - this is the actual button handler for a standalone
         // Inventory-app login, so this is where the raw textbox values still need
-        // checking before LoginFromSales (also reachable directly from Sales.cs's own
+        // checking before LoginFromSalesAsync (also reachable directly from Sales.cs's own
         // Login, already-validated there) ever builds a request out of them.
         private async void btn_login_Click_1(object sender, EventArgs e)
         {
@@ -77,10 +77,32 @@ namespace smpc_inventory_app.Pages
             data.Add("motherboard_serial_no", Helpers.GetSerialNumber());
             data.Add("machine_name", Environment.MachineName);
 
-            LoginFromSales(data);
-
+            // The standard loading screen (spec 2.1) stays over the login until signing in
+            // finishes. It also blocks a second click from signing in twice.
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                await LoginFromSalesAsync(data);
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Error(ex, "Login failed");
+                Helpers.ShowDialogMessage("error", "Something went wrong. Please try again.");
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
+
+        // Kept for any caller that starts the sign-in without waiting for it;
+        // LoginFromSalesAsync is the one to await.
         public async void LoginFromSales(Dictionary<string, dynamic> data)
+        {
+            await LoginFromSalesAsync(data);
+        }
+
+        public async Task LoginFromSalesAsync(Dictionary<string, dynamic> data)
         {
             var response = await AuthServices.Login(data);
 

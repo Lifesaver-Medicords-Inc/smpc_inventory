@@ -295,20 +295,28 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
 
         private async void btn_cancel_Click(object sender, EventArgs e)
         {
-            await SetEditMode(false);
-
-            // If no records exist, clear everything
-            if (_receivingReports == null || !_receivingReports.Any())
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                ClearReceivingReportUI();
-                return;
+                await SetEditMode(false);
+
+                // If no records exist, clear everything
+                if (_receivingReports == null || !_receivingReports.Any())
+                {
+                    ClearReceivingReportUI();
+                    return;
+                }
+
+                // Return to the previous record index if available
+                if (_previousRRIndex >= 0 && _receivingReports != null && _receivingReports.Count > 0)
+                {
+                    _currentRRIndex = _previousRRIndex;
+                    await LoadReceivingReports();
+                }
             }
-
-            // Return to the previous record index if available
-            if (_previousRRIndex >= 0 && _receivingReports != null && _receivingReports.Count > 0)
+            finally
             {
-                _currentRRIndex = _previousRRIndex;
-                await LoadReceivingReports();
+                Helpers.Loading.HideLoading(this);
             }
         }
 
@@ -533,7 +541,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_main, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_main);
                 await LoadReceivingReports();
             }
             catch (Exception ex)

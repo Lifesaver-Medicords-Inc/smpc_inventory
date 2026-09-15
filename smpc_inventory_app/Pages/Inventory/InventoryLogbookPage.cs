@@ -36,7 +36,7 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_inventory_item, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_inventory_item);
                 await LoadData();
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_inventory_item, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_inventory_item);
 
                 await BindWarehouseData();
             }

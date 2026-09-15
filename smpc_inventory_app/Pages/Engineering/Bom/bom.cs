@@ -501,7 +501,7 @@ namespace smpc_inventory_app.Pages
 
         private async void LoadAll()
         {
-            Helpers.Loading.ShowLoading(dg_bom, "Fetching data...");
+            Helpers.Loading.ShowLoading(dg_bom);
 
             GetBomItemList();
             GetAllBomItemList();

@@ -694,34 +694,42 @@ namespace smpc_inventory_app.Pages
         {
             try
             {
-                foreach (DataGridViewRow row in dg_boq.Rows)
+                Helpers.Loading.ShowLoading(this);
+                try
                 {
-                    if (row.IsNewRow) continue;
-
-                    if (row.DataBoundItem is BoqDetailModel model)
+                    foreach (DataGridViewRow row in dg_boq.Rows)
                     {
-                        if (string.IsNullOrWhiteSpace(model.remarks) && string.IsNullOrWhiteSpace(model.notes))
-                            continue;
+                        if (row.IsNewRow) continue;
 
-                        var data = new Dictionary<string, dynamic>
-                {
-                    { "remarks", model.remarks ?? "" },
-                    { "notes", model.notes ?? "" }
-                };
-
-                        var response = await BoqNotesServices.Insert(data);
-
-                        Console.WriteLine($"Response: Success={response.Success}, Message={response.Message}");
-
-                        if (!response.Success)
+                        if (row.DataBoundItem is BoqDetailModel model)
                         {
-                            MessageBox.Show($"Save failed: {response.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
+                            if (string.IsNullOrWhiteSpace(model.remarks) && string.IsNullOrWhiteSpace(model.notes))
+                                continue;
+
+                            var data = new Dictionary<string, dynamic>
+                    {
+                        { "remarks", model.remarks ?? "" },
+                        { "notes", model.notes ?? "" }
+                    };
+
+                            var response = await BoqNotesServices.Insert(data);
+
+                            Console.WriteLine($"Response: Success={response.Success}, Message={response.Message}");
+
+                            if (!response.Success)
+                            {
+                                MessageBox.Show($"Save failed: {response.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
                         }
                     }
-                }
 
-                MessageBox.Show("Saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
             catch (Exception ex)
             {

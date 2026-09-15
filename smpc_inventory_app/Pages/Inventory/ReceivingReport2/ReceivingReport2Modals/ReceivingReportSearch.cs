@@ -62,7 +62,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReport2.ReceivingReport2Mo
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_rr_search, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_rr_search);
                 await ReceivingReports();
             }
             catch (Exception ex)

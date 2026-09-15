@@ -83,17 +83,25 @@ namespace smpc_inventory_app.Pages.Setup
 
             if (result == DialogResult.Yes)
             {
-                bool isSuccess = await EntityServices.Delete(data);
-
-                if (!isSuccess)
+                Helpers.Loading.ShowLoading(this);
+                try
                 {
-                    Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
-                    return;
+                    bool isSuccess = await EntityServices.Delete(data);
+
+                    if (!isSuccess)
+                    {
+                        Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
+                        return;
+                    }
+                    Helpers.ResetControls(panel_records);
+                    Helpers.ShowDialogMessage("success", "Delete Entity Type Succesfully");
+                    GetEntityType();
+                    BtnToogle(false);
                 }
-                Helpers.ResetControls(panel_records);
-                Helpers.ShowDialogMessage("success", "Delete Entity Type Succesfully");
-                GetEntityType();
-                BtnToogle(false);
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
 
         }
@@ -134,28 +142,36 @@ namespace smpc_inventory_app.Pages.Setup
 
             var data = Helpers.GetControlsValues(panel_records);
 
-            if (txt_id.Text.Equals(""))
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                data.Remove("id");
-                response = await EntityServices.Insert(data);
-                message = response.Success ? "Insert Data Succesfully" : "Failed to add entity type\n" + response.message;
-            }
-            else
-            {
-                response = await EntityServices.Update(data);
-                message = response.Success ? "Update Data Succesfully" : "Failed to update entity type ";
-            }
+                if (txt_id.Text.Equals(""))
+                {
+                    data.Remove("id");
+                    response = await EntityServices.Insert(data);
+                    message = response.Success ? "Insert Data Succesfully" : "Failed to add entity type\n" + response.message;
+                }
+                else
+                {
+                    response = await EntityServices.Update(data);
+                    message = response.Success ? "Update Data Succesfully" : "Failed to update entity type ";
+                }
 
-            if (!response.Success)
-            {
-                Helpers.ShowDialogMessage("error", message);
-                return;
-            }
+                if (!response.Success)
+                {
+                    Helpers.ShowDialogMessage("error", message);
+                    return;
+                }
 
-            Helpers.ShowDialogMessage("success", message);
-            Helpers.ResetControls(panel_records);
-            GetEntityType();
-            BtnToogle(false);
+                Helpers.ShowDialogMessage("success", message);
+                Helpers.ResetControls(panel_records);
+                GetEntityType();
+                BtnToogle(false);
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private void panel_records_Paint(object sender, PaintEventArgs e)

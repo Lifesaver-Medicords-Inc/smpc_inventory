@@ -35,10 +35,18 @@ namespace smpc_inventory_app.Pages.Inventory
             try
             {
                 this.Enabled = false;
-                var warehouseData = await WarehouseNameServices.GetWarehouseInfos();
-                cmb_warehouse.DataSource = warehouseData?.warehouse_name ?? new System.Collections.Generic.List<WarehouseNameModel>();
-                cmb_warehouse.DisplayMember = "name";
-                cmb_warehouse.SelectedIndex = -1;
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    var warehouseData = await WarehouseNameServices.GetWarehouseInfos();
+                    cmb_warehouse.DataSource = warehouseData?.warehouse_name ?? new System.Collections.Generic.List<WarehouseNameModel>();
+                    cmb_warehouse.DisplayMember = "name";
+                    cmb_warehouse.SelectedIndex = -1;
+                }
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
             catch (Exception ex)
             {
@@ -61,17 +69,25 @@ namespace smpc_inventory_app.Pages.Inventory
 
             try
             {
-                var areaService = new GeneralService<ReceivingWarehouseAreaView>(ENUM_ENDPOINT.RECEIVING_REPORT_WAREHOUSE_AREA + selectedWarehouse.id);
-                var areas = await areaService.GetAsList() ?? new System.Collections.Generic.List<ReceivingWarehouseAreaView>();
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    var areaService = new GeneralService<ReceivingWarehouseAreaView>(ENUM_ENDPOINT.RECEIVING_REPORT_WAREHOUSE_AREA + selectedWarehouse.id);
+                    var areas = await areaService.GetAsList() ?? new System.Collections.Generic.List<ReceivingWarehouseAreaView>();
 
-                var binOptions = areas
-                    .Select(a => string.Join("-", new[] { a.zone, a.area, a.rack, a.level, a.bins }.Where(p => !string.IsNullOrWhiteSpace(p))))
-                    .Where(b => !string.IsNullOrWhiteSpace(b))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .OrderBy(b => b, StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
+                    var binOptions = areas
+                        .Select(a => string.Join("-", new[] { a.zone, a.area, a.rack, a.level, a.bins }.Where(p => !string.IsNullOrWhiteSpace(p))))
+                        .Where(b => !string.IsNullOrWhiteSpace(b))
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .OrderBy(b => b, StringComparer.OrdinalIgnoreCase)
+                        .ToArray();
 
-                cmb_bin_location.Items.AddRange(binOptions);
+                    cmb_bin_location.Items.AddRange(binOptions);
+                }
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
             catch (Exception)
             {

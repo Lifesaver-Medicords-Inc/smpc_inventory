@@ -83,7 +83,7 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseReturn
 
         private async Task LoadRecordsAsync()
         {
-            Helpers.Loading.ShowLoading(pnl_main, "Fetching data...");
+            Helpers.Loading.ShowLoading(pnl_main);
             try
             {
                 var data = await _service.GetAsModel();
@@ -347,6 +347,7 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseReturn
             if (confirm != DialogResult.Yes) return;
 
             btn_approve.Enabled = false;
+            Helpers.Loading.ShowLoading(pnl_main);
             try
             {
                 var response = await _service.ApprovePurchaseReturn(_records[_currentIndex].id ?? 0);
@@ -359,6 +360,7 @@ namespace smpc_inventory_app.Pages.Purchasing.PurchaseReturn
             }
             finally
             {
+                Helpers.Loading.HideLoading(pnl_main);
                 btn_approve.Enabled = true;
             }
         }

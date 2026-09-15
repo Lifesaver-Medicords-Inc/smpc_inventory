@@ -55,7 +55,7 @@ namespace smpc_inventory_app.Pages.Inventory
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_item_stocks, "Fetching stock levels...");
+                Helpers.Loading.ShowLoading(dgv_item_stocks);
                 _allStocks = await _service.GetAsList();
                 ApplyFilter();
             }

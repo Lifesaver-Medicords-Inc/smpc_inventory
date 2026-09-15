@@ -42,7 +42,7 @@ namespace smpc_inventory_app.Pages
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_inventory_item, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_inventory_item);
                 await LoadData();
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace smpc_inventory_app.Pages
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_inventory_item, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_inventory_item);
 
                 await LoadWarehouseNames();
 
@@ -336,7 +336,7 @@ namespace smpc_inventory_app.Pages
 
             try
             {
-                Helpers.Loading.ShowLoading(dgv_inventory_item, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_inventory_item);
                 btn_next.Enabled = false;
                 await BindWarehouseData();
             }

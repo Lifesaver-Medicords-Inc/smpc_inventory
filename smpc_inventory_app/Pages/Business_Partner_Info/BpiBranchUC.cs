@@ -987,20 +987,66 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         }
         public void AddNewBpiItem(Dictionary<string, dynamic> value)
         {
+            // Added to the table the grid is actually bound to. This used to rebuild a fresh
+            // table from the grid's columns and rebind to it: the copy had no short_desc /
+            // status_* columns, so the next ADD ITEM or multi-pick threw part-way, and the
+            // new item lived in a table the rest of the tab was no longer reading.
+            DataTable table = CurrentItemsTable();
+            DataRow addedRow = table.NewRow();
+            SetItemFields(addedRow, value);
+            table.Rows.Add(addedRow);
+            dataBindingItems.EndEdit();
+        }
 
-            Dictionary<string, dynamic> Bpi_Item = value;
-            DataTable itemList = Helpers.ConvertDataGridViewToDataTable(dg_items);
+        // Every column the Items tab writes when an item is picked or added.
+        private static readonly string[] ItemFieldColumns =
+        {
+            "item_id", "item_code", "item_type", "long_description", "short_desc",
+            "status_tangible", "status_trade", "price", "notes", "item_is_deleted",
+        };
 
-            DataRow addedRow = itemList.NewRow();
-            foreach (var item in Bpi_Item)
+        // The table the Items grid is bound to, with every column in ItemFieldColumns present.
+        // A new partner starts from items.Clone() and a loaded one from a filtered copy of
+        // vw_bpi_items, and neither is guaranteed to carry them all - writing a column that is
+        // not there throws "Column ... does not belong to table".
+        private DataTable CurrentItemsTable()
+        {
+            if (!(dataBindingItems.DataSource is DataTable table))
             {
-                if (itemList.Columns.Contains(item.Key))
-                {
-                    addedRow[item.Key] = item.Value ?? DBNull.Value;
-                }
+                table = Helpers.ConvertDataGridViewToDataTable(dg_items);
+                dataBindingItems.DataSource = table;
             }
-            itemList.Rows.Add(addedRow);
-            dataBindingItems.DataSource = itemList;
+
+            foreach (string column in ItemFieldColumns)
+            {
+                if (!table.Columns.Contains(column))
+                    table.Columns.Add(column);
+            }
+
+            return table;
+        }
+
+        // Copies a picked or newly created item onto a row. The keys are the Item List modal's
+        // and the Item Entry callback's; a key the source does not send leaves its column alone.
+        private static void SetItemFields(DataRow row, Dictionary<string, dynamic> item)
+        {
+            void Set(string column, string key)
+            {
+                if (item.TryGetValue(key, out dynamic value) && row.Table.Columns.Contains(column))
+                    row[column] = (object)value ?? DBNull.Value;
+            }
+
+            Set("item_id", "item_id");
+            Set("item_code", "item_code");
+            Set("long_description", "long_description");
+            Set("short_desc", "short_desc");
+            Set("status_tangible", "status_tangible");
+            Set("status_trade", "status_trade");
+            Set("price", "item_price");
+
+            // TYPE is the item's tangibility. Item Entry's callback sends it only as
+            // status_tangible.
+            Set("item_type", item.ContainsKey("item_type") ? "item_type" : "status_tangible");
         }
 
         private void btn_upload_image_Click(object sender, EventArgs e)
@@ -1599,7 +1645,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void btn_add_item_Click(object sender, EventArgs e)
         {
-            DataTable currentTable = dataBindingItems.DataSource as DataTable;
+            // CurrentItemsTable guarantees every column written below exists. Writing short_desc /
+            // status_* straight into the bound table threw once "add new item" had rebound it.
+            DataTable currentTable = CurrentItemsTable();
             if (currentTable != null)
             {
                 DataRow newRow = currentTable.NewRow();
@@ -1658,27 +1706,35 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                         List<Dictionary<string, dynamic>> results = modal.GetResult();
                         if (results == null || results.Count == 0) return;
 
-                        DataGridViewRow selectedRow = dg_items.Rows[e.RowIndex];
-                        selectedRow.Cells["item_id"].Value = results[0]["item_id"];
-                        selectedRow.Cells["item_type"].Value = results[0]["item_type"];
-                        selectedRow.Cells["item_code"].Value = results[0]["item_code"];
-                        selectedRow.Cells["long_description"].Value = results[0]["long_description"];
-                        selectedRow.Cells["price"].Value = results[0]["item_price"];
+                        // Written to the bound table's rows rather than to grid cells. TYPE and
+                        // DESCRIPTION had no column in that table, so values put into those cells
+                        // were never kept, and the extra picks wrote columns the table did not
+                        // always have and threw part-way (see CurrentItemsTable).
+                        DataTable table = CurrentItemsTable();
 
-                        DataTable currentTable = dataBindingItems.DataSource as DataTable;
+                        var clicked = dg_items.Rows[e.RowIndex].DataBoundItem as DataRowView;
+                        if (clicked != null && clicked.Row.Table == table)
+                        {
+                            SetItemFields(clicked.Row, results[0]);
+                            // The blank "new row" line: commit it so the pick becomes a real row.
+                            if (clicked.IsNew)
+                                clicked.EndEdit();
+                        }
+                        else
+                        {
+                            DataRow firstRow = table.NewRow();
+                            SetItemFields(firstRow, results[0]);
+                            table.Rows.Add(firstRow);
+                        }
+
                         for (int i = 1; i < results.Count; i++)
                         {
-                            if (currentTable == null) break;
-
-                            DataRow newRow = currentTable.NewRow();
-                            newRow["item_id"] = results[i]["item_id"];
-                            newRow["item_code"] = results[i]["item_code"];
-                            newRow["short_desc"] = results[i]["long_description"];
-                            newRow["status_tangible"] = "";
-                            newRow["status_trade"] = "";
-                            newRow["price"] = results[i]["item_price"];
-                            currentTable.Rows.Add(newRow);
+                            DataRow newRow = table.NewRow();
+                            SetItemFields(newRow, results[i]);
+                            table.Rows.Add(newRow);
                         }
+
+                        dataBindingItems.EndEdit();
                     }
 
 
@@ -2010,7 +2066,35 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
 
             var dataItemSource = Helpers.ConvertDataGridViewToDataTable(dg_items);
-            var allItems = fullItemsRecords == null ? dataItemSource : fullItemsRecords;
+
+            // The grid is what the user sees now, so the grid is what gets saved - including
+            // items picked or edited after a row was deleted. This used to read
+            // fullItemsRecords whenever it was set, and only a delete sets it, as a snapshot
+            // taken at that moment: every item picked or edited after any delete was left out
+            // of the save, so its item_id never reached the database (user-reported
+            // 2026-09-14). The one thing the snapshot holds that the grid may not is the rows
+            // the user deleted, flagged item_is_deleted - those are carried across so the API
+            // still marks them deleted.
+            var allItems = dataItemSource;
+            if (fullItemsRecords != null
+                && fullItemsRecords.Columns.Contains("bpi_item_id")
+                && fullItemsRecords.Columns.Contains("item_is_deleted")
+                && allItems.Columns.Contains("bpi_item_id"))
+            {
+                var onScreen = new HashSet<string>(allItems.AsEnumerable()
+                    .Select(r => r["bpi_item_id"]?.ToString() ?? "")
+                    .Where(id => id.Length > 0 && id != "0"));
+
+                foreach (DataRow snapshotRow in fullItemsRecords.Rows)
+                {
+                    string id = snapshotRow["bpi_item_id"]?.ToString() ?? "";
+                    bool.TryParse(snapshotRow["item_is_deleted"]?.ToString(), out bool deleted);
+                    if (!deleted || id.Length == 0 || id == "0" || onScreen.Contains(id))
+                        continue;
+
+                    allItems.ImportRow(snapshotRow);
+                }
+            }
             var items = Helpers.GetControlsValues(panel_item);
             List<BpiItems> listItem = new List<BpiItems>();
 

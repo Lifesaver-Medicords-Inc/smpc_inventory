@@ -38,7 +38,7 @@ namespace smpc_inventory_app.Pages.Engineering.Bom
 
         private void BomItemModal_Load(object sender, EventArgs e)
         {
-            Helpers.Loading.ShowLoading(dg_BomItemList, "Fetching data...");
+            Helpers.Loading.ShowLoading(dg_BomItemList);
 
             GetBomItemList();
 

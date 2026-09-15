@@ -22,8 +22,16 @@ namespace Inventory_SMPC.Pages.Setup
 
         private async void GetUnitOfMeasurement()
         {
-            var data = await UnitOfMeasurementServices.GetAsDatatable();
-            dg_unit_of_measurement.DataSource = data;
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                var data = await UnitOfMeasurementServices.GetAsDatatable();
+                dg_unit_of_measurement.DataSource = data;
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
         }
 
@@ -79,17 +87,25 @@ namespace Inventory_SMPC.Pages.Setup
 
             if (result == DialogResult.Yes)
             {
-                bool isSuccess = await UnitOfMeasurementServices.Delete(data);
-
-                if (!isSuccess)
+                Helpers.Loading.ShowLoading(this);
+                try
                 {
-                    Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
-                    return;
+                    bool isSuccess = await UnitOfMeasurementServices.Delete(data);
+
+                    if (!isSuccess)
+                    {
+                        Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
+                        return;
+                    }
+                    Helpers.ResetControls(panel_records);
+                    Helpers.ShowDialogMessage("success", "Delete Unit of Measurement Succesfully");
+                    GetUnitOfMeasurement();
+                    BtnToogle(false);
                 }
-                Helpers.ResetControls(panel_records);
-                Helpers.ShowDialogMessage("success", "Delete Unit of Measurement Succesfully");
-                GetUnitOfMeasurement();
-                BtnToogle(false);
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
         }
 
@@ -114,25 +130,33 @@ namespace Inventory_SMPC.Pages.Setup
             var data = Helpers.GetControlsValues(panel_records);
 
             //Conditions for Add and Update executions of Api
-            if (txt_id.Text.Equals("")) {
-                data.Remove("id");
-                response = await UnitOfMeasurementServices.Insert(data);
-                message = response.Success ? "Insert Data Succesfully" : "Failed to add unit of measurement\n" + response.message;
-            }
-            else {
-                response = await UnitOfMeasurementServices.Update(data);  
-                message = response.Success ? "Update Data Succesfully" : "Failed to update unit of measurement";
-            }
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                if (txt_id.Text.Equals("")) {
+                    data.Remove("id");
+                    response = await UnitOfMeasurementServices.Insert(data);
+                    message = response.Success ? "Insert Data Succesfully" : "Failed to add unit of measurement\n" + response.message;
+                }
+                else {
+                    response = await UnitOfMeasurementServices.Update(data);  
+                    message = response.Success ? "Update Data Succesfully" : "Failed to update unit of measurement";
+                }
 
-            if (!response.Success) {
-                Helpers.ShowDialogMessage("error", message);
-                return;
+                if (!response.Success) {
+                    Helpers.ShowDialogMessage("error", message);
+                    return;
+                }
+                //Message  after success 
+                Helpers.ShowDialogMessage("success", message);
+                Helpers.ResetControls(panel_records);
+                GetUnitOfMeasurement();
+                BtnToogle(false);
             }
-            //Message  after success 
-            Helpers.ShowDialogMessage("success", message);
-            Helpers.ResetControls(panel_records);
-            GetUnitOfMeasurement();
-            BtnToogle(false);
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
             
         }

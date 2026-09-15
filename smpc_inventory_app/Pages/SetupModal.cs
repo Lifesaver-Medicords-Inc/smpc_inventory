@@ -156,29 +156,37 @@ namespace smpc_inventory_app.Pages
 
             var data = Helpers.GetControlsValues(panel_records);
 
-            if (txt_id.Text.Equals(""))
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                data.Remove("id");
-                response = await _serviceSetup.Insert(data);
-                message = response.Success ? "Insert Data Succesfully" : "Failed to add" + this.title +"\n" + response.message;
-            }
-            else
-            {
-                response = await _serviceSetup.Update(data);
-                message = response.Success ? "Update Data Succesfully" : "Failed to update " + this.title;
-            }
+                if (txt_id.Text.Equals(""))
+                {
+                    data.Remove("id");
+                    response = await _serviceSetup.Insert(data);
+                    message = response.Success ? "Insert Data Succesfully" : "Failed to add" + this.title +"\n" + response.message;
+                }
+                else
+                {
+                    response = await _serviceSetup.Update(data);
+                    message = response.Success ? "Update Data Succesfully" : "Failed to update " + this.title;
+                }
 
-            if (!response.Success)
-            {
-                Helpers.ShowDialogMessage("error", message);
-                return;
-            }
-            Helpers.ShowDialogMessage("success", message);
-            Helpers.ResetControls(panel_records);
-            await GetSetup();
-            BtnToggle(false);
+                if (!response.Success)
+                {
+                    Helpers.ShowDialogMessage("error", message);
+                    return;
+                }
+                Helpers.ShowDialogMessage("success", message);
+                Helpers.ResetControls(panel_records);
+                await GetSetup();
+                BtnToggle(false);
 
-            OnDataChanged?.Invoke();
+                OnDataChanged?.Invoke();
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
         }
         private void txt_search_TextChanged(object sender, EventArgs e)
@@ -242,20 +250,28 @@ namespace smpc_inventory_app.Pages
                 {
                     var data = Helpers.GetControlsValues(panel_records);
 
-                    bool isSuccess = await _serviceSetup.Delete(data);
-
-                    if (isSuccess)
+                    Helpers.Loading.ShowLoading(this);
+                    try
                     {
-                        Helpers.ResetControls(panel_records);
-                        Helpers.ShowDialogMessage("success", "Item deleted successfully.");
-                        await GetSetup();
-                        BtnToggle(false);
+                        bool isSuccess = await _serviceSetup.Delete(data);
 
-                        OnDataChanged?.Invoke();
+                        if (isSuccess)
+                        {
+                            Helpers.ResetControls(panel_records);
+                            Helpers.ShowDialogMessage("success", "Item deleted successfully.");
+                            await GetSetup();
+                            BtnToggle(false);
+
+                            OnDataChanged?.Invoke();
+                        }
+                        else
+                        {
+                            Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                        }
                     }
-                    else
+                    finally
                     {
-                        Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                        Helpers.Loading.HideLoading(this);
                     }
                 }
             }

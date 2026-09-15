@@ -28,39 +28,47 @@ namespace smpc_inventory_app.Pages.Purchasing.Modal
         }
         private async void GetSupplierList()
         {
-            var data = await PurchasingListSupplierServices.GetAsDataTable();
-
-            var filtered = data.Clone(); // clone structure
-
-            foreach (DataRow row in data.Rows)
+            smpc_app.Services.Helpers.Helpers.Loading.ShowLoading(this);
+            try
             {
-                if (row["item_ids"] != DBNull.Value)
-                {
-                    var itemIdsStr = row["item_ids"].ToString();
-                    var itemIds = itemIdsStr.Split(',').Select(s => s.Trim());
+                var data = await PurchasingListSupplierServices.GetAsDataTable();
 
-                    if (itemIds.Contains(itemId))
+                var filtered = data.Clone(); // clone structure
+
+                foreach (DataRow row in data.Rows)
+                {
+                    if (row["item_ids"] != DBNull.Value)
                     {
-                        filtered.ImportRow(row); // include only rows with the itemId
+                        var itemIdsStr = row["item_ids"].ToString();
+                        var itemIds = itemIdsStr.Split(',').Select(s => s.Trim());
+
+                        if (itemIds.Contains(itemId))
+                        {
+                            filtered.ImportRow(row); // include only rows with the itemId
+                        }
+                    }
+                }
+
+                dgv_supplier.AutoGenerateColumns = false;
+                dgv_supplier.DataSource = filtered;
+
+                // Apply gray background to used suppliers
+                foreach (DataGridViewRow row in dgv_supplier.Rows)
+                {
+                    if (row.Cells[0].Value != null && int.TryParse(row.Cells[0].Value.ToString(), out int id))
+                    {
+                        if (excludedSupplierIds.Contains(id))
+                        {
+                            row.DefaultCellStyle.ForeColor = Color.Gray;
+                            row.DefaultCellStyle.BackColor = Color.LightGray;
+                            row.ReadOnly = true;
+                        }
                     }
                 }
             }
-
-            dgv_supplier.AutoGenerateColumns = false;
-            dgv_supplier.DataSource = filtered;
-
-            // Apply gray background to used suppliers
-            foreach (DataGridViewRow row in dgv_supplier.Rows)
+            finally
             {
-                if (row.Cells[0].Value != null && int.TryParse(row.Cells[0].Value.ToString(), out int id))
-                {
-                    if (excludedSupplierIds.Contains(id))
-                    {
-                        row.DefaultCellStyle.ForeColor = Color.Gray;
-                        row.DefaultCellStyle.BackColor = Color.LightGray;
-                        row.ReadOnly = true;
-                    }
-                }
+                smpc_app.Services.Helpers.Helpers.Loading.HideLoading(this);
             }
         }
 

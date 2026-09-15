@@ -209,7 +209,7 @@ namespace smpc_inventory_app.Pages.Inventory
             try
             {
                 this.Enabled = false;
-                Helpers.Loading.ShowLoading(cmb_item, "Refreshing item list...");
+                Helpers.Loading.ShowLoading(cmb_item);
                 await LoadItems();
             }
             catch (Exception ex)

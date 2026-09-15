@@ -39,8 +39,16 @@ namespace smpc_inventory_app.Pages.Setup
         private async void GetIndustries()
         {
 
-            var data = await IndustriesServices.GetAsDatatable();
-            dg_industries.DataSource = data;
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                var data = await IndustriesServices.GetAsDatatable();
+                dg_industries.DataSource = data;
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
         }
 
@@ -86,17 +94,25 @@ namespace smpc_inventory_app.Pages.Setup
 
             if (result == DialogResult.Yes)
             {
-                bool isSuccess = await IndustriesServices.Delete(data);
-
-                if (!isSuccess)
+                Helpers.Loading.ShowLoading(this);
+                try
                 {
-                    Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
-                    return;
+                    bool isSuccess = await IndustriesServices.Delete(data);
+
+                    if (!isSuccess)
+                    {
+                        Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
+                        return;
+                    }
+                    Helpers.ResetControls(panel_records);
+                    Helpers.ShowDialogMessage("success", "Delete Industries Name Succesfully");
+                    GetIndustries();
+                    BtnToogle(false);
                 }
-                Helpers.ResetControls(panel_records);
-                Helpers.ShowDialogMessage("success", "Delete Industries Name Succesfully");
-                GetIndustries();
-                BtnToogle(false);
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
         }
 
@@ -117,28 +133,36 @@ namespace smpc_inventory_app.Pages.Setup
 
             var data = Helpers.GetControlsValues(panel_records);
 
-            if (txt_id.Text.Equals(""))
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                data.Remove("id");
-                response = await IndustriesServices.Insert(data);
-                message = response.Success ? "Insert Data Succesfully" : "Failed to add industries  \n" + response.message;
-            }
-            else
-            {
-                response = await IndustriesServices.Update(data);
-                message = response.Success ? "Update Data Succesfully" : "Failed to update industries ";
-            }
+                if (txt_id.Text.Equals(""))
+                {
+                    data.Remove("id");
+                    response = await IndustriesServices.Insert(data);
+                    message = response.Success ? "Insert Data Succesfully" : "Failed to add industries  \n" + response.message;
+                }
+                else
+                {
+                    response = await IndustriesServices.Update(data);
+                    message = response.Success ? "Update Data Succesfully" : "Failed to update industries ";
+                }
 
-            if (!response.Success)
-            {
-                Helpers.ShowDialogMessage("error", message);
-                return;
-            }
+                if (!response.Success)
+                {
+                    Helpers.ShowDialogMessage("error", message);
+                    return;
+                }
 
-            Helpers.ShowDialogMessage("success", message);
-            Helpers.ResetControls(panel_records);
-            GetIndustries();
-            BtnToogle(false);
+                Helpers.ShowDialogMessage("success", message);
+                Helpers.ResetControls(panel_records);
+                GetIndustries();
+                BtnToogle(false);
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private void btn_cancel_Click(object sender, EventArgs e)

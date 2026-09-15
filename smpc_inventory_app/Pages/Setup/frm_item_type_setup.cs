@@ -22,8 +22,16 @@ namespace Inventory_SMPC.Pages.Setup
 
         private async void GetData()
         {
-            var data = await ItemTypeServices.GetAsDatatable();
-            dg_item_type.DataSource = data;
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                var data = await ItemTypeServices.GetAsDatatable();
+                dg_item_type.DataSource = data;
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private void frm_item_type_setup_Load(object sender, EventArgs e)
@@ -63,23 +71,31 @@ namespace Inventory_SMPC.Pages.Setup
                 data.Remove("id");
             }
 
-            response = isNewRecord
-                ? await ItemTypeServices.Insert(data)
-                : await ItemTypeServices.Update(data);
-
-            // Handle result
-            if (response.Success)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                Helpers.ResetControls(pnl_input);
-                GetData();
-                BtnToggle(false);
+                response = isNewRecord
+                    ? await ItemTypeServices.Insert(data)
+                    : await ItemTypeServices.Update(data);
+
+                // Handle result
+                if (response.Success)
+                {
+                    Helpers.ResetControls(pnl_input);
+                    GetData();
+                    BtnToggle(false);
+                }
+
+                string message = response.Success
+                    ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
+                    : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
+
+                Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
             }
-
-            string message = response.Success
-                ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
-                : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
-
-            Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private void dg_item_type_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -132,18 +148,26 @@ namespace Inventory_SMPC.Pages.Setup
             {
                 var data = Helpers.GetControlsValues(pnl_input);
 
-                bool isSuccess = await ItemTypeServices.Delete(data);
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    bool isSuccess = await ItemTypeServices.Delete(data);
 
-                if (isSuccess)
-                {
-                    Helpers.ResetControls(pnl_input);
-                    Helpers.ShowDialogMessage("success", "Item deleted successfully.");
-                    GetData();
-                    BtnToggle(false);
+                    if (isSuccess)
+                    {
+                        Helpers.ResetControls(pnl_input);
+                        Helpers.ShowDialogMessage("success", "Item deleted successfully.");
+                        GetData();
+                        BtnToggle(false);
+                    }
+                    else
+                    {
+                        Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    }
                 }
-                else
+                finally
                 {
-                    Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    Helpers.Loading.HideLoading(this);
                 }
             }
         }

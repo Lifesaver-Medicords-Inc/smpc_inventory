@@ -52,8 +52,16 @@ namespace smpc_inventory_app.Pages.Inventory
             {
                 this.Enabled = false;
 
-                var warehouseData = await WarehouseNameServices.GetWarehouseInfos();
-                cmb_dest_warehouse.DataSource = warehouseData?.warehouse_name ?? new List<WarehouseNameModel>();
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    var warehouseData = await WarehouseNameServices.GetWarehouseInfos();
+                    cmb_dest_warehouse.DataSource = warehouseData?.warehouse_name ?? new List<WarehouseNameModel>();
+                }
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
             catch (Exception ex)
             {
@@ -76,9 +84,17 @@ namespace smpc_inventory_app.Pages.Inventory
 
             try
             {
-                var areaService = new GeneralService<ReceivingWarehouseAreaView>(ENUM_ENDPOINT.RECEIVING_REPORT_WAREHOUSE_AREA + selectedWarehouse.id);
-                var areas = await areaService.GetAsList() ?? new List<ReceivingWarehouseAreaView>();
-                _destBinLocationPicker.SetData(areas);
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    var areaService = new GeneralService<ReceivingWarehouseAreaView>(ENUM_ENDPOINT.RECEIVING_REPORT_WAREHOUSE_AREA + selectedWarehouse.id);
+                    var areas = await areaService.GetAsList() ?? new List<ReceivingWarehouseAreaView>();
+                    _destBinLocationPicker.SetData(areas);
+                }
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
             catch (Exception)
             {

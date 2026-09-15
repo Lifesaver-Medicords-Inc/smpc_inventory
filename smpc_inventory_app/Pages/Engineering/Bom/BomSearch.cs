@@ -30,7 +30,7 @@ namespace smpc_inventory_app.Pages.Engineering.Bom
 
         private void LoadData(string[] columnsToShow)
         {
-            Helpers.Loading.ShowLoading(dgv_bomsearch, "Fetching data...");
+            Helpers.Loading.ShowLoading(dgv_bomsearch);
 
             if (Dt == null || Dt.Rows.Count == 0)
             {

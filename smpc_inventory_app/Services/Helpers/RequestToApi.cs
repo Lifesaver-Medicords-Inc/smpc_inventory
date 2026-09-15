@@ -23,12 +23,28 @@ namespace smpc_inventory_app.Services.Helpers
         {
             get
             {
-                string env =
-                    ConfigurationManager.AppSettings["Environment"]
-                    ?? "Development";
+                // Program.ApiBaseUrl resolves smpc.endpoints.xml first and App.config second,
+                // and does it lazily - so it is also correct when these forms run hosted
+                // inside the sales app, where this assembly's Main() never executes.
+                //
+                // This used to read the host's App.config ApiBaseUrl.{env} directly, with a
+                // silent http://127.0.0.1:3000/api fallback. BPI and Item Entry run inside
+                // Sales from this assembly, so they ignored the override file as well - and
+                // with the App.config value blanked, an empty value produced host-less
+                // relative URLs while a missing key quietly sent them to localhost.
+                string url = Program.ApiBaseUrl;
 
-                return ConfigurationManager.AppSettings[$"ApiBaseUrl.{env}"]
-                    ?? "http://127.0.0.1:3000/api";
+                // No hardcoded fallback address: a guessed one hides the misconfiguration
+                // and, on a remote office PC, points at a server that is not there.
+                if (string.IsNullOrWhiteSpace(url))
+                {
+                    string env = ConfigurationManager.AppSettings["Environment"] ?? "Development";
+                    throw new ConfigurationErrorsException(
+                        $"No API URL configured. Set <base> in {SmpcEndpoints.FileName} "
+                        + $"or 'ApiBaseUrl.{env}' in App.config. Endpoint source: {SmpcEndpoints.Source}");
+                }
+
+                return url;
             }
         }
         static CookieContainer cookieContainer = new CookieContainer();
@@ -119,8 +135,28 @@ namespace smpc_inventory_app.Services.Helpers
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Exception: " + ex.Message, "Error ");
-                    return default(T);  // Return default value of T in case of exception
+                    // HttpRequestException's own Message is always "An error occurred while sending
+                    // the request." - the real cause (no such host, connection refused, TLS failure)
+                    // is on the innermost exception. Showing only the outer message made every
+                    // connection problem look identical and hid which address was being called,
+                    // which is usually the whole answer: a tunnel hostname that stopped existing when
+                    // the tunnel was restarted. Same wording as the sales app's ApiConnection.
+                    Exception root = ex;
+                    while (root.InnerException != null)
+                        root = root.InnerException;
+
+                    // baseUrl throws when no URL is configured at all; that message is already the
+                    // cause, so fall back to the relative path rather than throwing from the catch.
+                    string address;
+                    try { address = baseUrl + url; }
+                    catch { address = url; }
+
+                    MessageBox.Show(
+                        "Cannot reach the server." + Environment.NewLine + Environment.NewLine
+                        + root.Message + Environment.NewLine + Environment.NewLine
+                        + "Request: " + address,
+                        "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return default(T);
                 }
                 finally
                 {

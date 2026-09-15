@@ -149,23 +149,46 @@ namespace smpc_inventory_app.Pages.Item
             SpecsTemplateVisibility();
         }
 
-        private void frm_Item_Entry_Load(object sender, EventArgs e)
+        // The standard page-wide loading screen (spec 2.1), which this page had none of.
+        //
+        // The handler used to be a plain `void` that fired eleven `async void` fetches
+        // back to back and returned with all eleven still in flight - the form came up
+        // fully interactive over empty controls, and nothing anywhere knew when the
+        // loading had finished, so there was no point at which a screen could have been
+        // cleared. The fetches are `async Task` now, which is what makes a completion
+        // point possible at all.
+        private async void frm_Item_Entry_Load(object sender, EventArgs e)
         {
+            Helpers.Loading.ShowLoading(this);
+
             try
             {
                 InitializeCmbMap();
                 BtnToggle(false);
-                FetchClassSetup();
-                FetchNameSetup();
-                FetchBrandSetup();
-                FetchUOMSetup();
-                FetchItemTradeType();
-                FetchMaterialSetup();
-                FetchPumpTypeSetup();
-                FetchPumpCountSetup();
-                FetchWarehouse();
-                FetchValuationMethodSetup();
-                FetchItemData();
+
+                // The ten setup fetches are independent of one another and already ran
+                // concurrently, since they were fired without being awaited. WhenAll
+                // keeps that concurrency and adds the completion point that was missing;
+                // awaiting them one at a time would turn ten parallel round trips into
+                // ten sequential ones on the page that can least afford it.
+                await Task.WhenAll(
+                    FetchClassSetup(),
+                    FetchNameSetup(),
+                    FetchBrandSetup(),
+                    FetchUOMSetup(),
+                    FetchItemTradeType(),
+                    FetchMaterialSetup(),
+                    FetchPumpTypeSetup(),
+                    FetchPumpCountSetup(),
+                    FetchWarehouse(),
+                    FetchValuationMethodSetup());
+
+                // Deliberately AFTER the setups rather than alongside them. This is the
+                // fetch that binds the form, and it binds into the combo boxes those
+                // setups populate - fired together, which arrived first was decided by
+                // network timing, so the item could be bound against combos that were
+                // still empty.
+                await FetchItemData();
 
                 // subscribe event
                 dgv_template.CellValueChanged += dgv_template_CellValueChanged;
@@ -177,7 +200,9 @@ namespace smpc_inventory_app.Pages.Item
             }
             finally
             {
-
+                // In the finally so a failed fetch cannot strand the screen over a form
+                // the user then cannot touch.
+                Helpers.Loading.HideLoading(this);
             }
         }
 
@@ -568,7 +593,23 @@ namespace smpc_inventory_app.Pages.Item
         {
             try
             {
-                byte[] data = await _httpClient.GetByteArrayAsync(imageUrl);
+                // With the session token: uploaded files are served only to a logged-in
+                // session once the API sets FILES_REQUIRE_AUTH. Set per request rather
+                // than on the shared client's default headers, which would outlive a
+                // re-login.
+                byte[] data;
+                using (var request = new HttpRequestMessage(HttpMethod.Get, imageUrl))
+                {
+                    string token = smpc_inventory_app.Data.CacheData.SessionToken;
+                    if (!string.IsNullOrEmpty(token))
+                        request.Headers.TryAddWithoutValidation("Authorization", token);
+
+                    using (var response = await _httpClient.SendAsync(request))
+                    {
+                        response.EnsureSuccessStatusCode();
+                        data = await response.Content.ReadAsByteArrayAsync();
+                    }
+                }
 
                 // MemoryStream must stay open — Image.FromStream needs it alive
                 var ms = new MemoryStream(data);
@@ -724,6 +765,24 @@ namespace smpc_inventory_app.Pages.Item
 
             var additionalspecs = Helpers.GetControlsValues(pnl_additional_specs);
 
+            // Pump count and pump types go under the API's spelling (..._compatibility_id). The
+            // controls are named ..._compatability and GetControlsValues builds keys from control
+            // names, so neither value ever reached the API: pump count never saved, and the pump
+            // types were replaced with nothing on every update (user-reported 2026-09-14).
+            if (additionalspecs.TryGetValue("pump_count_compatability_id", out var pumpCount))
+            {
+                additionalspecs.Remove("pump_count_compatability_id");
+                additionalspecs["pump_count_compatibility_id"] = pumpCount;
+            }
+
+            // The pump type list is always sent, empty included, so clearing it saves too. The
+            // picker stores its selection in the box's Tag as a List<int>; before the picker is
+            // opened the Tag may hold a marker string, and currentSelectedPumpTypeIds is then the
+            // selection loaded with the record.
+            additionalspecs.Remove("pump_type_compatability_id");
+            additionalspecs.Remove("pump_type_compatability");
+            additionalspecs["pump_type_compatibility_id"] = txt_pump_type_compatability.Tag as List<int> ?? currentSelectedPumpTypeIds;
+
             additionalspecs["weight"] = float.TryParse(additionalspecs["weight"]?.ToString(), out float weight) ? weight : 0f;
             additionalspecs["volume"] = float.TryParse(additionalspecs["volume"]?.ToString(), out float volume) ? volume : 0f;
 
@@ -826,7 +885,7 @@ namespace smpc_inventory_app.Pages.Item
             cmb.DisplayMember = "name";
             cmb.SelectedIndex = 0;
         }
-        private async void FetchClassSetup()
+        private async Task FetchClassSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_CLASS);
             var result = await serviceSetup.GetAsDatatable();
@@ -836,7 +895,7 @@ namespace smpc_inventory_app.Pages.Item
             Helpers.AddCmbDefaultVal(CacheData.ItemClass);
             Helpers.BindCmbValues(cmb_item_class, CacheData.ItemClass);
         }
-        private async void FetchNameSetup()
+        private async Task FetchNameSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_NAME);
             var result = await serviceSetup.GetAsDatatable();
@@ -848,7 +907,7 @@ namespace smpc_inventory_app.Pages.Item
             cmb_item_name.ValueMember = "id";
             cmb_item_name.DisplayMember = "name";
         }
-        private async void FetchBrandSetup()
+        private async Task FetchBrandSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_BRAND);
             var result = await serviceSetup.GetAsDatatable();
@@ -879,7 +938,7 @@ namespace smpc_inventory_app.Pages.Item
             Helpers.BindCmbValues(cmb_volume_unit_of_measure, dvVolume);
         }
 
-        private async void FetchUOMSetup()
+        private async Task FetchUOMSetup()
         {
             var serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.UNIT_OF_MEASUREMENT);
             var result = await serviceSetup.GetAsDatatable();
@@ -887,7 +946,7 @@ namespace smpc_inventory_app.Pages.Item
             CacheData.UnitOfMeasurement = result;
             BindUOMComboBoxes(result);
         }
-        private async void FetchItemTradeType()
+        private async Task FetchItemTradeType()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_TYPE);
             var result = await serviceSetup.GetAsDatatable();
@@ -895,7 +954,7 @@ namespace smpc_inventory_app.Pages.Item
 
             CacheData.ItemType = result;
         }
-        private async void FetchMaterialSetup()
+        private async Task FetchMaterialSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_MATERIAL);
             var result = await serviceSetup.GetAsDatatable();
@@ -911,7 +970,7 @@ namespace smpc_inventory_app.Pages.Item
             Helpers.BindCmbValues(cmb_impeller, dvImpeller);
             Helpers.BindCmbValues(cmb_material, dvMaterial);
         }
-        private async void FetchPumpTypeSetup()
+        private async Task FetchPumpTypeSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_PUMP_TYPE);
             var result = await serviceSetup.GetAsDatatable();
@@ -919,7 +978,7 @@ namespace smpc_inventory_app.Pages.Item
 
             CacheData.PumpType = result;
         }
-        private async void FetchPumpCountSetup()
+        private async Task FetchPumpCountSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.ITEM_PUMP_COUNT);
             var result = await serviceSetup.GetAsDatatable();
@@ -929,7 +988,7 @@ namespace smpc_inventory_app.Pages.Item
             Helpers.AddCmbDefaultVal(CacheData.PumpCount);
             Helpers.BindCmbValues(cmb_pump_count_compatability, CacheData.PumpCount);
         }
-        private async void FetchValuationMethodSetup()
+        private async Task FetchValuationMethodSetup()
         {
             serviceSetup = new GeneralSetupServices(ENUM_ENDPOINT.VALUATIONMETHOD);
             var result = await serviceSetup.GetAsDatatable();
@@ -939,7 +998,7 @@ namespace smpc_inventory_app.Pages.Item
             Helpers.AddCmbDefaultVal(CacheData.ValuationMethod);
             Helpers.BindCmbValues(cmb_valuation_method, CacheData.ValuationMethod);
         }
-        private async void FetchWarehouse()
+        private async Task FetchWarehouse()
         {
             _warehouseData = await ReceivingReportService.GetWarehouseDetails();
             if (_warehouseData == null) return;
@@ -1486,80 +1545,105 @@ namespace smpc_inventory_app.Pages.Item
                 return;
             }
 
-            response = isNewRecord
-                ? await ItemServices.Insert(data)
-                : await ItemServices.Update(data);
-
-            string message = response.Success
-                ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
-                : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
-
-            Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
-
-            if (response.Success)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                BpiAddItem(response.Data["id"].ToString());
+                response = isNewRecord
+                    ? await ItemServices.Insert(data)
+                    : await ItemServices.Update(data);
 
-                Helpers.ResetControls(pnl_header);
-                FetchItemData();
-                selectedRecord = isNewRecord ? items.Rows.Count - 1 : selectedRecord;
+                string message = response.Success
+                    ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
+                    : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
 
-                BtnToggle(false);
-                currentSelectedTradeTypeIds.Clear();
-                txt_trade_type.Tag = 0;
-                currentSelectedPumpTypeIds.Clear();
-                txt_pump_type_compatability.Tag = 0;
+                Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
 
-                // Full image state reset
-                _pendingNewImages.Clear();
-                replaceBase64Images.Clear();
-                imageData.Remove("newimages");
-                imageData.Remove("replaceimages");
-                imageData.Remove("deleteimages");
-                removedImages.Clear();
-            }
-            else
-            {
-                // Restore removed images on failure
-                foreach (var removedImage in removedImages)
+                if (response.Success)
                 {
-                    PictureBox restoredPictureBox = new PictureBox
-                    {
-                        Image = removedImage.Value,
-                        Width = 100,
-                        Height = 100,
-                        BorderStyle = BorderStyle.FixedSingle,
-                        SizeMode = PictureBoxSizeMode.Zoom,
-                        Margin = new Padding(5),
-                    };
-                    restoredPictureBox.Tag = new ImageTag { Id = removedImage.Key };
-                    flowLayoutPanel1.Controls.Add(restoredPictureBox);
-                    restoredPictureBox.Click += PictureBox_Clicked;
-                }
-                removedImages.Clear();
+                    // Only a newly created item goes back to the caller - BPI's Add Item dialog adds
+                    // it to the partner and closes. It used to fire on every successful save, so
+                    // editing an existing item inside that dialog also re-added it to the partner
+                    // and closed the dialog (decided 2026-09-14). No other host listens to OnItem.
+                    if (isNewRecord)
+                        BpiAddItem(response.Data["id"].ToString());
 
-                // The UI is put back above, but the INSTRUCTIONS were not - and imageData is a
-                // form-level field that outlives this save. A failed save therefore left
-                // "deleteimages" (and any "replaceimages") queued against image ids the user
-                // can no longer see, to be sent by whatever save happened next - including a
-                // save of a DIFFERENT item after paging with Previous/Next, which would delete
-                // an image nobody asked to remove.
-                //
-                // Reachable in practice: an item save that fails partway (the "failed to delete
-                // image file" error on this screen was exactly that) leaves the form in this
-                // state. Clearing them here keeps the queued instructions in step with the
-                // pictures that were just restored.
-                replaceBase64Images.Clear();
-                imageData.Remove("replaceimages");
-                imageData.Remove("deleteimages");
+                    Helpers.ResetControls(pnl_header);
+                    // Awaited: the line below reads items.Rows.Count, and `items` is what
+                    // FetchItemData repopulates. Fired and forgotten, that count came from
+                    // the table as it was BEFORE the save, so saving a new item selected
+                    // the wrong record.
+                    await FetchItemData();
+                    selectedRecord = isNewRecord ? items.Rows.Count - 1 : selectedRecord;
+
+                    BtnToggle(false);
+                    currentSelectedTradeTypeIds.Clear();
+                    txt_trade_type.Tag = 0;
+                    currentSelectedPumpTypeIds.Clear();
+                    txt_pump_type_compatability.Tag = 0;
+
+                    // Full image state reset
+                    _pendingNewImages.Clear();
+                    replaceBase64Images.Clear();
+                    imageData.Remove("newimages");
+                    imageData.Remove("replaceimages");
+                    imageData.Remove("deleteimages");
+                    removedImages.Clear();
+                }
+                else
+                {
+                    // Restore removed images on failure
+                    foreach (var removedImage in removedImages)
+                    {
+                        PictureBox restoredPictureBox = new PictureBox
+                        {
+                            Image = removedImage.Value,
+                            Width = 100,
+                            Height = 100,
+                            BorderStyle = BorderStyle.FixedSingle,
+                            SizeMode = PictureBoxSizeMode.Zoom,
+                            Margin = new Padding(5),
+                        };
+                        restoredPictureBox.Tag = new ImageTag { Id = removedImage.Key };
+                        flowLayoutPanel1.Controls.Add(restoredPictureBox);
+                        restoredPictureBox.Click += PictureBox_Clicked;
+                    }
+                    removedImages.Clear();
+
+                    // The UI is put back above, but the INSTRUCTIONS were not - and imageData is a
+                    // form-level field that outlives this save. A failed save therefore left
+                    // "deleteimages" (and any "replaceimages") queued against image ids the user
+                    // can no longer see, to be sent by whatever save happened next - including a
+                    // save of a DIFFERENT item after paging with Previous/Next, which would delete
+                    // an image nobody asked to remove.
+                    //
+                    // Reachable in practice: an item save that fails partway (the "failed to delete
+                    // image file" error on this screen was exactly that) leaves the form in this
+                    // state. Clearing them here keeps the queued instructions in step with the
+                    // pictures that were just restored.
+                    replaceBase64Images.Clear();
+                    imageData.Remove("replaceimages");
+                    imageData.Remove("deleteimages");
+                }
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
             }
 
             btn_save.Enabled = true;
         }
-        private void btn_close_Click(object sender, EventArgs e)
+        private async void btn_close_Click(object sender, EventArgs e)
         {
-            BtnToggle(false);
-            FetchItemData();
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                BtnToggle(false);
+                await FetchItemData();
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
             if (dgv_template.Columns["title"] != null)
                 dgv_template.Columns["title"].ReadOnly = true;
@@ -1904,7 +1988,7 @@ namespace smpc_inventory_app.Pages.Item
         }
         #endregion
         #region "Parent Tab"
-        private async void FetchItemData()
+        private async Task FetchItemData()
         {
             try
             {

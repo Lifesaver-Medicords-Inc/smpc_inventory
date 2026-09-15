@@ -44,7 +44,7 @@ namespace smpc_inventory_app.Pages.Engineering.Bom
 
         private void SetupItemModal_Load(object sender, EventArgs e)
         {
-            Helpers.Loading.ShowLoading(dg_item_bom, "Fetching data...");
+            Helpers.Loading.ShowLoading(dg_item_bom);
             dg_item_bom.DataSource = this.Dt;
 
             foreach (DataGridViewColumn column in dg_item_bom.Columns)

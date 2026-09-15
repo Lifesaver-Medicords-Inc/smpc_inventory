@@ -39,28 +39,44 @@ namespace smpc_inventory_app.Pages.Setup
                 return;
             }
 
-            var models = await ItemModelServices.GetAsDatatable();
-            DataView dataView = new DataView(models);
-            string selectedItemId = records.items[selectedRecord].item_model_id.ToString();
-            dataView.RowFilter = $"id = '{selectedItemId}'";
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                var models = await ItemModelServices.GetAsDatatable();
+                DataView dataView = new DataView(models);
+                string selectedItemId = records.items[selectedRecord].item_model_id.ToString();
+                dataView.RowFilter = $"id = '{selectedItemId}'";
 
-            DataTable filteredData = dataView.ToTable();
-            dg_item_model.DataSource = filteredData;
+                DataTable filteredData = dataView.ToTable();
+                dg_item_model.DataSource = filteredData;
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private async void GetItems()
         {
 
-            var response = await RequestToApi<ApiResponseModel<Items>>.Get(ENUM_ENDPOINT.ITEM);
-            records = response.Data;
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                var response = await RequestToApi<ApiResponseModel<Items>>.Get(ENUM_ENDPOINT.ITEM);
+                records = response.Data;
 
-            items = JsonHelper.ToDataTable(records.items);
+                items = JsonHelper.ToDataTable(records.items);
 
-            cmb_item.DataSource = items;
-            cmb_item.ValueMember = "id";
-            cmb_item.DisplayMember = "item_name";
+                cmb_item.DataSource = items;
+                cmb_item.ValueMember = "id";
+                cmb_item.DisplayMember = "item_name";
 
-            Bind(true);
+                Bind(true);
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
         private void Bind(bool isBind = false)
         {
@@ -107,23 +123,31 @@ namespace smpc_inventory_app.Pages.Setup
                 data.Remove("id");
             }
 
-            response = isNewRecord
-                ? await ItemModelServices.Insert(data)
-                : await ItemModelServices.Update(data);
-
-            // Handle result
-            if (response.Success)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                Helpers.ResetControls(pnl_header);
-                GetData();
-                BtnToggle(false);
+                response = isNewRecord
+                    ? await ItemModelServices.Insert(data)
+                    : await ItemModelServices.Update(data);
+
+                // Handle result
+                if (response.Success)
+                {
+                    Helpers.ResetControls(pnl_header);
+                    GetData();
+                    BtnToggle(false);
+                }
+
+                string message = response.Success
+                    ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
+                    : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
+
+                Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
             }
-
-            string message = response.Success
-                ? (isNewRecord ? "Item saved successfully." : "Item updated successfully.")
-                : (isNewRecord ? "Failed to save item.\n" + response.message : "Failed to update item.\n" + response.message);
-
-            Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private void dg_item_model_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -182,18 +206,26 @@ namespace smpc_inventory_app.Pages.Setup
             {
                 var data = Helpers.GetControlsValues(pnl_header);
 
-                bool isSuccess = await ItemModelServices.Delete(data);
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    bool isSuccess = await ItemModelServices.Delete(data);
 
-                if (isSuccess)
-                {
-                    Helpers.ResetControls(pnl_header);
-                    Helpers.ShowDialogMessage("success", "Item deleted successfully.");
-                    GetData();
-                    BtnToggle(false);
+                    if (isSuccess)
+                    {
+                        Helpers.ResetControls(pnl_header);
+                        Helpers.ShowDialogMessage("success", "Item deleted successfully.");
+                        GetData();
+                        BtnToggle(false);
+                    }
+                    else
+                    {
+                        Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    }
                 }
-                else
+                finally
                 {
-                    Helpers.ShowDialogMessage("error", "Failed to delete item.");
+                    Helpers.Loading.HideLoading(this);
                 }
             }
         }

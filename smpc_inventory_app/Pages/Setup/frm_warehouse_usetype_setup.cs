@@ -31,39 +31,47 @@ namespace smpc_inventory_app.Pages.Setup
 
         private async void GetData()
         {
-            var data = await WarehouseUseTypeServices.GetDataTable();
-
-            if (data.Rows.Count <= 0)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                BtnToggle("empty");
-                return;
-            }
+                var data = await WarehouseUseTypeServices.GetDataTable();
 
-            dg_warehouse_usetype.DataSource = data;
-             
-            DataTable dataTable = Helpers.ConvertDataGridViewToDataTable(dg_warehouse_usetype);
-            Panel[] panelList = { pnl_records };
-            Helpers.BindControls(panelList, dataTable, 0);
-             
-            colorDictionary.Clear();
-
-            //add color based on bg_color column
-            foreach (DataGridViewRow row in dg_warehouse_usetype.Rows)
-            { 
-                string nameValue = row.Cells["name"]?.Value?.ToString();
-                string bgColorName = row.Cells["bg_color"]?.Value?.ToString();
-
-                if (!string.IsNullOrWhiteSpace(nameValue) && !string.IsNullOrWhiteSpace(bgColorName))
+                if (data.Rows.Count <= 0)
                 {
-                    Color color = Color.FromName(bgColorName);
-                     
-                    if (!colorDictionary.ContainsKey(nameValue))
-                        colorDictionary[nameValue] = color;
-                     
-                    var nameCell = row.Cells["name"];
-                    nameCell.Style.BackColor = color;
-                    nameCell.Style.ForeColor = color.GetBrightness() < 0.6f ? Color.White : Color.Black;
+                    BtnToggle("empty");
+                    return;
                 }
+
+                dg_warehouse_usetype.DataSource = data;
+             
+                DataTable dataTable = Helpers.ConvertDataGridViewToDataTable(dg_warehouse_usetype);
+                Panel[] panelList = { pnl_records };
+                Helpers.BindControls(panelList, dataTable, 0);
+             
+                colorDictionary.Clear();
+
+                //add color based on bg_color column
+                foreach (DataGridViewRow row in dg_warehouse_usetype.Rows)
+                { 
+                    string nameValue = row.Cells["name"]?.Value?.ToString();
+                    string bgColorName = row.Cells["bg_color"]?.Value?.ToString();
+
+                    if (!string.IsNullOrWhiteSpace(nameValue) && !string.IsNullOrWhiteSpace(bgColorName))
+                    {
+                        Color color = Color.FromName(bgColorName);
+                     
+                        if (!colorDictionary.ContainsKey(nameValue))
+                            colorDictionary[nameValue] = color;
+                     
+                        var nameCell = row.Cells["name"];
+                        nameCell.Style.BackColor = color;
+                        nameCell.Style.ForeColor = color.GetBrightness() < 0.6f ? Color.White : Color.Black;
+                    }
+                }
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
             }
 
         }
@@ -95,26 +103,34 @@ namespace smpc_inventory_app.Pages.Setup
                 data.Remove("id");
             }
 
-            response = isNewRecord ? 
-                await WarehouseUseTypeServices.Insert(data) : 
-                await WarehouseUseTypeServices.Update(data);
-
-            if (response.Success)
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                Helpers.ResetControls(pnl_records);
-                GetData();
-                BtnToggle("save");
-                TableContentChanged.WarehouseUseType = true;
-            }
-            
-            // Bug #174 (Trello): "Usetype" ran together as one word (also misspelled
-            // "Succesfully"); same fix applied to the sibling failure/insert messages
-            // for consistency.
-            string message = response.Success ?
-                (isNewRecord ? "Use Type Added Successfully" : "Use Type Updated Successfully") :
-                (isNewRecord ? "Failed to add use type\n" + response.message : "Failed to update use type\n" + response.message);
+                response = isNewRecord ? 
+                    await WarehouseUseTypeServices.Insert(data) : 
+                    await WarehouseUseTypeServices.Update(data);
 
-            Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
+                if (response.Success)
+                {
+                    Helpers.ResetControls(pnl_records);
+                    GetData();
+                    BtnToggle("save");
+                    TableContentChanged.WarehouseUseType = true;
+                }
+            
+                // Bug #174 (Trello): "Usetype" ran together as one word (also misspelled
+                // "Succesfully"); same fix applied to the sibling failure/insert messages
+                // for consistency.
+                string message = response.Success ?
+                    (isNewRecord ? "Use Type Added Successfully" : "Use Type Updated Successfully") :
+                    (isNewRecord ? "Failed to add use type\n" + response.message : "Failed to update use type\n" + response.message);
+
+                Helpers.ShowDialogMessage(response.Success ? "success" : "error", message);
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
         }
 
         private void dg_warehouse_usetype_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -194,18 +210,26 @@ namespace smpc_inventory_app.Pages.Setup
             {
                 var data = Helpers.GetControlsValues(pnl_records);
 
-                bool isSuccess = await WarehouseUseTypeServices.Delete(data);
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    bool isSuccess = await WarehouseUseTypeServices.Delete(data);
 
-                if (!isSuccess) //idk why it has to be !isSuccess errors if aint
-                {
-                    BtnToggle("delete");
-                    GetData();
-                    Helpers.ShowDialogMessage("success", "Use type deleted successfully");
-                    Helpers.ResetControls(pnl_records);
+                    if (!isSuccess) //idk why it has to be !isSuccess errors if aint
+                    {
+                        BtnToggle("delete");
+                        GetData();
+                        Helpers.ShowDialogMessage("success", "Use type deleted successfully");
+                        Helpers.ResetControls(pnl_records);
+                    }
+                    else
+                    {
+                        Helpers.ShowDialogMessage("error", "Failed to delete use type" + isSuccess);
+                    }
                 }
-                else
+                finally
                 {
-                    Helpers.ShowDialogMessage("error", "Failed to delete use type" + isSuccess);
+                    Helpers.Loading.HideLoading(this);
                 }
             }
         }

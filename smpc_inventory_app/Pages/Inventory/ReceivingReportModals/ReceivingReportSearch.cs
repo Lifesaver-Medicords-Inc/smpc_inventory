@@ -58,7 +58,7 @@ namespace smpc_inventory_app.Pages.Inventory.ReceivingReportModals
         {
             try
             {
-                Helpers.Loading.ShowLoading(dgv_rr_search, "Fetching data...");
+                Helpers.Loading.ShowLoading(dgv_rr_search);
                 await LoadReceivingReports();
             }
             catch (Exception ex)

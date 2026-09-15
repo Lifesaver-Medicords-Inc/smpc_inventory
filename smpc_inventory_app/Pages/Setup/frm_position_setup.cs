@@ -37,8 +37,16 @@ namespace smpc_inventory_app.Pages.Setup
 
         private async void GetPosition()
         {   
-                var data = await PositionServices.GetAsDatatable();
-                dg_position.DataSource = data;        
+                Helpers.Loading.ShowLoading(this);
+                try
+                {
+                    var data = await PositionServices.GetAsDatatable();
+                    dg_position.DataSource = data;        
+                }
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
         }
 
         private void panel_records_Paint(object sender, PaintEventArgs e)
@@ -118,28 +126,36 @@ namespace smpc_inventory_app.Pages.Setup
 
             var data = Helpers.GetControlsValues(panel_records);
 
-            if (txt_id.Text.Equals(""))
+            Helpers.Loading.ShowLoading(this);
+            try
             {
-                data.Remove("id");
-                response = await PositionServices.Insert(data);
-                message = response.Success ? "Insert Data Succesfully" : "Failed to add position\n" + response.message;
-            }
-            else
-            {
-                response = await PositionServices.Update(data);
-                message = response.Success ? "Update Data Succesfully" : "Failed to update Position";
-            }
+                if (txt_id.Text.Equals(""))
+                {
+                    data.Remove("id");
+                    response = await PositionServices.Insert(data);
+                    message = response.Success ? "Insert Data Succesfully" : "Failed to add position\n" + response.message;
+                }
+                else
+                {
+                    response = await PositionServices.Update(data);
+                    message = response.Success ? "Update Data Succesfully" : "Failed to update Position";
+                }
 
-            if (!response.Success)
-            {
-                Helpers.ShowDialogMessage("error", message);
-                return;
-            }
+                if (!response.Success)
+                {
+                    Helpers.ShowDialogMessage("error", message);
+                    return;
+                }
 
-            Helpers.ShowDialogMessage("success", message);
-            Helpers.ResetControls(panel_records);
-            GetPosition();
-            BtnToogle(false);
+                Helpers.ShowDialogMessage("success", message);
+                Helpers.ResetControls(panel_records);
+                GetPosition();
+                BtnToogle(false);
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
         }
 
@@ -151,17 +167,25 @@ namespace smpc_inventory_app.Pages.Setup
 
             if (result == DialogResult.Yes)
             {
-                bool isSuccess = await PositionServices.Delete(data);
-
-                if (!isSuccess)
+                Helpers.Loading.ShowLoading(this);
+                try
                 {
-                    Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
-                    return;
+                    bool isSuccess = await PositionServices.Delete(data);
+
+                    if (!isSuccess)
+                    {
+                        Helpers.ShowDialogMessage("error", "Operation failed. Please try again later.");
+                        return;
+                    }
+                    Helpers.ResetControls(panel_records);
+                    Helpers.ShowDialogMessage("success", "Delete Position Succesfully");
+                    GetPosition();
+                    BtnToogle(false);
                 }
-                Helpers.ResetControls(panel_records);
-                Helpers.ShowDialogMessage("success", "Delete Position Succesfully");
-                GetPosition();
-                BtnToogle(false);
+                finally
+                {
+                    Helpers.Loading.HideLoading(this);
+                }
             }
         }
 

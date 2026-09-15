@@ -89,22 +89,30 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
 
         private async void InventoryReport_Load(object sender, EventArgs e)
         {
-            await LoadData();
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                await LoadData();
 
-            // Clear panels first
-            pnl_item_category.Controls.Clear();
-            pnl_general_name.Controls.Clear();
-            pnl_brand.Controls.Clear();
+                // Clear panels first
+                pnl_item_category.Controls.Clear();
+                pnl_general_name.Controls.Clear();
+                pnl_brand.Controls.Clear();
 
-            // After data is loaded and combos are populated
-            if (!string.IsNullOrWhiteSpace(_selectedYear) && cmb_year.Items.Contains(_selectedYear))
-                cmb_year.SelectedItem = _selectedYear;
+                // After data is loaded and combos are populated
+                if (!string.IsNullOrWhiteSpace(_selectedYear) && cmb_year.Items.Contains(_selectedYear))
+                    cmb_year.SelectedItem = _selectedYear;
 
-            if (!string.IsNullOrWhiteSpace(_selectedMonth) && cmb_month.Items.Contains(_selectedMonth))
-                cmb_month.SelectedItem = _selectedMonth;
+                if (!string.IsNullOrWhiteSpace(_selectedMonth) && cmb_month.Items.Contains(_selectedMonth))
+                    cmb_month.SelectedItem = _selectedMonth;
 
-            // Initially clear all panels
-            FilterAndLoadPanels();
+                // Initially clear all panels
+                FilterAndLoadPanels();
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
 
             // Add event handlers for month and year selection changes
             cmb_month.SelectedIndexChanged += (s, ev) => FilterAndLoadPanels();
