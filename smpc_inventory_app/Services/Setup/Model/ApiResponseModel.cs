@@ -27,6 +27,12 @@ namespace smpc_inventory_app.Services.Setup
     {
         public bool has_next { get; set; }
         public int page_size { get; set; }
+        // Sent by the endpoints that page in BOTH directions or show a page counter (Item
+        // Entry, its Search modal). The cursor-paged callers simply leave these at zero.
+        public bool has_prev { get; set; }
+        public int page { get; set; }
+        public int total_pages { get; set; }
+        public long total { get; set; }
     }
 
     public class PaginatedResult<T>

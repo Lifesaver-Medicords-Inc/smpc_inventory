@@ -58,7 +58,17 @@ namespace smpc_inventory_app.Pages.Item
         DataTable warehouseArea;
 
         Items records;
+        // An index INTO THE CURRENT PAGE (20 items), not a position in the whole catalogue.
         int selectedRecord = 0;
+        // Keyset page state. The ids are what PREV/NEXT travel on - see ItemServices.GetPaged.
+        private int _pageFirstId;
+        private int _pageLastId;
+        private bool _hasNextPage;
+        private bool _hasPrevPage;
+        private const string NEW_ITEM_CODE_PLACEHOLDER = "I# (assigned on save)";
+        // Land on the end of the page just fetched, rather than its start - what << PREV wants
+        // when it steps back off the first row into the previous page.
+        private const int LAST_ROW = -1;
         private bool isProgrammaticChange = false;
         private List<TabPage> hiddenTabs = new List<TabPage>();
         private Dictionary<string, int> tabOrder = new Dictionary<string, int>();
@@ -188,7 +198,7 @@ namespace smpc_inventory_app.Pages.Item
                 // setups populate - fired together, which arrived first was decided by
                 // network timing, so the item could be bound against combos that were
                 // still empty.
-                await FetchItemData();
+                await FetchItemPage();
 
                 // subscribe event
                 dgv_template.CellValueChanged += dgv_template_CellValueChanged;
@@ -249,7 +259,11 @@ namespace smpc_inventory_app.Pages.Item
                 BindDataToDataGridView();
 
                 var item = records.items?.ElementAtOrDefault(this.selectedRecord);
-                var additionalSpec = records.additionalspecs?.ElementAtOrDefault(this.selectedRecord);
+                // Matched on based_id, not on position. These two lists only ever lined up
+                // because nearly every item happened to have exactly one additional-specs row in
+                // the same order - one item without one shifted every later row onto the wrong
+                // item. A page of 20 items out of 3,707 has no reason to line up at all.
+                var additionalSpec = records.additionalspecs?.FirstOrDefault(spec => spec.based_id == currentItemId);
 
                 txt_trade_type.Text = item?.trade_type_names ?? "";
                 txt_pump_type_compatability.Text = additionalSpec?.pump_type_compatability_names ?? "";
@@ -501,44 +515,31 @@ namespace smpc_inventory_app.Pages.Item
 
 
 
-            //Fetch Additional Specs
-            DataView dataViewAdditionalSpecs = new DataView(additionalspecs);
-            if (dataViewAdditionalSpecs.Count != 0)
-            {
-                dataViewAdditionalSpecs.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-            }
-            //Fetch Item Purchasing
-            DataView dataViewPurchasing = new DataView(itempurchasing);
+            string currentId = items.Rows[this.selectedRecord]["id"].ToString();
 
-            if (dataViewPurchasing.Count != 0)
-            {
-                dataViewPurchasing.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-                bindingSourcePurchasing.DataSource = dataViewPurchasing;
-            }
+            BindFiltered(itempurchasing, "based_id", currentId, bindingSourcePurchasing);
+            BindFiltered(itemsales, "based_id", currentId, bindingSourceSales);
+            BindFiltered(itemavailableinv, "item_id", currentId, bindingSourceInventory);
+            BindFiltered(itemproduction, "item_id", currentId, bindingSourceProduction);
 
-            //Fetch Item Sales
-            DataView dataViewSales = new DataView(itemsales);
-            if (dataViewSales.Count != 0)
-            {
-                dataViewSales.RowFilter = "based_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-                bindingSourceSales.DataSource = dataViewSales;
-            }
+            // (The additional-specs DataView that used to be built here was filtered and then
+            // never bound to anything - the real binding is by based_id in Bind().)
+        }
 
-            // Fetch Item Available Inventory
-            DataView dataViewAvailableInv = new DataView(itemavailableinv);
-            if (dataViewAvailableInv.Count != 0)
+        // Always filters AND always assigns. Each of these used to be skipped entirely when its
+        // table had no rows at all, which left the grid pointing at the PREVIOUS item's view -
+        // so an item with no purchasing or sales rows showed someone else's. Barely visible
+        // while the whole catalogue was loaded and almost every item had rows; plain as soon as
+        // you page through 20 at a time.
+        private void BindFiltered(DataTable table, string column, string currentId, BindingSource source)
+        {
+            if (table == null || !table.Columns.Contains(column))
             {
-                dataViewAvailableInv.RowFilter = "item_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-                bindingSourceInventory.DataSource = dataViewAvailableInv;
+                source.DataSource = null;
+                return;
             }
 
-            //Fetch Item Production
-            DataView dataViewProduction = new DataView(itemproduction);
-            if (dataViewProduction.Count != 0)
-            {
-                dataViewProduction.RowFilter = "item_id = '" + items.Rows[this.selectedRecord]["id"].ToString() + "'";
-                bindingSourceProduction.DataSource = dataViewProduction;
-            }
+            source.DataSource = new DataView(table) { RowFilter = column + " = '" + currentId + "'" };
         }
         private void BindDataToFlowLayoutPanel(int currentItemId)
         {
@@ -1501,9 +1502,10 @@ namespace smpc_inventory_app.Pages.Item
 
             if (data.ContainsKey("item_code") && data["item_code"] is string itemCode)
             {
-                data["item_code"] = itemCode.StartsWith("I#")
-                    ? itemCode.Substring(2)
-                    : itemCode;
+                // The placeholder is not a code - the server issues the real one on create.
+                data["item_code"] = itemCode == NEW_ITEM_CODE_PLACEHOLDER
+                    ? ""
+                    : (itemCode.StartsWith("I#") ? itemCode.Substring(2) : itemCode);
             }
 
             if (itemprice.TryGetValue("price", out var priceValue))
@@ -1565,15 +1567,13 @@ namespace smpc_inventory_app.Pages.Item
                     // editing an existing item inside that dialog also re-added it to the partner
                     // and closed the dialog (decided 2026-09-14). No other host listens to OnItem.
                     if (isNewRecord)
-                        BpiAddItem(response.Data["id"].ToString());
+                        BpiAddItem(response.Data["id"].ToString(), response.Data["item_code"]?.ToString());
 
                     Helpers.ResetControls(pnl_header);
-                    // Awaited: the line below reads items.Rows.Count, and `items` is what
-                    // FetchItemData repopulates. Fired and forgotten, that count came from
-                    // the table as it was BEFORE the save, so saving a new item selected
-                    // the wrong record.
-                    await FetchItemData();
-                    selectedRecord = isNewRecord ? items.Rows.Count - 1 : selectedRecord;
+                    // Reopen by id, on the page that holds the saved item. This used to refetch
+                    // the whole catalogue and jump to the last row for a create - correct only
+                    // while the client held every item AND the new one sorted last.
+                    await FetchItemPage(at: Convert.ToInt32(response.Data["id"]));
 
                     BtnToggle(false);
                     currentSelectedTradeTypeIds.Clear();
@@ -1638,7 +1638,9 @@ namespace smpc_inventory_app.Pages.Item
             try
             {
                 BtnToggle(false);
-                await FetchItemData();
+                // Reload the page being viewed, not the first one - Close should put the record
+                // back as it was saved, not move the user somewhere else.
+                await FetchItemPage(at: _pageFirstId > 0 ? _pageFirstId : (int?)null, selectRow: selectedRecord);
             }
             finally
             {
@@ -1656,51 +1658,51 @@ namespace smpc_inventory_app.Pages.Item
             imageData.Remove("deleteimages");
             removedImages.Clear();
         }
-        private void ChangeRecord(int step)
+        // Walks within the loaded page, and fetches the next or previous one at its edges. The
+        // ids are what the fetch travels on, so nothing renumbers if another user adds an item
+        // while this one reads.
+        private async Task ChangeRecord(int step)
         {
             if (items == null || items.Rows.Count == 0) return;
 
             int newIndex = this.selectedRecord + step;
-            if (newIndex < 0 || newIndex >= items.Rows.Count) return;
+
+            if (newIndex < 0 && !_hasPrevPage) return;
+            if (newIndex >= items.Rows.Count && !_hasNextPage) return;
 
             RemoveSelectedDataTable(CacheData.PumpType);
             RemoveSelectedDataTable(CacheData.ItemType);
 
-            this.selectedRecord = newIndex;
-            Bind(true);
-
-            btn_prev.Enabled = this.selectedRecord > 0;
-            btn_next.Enabled = this.selectedRecord < items.Rows.Count - 1;
-        }
-        private void btn_next_Click(object sender, EventArgs e) => ChangeRecord(1);
-        private void btn_prev_Click(object sender, EventArgs e) => ChangeRecord(-1);
-        private void btn_search_Click(object sender, EventArgs e)
-        {
-            if (items == null || items.Rows.Count == 0)
+            if (newIndex < 0)
             {
-                MessageBox.Show("No items available for selection.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await LoadPage(before: _pageFirstId, selectRow: LAST_ROW);
                 return;
             }
-            Dictionary<string, string> columnMappings = new Dictionary<string, string>
-                {
-                    { "id", "ID" },
-                    { "item_code", "ITEM CODE" },
-                    { "item_name", "ITEM NAME" },
-                    { "item_model", "MODEL" },
-                    { "item_brand", "BRAND" },
-                };
 
-            using (SearchModal searchModal = new SearchModal("Search Items", items, columnMappings))
+            if (newIndex >= items.Rows.Count)
             {
-                if (searchModal.ShowDialog() == DialogResult.OK)
-                {
-                    int selectedIndex = searchModal.SelectedIndex;
+                await LoadPage(after: _pageLastId);
+                return;
+            }
 
-                    if (selectedIndex >= 0)
-                    {
-                        this.selectedRecord = selectedIndex;
-                        Bind(true);
-                    }
+            this.selectedRecord = newIndex;
+            Bind(true);
+            UpdateNavButtons();
+        }
+        private async void btn_next_Click(object sender, EventArgs e) => await ChangeRecord(1);
+        private async void btn_prev_Click(object sender, EventArgs e) => await ChangeRecord(-1);
+        private async void btn_search_Click(object sender, EventArgs e)
+        {
+            // Searches the whole catalogue on the server, not the 20 items this page happens to
+            // be holding, and comes back with an id rather than a row index.
+            using (ItemSearchModal searchModal = new ItemSearchModal())
+            {
+                if (searchModal.ShowDialog() == DialogResult.OK && searchModal.SelectedItemId > 0)
+                {
+                    RemoveSelectedDataTable(CacheData.PumpType);
+                    RemoveSelectedDataTable(CacheData.ItemType);
+
+                    await LoadPage(at: searchModal.SelectedItemId);
                 }
             }
         }
@@ -1716,12 +1718,14 @@ namespace smpc_inventory_app.Pages.Item
 
             return item_recieve;
         }
-        public void BpiAddItem(string itemId)
+        // itemCode comes from the save response, not from txt_item_code: the box holds whatever
+        // the client last displayed (now a placeholder for a new item), while the server is what
+        // actually issued the code. BPI was being handed the guess.
+        public void BpiAddItem(string itemId, string itemCode)
         {
 
             var itemName = cmb_item_name.Text;
             var tradeType = txt_trade_type.Text;
-            var itemCode = txt_item_code.Text;
             var statusTangible = cmb_item_tangibility_type.Text;
             Dictionary<string, dynamic> item = new Dictionary<string, dynamic>();
 
@@ -1744,36 +1748,14 @@ namespace smpc_inventory_app.Pages.Item
                 }
             }
         }
+        // The server issues the real code on save and has since Trello #091 (generateItemCode:
+        // MAX over every code ever issued, + 1), precisely so two people creating items at once
+        // cannot land on the same one. This used to guess it from the last loaded row + 1 and
+        // send that guess along; with 20 of 3,707 items loaded the guess is wrong nearly every
+        // time. Say where the code comes from instead of inventing one.
         private void ItemModelGenerator()
         {
-            string item_code;
-
-            if (items.Rows.Count > 0)
-            {
-                int latestIndex = items.Rows.Count - 1;
-                DataRow latestRow = items.Rows[latestIndex];
-                // Check if "document_no" is not null or DBNull
-                if (latestRow["item_code"] != DBNull.Value && !string.IsNullOrEmpty(latestRow["item_code"].ToString()))
-                {
-                    if (int.TryParse(latestRow["item_code"].ToString(), out int itemNum))
-                    {
-                        item_code = (itemNum + 1).ToString().PadLeft(4, '0');
-                    }
-                    else
-                    {
-                        item_code = "0001";
-                    }
-                }
-                else
-                {
-                    item_code = "0001";
-                }
-            }
-            else
-            {
-                item_code = "0001";
-            }
-            txt_item_code.Text = "I#" + item_code;
+            txt_item_code.Text = NEW_ITEM_CODE_PLACEHOLDER;
         }
         private void ResetComboBoxes(params ComboBox[] comboBoxes)
         {
@@ -1988,19 +1970,33 @@ namespace smpc_inventory_app.Pages.Item
         }
         #endregion
         #region "Parent Tab"
-        private async Task FetchItemData()
+        // Loads ONE page of items (20) with only that page's children, and binds one of its rows.
+        //
+        // This used to call GET /setup/item with no conditions: nine tables covering every item
+        // in the database - 3,707 of them since the Calpeda load, with ~2,450 spec rows and
+        // ~22,000 template lines - to display one. That payload is also what pushed the specs
+        // preload past SQL Server's 2,100-parameter limit and left this page blank on
+        // 2026-09-15. The unpaged route still exists for the pickers that need every row.
+        //
+        // after/before/at are item ids, not page numbers - see ItemServices.GetPaged.
+        // selectRow indexes the NEW page; LAST_ROW lands on the end of it, which is what
+        // << PREV back into the previous page wants.
+        private async Task FetchItemPage(int? after = null, int? before = null, int? at = null, int selectRow = 0)
         {
             try
             {
-                var response = await RequestToApi<ApiResponseModel<Items>>.Get(ENUM_ENDPOINT.ITEM);
+                var result = await ItemServices.GetPaged(after, before, at);
 
-                if (response?.Data == null || response.Data.items == null)
+                if (result?.Data == null || result.Data.items == null)
                 {
                     MessageBox.Show("No records found.");
                     return;
                 }
 
-                records = response.Data;
+                records = result.Data;
+
+                _hasNextPage = result.Pagination?.has_next ?? false;
+                _hasPrevPage = result.Pagination?.has_prev ?? false;
 
                 // heavy work off the UI thread
                 var tables = await Task.Run(() => new
@@ -2030,21 +2026,53 @@ namespace smpc_inventory_app.Pages.Item
 
                 if (records.items.Count > 0)
                 {
+                    _pageFirstId = records.items.First().id;
+                    _pageLastId = records.items.Last().id;
+                    this.selectedRecord = selectRow == LAST_ROW
+                        ? records.items.Count - 1
+                        : Math.Min(Math.Max(selectRow, 0), records.items.Count - 1);
+
                     if (this.InvokeRequired)
-                        this.BeginInvoke(new Action(() => Bind(true)));
+                        this.BeginInvoke(new Action(() => { Bind(true); UpdateNavButtons(); }));
                     else
+                    {
                         Bind(true);
+                        UpdateNavButtons();
+                    }
                 }
                 else
                 {
+                    _pageFirstId = 0;
+                    _pageLastId = 0;
                     MessageBox.Show("No records found.");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[FetchItemData] {ex.Message}");
+                Debug.WriteLine($"[FetchItemPage] {ex.Message}");
                 MessageBox.Show("Failed to load item data. Please try again.");
             }
+        }
+
+        // Every page turn is a round trip, so it gets the page-wide loading screen (spec 2.1).
+        private async Task LoadPage(int? after = null, int? before = null, int? at = null, int selectRow = 0)
+        {
+            Helpers.Loading.ShowLoading(this);
+            try
+            {
+                await FetchItemPage(after, before, at, selectRow);
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(this);
+            }
+        }
+
+        // PREV/NEXT are live whenever there is somewhere to go - inside this page OR beyond it.
+        private void UpdateNavButtons()
+        {
+            btn_prev.Enabled = _hasPrevPage || this.selectedRecord > 0;
+            btn_next.Enabled = _hasNextPage || (items != null && this.selectedRecord < items.Rows.Count - 1);
         }
         private void ToggleItemPages(string tradeStatusText, string tangibility)
         {

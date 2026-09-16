@@ -11,6 +11,10 @@ namespace smpc_inventory_app.Data
         private static string setupItem = "/setup/item/";
 
         public static string ITEM = setupItem;
+        // Item Entry only. ITEM above still returns the whole catalogue, which the quotation
+        // and order pickers, Item Model Setup and Item Stock Add all rely on.
+        public static string ITEM_PAGED = setupItem + "paged";
+        public static string ITEM_SEARCH = setupItem + "search";
         public static string ITEM_IMAGE = setupItem + "item_image";
         public static string ITEM_BRAND = setupItem + "brand";
         public static string ITEM_TYPE = setupItem + "type";

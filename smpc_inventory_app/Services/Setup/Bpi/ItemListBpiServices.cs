@@ -21,5 +21,23 @@ namespace smpc_inventory_app.Services.Setup.Bpi
             return entityType;
 
         }
+
+        // One page of the BPI item picker (20 rows), searched on the server. The unpaged
+        // call above is left alone for any caller that still wants the whole list.
+        public static async Task<PaginatedResult<List<ItemBpiList>>> GetPaged(string search, int page = 1)
+        {
+            string query = $"?page={page}";
+            if (!string.IsNullOrWhiteSpace(search))
+                query += $"&search={Uri.EscapeDataString(search)}";
+
+            var response = await RequestToApi<ApiResponseModel<List<ItemBpiList>>>.Get(
+                ENUM_ENDPOINT.BpiItemList + "/paged" + query);
+
+            return new PaginatedResult<List<ItemBpiList>>
+            {
+                Data = response?.Data ?? new List<ItemBpiList>(),
+                Pagination = response?.pagination
+            };
+        }
     }
 }

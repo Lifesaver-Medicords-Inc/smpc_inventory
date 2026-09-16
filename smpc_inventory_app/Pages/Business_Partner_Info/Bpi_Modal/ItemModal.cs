@@ -1,7 +1,9 @@
 
 using smpc_app.Services.Helpers;
 using smpc_inventory_app.Services.Helpers;
+using smpc_inventory_app.Services.Setup;
 using smpc_inventory_app.Services.Setup.Bpi;
+using smpc_inventory_app.Services.Setup.Model.Bpi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +18,6 @@ namespace smpc_sales_app.Pages
 {
     public partial class ItemModal : Form
     {
-        private DataTable _allItems;
         private TextBox txt_search;
         private const string SearchPlaceholder = "Item Search...";
 
@@ -25,10 +26,51 @@ namespace smpc_sales_app.Pages
         // instead - see btn_add_selected_Click.
         private List<Dictionary<string, dynamic>> results { get; set; }
 
+        // The rows on screen now - one page of 20, from the server. This used to be the
+        // whole vw_bpi_item_list (3,707 rows once the Calpeda catalogue landed), filtered
+        // in memory.
+        private List<ItemBpiList> _rows = new List<ItemBpiList>();
+
+        // Ticks live HERE, not in the grid, and they are keyed by item id with the whole
+        // row kept alongside. Two reasons: a page change rebinds the grid and would
+        // otherwise lose every tick, and "Add Selected Items" needs each ticked row's
+        // price and descriptions even after you have paged away from it.
+        private readonly Dictionary<int, ItemBpiList> _checked = new Dictionary<int, ItemBpiList>();
+
+        private string _search = "";
+        private int _page = 1;
+        private int _totalPages;
+        private bool _isLoading;
+        private readonly Timer _typingTimer = new Timer { Interval = 350 };
+
+        private readonly Button btn_page_prev = new Button { Text = "<< PREV", Dock = DockStyle.Left, Width = 90 };
+        private readonly Button btn_page_next = new Button { Text = "NEXT >>", Dock = DockStyle.Left, Width = 90 };
+        private readonly Label lbl_page = new Label { Dock = DockStyle.Left, Width = 250, TextAlign = ContentAlignment.MiddleCenter };
+
         public ItemModal()
         {
             InitializeComponent();
             InitializeSearchBox();
+            BuildPager();
+        }
+
+        // Added to the existing footer in code, so ItemModal.Designer.cs and its .resx are
+        // left alone.
+        private void BuildPager()
+        {
+            pnl_footer.Controls.Add(lbl_page);
+            pnl_footer.Controls.Add(btn_page_next);
+            pnl_footer.Controls.Add(btn_page_prev);
+            lbl_page.BringToFront();
+            btn_page_next.BringToFront();
+            btn_page_prev.BringToFront();
+
+            btn_page_prev.Click += async (s, e) => { if (_page > 1) await LoadPage(_page - 1); };
+            btn_page_next.Click += async (s, e) => { if (_page < _totalPages) await LoadPage(_page + 1); };
+
+            _typingTimer.Tick += async (s, e) => { _typingTimer.Stop(); await LoadPage(1); };
+            // Not a Dispose(bool) override - the Designer already declares one.
+            FormClosed += (s, e) => { _typingTimer.Stop(); _typingTimer.Dispose(); };
         }
 
         private void InitializeSearchBox()
@@ -47,58 +89,69 @@ namespace smpc_sales_app.Pages
             txt_search.SendToBack();
         }
 
+        // Searches the whole catalogue on the server. Debounced, because every keystroke
+        // is now a round trip rather than a filter over a table already in memory.
         private void txt_search_TextChanged(object sender, EventArgs e)
         {
-            if (_allItems == null || _allItems.Rows.Count == 0)
-                return;
-
             string searchText = txt_search.Text.Trim();
 
-            if (string.IsNullOrEmpty(searchText) || searchText == SearchPlaceholder)
-            {
-                dg_ItemList.DataSource = _allItems;
-            }
-            else
-            {
-                DataTable filtered = Helpers.FilterDataTable(_allItems, searchText,
-                    "general_name", "item_type", "item_model_name", "item_brand_name", "item_code", "long_description");
-                dg_ItemList.DataSource = filtered;
-            }
+            // CreateSearchBox writes the placeholder into the box itself, which fires this
+            // handler - treat it as an empty search rather than searching for its text.
+            _search = (string.IsNullOrEmpty(searchText) || searchText == SearchPlaceholder)
+                ? ""
+                : searchText;
+
+            _typingTimer.Stop();
+            _typingTimer.Start();
         }
 
-        private async void GetItemList()
+        private async Task LoadPage(int page)
         {
+            if (_isLoading) return;
+            _isLoading = true;
+
             Helpers.Loading.ShowLoading(this);
             try
             {
-                var data = await ItemListBpiServices.GetAsDatatable();
+                var result = await ItemListBpiServices.GetPaged(_search, page);
 
-                // Multi-select (requested): a real bool column, not left typeless - the
-                // "selected" DataGridViewCheckBoxColumn needs a bool-typed source to bind
-                // cleanly. Columns.Add's DefaultValue only applies to rows created via
-                // NewRow() afterwards, not the rows already in `data` from the API
-                // response, so every existing row is set explicitly to false too.
-                if (data != null && !data.Columns.Contains("Selected"))
-                {
-                    data.Columns.Add("Selected", typeof(bool)).DefaultValue = false;
-                    foreach (DataRow row in data.Rows)
-                    {
-                        row["Selected"] = false;
-                    }
-                }
+                _rows = result?.Data ?? new List<ItemBpiList>();
 
-                _allItems = data;
-                dg_ItemList.DataSource = data;
+                // Re-apply ticks: the rows are new objects on every page fetch, so a row
+                // that was checked earlier arrives unchecked unless it is marked here.
+                foreach (ItemBpiList row in _rows)
+                    row.Selected = _checked.ContainsKey(row.id);
+
+                // The Designer already declares every column with a DataPropertyName, so
+                // auto-generation would add a second set of them.
+                dg_ItemList.AutoGenerateColumns = false;
+                dg_ItemList.DataSource = null;
+                dg_ItemList.DataSource = _rows;
+
+                _page = result?.Pagination?.page ?? page;
+                _totalPages = result?.Pagination?.total_pages ?? 0;
+
+                lbl_page.Text = _totalPages == 0
+                    ? "No items found"
+                    : $"Page {_page} of {_totalPages}  ({result?.Pagination?.total ?? 0} items, {_checked.Count} ticked)";
+
+                btn_page_prev.Enabled = result?.Pagination?.has_prev ?? false;
+                btn_page_next.Enabled = result?.Pagination?.has_next ?? false;
+            }
+            catch (Exception ex)
+            {
+                Helpers.ShowDialogMessage("error", "Failed to load the item list.\n" + ex.Message);
             }
             finally
             {
                 Helpers.Loading.HideLoading(this);
+                _isLoading = false;
             }
         }
 
-        private void ItemModal_Load(object sender, EventArgs e)
+        private async void ItemModal_Load(object sender, EventArgs e)
         {
-            GetItemList();
+            await LoadPage(1);
         }
 
         public List<Dictionary<string, dynamic>> GetResult()
@@ -112,64 +165,50 @@ namespace smpc_sales_app.Pages
         // be checked first.
         private void dgv_itemList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Live crash (fixed earlier): NullReferenceException ("DataGridViewCell.
-            // Value.get returned null") - dg_ItemList is bound directly to a DataTable,
-            // so it still shows the trailing "add new row" placeholder by default.
-            // Clicking that row fires CellClick with a real, non-negative RowIndex,
-            // but every cell's Value is genuinely null (no DataRow backs it yet)
-            // rather than DBNull - IsNewRow is what actually catches that case.
-            if (e.RowIndex < 0 || e.RowIndex >= dg_ItemList.Rows.Count || dg_ItemList.Rows[e.RowIndex].IsNewRow)
+            if (e.RowIndex < 0 || e.RowIndex >= _rows.Count)
                 return;
 
-            DataGridViewRow row = dg_ItemList.Rows[e.RowIndex];
-            var checkboxCell = row.Cells["selected"];
-            bool current = checkboxCell.Value as bool? ?? false;
-            checkboxCell.Value = !current;
+            // Toggled on the bound object, not the cell: the grid is ReadOnly (Designer),
+            // so a cell write would not push back through the binding. The old
+            // EndEdit/CommitEdit dance existed for exactly that reason and is no longer
+            // needed.
+            ItemBpiList row = _rows[e.RowIndex];
+            row.Selected = !row.Selected;
 
-            // A checkbox cell's new Value doesn't commit to the bound DataTable until
-            // the cell loses focus - without this, the very next click (e.g. on
-            // btn_add_selected) would still see the old value.
-            dg_ItemList.EndEdit();
-            dg_ItemList.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            if (row.Selected)
+                _checked[row.id] = row;
+            else
+                _checked.Remove(row.id);
+
+            dg_ItemList.InvalidateRow(e.RowIndex);
+
+            if (_totalPages > 0)
+            {
+                lbl_page.Text = $"Page {_page} of {_totalPages}  ({_checked.Count} ticked)";
+            }
         }
 
         private void btn_add_selected_Click(object sender, EventArgs e)
         {
-            dg_ItemList.EndEdit();
-
+            // Reads the tick register, not the grid - so items ticked on an earlier page
+            // are still included after paging away from them.
             var selectedRows = new List<Dictionary<string, dynamic>>();
 
-            foreach (DataGridViewRow row in dg_ItemList.Rows)
+            foreach (ItemBpiList row in _checked.Values)
             {
-                if (row.IsNewRow) continue;
-
-                bool isChecked = row.Cells["selected"].Value as bool? ?? false;
-                if (!isChecked) continue;
-
-                int.TryParse(row.Cells["id"].Value?.ToString(), out int item_id);
-                string item_type = row.Cells["item_type"].Value?.ToString() ?? "";
-                string item_code = row.Cells["item_code"].Value?.ToString() ?? "";
-                string long_description = row.Cells["long_description"].Value?.ToString() ?? "";
-                float.TryParse(row.Cells["item_price"].Value?.ToString(), out float item_price);
-                // Bug fix: BusinessPartnerInfo.cs's dg_items_CellClick reads
-                // result["short_desc"]/["status_tangible"]/["status_trade"] - keys
-                // this dictionary never provided, throwing KeyNotFoundException the
-                // moment that path ran. vw_bpi_item_list now returns real values for
-                // all three (see the view + BpiItemListContent for where they come
-                // from), so read them the same way as everything else here.
-                string short_desc = row.Cells["short_desc"].Value?.ToString() ?? "";
-                string status_tangible = row.Cells["status_tangible"].Value?.ToString() ?? "";
-                string status_trade = row.Cells["status_trade"].Value?.ToString() ?? "";
-
                 var data = new Dictionary<string, dynamic>();
-                data.Add("item_id", item_id);
-                data.Add("item_type", item_type);
-                data.Add("item_code", item_code);
-                data.Add("long_description", long_description);
-                data.Add("item_price", item_price);
-                data.Add("short_desc", short_desc);
-                data.Add("status_tangible", status_tangible);
-                data.Add("status_trade", status_trade);
+                data.Add("item_id", row.id);
+                data.Add("item_type", row.item_type ?? "");
+                data.Add("item_code", row.item_code ?? "");
+                data.Add("long_description", row.long_description ?? "");
+                data.Add("item_price", row.item_price);
+                // BusinessPartnerInfo.cs's dg_items_CellClick reads short_desc /
+                // status_tangible / status_trade and threw KeyNotFoundException before
+                // vw_bpi_item_list carried them - the paged endpoint returns the whole
+                // row precisely so these keep working.
+                data.Add("short_desc", row.short_desc ?? "");
+                data.Add("status_tangible", row.status_tangible ?? "");
+                data.Add("status_trade", row.status_trade ?? "");
 
                 selectedRows.Add(data);
             }

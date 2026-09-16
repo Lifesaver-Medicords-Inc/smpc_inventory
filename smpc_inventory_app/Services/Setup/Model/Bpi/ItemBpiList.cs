@@ -23,5 +23,9 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         public string status_tangible { get; set; }
         public string status_trade { get; set; }
 
+        // Bound to the picker's checkbox column (DataPropertyName = "Selected"). It used to
+        // be a column bolted onto the DataTable at runtime; binding a list of these instead
+        // needs it on the model. Not sent by the API - it is purely the tick state.
+        public bool Selected { get; set; }
     }
 }
