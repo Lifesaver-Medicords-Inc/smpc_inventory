@@ -1782,7 +1782,15 @@ namespace smpc_inventory_app.Pages.Item
         private void BtnToggle(bool isEdit)
         {
             btn_new.Visible = !isEdit;
-            btn_delete.Visible = !isEdit;
+            // Spec 4.2 gives Item Entry no Delete: an item is retired with STOP SELLING
+            // (4.2.1), which is why that checkbox exists and why the spec requires a way to
+            // clear remaining stock afterwards. The button was dead anyway - nothing ever
+            // wired its Click - and wiring it would have been worse than leaving it: the API
+            // deletes the row outright with no reference check, while tbl_setup_item is
+            // pointed at by two foreign keys and 36 tables carrying item_id (stock lots,
+            // reservations, transactions, quotations, orders, invoices, BOMs, BPI items), so
+            // deleting an item in use would orphan rows across the system.
+            btn_delete.Visible = false;
             btn_edit.Visible = !isEdit;
             btn_search.Visible = !isEdit;
             btn_prev.Visible = !isEdit;
