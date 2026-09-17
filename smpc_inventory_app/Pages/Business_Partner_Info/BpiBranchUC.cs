@@ -1135,6 +1135,52 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 currentSelectedEntityIds.Clear();
             }
         }
+        // C# and S# are issued by the API when the partner is saved (spec 4.1.3), and it
+        // ignores any code the form sends, on create and on update. Until then the box says
+        // so. The form used to preview "C#" + a count that was never fetched here, so it
+        // always read C#1 / S#1.
+        private const string CUSTOMER_CODE_PENDING = "C# (assigned on save)";
+        private const string SUPPLIER_CODE_PENDING = "S# (assigned on save)";
+
+        // The picked entity types as setup codes (SUP, CUS, TSP, NAF, AFF...), read from the
+        // ids the picker stored. The picker shows names, and names differ by database -
+        // "Supplier" on test_fresh, "SUPPLIER" on the rehearsal DB - so the old upper-case
+        // name comparison sent a supplier down the customer branch on test_fresh, which
+        // disabled its Supplier Code box.
+        private HashSet<string> SelectedEntityCodes()
+        {
+            var codes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            DataTable entities = CacheData.Entity;
+            if (entities == null || !entities.Columns.Contains("code")) return codes;
+
+            if (txt_entity_type.Tag is List<int> ids && ids.Count > 0)
+            {
+                foreach (DataRow row in entities.Rows)
+                    if (int.TryParse(row["id"]?.ToString(), out int id) && ids.Contains(id))
+                        codes.Add(row["code"]?.ToString().Trim() ?? string.Empty);
+                return codes;
+            }
+
+            // No ids to go on: match the listed names, ignoring case.
+            var names = new HashSet<string>(
+                txt_entity_type.Text.Split(',').Select(n => n.Trim()).Where(n => n.Length > 0),
+                StringComparer.OrdinalIgnoreCase);
+            foreach (DataRow row in entities.Rows)
+                if (names.Contains(row["name"]?.ToString().Trim() ?? string.Empty))
+                    codes.Add(row["code"]?.ToString().Trim() ?? string.Empty);
+            return codes;
+        }
+
+        // The code this branch was saved with, if any - an existing customer that gains the
+        // Supplier type keeps showing its own C#.
+        private string SavedCode(bool customer)
+        {
+            if (Records?.general == null || !int.TryParse(ParentId, out int id)) return null;
+            var saved = Records.general.FirstOrDefault(x => x.general_id == id);
+            string code = customer ? saved?.customer_code : saved?.supplier_code;
+            return string.IsNullOrWhiteSpace(code) ? null : code;
+        }
+
         private void ProcessEntitySelection()
         {
             txt_customer_code.Text = "";
@@ -1144,6 +1190,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             var data = txt_entity_type.Text;
             string[] entities = data.Split(',');
+            HashSet<string> codes = SelectedEntityCodes();
+            bool isCustomer = codes.Contains("CUS");
+            bool isSupplier = codes.Contains("SUP");
+            // Temporary Supplier is TSP on test_fresh and "SUP (TEMP)" on the rehearsal DB.
+            // It gets no S# (the API issues one for SUP only) but it is a supplier for the tabs.
+            bool isSupplierType = isSupplier || codes.Contains("TSP") || codes.Contains("SUP (TEMP)");
 
             bool hasBlackListed = entities.Any(n => n.Trim() == ENUM_ENTITY_TYPE.Blacklisted);
             bool hasTempSupplier = entities.Any(n => n.Trim() == ENUM_ENTITY_TYPE.TempSupplier);
@@ -1166,26 +1218,24 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 return;
             }
 
-            string[] valuesToCheck = { "SUPPLIER", "CUSTOMER" };
-            bool containsBoth = valuesToCheck.All(value => data.Contains(value));
-
-            if (containsBoth)
+            if (isCustomer && isSupplierType)
             {
-                DocumentCodeIncrementor("BOTH");
+                DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Customer);
+                if (isSupplier) DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Supplier);
                 ToggleCustomerAndSupplier(true);
                 ShowTabPages(tabItemPages);
                 ShowTabPages(tabFinancePages);
             }
-            else if (data.Contains(ENUM_ENTITY_TYPE.Supplier))
+            else if (isSupplierType)
             {
-                DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Supplier);
+                if (isSupplier) DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Supplier);
                 ToggleCustomerAndSupplier(true);
                 ShowAffiliatedAndNon(false);
                 ShowTabPages(tabItemPages);
                 RemoveTabPages(tabFinancePages);
                 txt_customer_code.Enabled = false;
             }
-            else if (data.Contains(ENUM_ENTITY_TYPE.Non_Affiliated))
+            else if (codes.Contains("NAF"))
             {
                 DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Non_Affiliated);
                 ToggleEntityField(true);
@@ -1193,14 +1243,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 RemoveTabPages(tabFinancePages);
                 RemoveTabPages(tabItemPages);
             }
-            else if (data.Contains(ENUM_ENTITY_TYPE.Affiliated))
+            else if (codes.Contains("AFF"))
             {
                 DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Affiliated);
                 ToggleEntityField(false);
                 ToggleCustomerAndSupplier(false);
                 RemoveTabPages(tabFinancePages);
             }
-            else
+            else if (isCustomer)
             {
                 DocumentCodeIncrementor(ENUM_ENTITY_TYPE.Customer);
                 ShowAffiliatedAndNon(false);
@@ -1209,6 +1259,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 RemoveTabPages(tabItemPages);
                 txt_supplier_code.Enabled = false;
                 btn_finance_payment_terms.Visible = CacheData.CurrentUser.position_id.Equals("Web Developer");
+            }
+            else
+            {
+                // Neither customer nor supplier (e.g. Closed only, or nothing picked): no C#
+                // or S# is issued (4.1.3), and neither Finance nor Items applies (4.1).
+                // This used to fall into the customer branch.
+                ShowAffiliatedAndNon(false);
+                ToggleCustomerAndSupplier(false);
+                RemoveTabPages(tabFinancePages);
+                RemoveTabPages(tabItemPages);
             }
         }
         private void ToggleEntityField(bool isShow)
@@ -1266,12 +1326,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 case "SUPPLIER":
 
-                    txt_supplier_code.Text = "S#" + (GetEntityRecordCount(ENUM_ENTITY_TYPE.Supplier) + 1);
+                    txt_supplier_code.Text = SavedCode(customer: false) ?? SUPPLIER_CODE_PENDING;
 
                     break;
 
                 case "CUSTOMER":
-                    txt_customer_code.Text = "C#" + (GetEntityRecordCount(ENUM_ENTITY_TYPE.Customer) + 1);
+                    txt_customer_code.Text = SavedCode(customer: true) ?? CUSTOMER_CODE_PENDING;
 
                     break;
 
@@ -1287,8 +1347,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 case "BOTH":
 
-                    txt_customer_code.Text = "C#" + (GetEntityRecordCount(ENUM_ENTITY_TYPE.Customer) + 1);
-                    txt_supplier_code.Text = "S#" + (GetEntityRecordCount(ENUM_ENTITY_TYPE.Supplier) + 1);
+                    txt_customer_code.Text = SavedCode(customer: true) ?? CUSTOMER_CODE_PENDING;
+                    txt_supplier_code.Text = SavedCode(customer: false) ?? SUPPLIER_CODE_PENDING;
 
                     break;
 
@@ -2053,6 +2113,14 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
 
             var GeneralData = Helpers.GetControlsValues(panel_general);
+
+            // The "(assigned on save)" text is not a code. The API ignores what is sent here
+            // anyway; this keeps the placeholder out of the request and the history.
+            if (GeneralData.TryGetValue("customer_code", out object customerCode) && Equals(customerCode, CUSTOMER_CODE_PENDING))
+                GeneralData["customer_code"] = string.Empty;
+            if (GeneralData.TryGetValue("supplier_code", out object supplierCode) && Equals(supplierCode, SUPPLIER_CODE_PENDING))
+                GeneralData["supplier_code"] = string.Empty;
+
             return GeneralData;
         }
 
@@ -2554,6 +2622,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             dg_finance_pending.AllowUserToAddRows = false;
             dg_finance_pending.AllowUserToDeleteRows = false;
             txt_account_balance.ReadOnly = true;
+            // System-issued codes (4.1.3): Edit mode used to make them look typeable, and the
+            // API throws away whatever is typed there.
+            txt_customer_code.ReadOnly = true;
+            txt_supplier_code.ReadOnly = true;
+            txt_affiliated.ReadOnly = true;
+            txt_non_affiliated.ReadOnly = true;
 
             _isReadOnly = isReadOnly;
             ApplyTaxRateLock(cmb_finance_tax_code, txt_finance_tax);
