@@ -462,7 +462,9 @@
     <Compile Include="Pages\Item\frm_Item_Entry.Designer.cs">
       <DependentUpon>frm_Item_Entry.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Item\ItemSearchModal.cs" />
+    <Compile Include="Pages\Item\ItemSearchModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Pages\Item\ItemEntry.cs">
       <SubType>UserControl</SubType>
     </Compile>

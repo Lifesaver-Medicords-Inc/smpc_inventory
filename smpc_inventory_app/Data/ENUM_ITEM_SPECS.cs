@@ -161,7 +161,7 @@ namespace smpc_inventory_app.Data
         {
             IEnumerable<string> data = new List<String>()
             {
-                "SUNCTION SIZE",
+                "SANCTION SIZE",
                 "DISCHARGE SIZE"
             };
 
