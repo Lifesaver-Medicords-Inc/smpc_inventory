@@ -710,6 +710,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                                            .Where(val => int.TryParse(val, out _))
                                            .Select(int.Parse)
                                            .ToList();
+                // The field carries the ids it shows, as a pick leaves it (SetHeaderIndustries).
+                txt_industries.Tag = new List<int>(currentSelectedIndustryIds);
 
                 // Filter BPI General Child using general_based_id
                 DataView dataViewGeneral = new DataView(general);
@@ -788,6 +790,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 preloadedData: records
             );
             branchUC.Dock = DockStyle.Fill;
+            branchUC.BranchIndustriesPicked += OnBranchIndustriesPicked;
 
             TabPage tab = new TabPage(branchName);
             tab.ToolTipText = smpc_inventory_app.Model.BpiAccess.OwnerLabel(owner);
@@ -1020,20 +1023,40 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             ToggleAddNewTab(isEdit);
         }
         private bool IsMainBranch => string.IsNullOrEmpty(txt_id.Text);
+        // The tab flagged IsMain for a saved partner; the first tab for a new one (it has only
+        // MAIN). This used to be the first tab always.
         private BpiBranchUC GetMainBranchUC()
         {
-            return tab_dynamic.TabPages
+            var tabs = tab_dynamic.TabPages
                 .Cast<TabPage>()
                 .Where(t => t.Name != "tab_add_new_branch")
-                .Select(t => t.Controls.OfType<BpiBranchUC>().FirstOrDefault())
-                .FirstOrDefault();
+                .ToList();
+
+            TabPage main = tabs.FirstOrDefault(t => TabIsMain(t)) ?? tabs.FirstOrDefault();
+            return main?.Controls.OfType<BpiBranchUC>().FirstOrDefault();
         }
+
+        private static bool TabIsMain(TabPage tab)
+        {
+            if (tab.Tag == null) return false;
+            var prop = tab.Tag.GetType().GetProperty("IsMain");
+            return prop != null && prop.GetValue(tab.Tag) is bool isMain && isMain;
+        }
+
         private void CopyToMainBranchField(string fieldName, string value)
         {
-            if (!IsMainBranch) return;
-
             var branchUC = GetMainBranchUC();
             if (branchUC == null) return;
+
+            // Industries mirror for saved partners too (spec 4.1.3). Website and tel no. still
+            // copy only while the partner is new, as before.
+            if (fieldName.Equals("industries", StringComparison.OrdinalIgnoreCase))
+            {
+                branchUC.SetBranchIndustries(txt_industries.Text, txt_industries.Tag as List<int> ?? new List<int>());
+                return;
+            }
+
+            if (!IsMainBranch) return;
 
             switch (fieldName.ToLower())
             {
@@ -1791,6 +1814,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 case var _ when api == ENUM_ENDPOINT.INDUSTRIES:
                     CacheData.Industries = result;
+                    // Same setup list; the branch picker of a saved partner reads this copy,
+                    // so an industry added with + showed in the header picker only.
+                    CacheData.BranchIndustries = result.Copy();
                     break;
                 default:
                     return;
@@ -1851,16 +1877,30 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void btn_add_industries_Click(object sender, EventArgs e)
         {
-            modalSelection = new SetupSelectionModal("Industries", ENUM_ENDPOINT.INDUSTRIES, CacheData.Industries, currentSelectedIndustryIds, new List<string>(), 0);
-            DialogResult modalResult = modalSelection.ShowDialog();
+            List<int> shown = txt_industries.Tag as List<int> ?? new List<int>(currentSelectedIndustryIds);
+            if (!BpiBranchUC.PickIndustries("Industries", CacheData.Industries, shown, out string codes, out List<int> ids))
+                return;
 
-            if (modalResult == DialogResult.OK)
-            {
-                var result = modalSelection.GetResult();
-                Helpers.GetModalData(txt_industries, result);
-                CopyToMainBranchField("industries", txt_industries.Text);
-                currentSelectedIndustryIds.Clear();
-            }
+            SetHeaderIndustries(codes, ids);
+            CopyToMainBranchField("industries", txt_industries.Text);
+        }
+
+        // The ids shown in the header INDUSTRIES are kept current rather than cleared after a
+        // pick: Update writes currentSelectedIndustryIds over the field's Tag, and the picker
+        // opens with them ticked.
+        private void SetHeaderIndustries(string codes, List<int> ids)
+        {
+            txt_industries.Text = codes;
+            txt_industries.Tag = new List<int>(ids);
+            currentSelectedIndustryIds = new List<int>(ids);
+        }
+
+        // MAIN mirrors the header both ways (spec 4.1.3), for saved partners as well as new ones.
+        // A pick on another branch leaves the header alone.
+        private void OnBranchIndustriesPicked(BpiBranchUC branch, string codes, List<int> ids)
+        {
+            if (branch != GetMainBranchUC()) return;
+            SetHeaderIndustries(codes, ids);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -2264,22 +2304,20 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             if (records.Any(c => !string.IsNullOrWhiteSpace(c.number) && !IsValidContactNumber(c.number)))
                 problems.Add("Invalid Contact Number");
 
-            // Exactly one default (4.1.5). A lone contact is the default without asking.
+            // Exactly one default (4.1.5). None ticked is asked about, not refused - also for a
+            // lone contact, which used to be made the default without a word (user decision,
+            // 2026-09-17). Two ticked still blocks: that is a wrong pick, not a missing one, and
+            // CRM takes the one default.
             List<BpiContacts> filled = records.Where(c => !IsBlankContact(c)).ToList();
+            int defaults = filled.Count(c => c.is_default_contact);
+            if (filled.Count > 0 && defaults == 0)
+                _blankFieldWarnings.Add("Default Contact");
+            else if (defaults > 1)
+                problems.Add("Only one contact can be the default");
+
+            // Saving on anyway: a lone contact is still stored as the default, as 4.1.5 has it.
             if (filled.Count == 1)
-            {
                 filled[0].is_default_contact = true;
-            }
-            else if (filled.Count > 1)
-            {
-                int defaults = filled.Count(c => c.is_default_contact);
-                // Asked, not refused (user decision, 2026-09-17). Two defaults still blocks: that
-                // is a wrong pick, not a missing one, and CRM takes the one default (4.1.5).
-                if (defaults == 0)
-                    _blankFieldWarnings.Add("Default Contact");
-                else if (defaults > 1)
-                    problems.Add("Only one contact can be the default");
-            }
 
             if (problems.Count == 0) return true;
 
@@ -2364,7 +2402,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             if (Bpi["id"] == 0)
             {
                 Generals["branch_name"] = Bpi["name"];
-                Generals["branch_industry_id"] = Bpi["industries_id"];
+                // MAIN takes the header industries. With none (saved through the "proceed?" list)
+                // there is nothing to copy - this lookup threw and the save never happened.
+                if (Bpi.TryGetValue("industries_id", out var headerIndustryIds))
+                    Generals["branch_industry_id"] = headerIndustryIds;
             }
 
 
@@ -3773,7 +3814,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 // reuse bpi name as branch name
                 Generals["branch_name"] = Bpi["name"];
-                Generals["branch_industry_id"] = Bpi["industries_id"];
+                // MAIN takes the header industries. With none (saved through the "proceed?" list)
+                // there is nothing to copy - this lookup threw and the save never happened.
+                if (Bpi.TryGetValue("industries_id", out var headerIndustryIds))
+                    Generals["branch_industry_id"] = headerIndustryIds;
             }
 
 
@@ -3837,8 +3881,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                     Generals.Add("general_based_id", data["general"]["based_id"].ToString());
                     Generals["general_id"] = int.Parse(Generals["general_id"].ToString());
                     Generals["general_based_id"] = int.Parse(Generals["general_based_id"].ToString());
-                    Generals.Add("branch_industry_ids", Generals["branch_industry_id"]);
-                    Generals.Add("entity_ids", Generals["entity_type_id"]);
+                    // Either can be missing when the user saved through the "proceed?" list
+                    // without it; reading them straight threw after the partner was saved.
+                    Generals["branch_industry_ids"] = Generals.TryGetValue("branch_industry_id", out object savedIndustryIds) ? savedIndustryIds : DBNull.Value;
+                    Generals["entity_ids"] = Generals.TryGetValue("entity_type_id", out object savedEntityIds) ? savedEntityIds : DBNull.Value;
                     Generals.Add("branch_sales_id", Generals["sales_id"]);
 
 
@@ -3982,7 +4028,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }).ToList();
 
             //   Bpi["sales_id"] = CacheData.CurrentUser.employee_id;
-            Generals["social_id"] = int.Parse(Generals["social_id"].ToString());
+            Generals["social_id"] = int.TryParse(Generals["social_id"]?.ToString(), out int socialId) ? socialId : 0;
             Generals["id"] = int.TryParse(Generals["general_id"]?.ToString(), out generalId) ? generalId : 0;
             Generals["based_id"] = int.TryParse(Generals["general_based_id"]?.ToString(), out generalBasedId) ? generalBasedId : 0;
 
@@ -4229,6 +4275,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                             Dock = DockStyle.Fill,
                             BackColor = Color.White
                         };
+                        uc.BranchIndustriesPicked += OnBranchIndustriesPicked;
 
                         newTab.Tag = new
                         {
@@ -4264,6 +4311,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             };
 
             currentBranchUC.SetMainBranch(true);
+            currentBranchUC.BranchIndustriesPicked += OnBranchIndustriesPicked;
 
             mainTab.Controls.Add(currentBranchUC);
             tab_dynamic.TabPages.Insert(0, mainTab);

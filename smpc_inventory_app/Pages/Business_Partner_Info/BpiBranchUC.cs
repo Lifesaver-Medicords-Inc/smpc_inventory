@@ -609,6 +609,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                                                  .Where(val => int.TryParse(val, out _))
                                                  .Select(int.Parse)
                                                  .ToList();
+            txt_branch_industry.Tag = new List<int>(currentSelectedBranchIndustryIds);
         }
         private void SetComboBoxValue(DataTable table, string filterColumn, int filterValue, ComboBox combo, string valueColumn)
         {
@@ -824,6 +825,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 case var _ when api == ENUM_ENDPOINT.INDUSTRIES:
                     CacheData.Industries = result;
+                    // Same setup list; the branch picker of a saved partner reads this copy,
+                    // so an industry added with + showed in the header picker only.
+                    CacheData.BranchIndustries = result.Copy();
                     break;
                 case var _ when api == ENUM_ENDPOINT.ENTITY:
                     CacheData.Entity = result;
@@ -849,18 +853,65 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private void btn_social_links_Click(object sender, EventArgs e) =>
             OpenSetupModal("SOCIAL MEDIA", ENUM_ENDPOINT.SOCIALS, CacheData.SocialMedia);
+        // Raised when the user picks this branch's industries. The form copies them to the header
+        // INDUSTRIES when this is the main branch (spec 4.1.3: MAIN mirrors the header both ways).
+        public event Action<BpiBranchUC, string, List<int>> BranchIndustriesPicked;
+
+        // The industry picker behind the header INDUSTRIES and every BRANCH INDUSTRY. False when
+        // cancelled. The picked industries are shown by CODE, joined the way the saved list comes
+        // back from the API ("RET,AUTO,EDU,HW"), so a field reads the same before and after a
+        // pick and the header and the main branch read alike (user instruction 2026-09-17: codes,
+        // not names). It used to write names, so a picked field and a loaded one never matched.
+        internal static bool PickIndustries(string title, DataTable source, List<int> current, out string codes, out List<int> ids)
+        {
+            codes = string.Empty;
+            ids = new List<int>();
+            current = current ?? new List<int>();
+
+            // The picker keeps its ticks in the table between uses and only resets them when it
+            // is given ids. With none, clear what is left over, or an earlier pick shows ticked.
+            if (current.Count == 0 && source != null && source.Columns.Contains("select"))
+                foreach (DataRow row in source.Rows)
+                    row["select"] = false;
+
+            using (var modal = new SetupSelectionModal(title, ENUM_ENDPOINT.INDUSTRIES, source, current, new List<string>(), 0))
+            {
+                if (modal.ShowDialog() != DialogResult.OK) return false;
+
+                var picked = new List<string>();
+                foreach (DataRowView row in modal.GetResult())
+                {
+                    if (int.TryParse(row["id"]?.ToString(), out int id)) ids.Add(id);
+                    picked.Add(row["code"]?.ToString());
+                }
+                codes = string.Join(",", picked);
+                return true;
+            }
+        }
+
+        // The ids now shown in BRANCH INDUSTRY. Kept current instead of being cleared after a
+        // pick: GetGeneralData writes this list over the field's Tag, so a stale copy saved the
+        // old industries, and the picker opened with the wrong ones ticked.
+        private List<int> ShownBranchIndustryIds() =>
+            txt_branch_industry.Tag as List<int> ?? new List<int>(currentSelectedBranchIndustryIds);
+
         private void btn_get_branch_Click(object sender, EventArgs e)
         {
             var branchData = string.IsNullOrEmpty(ParentId) ? CacheData.Industries : CacheData.BranchIndustries;
-            modalSelection = new SetupSelectionModal("Branch Industries", ENUM_ENDPOINT.INDUSTRIES, branchData, currentSelectedBranchIndustryIds, new List<string>(), 0);
-            DialogResult modalResult = modalSelection.ShowDialog();
-            if (modalResult == DialogResult.OK)
-            {
-                var result = modalSelection.GetResult();
-                Helpers.GetModalData(txt_branch_industry, result);
-                CopyToMainBranchField("branch_industries", txt_branch_industry.Text);
-                currentSelectedBranchIndustryIds.Clear();
-            }
+            if (!PickIndustries("Branch Industries", branchData, ShownBranchIndustryIds(), out string codes, out List<int> ids))
+                return;
+
+            SetBranchIndustries(codes, ids);
+            BranchIndustriesPicked?.Invoke(this, codes, ids);
+        }
+
+        // Puts industries on this branch without raising BranchIndustriesPicked, so a copy from
+        // the header never bounces back.
+        public void SetBranchIndustries(string codes, List<int> ids)
+        {
+            txt_branch_industry.Text = codes;
+            txt_branch_industry.Tag = new List<int>(ids);
+            currentSelectedBranchIndustryIds = new List<int>(ids);
         }
         private void InitializeCmbMap()
         {
@@ -873,8 +924,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         {
             txt_branch_tel_no.Text = telNo;
             txt_branch_website.Text = website;
-            txt_branch_industry.Text = industryText;
-            txt_branch_industry.Tag = industryIds;
+            SetBranchIndustries(industryText, industryIds ?? new List<int>());
         }
         private void CopyToMainBranchField(string fieldName, string value)
         {
