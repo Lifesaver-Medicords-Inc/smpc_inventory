@@ -36,6 +36,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnl_new_brach = new System.Windows.Forms.Panel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.GENERAL = new System.Windows.Forms.TabPage();
@@ -1198,7 +1199,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // pending_price
             //
             this.pending_price.DataPropertyName = "total_price";
-            this.pending_price.DefaultCellStyle = new System.Windows.Forms.DataGridViewCellStyle { Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight, Format = "N2" };
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N2";
+            this.pending_price.DefaultCellStyle = dataGridViewCellStyle6;
             this.pending_price.HeaderText = "PRICE";
             this.pending_price.Name = "pending_price";
             this.pending_price.ReadOnly = true;
