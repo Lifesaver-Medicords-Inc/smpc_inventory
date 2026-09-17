@@ -62,8 +62,8 @@ namespace smpc_sales_app.Pages
             pnl_footer.Controls.Add(btn_page_next);
             pnl_footer.Controls.Add(btn_page_prev);
             lbl_page.BringToFront();
-            btn_page_next.BringToFront();
             btn_page_prev.BringToFront();
+            btn_page_next.BringToFront();
 
             btn_page_prev.Click += async (s, e) => { if (_page > 1) await LoadPage(_page - 1); };
             btn_page_next.Click += async (s, e) => { if (_page < _totalPages) await LoadPage(_page + 1); };

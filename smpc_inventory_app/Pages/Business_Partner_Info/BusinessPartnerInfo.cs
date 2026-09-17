@@ -2089,7 +2089,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private static readonly string[] BlankFieldOrder =
         {
             "Address", "TIN", "Main Tel No", "Industries", "Contacts",
-            "Contact Number or Email", "Entity Type", "Branch Industries",
+            "Contact Number or Email", "Default Contact", "Entity Type", "Branch Industries",
         };
 
         // One list, one question. "No" returns to the form with nothing saved.
@@ -2225,9 +2225,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             && string.IsNullOrWhiteSpace(contact.name);
 
         // Missing contact data is asked about, not refused (user decision, 2026-09-17): no
-        // contacts at all, or a contact with no number and no email, joins the "Are you sure
-        // want to proceed?" list. What still blocks is data that is wrong rather than absent -
-        // an invalid number, no default or two defaults among several contacts, and a saved
+        // contacts at all, a contact with no number and no email, or no default ticked among
+        // several, joins the "Are you sure want to proceed?" list. What still blocks is data
+        // that is wrong rather than absent - an invalid number, two defaults, and a saved
         // contact whose every field was wiped (delete the row instead).
         private bool ContactsValidations(List<BpiContacts> records, out string contactsMessages)
         {
@@ -2273,8 +2273,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             else if (filled.Count > 1)
             {
                 int defaults = filled.Count(c => c.is_default_contact);
+                // Asked, not refused (user decision, 2026-09-17). Two defaults still blocks: that
+                // is a wrong pick, not a missing one, and CRM takes the one default (4.1.5).
                 if (defaults == 0)
-                    problems.Add("You need atleast 1 default selected contact to proceed");
+                    _blankFieldWarnings.Add("Default Contact");
                 else if (defaults > 1)
                     problems.Add("Only one contact can be the default");
             }
