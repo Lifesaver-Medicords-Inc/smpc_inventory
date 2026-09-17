@@ -119,7 +119,9 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         public int finance_pending_branch_id { get; set; }
         public string date { get; set; }
         public string qoute_ref { get; set; }
-        public float total_price { get; set; }
+        // double, not float: this is summed into ACCOUNT BALANCE, and a float keeps only
+        // about seven digits - a 1,234,567.89 quote would total as 1,234,567.88.
+        public double total_price { get; set; }
         public string stage { get; set; }
         public string status { get; set; }
 

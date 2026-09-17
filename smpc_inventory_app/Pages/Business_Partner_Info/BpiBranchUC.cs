@@ -18,7 +18,9 @@ using smpc_sales_app.Pages;
 using System.IO;
 using smpc_inventory_app.Pages.Business_Partner_Info.Bpi_Modal;
 using smpc_inventory_app.Model;
+using smpc_inventory_app.Services.Setup.Bpi;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace smpc_inventory_app.Pages.Business_Partner_Info
 {
@@ -63,6 +65,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private bool isUpdatingText = false;
         private bool isUpdatingTin = false;
         private Dictionary<string, List<ComboBox>> _endpointCmbMap;
+        // Company Setup's VAT rate; null when it could not be read.
+        private double? _vatRatePercent;
+        // Set while stored values are put on screen, so the tax-code handler keeps the stored
+        // rate instead of clearing it as it does when the user changes the code.
+        private bool _bindingTaxCodes;
+        private bool _isReadOnly;
         public bool isUpdate { get; set; }
         private Bpi_Class _preloadedData;
         public BpiBranchUC(string parentId, string salesId, string tabTitle,
@@ -106,7 +114,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             await Task.WhenAll(
                 GetSocialMediaSetup(),
                 GetPayments(),
-                GetPositionSetup()
+                GetPositionSetup(),
+                GetAccounts(),
+                GetVatRate()
             );
             GetTaxCode();
 
@@ -401,15 +411,47 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 Helpers.BindControls(pnlGeneralPanel, filteredGeneral);
             }
-               
-            if (filteredFinance != null && filteredFinance.Rows.Count > 0)
+
+            _bindingTaxCodes = true;
+            try
             {
-                Helpers.BindControls(pnlFinancePanel, filteredFinance);
+                if (filteredFinance != null && filteredFinance.Rows.Count > 0)
+                {
+                    Helpers.BindControls(pnlFinancePanel, filteredFinance);
+                }
+                if (filteredItems != null && filteredItems.Rows.Count > 0)
+                {
+                    Helpers.BindControls(pnlItemPanel, filteredItems);
+                }
+
+                // BindControls matches a combo by Name.Contains(column), so the finance tax
+                // code combo also receives finance_tax (the rate). Put both tax codes on
+                // screen explicitly, after it. No row yet means VAT, the standard default
+                // (4.5.3); a row with no code shows as unset.
+                BindTaxCode(cmb_finance_tax_code, txt_finance_tax, filteredFinance, "finance_tax_code", "finance_tax");
+                BindTaxCode(cmb_tax_code, txt_item_tax_code, filteredItems, "tax_code", "item_tax_code");
             }
-            if (filteredItems != null && filteredItems.Rows.Count > 0)
+            finally
             {
-                Helpers.BindControls(pnlItemPanel, filteredItems);
+                _bindingTaxCodes = false;
             }
+        }
+
+        private void BindTaxCode(ComboBox code, TextBox rate, DataTable rows, string codeColumn, string rateColumn)
+        {
+            DataRow row = rows?.AsEnumerable().FirstOrDefault(r =>
+                !rows.Columns.Contains("item_is_deleted") || !string.Equals(r["item_is_deleted"]?.ToString(), "True", StringComparison.OrdinalIgnoreCase))
+                ?? rows?.AsEnumerable().FirstOrDefault();
+
+            if (row == null)
+            {
+                rate.Text = string.Empty;
+                SetTaxCode(code, rate, ENUM_TAX_CODE.VAT);
+                return;
+            }
+
+            rate.Text = row.Table.Columns.Contains(rateColumn) ? row[rateColumn]?.ToString() : string.Empty;
+            SetTaxCode(code, rate, row.Table.Columns.Contains(codeColumn) ? row[codeColumn]?.ToString() : string.Empty);
         }
         private void BindDataToTable()
         {
@@ -486,19 +528,17 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             dataBindingItems.DataSource = itemsView.ToTable();
 
             // ---- Finance Pending ----
+            // customer_id on a quotation is the partner's BPI id, not a branch id, so filtering
+            // it by this branch's id matched nothing - or another partner's quotes whenever the
+            // two numbers happened to coincide. The view already resolves each quotation to its
+            // partner's main branch as finance_pending_branch_id; that is the branch to match.
             var financePendingView = new DataView(finance_pending)
             {
-                RowFilter = $"customer_id = '{parentId}'"
+                RowFilter = $"finance_pending_branch_id = '{parentId}'"
             };
-
-            if (financePendingView.Count > 0)
-            {
-                var filteredRow = financePendingView[0];
-                string filteredBranchId = filteredRow["finance_pending_branch_id"].ToString();
-                string financeCustomerId = filteredRow["customer_id"].ToString();
-                financePendingView.RowFilter = $"finance_pending_branch_id = '{filteredBranchId}' AND customer_id = '{financeCustomerId}'";
-            }
-            dataBindingFinancePending.DataSource = financePendingView.ToTable();
+            DataTable filteredPending = financePendingView.ToTable();
+            dataBindingFinancePending.DataSource = filteredPending;
+            ShowAccountBalance(filteredPending);
 
             // ---- Accreditations ----
             var accreditationView = new DataView(accreditations)
@@ -1600,18 +1640,31 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             CacheData.PaymentTerms = await serviceSetup.GetAsDatatable();
 
             AddCmbDefaultVal(CacheData.PaymentTerms);
-            
+
             var financeDt = CacheData.PaymentTerms.Copy();
-            var financeAccountDt = CacheData.PaymentTerms.Copy();
-            var itemAccountDt = CacheData.PaymentTerms.Copy();
 
             // finance tab
             BindCmbValues(cmb_finance_payment_terms, financeDt);
-            BindCmbValues(cmb_finance_account, financeAccountDt);
             // item tab
             BindCmbValues(cmb_payment_terms, CacheData.PaymentTerms);
-            BindCmbValues(cmb_item_account, itemAccountDt);
 
+        }
+
+        // ACCOUNT is a GL account (4.1.7), so both ACCOUNT dropdowns list the Accounting chart
+        // of accounts. They were bound to the payment terms, which is why they offered CASH,
+        // GCASH, Net 30... Each combo gets its own copy: two combos on one table share a
+        // position, and picking on one tab would move the other.
+        private async Task GetAccounts()
+        {
+            DataTable accounts = await BpiAccountingSetupServices.GetAccounts();
+
+            BindCmbValues(cmb_finance_account, accounts);
+            BindCmbValues(cmb_item_account, accounts.Copy());
+        }
+
+        private async Task GetVatRate()
+        {
+            _vatRatePercent = await BpiAccountingSetupServices.GetVatRatePercent();
         }
 
         private void cmb_payment_terms_Click(object sender, EventArgs e)
@@ -1633,14 +1686,110 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             if (matchedRow != null)
             {
                 cmb_payment_terms.SelectedValue = matchedRow.Field<int>("payment_terms_id");
-                cmb_tax_code.Text = matchedRow.Field<int>("payment_terms_id").ToString();
+                // This also wrote the payment term's id into TAX CODE. The tax code is put
+                // on screen by BindTaxCode.
             }
         }
 
+        // Both tax code dropdowns - Finance and Items - offer the same list, headed by
+        // "-- SELECT --" because a tax code is optional (4.1.7). VAT is preselected for a new
+        // partner; stored codes replace it when an existing one is bound.
         private void GetTaxCode()
         {
-            cmb_tax_code.DataSource = ENUM_TAX_CODE.LIST();
-            cmb_tax_code.DisplayMember = "title";
+            BindTaxCodeList(cmb_finance_tax_code);
+            BindTaxCodeList(cmb_tax_code);
+
+            cmb_finance_tax_code.SelectedIndexChanged += (s, e) => ApplyTaxRate(cmb_finance_tax_code, txt_finance_tax);
+            cmb_tax_code.SelectedIndexChanged += (s, e) => ApplyTaxRate(cmb_tax_code, txt_item_tax_code);
+
+            _bindingTaxCodes = true;
+            try
+            {
+                SetTaxCode(cmb_finance_tax_code, txt_finance_tax, ENUM_TAX_CODE.VAT);
+                SetTaxCode(cmb_tax_code, txt_item_tax_code, ENUM_TAX_CODE.VAT);
+            }
+            finally
+            {
+                _bindingTaxCodes = false;
+            }
+        }
+
+        // Its own copy per combo, for the same shared-position reason as the accounts.
+        private static void BindTaxCodeList(ComboBox cmb)
+        {
+            DataTable codes = ENUM_TAX_CODE.LIST();
+            DataRow select = codes.NewRow();
+            select["title"] = BpiAccountingSetupServices.SELECT_TEXT;
+            select["value"] = string.Empty;
+            codes.Rows.InsertAt(select, 0);
+
+            cmb.DataSource = codes;
+            cmb.DisplayMember = "title";
+            cmb.ValueMember = "value";
+        }
+
+        // Shows a stored tax code. A code that is not on the list - a few older records hold
+        // one - is added to this combo instead of being dropped, so opening and saving a
+        // record never rewrites its code.
+        private void SetTaxCode(ComboBox cmb, TextBox rate, string code)
+        {
+            code = (code ?? string.Empty).Trim();
+            int index = 0;
+
+            if (code.Length > 0 && cmb.DataSource is DataTable codes)
+            {
+                index = cmb.FindStringExact(code);
+                if (index < 0)
+                {
+                    codes.Rows.Add(code, code);
+                    index = cmb.FindStringExact(code);
+                }
+            }
+
+            // Through -1 so the change always registers - BindControls may already have
+            // pushed text into this combo - and ApplyTaxRate runs for the code shown.
+            cmb.SelectedIndex = -1;
+            cmb.SelectedIndex = Math.Max(index, 0);
+            ApplyTaxRate(cmb, rate);
+        }
+
+        // The code as saved: "" for "-- SELECT --".
+        private static string GetTaxCodeValue(ComboBox cmb) =>
+            cmb.SelectedIndex > 0 ? cmb.GetItemText(cmb.SelectedItem) : string.Empty;
+
+        // Tax code VAT takes its rate from Company Setup, and the rate cannot be typed over
+        // (user instruction 2026-09-17). Any other code's rate is typed: 4.5.3 keeps rates out
+        // of code, and Tax Setup does not hold these codes yet. Changing the code by hand
+        // clears the previous rate, so a VAT 12 never stays behind as a NON-VAT 12.
+        // Provisional standard for the non-VAT codes; may change with the client's wishes.
+        private void ApplyTaxRate(ComboBox code, TextBox rate)
+        {
+            bool isVat = string.Equals(GetTaxCodeValue(code), ENUM_TAX_CODE.VAT, StringComparison.OrdinalIgnoreCase);
+
+            if (isVat && _vatRatePercent.HasValue)
+                rate.Text = _vatRatePercent.Value.ToString("0.##", CultureInfo.InvariantCulture);
+            else if (!_bindingTaxCodes)
+                rate.Text = string.Empty;
+
+            ApplyTaxRateLock(code, rate);
+        }
+
+        // ACCOUNT BALANCE is the total of the quotations listed under PENDING (user
+        // instruction 2026-09-17). It is computed, never typed: 4.1.7 leaves only ACCOUNT,
+        // PAYMENT TERMS and TAX CODE editable.
+        private void ShowAccountBalance(DataTable pending)
+        {
+            decimal total = 0;
+            if (pending != null && pending.Columns.Contains("total_price"))
+            {
+                foreach (DataRow row in pending.Rows)
+                {
+                    if (!row.IsNull("total_price"))
+                        total += Convert.ToDecimal(row["total_price"], CultureInfo.InvariantCulture);
+                }
+            }
+
+            txt_account_balance.Text = total.ToString("N2", CultureInfo.GetCultureInfo("en-PH"));
         }
 
         private void btn_add_item_Click(object sender, EventArgs e)
@@ -1816,14 +1965,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             cmb_social.SelectedIndex = 0;
             cmb_payment_terms.DataSource = CacheData.PaymentTerms;
             cmb_finance_payment_terms.DataSource = CacheData.PaymentTerms;
-            cmb_finance_account.DataSource = CacheData.PaymentTerms;
+            if (cmb_finance_account.Items.Count > 0) cmb_finance_account.SelectedIndex = 0;
+            if (cmb_item_account.Items.Count > 0) cmb_item_account.SelectedIndex = 0;
 
-            cmb_tax_code.DataSource = ENUM_TAX_CODE.LIST();
-            cmb_tax_code.DisplayMember = "title";
-            cmb_tax_code.Text = "VAT";
+            _bindingTaxCodes = true;
+            try
+            {
+                SetTaxCode(cmb_finance_tax_code, txt_finance_tax, ENUM_TAX_CODE.VAT);
+                SetTaxCode(cmb_tax_code, txt_item_tax_code, ENUM_TAX_CODE.VAT);
+            }
+            finally
+            {
+                _bindingTaxCodes = false;
+            }
             cmb_payment_terms.Text = "COD";
             cmb_finance_payment_terms.Text = "COD";
-            cmb_finance_account.Text = "COD";
 
             if (txt_entity_type.Text.Contains("Supplier"))
             {
@@ -1911,9 +2067,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             int contacts_id = 0;
             int contacts_based_id = 0;
             int branch_id = 0;
-            bool is_default_contact = false;
             foreach (DataRow row in dataSource.Rows)
             {
+                // Per row. This used to be declared outside the loop and only ever set to
+                // true, so every contact after the default one was sent as a default too.
+                bool is_default_contact = false;
 
                 if (isUpdate)
                 {
@@ -1971,9 +2129,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             int address_id = 0;
             int adrress_based_id = 0;
             int branch_id = 0;
-            bool isDeleted = false;
             foreach (DataRow row in allAddress.Rows)
             {
+                // Per row: a new address listed after a deleted one inherited its
+                // deleted flag and was saved as deleted.
+                bool isDeleted = false;
 
                 if (row.IsNull("address_ids") || string.IsNullOrWhiteSpace(row["address_ids"].ToString()) || row.IsNull("address_based_id") || string.IsNullOrWhiteSpace(row["address_based_id"].ToString()))
                 {
@@ -2002,6 +2162,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         public Dictionary<string, dynamic> GetFinanceData()
         {
             var FinanceData = Helpers.GetControlsValues(panel_finance);
+
+            // The combo's text would send "-- SELECT --" as a tax code.
+            FinanceData["finance_tax_code"] = GetTaxCodeValue(cmb_finance_tax_code);
+            // Shown, never saved - it is the total of the PENDING quotations.
+            FinanceData.Remove("account_balance");
 
             return FinanceData;
         }
@@ -2098,7 +2263,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             var items = Helpers.GetControlsValues(panel_item);
             List<BpiItems> listItem = new List<BpiItems>();
 
-            string taxCode = items["tax_code"].ToString();
+            string taxCode = GetTaxCodeValue(cmb_tax_code);
             string itemTaxCode = items["item_tax_code"].ToString();
             int itemAccountId;
             int paymentTermsId;
@@ -2383,6 +2548,23 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 dgv.AllowUserToDeleteRows = !isReadOnly;
             }
 
+            // What the loops above must not unlock. PENDING is generated from quotations and
+            // is view-only (4.1.7) - in edit mode it used to offer a blank row to type into.
+            dg_finance_pending.ReadOnly = true;
+            dg_finance_pending.AllowUserToAddRows = false;
+            dg_finance_pending.AllowUserToDeleteRows = false;
+            txt_account_balance.ReadOnly = true;
+
+            _isReadOnly = isReadOnly;
+            ApplyTaxRateLock(cmb_finance_tax_code, txt_finance_tax);
+            ApplyTaxRateLock(cmb_tax_code, txt_item_tax_code);
+        }
+
+        // Read-only state of a rate box without touching its value.
+        private void ApplyTaxRateLock(ComboBox code, TextBox rate)
+        {
+            bool isVat = string.Equals(GetTaxCodeValue(code), ENUM_TAX_CODE.VAT, StringComparison.OrdinalIgnoreCase);
+            rate.ReadOnly = _isReadOnly || (isVat && _vatRatePercent.HasValue);
         }
     }
 }

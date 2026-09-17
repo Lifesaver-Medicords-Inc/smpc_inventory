@@ -132,7 +132,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.tabControl_Finance = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dg_finance_pending = new System.Windows.Forms.DataGridView();
+            this.pending_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.qoute_ref = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pending_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pending_stage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pending_status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dg_finance_transactions = new System.Windows.Forms.DataGridView();
             this.finance_trans_so = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -151,9 +155,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.cmb_finance_payment_terms = new System.Windows.Forms.ComboBox();
             this.cmb_finance_account = new System.Windows.Forms.ComboBox();
             this.lbl_finance_tax_code = new System.Windows.Forms.Label();
-            this.txt_finance_tax_code = new System.Windows.Forms.TextBox();
-            this.lbl_finance_tax = new System.Windows.Forms.Label();
+            this.cmb_finance_tax_code = new System.Windows.Forms.ComboBox();
             this.txt_finance_tax = new System.Windows.Forms.TextBox();
+            this.lbl_finance_tax_percent = new System.Windows.Forms.Label();
+            this.lbl_account_balance = new System.Windows.Forms.Label();
+            this.txt_account_balance = new System.Windows.Forms.TextBox();
             this.btn_finance_payment_terms = new System.Windows.Forms.Button();
             this.ITEMS = new System.Windows.Forms.TabPage();
             this.pnl_new_added_item = new System.Windows.Forms.Panel();
@@ -1160,7 +1166,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.dg_finance_pending.AllowUserToAddRows = false;
             this.dg_finance_pending.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_finance_pending.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.qoute_ref});
+            this.pending_date,
+            this.qoute_ref,
+            this.pending_price,
+            this.pending_stage,
+            this.pending_status});
             this.dg_finance_pending.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_finance_pending.Location = new System.Drawing.Point(3, 3);
             this.dg_finance_pending.Name = "dg_finance_pending";
@@ -1176,6 +1186,39 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.qoute_ref.HeaderText = "QUOTE REF";
             this.qoute_ref.Name = "qoute_ref";
             this.qoute_ref.ReadOnly = true;
+            //
+            // pending_date
+            //
+            this.pending_date.DataPropertyName = "date";
+            this.pending_date.HeaderText = "DATE";
+            this.pending_date.Name = "pending_date";
+            this.pending_date.ReadOnly = true;
+            this.pending_date.Width = 150;
+            //
+            // pending_price
+            //
+            this.pending_price.DataPropertyName = "total_price";
+            this.pending_price.DefaultCellStyle = new System.Windows.Forms.DataGridViewCellStyle { Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight, Format = "N2" };
+            this.pending_price.HeaderText = "PRICE";
+            this.pending_price.Name = "pending_price";
+            this.pending_price.ReadOnly = true;
+            this.pending_price.Width = 160;
+            //
+            // pending_stage
+            //
+            this.pending_stage.DataPropertyName = "stage";
+            this.pending_stage.HeaderText = "STAGE";
+            this.pending_stage.Name = "pending_stage";
+            this.pending_stage.ReadOnly = true;
+            this.pending_stage.Width = 160;
+            //
+            // pending_status
+            //
+            this.pending_status.DataPropertyName = "status";
+            this.pending_status.HeaderText = "STATUS";
+            this.pending_status.Name = "pending_status";
+            this.pending_status.ReadOnly = true;
+            this.pending_status.Width = 160;
             // 
             // tabPage3
             // 
@@ -1251,7 +1294,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(454, 23);
+            this.label18.Location = new System.Drawing.Point(443, 23);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(100, 13);
             this.label18.TabIndex = 1;
@@ -1262,9 +1305,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(16, 23);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(111, 13);
+            this.label8.Size = new System.Drawing.Size(59, 13);
             this.label8.TabIndex = 0;
-            this.label8.Text = "ACCOUNT BALANCE";
+            this.label8.Text = "ACCOUNT";
             // 
             // panel_finance
             // 
@@ -1275,9 +1318,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             this.panel_finance.Controls.Add(this.cmb_finance_account);
             this.panel_finance.Controls.Add(this.btn_finance_payment_terms);
             this.panel_finance.Controls.Add(this.lbl_finance_tax_code);
-            this.panel_finance.Controls.Add(this.txt_finance_tax_code);
-            this.panel_finance.Controls.Add(this.lbl_finance_tax);
+            this.panel_finance.Controls.Add(this.cmb_finance_tax_code);
             this.panel_finance.Controls.Add(this.txt_finance_tax);
+            this.panel_finance.Controls.Add(this.lbl_finance_tax_percent);
+            this.panel_finance.Controls.Add(this.lbl_account_balance);
+            this.panel_finance.Controls.Add(this.txt_account_balance);
             this.panel_finance.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel_finance.Location = new System.Drawing.Point(3, 3);
             this.panel_finance.Name = "panel_finance";
@@ -1343,34 +1388,57 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // lbl_finance_tax_code
             //
             this.lbl_finance_tax_code.AutoSize = true;
-            this.lbl_finance_tax_code.Location = new System.Drawing.Point(16, 63);
+            this.lbl_finance_tax_code.Location = new System.Drawing.Point(13, 63);
             this.lbl_finance_tax_code.Name = "lbl_finance_tax_code";
-            this.lbl_finance_tax_code.Size = new System.Drawing.Size(52, 13);
+            this.lbl_finance_tax_code.Size = new System.Drawing.Size(61, 13);
             this.lbl_finance_tax_code.TabIndex = 36;
             this.lbl_finance_tax_code.Text = "TAX CODE";
             //
-            // txt_finance_tax_code
+            // cmb_finance_tax_code
             //
-            this.txt_finance_tax_code.Location = new System.Drawing.Point(130, 60);
-            this.txt_finance_tax_code.Name = "txt_finance_tax_code";
-            this.txt_finance_tax_code.Size = new System.Drawing.Size(200, 20);
-            this.txt_finance_tax_code.TabIndex = 37;
-            //
-            // lbl_finance_tax
-            //
-            this.lbl_finance_tax.AutoSize = true;
-            this.lbl_finance_tax.Location = new System.Drawing.Point(454, 63);
-            this.lbl_finance_tax.Name = "lbl_finance_tax";
-            this.lbl_finance_tax.Size = new System.Drawing.Size(24, 13);
-            this.lbl_finance_tax.TabIndex = 38;
-            this.lbl_finance_tax.Text = "TAX";
+            this.cmb_finance_tax_code.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_finance_tax_code.FormattingEnabled = true;
+            this.cmb_finance_tax_code.Location = new System.Drawing.Point(130, 60);
+            this.cmb_finance_tax_code.Name = "cmb_finance_tax_code";
+            this.cmb_finance_tax_code.Size = new System.Drawing.Size(109, 21);
+            this.cmb_finance_tax_code.TabIndex = 37;
             //
             // txt_finance_tax
             //
-            this.txt_finance_tax.Location = new System.Drawing.Point(557, 60);
+            this.txt_finance_tax.Location = new System.Drawing.Point(245, 60);
             this.txt_finance_tax.Name = "txt_finance_tax";
-            this.txt_finance_tax.Size = new System.Drawing.Size(193, 20);
-            this.txt_finance_tax.TabIndex = 39;
+            this.txt_finance_tax.Size = new System.Drawing.Size(60, 20);
+            this.txt_finance_tax.TabIndex = 38;
+            this.txt_finance_tax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            //
+            // lbl_finance_tax_percent
+            //
+            this.lbl_finance_tax_percent.AutoSize = true;
+            this.lbl_finance_tax_percent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_finance_tax_percent.Location = new System.Drawing.Point(307, 62);
+            this.lbl_finance_tax_percent.Name = "lbl_finance_tax_percent";
+            this.lbl_finance_tax_percent.Size = new System.Drawing.Size(20, 16);
+            this.lbl_finance_tax_percent.TabIndex = 39;
+            this.lbl_finance_tax_percent.Text = "%";
+            //
+            // lbl_account_balance
+            //
+            this.lbl_account_balance.AutoSize = true;
+            this.lbl_account_balance.Location = new System.Drawing.Point(440, 63);
+            this.lbl_account_balance.Name = "lbl_account_balance";
+            this.lbl_account_balance.Size = new System.Drawing.Size(111, 13);
+            this.lbl_account_balance.TabIndex = 40;
+            this.lbl_account_balance.Text = "ACCOUNT BALANCE";
+            //
+            // txt_account_balance
+            //
+            this.txt_account_balance.Location = new System.Drawing.Point(557, 60);
+            this.txt_account_balance.Name = "txt_account_balance";
+            this.txt_account_balance.ReadOnly = true;
+            this.txt_account_balance.Size = new System.Drawing.Size(193, 20);
+            this.txt_account_balance.TabIndex = 41;
+            this.txt_account_balance.TabStop = false;
+            this.txt_account_balance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             //
             // ITEMS
             // 
@@ -1574,6 +1642,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             // 
             // cmb_tax_code
             // 
+            this.cmb_tax_code.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_tax_code.FormattingEnabled = true;
             this.cmb_tax_code.Location = new System.Drawing.Point(117, 46);
             this.cmb_tax_code.Name = "cmb_tax_code";
@@ -2255,7 +2324,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.TabControl tabControl_Finance;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.DataGridView dg_finance_pending;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pending_date;
         private System.Windows.Forms.DataGridViewTextBoxColumn qoute_ref;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pending_price;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pending_stage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pending_status;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.DataGridView dg_finance_transactions;
         private System.Windows.Forms.DataGridViewTextBoxColumn finance_trans_so;
@@ -2268,9 +2341,11 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lbl_finance_tax_code;
-        private System.Windows.Forms.TextBox txt_finance_tax_code;
-        private System.Windows.Forms.Label lbl_finance_tax;
+        private System.Windows.Forms.ComboBox cmb_finance_tax_code;
         private System.Windows.Forms.TextBox txt_finance_tax;
+        private System.Windows.Forms.Label lbl_finance_tax_percent;
+        private System.Windows.Forms.Label lbl_account_balance;
+        private System.Windows.Forms.TextBox txt_account_balance;
         private System.Windows.Forms.Panel panel_finance;
         private System.Windows.Forms.TextBox txt_finance_branch_id;
         private System.Windows.Forms.TextBox txt_finance_based_id;

@@ -2206,66 +2206,66 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
 
         }
+        private static bool IsBlankContact(BpiContacts contact) =>
+            string.IsNullOrWhiteSpace(contact.number)
+            && string.IsNullOrWhiteSpace(contact.email)
+            && string.IsNullOrWhiteSpace(contact.name);
+
         private bool ContactsValidations(List<BpiContacts> records, out string contactsMessages)
         {
-            bool checkContactError = false;
             contactsMessages = string.Empty;
-            // Bug #301 (Trello): this only ever caught "exactly one blank contact" -
-            // zero contacts (records.Count == 0) skipped the foreach below entirely
-            // and fell through to `return true`, so a record with no contacts at all
-            // saved successfully.
-            if (records.Count == 0 || (records.Count == 1 && records[0].number == ""))
+            // Bug #301 (Trello): zero contacts used to skip every check and save.
+            if (records.Count == 0 || records.All(IsBlankContact))
             {
-                contactsMessages += "Contacts is required";
+                contactsMessages = "Contacts is required";
                 return false;
             }
 
+            // Whole list, all problems at once - the same reasoning as the header checks.
+            // Three checks here used to misfire and block valid contacts:
+            //  - "no default" was raised by the first contact that was not the default, so
+            //    any list whose default was not first could never be saved;
+            //  - a blank number was reported invalid, although 4.1.5 accepts an email alone;
+            //  - a landline was always invalid: the grid shows it as "(02) 1234-5678" and
+            //    only spaces and dashes were stripped before the length check.
+            List<string> problems = new List<string>();
 
-            foreach (BpiContacts contact in records)
+            if (records.Any(IsBlankContact))
+                problems.Add("Input email, number or name to proceed");
+
+            if (records.Any(c => !IsBlankContact(c)
+                                 && string.IsNullOrWhiteSpace(c.number)
+                                 && string.IsNullOrWhiteSpace(c.email)))
+                problems.Add("A contact needs a number or an email");
+
+            if (records.Any(c => !string.IsNullOrWhiteSpace(c.number) && !IsValidContactNumber(c.number)))
+                problems.Add("Invalid Contact Number");
+
+            // Exactly one default (4.1.5). A lone contact is the default without asking.
+            List<BpiContacts> filled = records.Where(c => !IsBlankContact(c)).ToList();
+            if (filled.Count == 1)
             {
-                string cleanedNumber = contact.number.Trim().Replace(" ", "").Replace("-", "");
-                if (checkContactError)
-                {
-                    break;
-                }
-                else
-                {
-                    if (string.IsNullOrEmpty(contact.email) && string.IsNullOrEmpty(contact.number) && string.IsNullOrEmpty(contact.name))
-                    {
-
-                        contactsMessages += "Input email,number or name to proceed";
-                        checkContactError = true;
-                    }
-                    else if (!contact.is_default_contact)
-                    {
-
-                        contactsMessages += "You need atleast 1 default selected contact to proceed";
-                        checkContactError = true;
-                    }
-
-
-                    else if (!IsValidLandlineNumber(cleanedNumber) && !IsValidMobileNumber(cleanedNumber))
-                    {
-                        contactsMessages += "Invalid Contact Number";
-                        checkContactError = true;
-                    }
-
-                    else
-                    {
-                        checkContactError = false;
-                    }
-                }
-
-
+                filled[0].is_default_contact = true;
             }
-            if (checkContactError)
+            else
             {
-                return false;
+                int defaults = filled.Count(c => c.is_default_contact);
+                if (defaults == 0)
+                    problems.Add("You need atleast 1 default selected contact to proceed");
+                else if (defaults > 1)
+                    problems.Add("Only one contact can be the default");
             }
 
+            if (problems.Count == 0) return true;
 
+            contactsMessages = string.Join("\n• ", problems);
+            return false;
+        }
 
-            return true;
+        private bool IsValidContactNumber(string number)
+        {
+            string cleaned = Regex.Replace(number ?? string.Empty, @"[\s\-\(\)]", "");
+            return IsValidLandlineNumber(cleaned) || IsValidMobileNumber(cleaned);
         }
         private bool IsValidEmail(string email)
         {
@@ -2279,34 +2279,31 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private bool AddressValidation(List<BpiAddress> records, out string addressMessages)
         {
             addressMessages = string.Empty;
-            if (records.Count == 0 || records[0].location == "")
+            // Counts the addresses that will still exist after the save. On Update the list
+            // also carries the rows the user deleted, so a partner with every address
+            // deleted still has a non-empty list.
+            if (!records.Any(a => !a.address_is_deleted && !string.IsNullOrWhiteSpace(a.location)))
             {
                 addressMessages += "Address is required";
                 return false;
             }
             return true;
         }
-        private async void btn_add_Click(object sender, EventArgs e)
+        // The one gate every save goes through. Edit -> Update never called any of this, so an
+        // existing partner could be saved with its TIN, contacts or address emptied and no
+        // warning at all - only New -> Save checked (user-reported 2026-09-17). Blocking
+        // problems are listed first; only when there are none is the user asked about the
+        // fields that are merely blank.
+        private bool ValidateForSave(Dictionary<string, dynamic> bpi, Dictionary<string, dynamic> generals, List<BpiContacts> contacts, List<BpiAddress> address)
         {
-            string generalMessage = "";
-            string bpiGeneralMessage = "";
-            string contactMessage = "";
-            string addressMessage = "";
-
-            var Bpi = Helpers.GetControlsValues(panel_header_records);
-            var Generals = Helpers.GetControlsValues(panel_general);
-            var Contacts = SaveContacts(false);
-            var Address = SaveAddress(false);
-
             // Cleared per attempt: a save the user backed out of must not carry its
             // warnings into the next one.
             _blankFieldWarnings.Clear();
 
-            bool isBpiValidated = AddBpiIdentificationType(Bpi, out bpiGeneralMessage);
-            bool isGeneralValidated = GeneralValidations(Generals, out generalMessage);
-            bool isContactValidated = ContactsValidations(Contacts, out contactMessage);
-            bool isAddressValidated = AddressValidation(Address, out addressMessage);
-
+            bool isBpiValidated = AddBpiIdentificationType(bpi, out string bpiGeneralMessage);
+            bool isGeneralValidated = GeneralValidations(generals, out string generalMessage);
+            bool isContactValidated = ContactsValidations(contacts, out string contactMessage);
+            bool isAddressValidated = AddressValidation(address, out string addressMessage);
 
             List<string> errorMessages = new List<string>();
 
@@ -2319,11 +2316,21 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 string fullMessage = string.Join("\n• ", errorMessages.Where(m => !string.IsNullOrWhiteSpace(m)));
                 MessageBox.Show("Please address the following issues:\n\n• " + fullMessage, "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                return false;
             }
 
             // Every blocker is clear; ask about what is merely blank.
-            if (!ConfirmBlankFields()) return;
+            return ConfirmBlankFields();
+        }
+
+        private async void btn_add_Click(object sender, EventArgs e)
+        {
+            var Bpi = Helpers.GetControlsValues(panel_header_records);
+            var Generals = Helpers.GetControlsValues(panel_general);
+            var Contacts = SaveContacts(false);
+            var Address = SaveAddress(false);
+
+            if (!ValidateForSave(Bpi, Generals, Contacts, Address)) return;
 
 
 
@@ -3711,12 +3718,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
         private async void btn_save_Click(object sender, EventArgs e)
         {
-            string generalMessage = "";
-            string bpiGeneralMessage = "";
-            string contactMessage = "";
-            string addressMessage = "";
-
-
             var bpiUC = tab_dynamic.SelectedTab.Controls.OfType<BpiBranchUC>().FirstOrDefault();
 
             if (bpiUC == null)
@@ -3737,32 +3738,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             //var Contacts = SaveContacts(false);
             //var Address = SaveAddress(false);
 
-            // Cleared per attempt: a save the user backed out of must not carry its
-            // warnings into the next one.
-            _blankFieldWarnings.Clear();
-
-            bool isBpiValidated = AddBpiIdentificationType(Bpi, out bpiGeneralMessage);
-            bool isGeneralValidated = GeneralValidations(Generals, out generalMessage);
-            bool isContactValidated = ContactsValidations(Contacts, out contactMessage);
-            bool isAddressValidated = AddressValidation(Address, out addressMessage);
-
-
-            List<string> errorMessages = new List<string>();
-
-            if (!isBpiValidated) errorMessages.Add(bpiGeneralMessage);
-            if (!isGeneralValidated) errorMessages.Add(generalMessage);
-            if (!isContactValidated) errorMessages.Add(contactMessage);
-            if (!isAddressValidated) errorMessages.Add(addressMessage);
-
-            if (errorMessages.Count > 0)
-            {
-                string fullMessage = string.Join("\n• ", errorMessages.Where(m => !string.IsNullOrWhiteSpace(m)));
-                MessageBox.Show("Please address the following issues:\n\n• " + fullMessage, "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Every blocker is clear; ask about what is merely blank.
-            if (!ConfirmBlankFields()) return;
+            if (!ValidateForSave(Bpi, Generals, Contacts, Address)) return;
 
 
             // Set parent id to 0
@@ -3919,6 +3895,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             var Address = bpiUC.GetAdressData(true);
             var Items = bpiUC.GetItemsData(true);
             var Accreditations = bpiUC.GetAccreditationData(true);
+
+            // Same checks and the same "blank. Proceed?" question as New -> Save.
+            if (!ValidateForSave(Bpi, Generals, Contacts, Address)) return;
 
             //var Generals = Helpers.GetControlsValues(panel_general);
             //var Contacts = SaveContacts(true);

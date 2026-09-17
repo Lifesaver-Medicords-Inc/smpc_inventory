@@ -790,6 +790,7 @@
     <Compile Include="Services\Setup\Boq\BoqNotesServices.cs" />
     <Compile Include="Services\Setup\Boq\BoqServices.cs" />
     <Compile Include="Services\Helpers\WebsocketServices.cs" />
+    <Compile Include="Services\Setup\Bpi\BpiAccountingSetupServices.cs" />
     <Compile Include="Services\Setup\Bpi\BpiServices.cs" />
     <Compile Include="Services\Setup\Bpi\ItemListBpiServices.cs" />
     <Compile Include="Services\Setup\Bom\BomServices.cs" />

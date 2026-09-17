@@ -39,6 +39,11 @@ namespace smpc_inventory_app.Data
         public static string BOQ_NOTES = "/setup/boq_notes";
         public static string SHIPTYPE = "/setup/shiptype";
 
+        // Accounting setup read by BPI: the GL accounts behind the ACCOUNT dropdowns and the
+        // company's VAT rate behind tax code VAT (spec 4.1.7). Both only need a login.
+        public static string CHART_OF_ACCOUNTS = "/accounting/chart_of_account";
+        public static string COMPANY_SETUP = "/accounting/company_setup";
+
         //REPORTS
         public static string REPORTS = "/setup/report";
 
