@@ -2084,17 +2084,29 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         // real error.
         private readonly List<string> _blankFieldWarnings = new List<string>();
 
-        // "No" returns to the form with nothing saved.
+        // The order the missing fields are listed in (user's order, 2026-09-17); anything not
+        // named here follows, in the order it was found.
+        private static readonly string[] BlankFieldOrder =
+        {
+            "Address", "TIN", "Main Tel No", "Industries", "Contacts",
+            "Contact Number or Email", "Entity Type", "Branch Industries",
+        };
+
+        // One list, one question. "No" returns to the form with nothing saved.
         private bool ConfirmBlankFields()
         {
             if (_blankFieldWarnings.Count == 0) return true;
 
-            string fields = string.Join(", ", _blankFieldWarnings.Distinct());
+            IEnumerable<string> fields = _blankFieldWarnings
+                .Distinct()
+                .OrderBy(f => Array.IndexOf(BlankFieldOrder, f) < 0 ? int.MaxValue : Array.IndexOf(BlankFieldOrder, f));
+
             return MessageBox.Show(
-                fields + " blank. Proceed?",
+                "This is the missing data required to fill up. Are you sure want to proceed?\n\n• "
+                    + string.Join("\n• ", fields),
                 "SMPC SOFTWARE",
                 MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question,
+                MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button1) == DialogResult.Yes;
         }
 
@@ -2132,9 +2144,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             //
             // This deviates from 4.1.3 and 4.1.4, which mark BRANCH INDUSTRY and TIN
             // required - deliberately, on the user's instruction. Address (4.1.6) and
-            // Contacts (4.1.5) still block.
+            // Contacts (4.1.5) joined this list on 2026-09-17, also on the user's
+            // instruction; see ContactsValidations and AddressValidation.
             if (string.IsNullOrWhiteSpace(industries)) _blankFieldWarnings.Add("Industries");
-            if (string.IsNullOrWhiteSpace(mainTelNo)) _blankFieldWarnings.Add("Main Tel No.");
+            if (string.IsNullOrWhiteSpace(mainTelNo)) _blankFieldWarnings.Add("Main Tel No");
             if (string.IsNullOrWhiteSpace(tin)) _blankFieldWarnings.Add("TIN");
 
             List<string> missing = new List<string>();
@@ -2211,14 +2224,24 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             && string.IsNullOrWhiteSpace(contact.email)
             && string.IsNullOrWhiteSpace(contact.name);
 
+        // Missing contact data is asked about, not refused (user decision, 2026-09-17): no
+        // contacts at all, or a contact with no number and no email, joins the "Are you sure
+        // want to proceed?" list. What still blocks is data that is wrong rather than absent -
+        // an invalid number, no default or two defaults among several contacts, and a saved
+        // contact whose every field was wiped (delete the row instead).
         private bool ContactsValidations(List<BpiContacts> records, out string contactsMessages)
         {
             contactsMessages = string.Empty;
-            // Bug #301 (Trello): zero contacts used to skip every check and save.
-            if (records.Count == 0 || records.All(IsBlankContact))
+
+            // A never-saved row with nothing in it is not a contact; sending it would store an
+            // empty one. The list is the one that gets saved, so it is removed here.
+            records.RemoveAll(c => c.contacts_id == 0 && IsBlankContact(c));
+
+            // Bug #301 (Trello): zero contacts used to skip every check and save unannounced.
+            if (records.Count == 0)
             {
-                contactsMessages = "Contacts is required";
-                return false;
+                _blankFieldWarnings.Add("Contacts");
+                return true;
             }
 
             // Whole list, all problems at once - the same reasoning as the header checks.
@@ -2236,7 +2259,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             if (records.Any(c => !IsBlankContact(c)
                                  && string.IsNullOrWhiteSpace(c.number)
                                  && string.IsNullOrWhiteSpace(c.email)))
-                problems.Add("A contact needs a number or an email");
+                _blankFieldWarnings.Add("Contact Number or Email");
 
             if (records.Any(c => !string.IsNullOrWhiteSpace(c.number) && !IsValidContactNumber(c.number)))
                 problems.Add("Invalid Contact Number");
@@ -2247,7 +2270,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 filled[0].is_default_contact = true;
             }
-            else
+            else if (filled.Count > 1)
             {
                 int defaults = filled.Count(c => c.is_default_contact);
                 if (defaults == 0)
@@ -2279,14 +2302,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private bool AddressValidation(List<BpiAddress> records, out string addressMessages)
         {
             addressMessages = string.Empty;
-            // Counts the addresses that will still exist after the save. On Update the list
-            // also carries the rows the user deleted, so a partner with every address
-            // deleted still has a non-empty list.
+
+            // A never-saved row with no address in it would be stored as an empty address.
+            records.RemoveAll(a => a.address_ids == 0 && string.IsNullOrWhiteSpace(a.location));
+
+            // No address is asked about, not refused (user decision, 2026-09-17). Counts the
+            // addresses that will still exist after the save: on Update the list also carries
+            // the rows the user deleted.
             if (!records.Any(a => !a.address_is_deleted && !string.IsNullOrWhiteSpace(a.location)))
-            {
-                addressMessages += "Address is required";
-                return false;
-            }
+                _blankFieldWarnings.Add("Address");
+
             return true;
         }
         // The one gate every save goes through. Edit -> Update never called any of this, so an
