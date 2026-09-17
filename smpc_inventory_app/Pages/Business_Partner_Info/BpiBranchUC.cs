@@ -1135,13 +1135,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 currentSelectedEntityIds.Clear();
             }
         }
-        // C# and S# are issued by the API when the partner is saved (spec 4.1.3), and it
-        // ignores any code the form sends, on create and on update. Until then the box says
-        // so. The form used to preview "C#" + a count that was never fetched here, so it
-        // always read C#1 / S#1.
-        private const string CUSTOMER_CODE_PENDING = "C# (assigned on save)";
-        private const string SUPPLIER_CODE_PENDING = "S# (assigned on save)";
-
         // The picked entity types as setup codes (SUP, CUS, TSP, NAF, AFF...), read from the
         // ids the picker stored. The picker shows names, and names differ by database -
         // "Supplier" on test_fresh, "SUPPLIER" on the rehearsal DB - so the old upper-case
@@ -1171,8 +1164,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             return codes;
         }
 
-        // The code this branch was saved with, if any - an existing customer that gains the
-        // Supplier type keeps showing its own C#.
+        // C# and S# are issued by the API when the partner is saved (spec 4.1.3) - it ignores
+        // any code the form sends, and two users saving at once take turns there - so a new
+        // partner's code box stays blank until the save returns (user instruction 2026-09-17).
+        // The form used to preview "C#" + a count that was never fetched here, so it always
+        // read C#1 / S#1. This returns the code the branch was saved with, if any: an existing
+        // customer that gains the Supplier type keeps showing its own C#.
         private string SavedCode(bool customer)
         {
             if (Records?.general == null || !int.TryParse(ParentId, out int id)) return null;
@@ -1326,12 +1323,12 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 case "SUPPLIER":
 
-                    txt_supplier_code.Text = SavedCode(customer: false) ?? SUPPLIER_CODE_PENDING;
+                    txt_supplier_code.Text = SavedCode(customer: false) ?? string.Empty;
 
                     break;
 
                 case "CUSTOMER":
-                    txt_customer_code.Text = SavedCode(customer: true) ?? CUSTOMER_CODE_PENDING;
+                    txt_customer_code.Text = SavedCode(customer: true) ?? string.Empty;
 
                     break;
 
@@ -1347,8 +1344,8 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                 case "BOTH":
 
-                    txt_customer_code.Text = SavedCode(customer: true) ?? CUSTOMER_CODE_PENDING;
-                    txt_supplier_code.Text = SavedCode(customer: false) ?? SUPPLIER_CODE_PENDING;
+                    txt_customer_code.Text = SavedCode(customer: true) ?? string.Empty;
+                    txt_supplier_code.Text = SavedCode(customer: false) ?? string.Empty;
 
                     break;
 
@@ -2113,13 +2110,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
 
             var GeneralData = Helpers.GetControlsValues(panel_general);
-
-            // The "(assigned on save)" text is not a code. The API ignores what is sent here
-            // anyway; this keeps the placeholder out of the request and the history.
-            if (GeneralData.TryGetValue("customer_code", out object customerCode) && Equals(customerCode, CUSTOMER_CODE_PENDING))
-                GeneralData["customer_code"] = string.Empty;
-            if (GeneralData.TryGetValue("supplier_code", out object supplierCode) && Equals(supplierCode, SUPPLIER_CODE_PENDING))
-                GeneralData["supplier_code"] = string.Empty;
 
             return GeneralData;
         }
