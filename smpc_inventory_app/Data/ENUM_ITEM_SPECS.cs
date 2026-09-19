@@ -102,12 +102,12 @@ namespace smpc_inventory_app.Data
         {
             IEnumerable<string> data = new List<String>()
             {
+                // "# OF PUMP/S" and "USE TYPE" removed on the user's instruction (2026-09-19),
+                // matching the sales copy (STATIC_ITEM_SPECS). Spec 4.2 still lists both.
                 "MODEL",
-                "# OF PUMP/S",
                 "VOLTAGE",
                 "CURRENT",
                 "START METHOD",
-                "USE TYPE",
                 "PHASE (1 OR 3)",
                 "WIRING DIAGRAM #",
             };
