@@ -198,6 +198,10 @@ namespace Inventory_SMPC.Pages
                 // gates itself too, for the modals that open it.
                 if (!smpc_inventory_app.Model.BpiAccess.CanOpen(CacheData.CurrentUser))
                     Sidebar.Nodes.RemoveByKey("BUSINESS PARTNER INFO");
+
+                // Everything else the position has no access to goes the same way, from the
+                // grants Admin's Access Control screen maintains. See NavigationAccess.
+                smpc_inventory_app.Model.NavigationAccess.Apply(Sidebar);
                 this.Enabled = true;
 
 
