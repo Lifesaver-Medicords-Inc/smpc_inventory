@@ -163,6 +163,25 @@ namespace Inventory_SMPC.Pages
             "LOGISTICS CALENDAR",
         };
 
+        // Purchase Requisition sits under the Purchasing heading in the designer, but raising
+        // one is not a purchasing job - the workbook lists it for warehouse, sales,
+        // engineering and accounting alike, as a top-level entry. Left where it was, a
+        // warehouse user with no purchasing screens at all still got the Purchasing heading,
+        // opened, holding this one item (user-reported 2026-09-21).
+        private void MovePurchaseRequisitionToTopLevel()
+        {
+            TreeNode[] found = Sidebar.Nodes.Find("PURCHASE REQUISITION", searchAllChildren: true);
+            if (found.Length == 0)
+                return;
+
+            TreeNode requisition = found[0];
+            if (requisition.Parent == null)
+                return; // already top level
+
+            requisition.Remove();
+            Sidebar.Nodes.Add(requisition);
+        }
+
         // Added in code rather than in the designer: they carry no form of their own yet, so
         // there is nothing for the designer to hold, and the sidebar stays one list to read.
         private void AddNotYetBuiltNodes()
@@ -245,6 +264,7 @@ namespace Inventory_SMPC.Pages
                 // Listed before the filter runs, so they are hidden or kept on the same
                 // access rules as everything else in the sidebar.
                 AddNotYetBuiltNodes();
+                MovePurchaseRequisitionToTopLevel();
 
                 // Everything else the position has no access to goes the same way, from the
                 // grants Admin's Access Control screen maintains. See NavigationAccess.

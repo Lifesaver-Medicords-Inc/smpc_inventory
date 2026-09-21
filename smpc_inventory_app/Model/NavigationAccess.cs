@@ -35,6 +35,11 @@ namespace smpc_inventory_app.Model
                 { "PURCHASING LIST", new[] { "Purchasing.Purchasing List (new)", "Purchasing.Purchasing List (old)" } },
                 { "PURCHASE ORDER", new[] { "Purchasing.Purchase Order" } },
                 { "PURCHASE REQUISITION", new[] { "Purchasing.Purchase Requisition", "Purchasing.Purchase Requisition Card (dashboard)" } },
+                // Both had a sidebar entry but no catalogue code, so they could never be
+                // hidden - and Purchase Return kept the whole Purchasing heading alive for
+                // a warehouse user, who has no purchasing screens at all bar the requisition.
+                { "PURCHASE RETURN", new[] { "Purchasing.Purchase Return" } },
+                { "PRODUCTION REPORT", new[] { "Inventory.Production Report" } },
                 { "BOM", new[] { "Engineering.BOM" } },
                 { "BOQ", new[] { "Engineering.BOQ" } },
                 { "RECEIVING REPORT", new[] { "Inventory.Receiving Report (v2)", "Inventory.Receiving Report (v1)" } },
@@ -48,7 +53,9 @@ namespace smpc_inventory_app.Model
                 { "INVENTORY REPORT LIST", new[] { "Inventory.Inventory Report (modal)" } },
                 { "ITEM REQUEST LIST", new[] { "Item Request.Item Request", "Item Request.Item Request (v2)" } },
                 { "ITEM RELEASE LIST", new[] { "Item Release.Item Release" } },
-                { "SALES ORDER LIST", new[] { "Sales Order.Order List" } },
+                // The list lives in the engineering app as well as dispatching; either grant
+                // is enough to see the entry here.
+                { "SALES ORDER LIST", new[] { "Sales Order.Order List", "Sales Order.Sales Order (Engineering)" } },
                 { "LOGISTICS CALENDAR", new[] { "Logistics Calendar.Calendar View" } },
                 { "ITEM BRAND", new[] { "Setup.Item Brand Setup" } },
                 { "ITEM CLASS", new[] { "Setup.Item Class Setup" } },
