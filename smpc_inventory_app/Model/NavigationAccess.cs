@@ -41,6 +41,15 @@ namespace smpc_inventory_app.Model
                 { "INVENTORY LOGBOOK", new[] { "Inventory.Inventory Logbook" } },
                 { "INVENTORY TRACKER", new[] { "Inventory.Inventory Tracker" } },
                 { "INVENTORY ITEM STOCKS", new[] { "Inventory.Item Stocks" } },
+                // Listed by the workbook's warehouse menu but not built here yet (see
+                // Layout.NotYetBuilt). They are gated on the codes of the screens they
+                // stand in for, which live in dispatching and engineering today, so the
+                // position that will use them is the position that sees them.
+                { "INVENTORY REPORT LIST", new[] { "Inventory.Inventory Report (modal)" } },
+                { "ITEM REQUEST LIST", new[] { "Item Request.Item Request", "Item Request.Item Request (v2)" } },
+                { "ITEM RELEASE LIST", new[] { "Item Release.Item Release" } },
+                { "SALES ORDER LIST", new[] { "Sales Order.Order List" } },
+                { "LOGISTICS CALENDAR", new[] { "Logistics Calendar.Calendar View" } },
                 { "ITEM BRAND", new[] { "Setup.Item Brand Setup" } },
                 { "ITEM CLASS", new[] { "Setup.Item Class Setup" } },
                 { "ITEM MATERIAL", new[] { "Setup.Item Material Setup" } },

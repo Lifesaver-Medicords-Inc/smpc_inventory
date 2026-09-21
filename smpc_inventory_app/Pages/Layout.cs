@@ -141,14 +141,57 @@ namespace Inventory_SMPC.Pages
 
         }
 
+        // Sidebar entries this app lists but does not implement yet.
+        //
+        // The access-level workbook's warehouse menu names screens that either live in
+        // another app today - Item Release, Sales Order List and Logistics Calendar are
+        // dispatching's, Item Request is engineering's - or exist nowhere yet, like the
+        // Inventory Report list. They are listed here so a warehouse user sees the menu the
+        // workbook describes rather than a shorter one, and opening any of them says plainly
+        // that it has not been built here yet.
+        //
+        // Deleting a name from this list is what "the module now exists" looks like: the
+        // click then falls through to RouteServices like every other entry.
+        private static readonly string[] NotYetBuilt =
+        {
+            "DASHBOARD",
+            "PURCHASE REQUISITION",
+            "INVENTORY REPORT LIST",
+            "ITEM REQUEST LIST",
+            "ITEM RELEASE LIST",
+            "SALES ORDER LIST",
+            "LOGISTICS CALENDAR",
+        };
+
+        // Added in code rather than in the designer: they carry no form of their own yet, so
+        // there is nothing for the designer to hold, and the sidebar stays one list to read.
+        private void AddNotYetBuiltNodes()
+        {
+            foreach (string name in NotYetBuilt)
+            {
+                if (Sidebar.Nodes.ContainsKey(name) || name == "DASHBOARD" || name == "PURCHASE REQUISITION")
+                    continue; // already in the designer's tree
+
+                Sidebar.Nodes.Add(name, ToTitleCase(name));
+            }
+        }
+
+        // "SALES ORDER LIST" -> "Sales Order List", to match how the designer's own entries
+        // are labelled.
+        private static string ToTitleCase(string name)
+        {
+            return System.Globalization.CultureInfo.CurrentCulture.TextInfo
+                .ToTitleCase(name.ToLowerInvariant());
+        }
+
         private void Sidebar_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            
+
             try
             {
-                if (e.Node.Name.Contains("DASHBOARD") || e.Node.Name.Contains("PURCHASE REQUISITION"))
+                if (NotYetBuilt.Any(name => string.Equals(e.Node.Name, name, StringComparison.OrdinalIgnoreCase)))
                 {
-                    Helpers.ShowDialogMessage("error", "This module is not available at the moment!");
+                    Helpers.ShowDialogMessage("error", "This module is not yet created.");
                     return;
                 }
 
@@ -198,6 +241,10 @@ namespace Inventory_SMPC.Pages
                 // gates itself too, for the modals that open it.
                 if (!smpc_inventory_app.Model.BpiAccess.CanOpen(CacheData.CurrentUser))
                     Sidebar.Nodes.RemoveByKey("BUSINESS PARTNER INFO");
+
+                // Listed before the filter runs, so they are hidden or kept on the same
+                // access rules as everything else in the sidebar.
+                AddNotYetBuiltNodes();
 
                 // Everything else the position has no access to goes the same way, from the
                 // grants Admin's Access Control screen maintains. See NavigationAccess.
