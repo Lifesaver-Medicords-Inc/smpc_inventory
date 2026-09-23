@@ -31,9 +31,10 @@ namespace smpc_inventory_app.Services.Setup.Model.Bom
         public string short_desc { get; set; }
         public int unit_price { get; set; }
         public float net_price { get; set; }
+        public string remarks { get; set; }
 
 
-        public ItemBomDetails(int id, int itemBomId, int itemId, int bomQty, int unitPrice, float netPrice)
+        public ItemBomDetails(int id, int itemBomId, int itemId, int bomQty, int unitPrice, float netPrice, string remarks)
         {
             this.id = id;
             this.item_bom_id = itemBomId;
@@ -42,6 +43,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bom
             this.size = size;
             this.net_price = netPrice;
             this.bom_qty = bomQty;
+            this.remarks = remarks;
 
         }
 

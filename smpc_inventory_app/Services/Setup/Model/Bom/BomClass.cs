@@ -41,6 +41,9 @@ namespace smpc_inventory_app.Services.Setup.Model.Bom
         public string uom_name { get; set; }
         public int unit_price { get; set; }
         public float net_price { get; set; }
+        // What the component is for on this BOM - 'Power', 'Control', 'Wye',
+        // 'Main, Delta', 'alternative models'.
+        public string remarks { get; set; }
 
     }
 }

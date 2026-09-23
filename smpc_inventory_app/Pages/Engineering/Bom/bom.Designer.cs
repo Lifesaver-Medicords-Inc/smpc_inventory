@@ -51,6 +51,7 @@ namespace smpc_inventory_app.Pages
             this.dataColumn8 = new System.Data.DataColumn();
             this.dataColumn9 = new System.Data.DataColumn();
             this.dataColumn10 = new System.Data.DataColumn();
+            this.dataColumn11 = new System.Data.DataColumn();
             this.pnl_footer = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -94,6 +95,7 @@ namespace smpc_inventory_app.Pages
             this.uom_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.unit_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.net_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl_title.SuspendLayout();
             this.pnl_label.SuspendLayout();
@@ -167,6 +169,7 @@ namespace smpc_inventory_app.Pages
             this.uom_name,
             this.unit_price,
             this.net_price,
+            this.remarks,
             this.id});
             this.dg_bom.DataSource = this.dataBindingBomComponents;
             this.dg_bom.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -201,7 +204,8 @@ namespace smpc_inventory_app.Pages
             this.dataColumn7,
             this.dataColumn8,
             this.dataColumn9,
-            this.dataColumn10});
+            this.dataColumn10,
+            this.dataColumn11});
             this.dataTable1.TableName = "TblBomComponents";
             // 
             // dataColumn1
@@ -250,6 +254,11 @@ namespace smpc_inventory_app.Pages
             // 
             this.dataColumn10.Caption = "net_price";
             this.dataColumn10.ColumnName = "net_price";
+            // 
+            // dataColumn11
+            // 
+            this.dataColumn11.Caption = "remarks";
+            this.dataColumn11.ColumnName = "remarks";
             // 
             // pnl_footer
             // 
@@ -642,6 +651,14 @@ namespace smpc_inventory_app.Pages
             this.net_price.Name = "net_price";
             this.net_price.ReadOnly = true;
             // 
+            // remarks
+            // 
+            this.remarks.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.remarks.DataPropertyName = "remarks";
+            this.remarks.FillWeight = 90F;
+            this.remarks.HeaderText = "REMARKS";
+            this.remarks.Name = "remarks";
+            // 
             // id
             // 
             this.id.DataPropertyName = "id";
@@ -725,6 +742,7 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip4;
         private System.Windows.Forms.TextBox txt_labor_rate;
         private System.Data.DataColumn dataColumn10;
+        private System.Data.DataColumn dataColumn11;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton btn_new;
         private System.Windows.Forms.ToolStripButton btn_search;
@@ -744,6 +762,7 @@ namespace smpc_inventory_app.Pages
         private System.Windows.Forms.DataGridViewTextBoxColumn uom_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn unit_price;
         private System.Windows.Forms.DataGridViewTextBoxColumn net_price;
+        private System.Windows.Forms.DataGridViewTextBoxColumn remarks;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
     }
 }

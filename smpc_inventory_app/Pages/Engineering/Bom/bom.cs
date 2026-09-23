@@ -488,7 +488,11 @@ namespace smpc_inventory_app.Pages
                 int.TryParse(row["unit_price"].ToString(), out unit_price);
                 float.TryParse(row["net_price"].ToString(), out net_price);
 
-                bomChild = new ItemBomDetails(id, item_bom_id, item_id, bom_qty, unit_price, net_price);
+                string remarks = dataSource.Columns.Contains("remarks") && !row.IsNull("remarks")
+                    ? row["remarks"].ToString()
+                    : "";
+
+                bomChild = new ItemBomDetails(id, item_bom_id, item_id, bom_qty, unit_price, net_price, remarks);
                 bomDetails.Add(bomChild);
             }
             return bomDetails;
