@@ -1830,9 +1830,36 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             select["value"] = string.Empty;
             codes.Rows.InsertAt(select, 0);
 
+            // A ComboBox only builds its Items from a DataSource once it has a
+            // BindingContext, and it inherits one from the form it sits on. Both tax code
+            // combos live on the ITEMS and FINANCE tabs, which the constructor REMOVES for a
+            // partner that does not exist yet - so on a new partner these two controls are
+            // off the form, DataSource lands on a control with no context, Items stays empty
+            // and the first SetTaxCode threw 'Value of 0 is not valid for SelectedIndex'.
+            // Its own context makes the binding independent of where the control is parented,
+            // and matches the per-combo DataTable copy above: neither combo can move the
+            // other's selection.
+            if (cmb.BindingContext == null)
+                cmb.BindingContext = new BindingContext();
+
             cmb.DataSource = codes;
             cmb.DisplayMember = "title";
             cmb.ValueMember = "value";
+        }
+
+        // Where a code sits in the list, or -1. Read off the DataTable rather than through
+        // ComboBox.FindStringExact, which answers -1 for every code while the combo's Items
+        // collection is empty - and the caller took that as "not in the list" and appended
+        // the code again on every call.
+        private static int IndexOfTaxCode(DataTable codes, string code)
+        {
+            for (int i = 0; i < codes.Rows.Count; i++)
+            {
+                if (string.Equals(codes.Rows[i]["title"]?.ToString(), code, StringComparison.OrdinalIgnoreCase))
+                    return i;
+            }
+
+            return -1;
         }
 
         // Shows a stored tax code. A code that is not on the list - a few older records hold
@@ -1845,18 +1872,26 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
             if (code.Length > 0 && cmb.DataSource is DataTable codes)
             {
-                index = cmb.FindStringExact(code);
+                // The combo is bound to this table in row order, so a row index is an item
+                // index. Adding the unknown code puts it last, which is where it will show.
+                index = IndexOfTaxCode(codes, code);
                 if (index < 0)
                 {
                     codes.Rows.Add(code, code);
-                    index = cmb.FindStringExact(code);
+                    index = codes.Rows.Count - 1;
                 }
             }
 
-            // Through -1 so the change always registers - BindControls may already have
-            // pushed text into this combo - and ApplyTaxRate runs for the code shown.
             cmb.SelectedIndex = -1;
-            cmb.SelectedIndex = Math.Max(index, 0);
+
+            // Items, never the DataTable's row count: setting SelectedIndex on a combo whose
+            // Items collection is empty throws, whatever its DataSource holds. BindTaxCodeList
+            // keeps the two in step, and this stays so that no call path can throw here again.
+            if (index >= 0 && index < cmb.Items.Count)
+                cmb.SelectedIndex = index;
+            else if (cmb.Items.Count > 0)
+                cmb.SelectedIndex = 0;
+
             ApplyTaxRate(cmb, rate);
         }
 
