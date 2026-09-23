@@ -4285,8 +4285,15 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
 
                         newTab.Controls.Add(uc);
 
+                        // IndexOfKey answers -1 when the "+" tab is not there - it is removed
+                        // while a partner is being loaded - and Insert(-1) throws
+                        // "Value of '-1' is not valid for 'index'". With no "+" tab the new
+                        // branch simply goes on the end.
                         int addIndex = tab_dynamic.TabPages.IndexOfKey("tab_add_new_branch");
-                        tab_dynamic.TabPages.Insert(addIndex, newTab);
+                        if (addIndex < 0)
+                            tab_dynamic.TabPages.Add(newTab);
+                        else
+                            tab_dynamic.TabPages.Insert(addIndex, newTab);
 
                         tab_dynamic.SelectedTab = newTab;
                         return;
