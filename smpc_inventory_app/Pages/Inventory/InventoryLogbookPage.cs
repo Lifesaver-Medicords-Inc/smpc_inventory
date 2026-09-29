@@ -16,6 +16,11 @@ namespace smpc_inventory_app.Pages.Inventory
 {
     public partial class InventoryLogbookPage : UserControl
     {
+        // Opens a page in a tab of the app hosting this one (this app and the sales app both
+        // listen), the way the other pages open documents in tabs.
+        public delegate void TriggerNewFormDelegate(string title, Control control);
+        public event TriggerNewFormDelegate TriggerNewForm;
+
         Dictionary<string, string[]> columnGroups = new Dictionary<string, string[]>()
         {
             { "TOTAL", new string[] { "in_total", "out_total" } },
@@ -489,6 +494,14 @@ namespace smpc_inventory_app.Pages.Inventory
 
             string selectedYear = cmb_year.SelectedItem.ToString();
             string selectedMonth = cmb_month.SelectedItem.ToString();
+
+            // In a tab, not a dialog (user 2026-09-29). A host that does not listen for tabs gets
+            // the builder as a dialog, as before, rather than nothing.
+            if (TriggerNewForm != null)
+            {
+                TriggerNewForm("INVENTORY REPORT", new InventoryReportPage(selectedYear, selectedMonth));
+                return;
+            }
 
             var reportForm = new InventoryReport { _selectedYear = selectedYear, _selectedMonth = selectedMonth};
 

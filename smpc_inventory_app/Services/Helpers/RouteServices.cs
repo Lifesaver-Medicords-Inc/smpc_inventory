@@ -73,6 +73,9 @@ namespace smpc_inventory_app.Services.Helpers
             { "INVENTORY ITEM STOCKS", () => new ItemStocksPage() },
             { "PRODUCTION REPORT", () => new production() },
 
+            // The Inventory Report builder, in a tab rather than a dialog (2026-09-29).
+            { "INVENTORY REPORT LIST", () => new InventoryReportPage() },
+
             // The warehouse menu's lists that live in the other apps (see HostedScreens).
             { "PURCHASE REQUISITION", HostedScreens.PurchaseRequisition },
             { "ITEM REQUEST LIST", HostedScreens.ItemRequestList },

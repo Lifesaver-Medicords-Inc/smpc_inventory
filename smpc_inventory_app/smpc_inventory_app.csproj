@@ -520,6 +520,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Pages\Hosted\HostedScreens.cs" />
+    <Compile Include="Pages\Inventory\InventoryReportPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Pages\Layout.cs">
       <SubType>Form</SubType>
     </Compile>

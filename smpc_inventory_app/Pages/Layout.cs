@@ -130,6 +130,11 @@ namespace Inventory_SMPC.Pages
                 {
                     purchasingListControl.TriggerNewForm += ShowForm;
                 }
+                // MAKE REPORT opens the report builder in a tab of its own.
+                else if (control is smpc_inventory_app.Pages.Inventory.InventoryLogbookPage logbookControl)
+                {
+                    logbookControl.TriggerNewForm += ShowForm;
+                }
             }
             catch (Exception )
             {
@@ -155,8 +160,8 @@ namespace Inventory_SMPC.Pages
         // reference to connect to this"): Item Request is engineering's, Item Release, the
         // Sales Order List and the Logistics Calendar are dispatching's - hosted in a tab here
         // (RouteServices, Pages/Hosted) - and the Inventory Report is this app's own report
-        // builder, until now reachable only from the Inventory Logbook. Added in code: the
-        // designer has nothing of its own to hold for them.
+        // builder (InventoryReportPage), until now reachable only from the Inventory Logbook.
+        // Added in code: the designer has nothing of its own to hold for them.
         private static readonly string[] WarehouseMenuNodes =
         {
             "INVENTORY REPORT LIST",
@@ -166,17 +171,6 @@ namespace Inventory_SMPC.Pages
             "LOGISTICS CALENDAR",
         };
 
-        // The Inventory Report (spec 10.3) is a builder dialog, not a page: it picks the year and
-        // month itself and writes each report out as a file, and no list of past reports is kept
-        // anywhere to show in a tab. So the entry opens the builder, as the Logbook's MAKE
-        // REPORT button does, with no period chosen in advance.
-        private void OpenInventoryReportBuilder()
-        {
-            using (var builder = new smpc_inventory_app.Pages.Inventory.InventoryLogbookModals.InventoryReport())
-            {
-                builder.ShowDialog(this);
-            }
-        }
 
         // Purchase Requisition sits under the Purchasing heading in the designer, but raising
         // one is not a purchasing job - the workbook lists it for warehouse, sales,
@@ -224,12 +218,6 @@ namespace Inventory_SMPC.Pages
                 if (NotYetBuilt.Any(name => string.Equals(e.Node.Name, name, StringComparison.OrdinalIgnoreCase)))
                 {
                     Helpers.ShowDialogMessage("error", "This module is not yet created.");
-                    return;
-                }
-
-                if (e.Node.Name == "INVENTORY REPORT LIST")
-                {
-                    OpenInventoryReportBuilder();
                     return;
                 }
 
