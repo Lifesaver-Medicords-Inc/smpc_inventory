@@ -1473,8 +1473,8 @@ namespace smpc_app.Services.Helpers
                 }
                 else if (control is DataGridView dgv) //datagridview is datagdrid
                 {   //not status since it is reversed no deletion : yes deletion
-                    dgv.AllowUserToAddRows = status.HasValue ? !status.Value : false; //outOfRange ex warning here if the dgv isnt visible/loaded
-                    dgv.AllowUserToDeleteRows = status.HasValue ? !status.Value : false;
+                    bool editable = status.HasValue ? !status.Value : false;
+                    SetGridRowEditing(dgv, editable, editable);
                     dgv.Enabled = true;
                     foreach (DataGridViewColumn col in dgv.Columns)
                     {
@@ -1523,6 +1523,70 @@ namespace smpc_app.Services.Helpers
             }
             pnl.Enabled = true;
             Console.WriteLine("]\n");
+        }
+
+        // Turns a grid's blank "new row" (AllowUserToAddRows) and row deletion on or off without
+        // the crash the Warehouse setup screen hit on Edit/Save/Cancel (user-reported
+        // 2026-09-26): ArgumentOutOfRangeException "Row index provided is out of range.
+        // Parameter name: rowIndex", thrown from inside WinForms by the AllowUserToAddRows
+        // setter. Switching it adds or removes the new row, and that throws when the grid's rows
+        // have fallen out of step with the row it thinks is current or new - on that screen the
+        // areas grid autosaves each row as it is typed and rebinds itself mid-edit, and it sits
+        // on a tab that is often not showing when Edit/Save/Cancel flips the setting.
+        //
+        //  - nothing is touched when the value is already right, so the new row is not added
+        //    and removed for no reason on every toggle;
+        //  - before the new row is taken away, an edit left open in it is dropped and the
+        //    current cell is moved off it - removing the row that holds the current cell is the
+        //    usual way into the bad index;
+        //  - if WinForms still throws, the grid is rebound to its own data source, which
+        //    rebuilds its rows in step with the data (checked 2026-09-26: rows and the new-row
+        //    index come back consistent), and the setting is applied again. An unbound grid has
+        //    nothing to rebuild from; its setting is left as WinForms left it.
+        public static void SetGridRowEditing(DataGridView dgv, bool allowAdd, bool allowDelete)
+        {
+            if (dgv == null) return;
+
+            dgv.AllowUserToDeleteRows = allowDelete;
+            if (dgv.AllowUserToAddRows == allowAdd) return;
+
+            if (!allowAdd)
+            {
+                try
+                {
+                    if (dgv.CurrentRow != null && dgv.CurrentRow.IsNewRow)
+                    {
+                        if (dgv.IsCurrentCellInEditMode) dgv.CancelEdit();
+                        dgv.CurrentCell = null;
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    // The grid would not let go of the cell (a validation handler refused);
+                    // the toggle below still gets its chance, with the recovery behind it.
+                }
+            }
+
+            try
+            {
+                dgv.AllowUserToAddRows = allowAdd;
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine(" " + dgv.Name + ".AllowUserToAddRows = " + allowAdd +
+                    " threw (" + ex.Message + "); rebinding the grid to bring its rows back in step");
+
+                object source = dgv.DataSource;
+                if (source == null) return;
+
+                string member = dgv.DataMember;
+                dgv.DataSource = null;
+                dgv.DataSource = source;
+                if (!string.IsNullOrEmpty(member)) dgv.DataMember = member;
+
+                if (dgv.AllowUserToAddRows != allowAdd)
+                    dgv.AllowUserToAddRows = allowAdd;
+            }
         }
 
         // Resolves the DataGridViewColumn back to the DataColumn it's bound to (walking
@@ -3003,8 +3067,7 @@ namespace smpc_app.Services.Helpers
                         break;
                     case DataGridView dgv:
                         dgv.ReadOnly = isReadOnly;
-                        dgv.AllowUserToAddRows = !isReadOnly;
-                        dgv.AllowUserToDeleteRows = !isReadOnly;
+                        SetGridRowEditing(dgv, !isReadOnly, !isReadOnly);
                         break;
                     case Button btn:
                         btn.Enabled = !isReadOnly;
