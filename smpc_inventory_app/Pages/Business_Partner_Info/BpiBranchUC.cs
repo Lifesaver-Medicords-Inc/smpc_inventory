@@ -33,6 +33,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         DataTable items;
         DataTable finance;
         DataTable finance_pending;
+        DataTable finance_transactions;
         DataTable history;
         DataTable accreditations;
         DataTable fullAddressRecords;
@@ -139,6 +140,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 items = Helpers.SafeTable(data.items);
                 finance = Helpers.SafeTable(data.finance);
                 finance_pending = Helpers.SafeTable(data.finance_pending);
+                finance_transactions = Helpers.SafeTable(data.finance_transactions);
                 accreditations = Helpers.SafeTable(data.accreditations);
                 history = Helpers.SafeTable(data.history);
 
@@ -196,6 +198,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                     Items = Helpers.SafeTable(Records.items),
                     Finance = Helpers.SafeTable(Records.finance),
                     FinancePending = Helpers.SafeTable(Records.finance_pending),
+                    FinanceTransactions = Helpers.SafeTable(Records.finance_transactions),
                     Accreditations = Helpers.SafeTable(Records.accreditations),
                     History = Helpers.SafeTable(Records.history),
                 });
@@ -209,6 +212,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 items = tables.Items;
                 finance = tables.Finance;
                 finance_pending = tables.FinancePending;
+                finance_transactions = tables.FinanceTransactions;
                 accreditations = tables.Accreditations;
                 history = tables.History;
 
@@ -329,6 +333,16 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 }
                 dataBindingFinancePending.DataSource = dataViewFinancePending;
             }
+
+            EnsurePendingSoRefColumn();
+
+            // Fetch Bpi Finance Transactions - the same partner, as PENDING above.
+            BindFinanceTransactions(finance_transactions == null ? null : new DataView(finance_transactions)
+            {
+                RowFilter = finance_transactions.Columns.Contains("customer_id")
+                    ? "customer_id = '" + bpi.Rows[this.SelectedRecord]["id"].ToString() + "'"
+                    : ""
+            });
 
             //Fetch Bpi Accreditation
             DataView dataViewAccreditation = new DataView(accreditations);
@@ -541,6 +555,15 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             DataTable filteredPending = financePendingView.ToTable();
             dataBindingFinancePending.DataSource = filteredPending;
             ShowAccountBalance(filteredPending);
+
+            // ---- Finance Transactions ----
+            // Resolved to the partner's main branch by the view, the same way as PENDING.
+            BindFinanceTransactions(finance_transactions == null ? null : new DataView(finance_transactions)
+            {
+                RowFilter = finance_transactions.Columns.Contains("finance_transaction_branch_id")
+                    ? $"finance_transaction_branch_id = '{parentId}'"
+                    : ""
+            });
 
             // ---- Accreditations ----
             var accreditationView = new DataView(accreditations)
@@ -1925,11 +1948,82 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             ApplyTaxRateLock(code, rate);
         }
 
+        // TRANSACTIONS (spec 4.1.7): one row per finished SO - SALES ORDER, its POs (stacked), the
+        // SALES INVOICE and the PAYMENT RECEIPT, each with its date. The designer columns were
+        // never bound to anything and nothing filled the grid (user-reported 2026-09-26); the
+        // last pair was headed OFFICIAL RECEIPT, but the spec's settlement column is the Payment
+        // Receipt - the OR belongs to Billing (spec 12.5).
+        private bool _financeTransactionsGridReady;
+
+        private void EnsureFinanceTransactionsGrid()
+        {
+            if (_financeTransactionsGridReady) return;
+            _financeTransactionsGridReady = true;
+
+            DataGridView grid = dg_finance_transactions;
+            grid.AutoGenerateColumns = false;
+            grid.Columns.Clear();
+
+            void Add(string property, string header)
+            {
+                grid.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "finance_trans_" + property,
+                    DataPropertyName = property,
+                    HeaderText = header,
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                });
+            }
+
+            Add("sales_order", "SALES ORDER");
+            Add("sales_order_date", "DATE");
+            Add("purchase_orders", "PURCHASE ORDER/S");
+            Add("purchase_order_dates", "DATE");
+            Add("sales_invoices", "SALES INVOICE");
+            Add("sales_invoice_dates", "DATE");
+            Add("payment_receipts", "PAYMENT RECEIPT");
+            Add("payment_receipt_dates", "DATE");
+
+            // Several POs (or receipts) against one SO sit in the SO's own row, one per line.
+            grid.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            grid.ReadOnly = true;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+        }
+
+        private void BindFinanceTransactions(DataView rows)
+        {
+            EnsureFinanceTransactionsGrid();
+            dg_finance_transactions.DataSource = rows == null
+                ? (finance_transactions?.Clone() ?? new DataTable())
+                : rows.ToTable();
+        }
+
+        // SO REF # on PENDING (spec 4.1.7), next to QUOTE REF. The designer never had it.
+        private void EnsurePendingSoRefColumn()
+        {
+            if (dg_finance_pending.Columns.Contains("pending_so_ref")) return;
+
+            int at = dg_finance_pending.Columns.Contains("qoute_ref")
+                ? dg_finance_pending.Columns["qoute_ref"].Index + 1
+                : dg_finance_pending.Columns.Count;
+
+            dg_finance_pending.Columns.Insert(at, new DataGridViewTextBoxColumn
+            {
+                Name = "pending_so_ref",
+                DataPropertyName = "so_ref",
+                HeaderText = "SO REF",
+            });
+        }
+
         // ACCOUNT BALANCE is the total of the quotations listed under PENDING (user
         // instruction 2026-09-17). It is computed, never typed: 4.1.7 leaves only ACCOUNT,
         // PAYMENT TERMS and TAX CODE editable.
         private void ShowAccountBalance(DataTable pending)
         {
+            EnsurePendingSoRefColumn();
+
             decimal total = 0;
             if (pending != null && pending.Columns.Contains("total_price"))
             {
@@ -2155,6 +2249,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             dataBindingItems.DataSource = items.Clone();
 
             dataBindingFinancePending.DataSource = finance_pending.Clone();
+            BindFinanceTransactions(null);
             databindingAccreditation.DataSource = accreditations.Clone();
 
             RemoveSelectedDataTable(CacheData.Industries);

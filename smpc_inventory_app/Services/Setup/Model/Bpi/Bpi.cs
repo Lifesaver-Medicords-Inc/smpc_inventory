@@ -119,6 +119,8 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         public int finance_pending_branch_id { get; set; }
         public string date { get; set; }
         public string qoute_ref { get; set; }
+        // The SO made from the quote, when there is one (spec 4.1.7 SO REF #).
+        public string so_ref { get; set; }
         // double, not float: this is summed into ACCOUNT BALANCE, and a float keeps only
         // about seven digits - a 1,234,567.89 quote would total as 1,234,567.88.
         public double total_price { get; set; }
@@ -126,6 +128,25 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         public string status { get; set; }
 
     }
+    // One row of the Finance tab's TRANSACTIONS table (spec 4.1.7): a finished sales order and
+    // the documents raised against it. The *_dates hold one line per document, lined up with
+    // the document column beside them.
+    public class BpiFinanceTransaction
+    {
+        public int order_id { get; set; }
+        public string sales_order { get; set; }
+        public string sales_order_date { get; set; }
+        public string purchase_orders { get; set; }
+        public string purchase_order_dates { get; set; }
+        public string sales_invoices { get; set; }
+        public string sales_invoice_dates { get; set; }
+        public string payment_receipts { get; set; }
+        public string payment_receipt_dates { get; set; }
+        public string status { get; set; }
+        public int customer_id { get; set; }
+        public int finance_transaction_branch_id { get; set; }
+    }
+
     public class BpiAccreditation
     {
         public int bpi_accreditation_id { get; set; }
@@ -195,6 +216,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
         public List<BpiItems> items { get; set; }
         public List<BpiFinance> finance { get; set; }
         public List<BpiFinancePending> finance_pending { get; set; }
+        public List<BpiFinanceTransaction> finance_transactions { get; set; }
 
         public List<BpiAccreditation> accreditations { get; set; }
         public List<BpiHistory> history { get; set; }
@@ -293,6 +315,7 @@ namespace smpc_inventory_app.Services.Setup.Model.Bpi
             public DataTable Items { get; set; }
             public DataTable Finance { get; set; }
             public DataTable FinancePending { get; set; }
+            public DataTable FinanceTransactions { get; set; }
             public DataTable Accreditations { get; set; }
             public DataTable History { get; set; }
         }
