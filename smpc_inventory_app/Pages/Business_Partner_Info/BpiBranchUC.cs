@@ -167,8 +167,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[BindFromPreloadedData] {ex.Message}");
-                MessageBox.Show("Failed to bind branch data.");
+                Debug.WriteLine($"[BindFromPreloadedData] {ex}");
+                // Say what went wrong. The bare message gave no way to tell one failure from
+                // another, and finding this one took reproducing the page offline.
+                MessageBox.Show("Failed to bind branch data." + Environment.NewLine + Environment.NewLine + ex.Message);
             }
         }
         private async Task LoadBpidData()
@@ -624,8 +626,15 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 bool exists = combo.Items.Cast<DataRowView>()
                     .Any(drv => Convert.ToInt32(drv[combo.ValueMember]) == value);
 
-                combo.SelectedValue = exists ? (object)value : (combo.Items.Count > 0 ? combo.Items[0] : null);
-                if (!exists && combo.Items.Count > 0)
+                // A stored id that is no longer in the list - its setup row was deleted or
+                // renumbered - shows as the "-- Select --" row. This used to assign Items[0]
+                // itself as the VALUE: an item is a DataRowView, which can never be converted
+                // to an id, so the page threw and showed only "Failed to bind branch data."
+                // (user-reported 2026-09-25: TEST CUSTOMER 1's finance ACCOUNT was id 4, from
+                // the chart of accounts replaced on 2026-09-17, whose ids now start at 40030).
+                if (exists)
+                    combo.SelectedValue = value;
+                else if (combo.Items.Count > 0)
                     combo.SelectedIndex = 0;
             }
             else if (combo.Items.Count > 0)
