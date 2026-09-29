@@ -21,7 +21,12 @@ namespace smpc_inventory_app.Pages.Purchasing
         public int Id { get; private set; }
         public string OrderNo { get; private set; }
         public string CommitmentDate { get; private set; }
+        // The assigned purchaser's employee id: what is stored and compared with the signed-in
+        // user's to tell whose the order is.
         public string Purchaser { get; private set; }
+        // Who that is - first and last name - which is what the card shows (user 2026-09-29:
+        // "assigned purchaser suppose to be name, not employee id").
+        public string PurchaserName { get; private set; }
         public int NumberOfItems { get; private set; }
         public string ProjectName { get; private set; }
         public string ItemNames { get; private set; }
@@ -29,7 +34,7 @@ namespace smpc_inventory_app.Pages.Purchasing
 
 
 
-        public PurchaseRequisitionCard(int id, string orderNo, string projectName, string commitmentDate, string purchaser, int numberOfItems, string itemNames, string customer)
+        public PurchaseRequisitionCard(int id, string orderNo, string projectName, string commitmentDate, string purchaser, int numberOfItems, string itemNames, string customer, string purchaserName = null)
         {
             InitializeComponent();
 
@@ -52,16 +57,17 @@ namespace smpc_inventory_app.Pages.Purchasing
             // unticked, and could be taken again.
             // The PR checkbox's handler is attached only in UpdateDetails (the designer does not
             // wire it), so before this a new PR card's checkbox did nothing at all.
-            UpdateDetails(orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer);
+            UpdateDetails(orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer, purchaserName);
         }
 
-        public void UpdateDetails(string orderNo, string projectName, string commitmentDate, string purchaser, int numberOfItems, string itemNames, string customer)
+        public void UpdateDetails(string orderNo, string projectName, string commitmentDate, string purchaser, int numberOfItems, string itemNames, string customer, string purchaserName = null)
         {
             // Update the properties of the card
             OrderNo = orderNo;
             ProjectName = projectName;
             CommitmentDate = commitmentDate;
             Purchaser = purchaser;
+            PurchaserName = purchaserName;
             NumberOfItems = numberOfItems;
             ItemNames = itemNames;
             Customer = customer;
@@ -72,7 +78,9 @@ namespace smpc_inventory_app.Pages.Purchasing
             lbl_commitment_date.Text = CommitmentDate;
             lbl_items_to_order.Text = NumberOfItems.ToString();
             lbl_client_name.Text = TruncateText(Customer, 10);
-            lbl_assigned_purchaser.Text = TruncateText(Purchaser, 10);
+            string shownPurchaser = PurchaserDisplayName();
+            lbl_assigned_purchaser.Text = TruncateText(shownPurchaser, 16);
+            toolTip.SetToolTip(lbl_assigned_purchaser, shownPurchaser);
 
             // Update the checkbox and label colors based on purchaser
             checkBox1.CheckedChanged -= checkBox1_CheckedChanged;
@@ -103,6 +111,24 @@ namespace smpc_inventory_app.Pages.Purchasing
             toolTip.AutoPopDelay = 5000;
             toolTip.InitialDelay = 500;
             toolTip.ReshowDelay = 200;
+        }
+
+        // The purchaser as a person: the signed-in user's own name when the order is theirs, else
+        // the name the red box list resolved, else the stored id (an older API, or an id no user
+        // has). "~" - nobody - shows as it always has.
+        private string PurchaserDisplayName()
+        {
+            if (!string.IsNullOrEmpty(Purchaser) && Purchaser == CacheData.CurrentUser?.employee_id)
+                return CurrentUserName();
+
+            return string.IsNullOrWhiteSpace(PurchaserName) ? Purchaser : PurchaserName;
+        }
+
+        private static string CurrentUserName()
+        {
+            var user = CacheData.CurrentUser;
+            string name = ((user?.first_name ?? "") + " " + (user?.last_name ?? "")).Trim();
+            return name.Length > 0 ? name : user?.employee_id;
         }
 
         private string TruncateText(string text, int maxLength)
@@ -139,7 +165,8 @@ namespace smpc_inventory_app.Pages.Purchasing
                 if (response != null && response.Success)
                 {
                     Purchaser = newPurchaser;
-                    UpdateDetails(OrderNo, ProjectName, CommitmentDate, Purchaser, NumberOfItems, ItemNames, Customer);
+                    PurchaserName = checkBox1.Checked ? CurrentUserName() : newPurchaser;
+                    UpdateDetails(OrderNo, ProjectName, CommitmentDate, Purchaser, NumberOfItems, ItemNames, Customer, PurchaserName);
 
                     MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

@@ -12,7 +12,10 @@ namespace smpc_inventory_app.Services.Setup.Model.Purchasing
         public string doc_no { get; set; }
         public string project_name { get; set; }
         public string commitment_date { get; set; }
+        // The assigned purchaser's employee id - whose order it is.
         public string purchaser { get; set; }
+        // Who that is, first and last name - what the card shows.
+        public string purchaser_name { get; set; }
         public string detail_ids { get; set; }
         public string item_ids { get; set; }
         public string item_names { get; set; }

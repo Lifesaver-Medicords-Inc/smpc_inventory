@@ -334,6 +334,10 @@ namespace Inventory_SMPC.Pages
                         string projectName = row["project_name"].ToString();
                         string commitmentDate = row["commitment_date"].ToString();
                         string purchaser = row["purchaser"].ToString();
+                        // The name to show; an API older than 2026-09-29 sends only the id.
+                        string purchaserName = purchasinglist.Columns.Contains("purchaser_name")
+                            ? row["purchaser_name"].ToString()
+                            : purchaser;
                         string itemNames = row["item_names"].ToString();
                         int numberOfItems = itemNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Length;
                         string customer = row["customer"].ToString();
@@ -347,12 +351,12 @@ namespace Inventory_SMPC.Pages
                                 if (existingCard is SalesOrderCard)
                                 {
                                     var card = (SalesOrderCard)existingCard;
-                                    card.LoadCardDetails(orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer);
+                                    card.LoadCardDetails(orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer, purchaserName);
                                 }
                             }
                             else
                             {
-                                Control card = new SalesOrderCard(id, orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer);
+                                Control card = new SalesOrderCard(id, orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer, purchaserName);
                                 card.Size = new Size(flowPanelRedBox.ClientSize.Width - flowPanelRedBox.Padding.Horizontal, 150);
                                 card.Margin = new Padding(0, 0, 0, 10);
                                 card.Tag = id;
@@ -367,13 +371,13 @@ namespace Inventory_SMPC.Pages
                                 if (existingCard is PurchaseRequisitionCard)
                                 {
                                     var card = (PurchaseRequisitionCard)existingCard;
-                                    card.UpdateDetails(orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer);
+                                    card.UpdateDetails(orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer, purchaserName);
                                 }
                             }
                             else
                             {
 
-                                Control card = new PurchaseRequisitionCard(id, orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer);
+                                Control card = new PurchaseRequisitionCard(id, orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer, purchaserName);
                                 card.Size = new Size(flowPanelRedBox.ClientSize.Width - flowPanelRedBox.Padding.Horizontal, 150);
                                 card.Margin = new Padding(0, 0, 0, 10);
                                 card.Tag = id;
