@@ -44,6 +44,14 @@ namespace smpc_inventory_app.Pages.Purchasing
             Customer = customer;
 
             toolTip = new ToolTip();
+
+            // Fill the card now. The constructor only stored the values, and the labels kept the
+            // designer's "~" until the card was refreshed by the websocket or its checkbox was
+            // ticked (user-reported 2026-09-26: no details from the start, details only after
+            // the checkbox). The same call sets the checkbox - ticked and locked when another
+            // purchaser has the order - so a new card taken by someone else used to start
+            // unticked, and could be taken again.
+            LoadCardDetails(orderNo, projectName, commitmentDate, purchaser, numberOfItems, itemNames, customer);
         }
 
         public void LoadCardDetails(string orderNo, string projectName, string commitmentDate, string purchaser, int numberOfItems, string itemNames, string customer)
