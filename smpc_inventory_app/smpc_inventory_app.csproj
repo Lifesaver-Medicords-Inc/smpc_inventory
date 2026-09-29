@@ -317,6 +317,9 @@
     <Compile Include="Pages\Engineering\Bom\BomItemModal.Designer.cs">
       <DependentUpon>BomItemModal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Engineering\Bom\BomPagedSearchModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Pages\Engineering\Bom\BomSearch.cs">
       <SubType>Form</SubType>
     </Compile>

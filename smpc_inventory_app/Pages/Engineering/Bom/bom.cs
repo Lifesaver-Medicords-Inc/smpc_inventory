@@ -38,8 +38,19 @@ namespace smpc_inventory_app.Pages
         DataTable BomHead = new DataTable();
         DataTable BomDetail = new DataTable();
         DataTable bomItemList;
-        DataTable allBomItemList;
         private bool _suppressEvents = false;
+
+        // The screen holds one page of 20 BOMs (user request 2026-09-26: "optimize of BOM 5,842
+        // items and 130k for item details", "create pagination 20 item per page in BOM").
+        // selectedRecord indexes the loaded page; PREV/NEXT fetch the neighbouring page at its
+        // edges, travelling on the first/last BOM id so nothing renumbers if someone else adds
+        // or deletes a BOM meanwhile.
+        private const int LAST_ROW = -1;
+        private int _pageFirstId;
+        private int _pageLastId;
+        private bool _hasNextPage;
+        private bool _hasPrevPage;
+        private bool _isLoadingPage;
 
         public bom()
         {
@@ -59,20 +70,31 @@ namespace smpc_inventory_app.Pages
 
             dg_bom.Columns["unit_price"].DefaultCellStyle.Format = "c2";
             dg_bom.Columns["unit_price"].DefaultCellStyle.FormatProvider = pesoCulture;
+
+            // Were added inside LoadAll, so every reload stacked one more pair of handlers.
+            txt_labor_rate.EnabledChanged += (s, ev) => ApplyPesoFormat(txt_labor_rate);
+            txt_production_cost.EnabledChanged += (s, ev) => ApplyPesoFormat(txt_production_cost);
         }
 
         int selectedRecord = 0;
 
-        private async void GetBomItemList()
+        // The item picker's list (items that may take a BOM - ~4,000 rows on test_fresh). It used
+        // to be downloaded on every reload together with the all-items list (~9,800 rows), which
+        // nothing on this screen ever read. Now it is fetched the first time the picker opens,
+        // and dropped after a save or delete so the next pick sees the change.
+        private async Task EnsureBomItemList()
         {
-            var data = await ItemListBomServices.GetAsDatatable();
-            bomItemList = data;
-        }
+            if (bomItemList != null && bomItemList.Rows.Count > 0) return;
 
-        private async void GetAllBomItemList()
-        {
-            var data = await ItemListBomServices.GetAllAsDatatable();
-            allBomItemList = data;
+            Helpers.Loading.ShowLoading(dg_bom);
+            try
+            {
+                bomItemList = await ItemListBomServices.GetAsDatatable();
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(dg_bom);
+            }
         }
 
         private void ApplyPesoFormat(params TextBox[] textBoxes)
@@ -219,8 +241,10 @@ namespace smpc_inventory_app.Pages
         //    cmb_production_type.SelectedIndex = 0;
         //}
 
-        private void btn_get_item_Click(object sender, EventArgs e)
+        private async void btn_get_item_Click(object sender, EventArgs e)
         {
+            await EnsureBomItemList();
+
             List<int> t1 = new List<int>();
             List<string> s1 = new List<string>();
             string Title = "Item";
@@ -246,26 +270,14 @@ namespace smpc_inventory_app.Pages
             dataBindingBomComponents.DataSource = BomDetail.Clone();
         }
 
-        private void btn_close_Click(object sender, EventArgs e)
+        private async void btn_close_Click(object sender, EventArgs e)
         {
             BtnToogle(false);
 
-            LoadAll();
+            await ReloadCurrentPage();
         }
 
-        private void btn_prev_Click(object sender, EventArgs e)
-        {
-            if (this.selectedRecord > 0)
-            {
-                this.selectedRecord--;
-                Bind(true);
-                ApplyPesoFormat(txt_labor_rate, txt_production_cost);
-            }
-            else
-            {
-                MessageBox.Show("No record found", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
+        private async void btn_prev_Click(object sender, EventArgs e) => await ChangeRecord(-1);
 
         private async void btn_delete_Click(object sender, EventArgs e)
         {
@@ -295,8 +307,7 @@ namespace smpc_inventory_app.Pages
                         if (response != null && response.Success)
                         {
                             Helpers.ShowDialogMessage("success", "BOM deleted successfully!");
-                            GetBomItemList();
-                            GetAllBomItemList();
+                            bomItemList = null;
                             Helpers.ResetControls(pnl_header);
                             BtnToogle(false);
 
@@ -307,8 +318,6 @@ namespace smpc_inventory_app.Pages
                             Helpers.Loading.HideLoading(dg_bom);
                             pnl_header.Enabled = true;
                             pnl_components.Enabled = true;
-
-                            LoadAll();
                         }
                         else
                         {
@@ -323,8 +332,13 @@ namespace smpc_inventory_app.Pages
                                         MessageBoxIcon.Error);
                     } finally
                     {
-                        LoadAll();
+                        // One reload (the success branch used to reload as well, so a delete
+                        // fetched everything twice). The page is reopened where it began: if the
+                        // deleted BOM headed it, the next one moves up; if it was the last BOM
+                        // there is, the page before it opens (FetchBomPage).
                         Helpers.Loading.HideLoading(dg_bom);
+                        pnl_components.Enabled = true;
+                        await ReloadCurrentPage();
                     }
                 }
             }
@@ -382,6 +396,9 @@ namespace smpc_inventory_app.Pages
 
             var isUpdate = !txt_id.Text.Equals("");
             var bomDetail = SaveBomDetails(isUpdate);
+            // A new BOM reopens on itself (the first row of its page); an edited one on the
+            // page it was edited on.
+            int? reopenAt = null;
 
             data.Add("bom_details", bomDetail);
             data.Remove("item_code");
@@ -395,6 +412,12 @@ namespace smpc_inventory_app.Pages
                     data.Remove("id");
                     response = await BomServices.Insert(data);
                     message = response.Success ? "Insert Bom Data Succesfully" : "Failed to add Bom\n" + response.message;
+
+                    if (response.Success)
+                    {
+                        try { reopenAt = Convert.ToInt32(response.Data?["id"]); }
+                        catch { reopenAt = null; }
+                    }
 
                     MessageBox.Show(response.Success ? "BOM saved successfully!" : "Failed to save BOM.",
                         response.Success ? "Success" : "Error",
@@ -417,6 +440,8 @@ namespace smpc_inventory_app.Pages
                     Helpers.ShowDialogMessage("error", message);
                     return;
                 }
+
+                bomItemList = null;
             }
 
             catch (Exception ex)
@@ -435,23 +460,14 @@ namespace smpc_inventory_app.Pages
                 pnl_header.Enabled = true;
                 pnl_components.Enabled = true;
 
-                LoadAll();
+                if (reopenAt.HasValue && reopenAt.Value > 0)
+                    await LoadPage(at: reopenAt.Value);
+                else
+                    await ReloadCurrentPage();
             }
         }
 
-        private void btn_next_Click(object sender, EventArgs e)
-        {
-            if (this.BomHead.Rows.Count - 1 > this.selectedRecord)
-            {
-                this.selectedRecord++;
-                Bind(true);
-                ApplyPesoFormat(txt_labor_rate, txt_production_cost);
-            }
-            else
-            {
-                MessageBox.Show("No record found", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
+        private async void btn_next_Click(object sender, EventArgs e) => await ChangeRecord(1);
 
         private List<ItemBomDetails> SaveBomDetails(bool isUpdate)
         {
@@ -498,30 +514,28 @@ namespace smpc_inventory_app.Pages
             return bomDetails;
         }
          
-        private void bom_Load(object sender, EventArgs e)
+        private async void bom_Load(object sender, EventArgs e)
         {
-            LoadAll();
+            await LoadPage();
         }
 
-        private async void LoadAll()
+        // This used to call GET /setup/bom: every BOM head and every component line in the
+        // system - 5,842 heads and 130,379 lines on test_fresh - to show one BOM. It now loads
+        // the page of 20 it needs (GET /setup/bom/paged), in the same bom_head/bom_details shape.
+        // after/before/at are BOM ids, not page numbers - see BomServices.GetPaged. selectRow
+        // indexes the NEW page; LAST_ROW lands on its end, which PREV into the page before wants.
+        private async Task FetchBomPage(int? after, int? before, int? at, int selectRow)
         {
-            Helpers.Loading.ShowLoading(dg_bom);
-
-            GetBomItemList();
-            GetAllBomItemList();
             BtnToogle(false);
 
-            var response = await RequestToApi<ApiResponseModel<BomClass>>.Get(ENUM_ENDPOINT.BOM);
-            records = response?.Data;
+            var result = await BomServices.GetPaged(after, before, at);
+            records = result?.Data;
 
             // A failed or empty BOM response used to walk straight into
             // records.bom_head, and from there into ToDataTable with a null list -
-            // NullReferenceException on opening the screen. It also left the "Fetching
-            // data..." overlay up permanently, because HideLoading only runs at the very
-            // end of this method.
+            // NullReferenceException on opening the screen.
             if (records == null)
             {
-                Helpers.Loading.HideLoading(dg_bom);
                 Helpers.ShowDialogMessage("error",
                     "The service is busy right now, so the bill of materials could not be loaded. Please try again in a moment.");
                 return;
@@ -534,37 +548,108 @@ namespace smpc_inventory_app.Pages
             if (records.bom_head == null) records.bom_head = new List<BomHead>();
             if (records.bom_details == null) records.bom_details = new List<BomDetail>();
 
+            // Reopened at a BOM that no longer exists and had nothing after it - the last BOM
+            // was just deleted: show the page before it instead of an empty screen.
+            if (records.bom_head.Count == 0 && at.HasValue && at.Value > 0)
+            {
+                await FetchBomPage(null, at.Value, null, LAST_ROW);
+                return;
+            }
+
+            _hasNextPage = result.Pagination?.has_next ?? false;
+            _hasPrevPage = result.Pagination?.has_prev ?? false;
+
             BomHead = JsonHelper.ToDataTable(records.bom_head);
             BomDetail = JsonHelper.ToDataTable(records.bom_details);
 
-            //Ensure selectedRecord is always valid
             if (BomHead.Rows.Count == 0)
             {
-                this.selectedRecord = -1; // nothing to bind
-            }
-            // BUG (live crash: "There is no row at position -1"): was
-            // "this.selectedRecord >= BomHead.Rows.Count" only - catches selectedRecord
-            // being too HIGH (e.g. the list got shorter), but not too LOW. If the list
-            // was ever empty, selectedRecord gets set to -1 above; if a later
-            // load/refresh finds rows again without selectedRecord happening to still be
-            // >= the new Count, that stale -1 survives untouched and FetchAllChilds
-            // indexes BomHead.Rows[-1].
-            else if (this.selectedRecord < 0 || this.selectedRecord >= BomHead.Rows.Count)
-            {
-                this.selectedRecord = 0; // fallback to first row
+                // Nothing to bind. (A stale -1 here used to survive into a later load that did
+                // find rows, and FetchAllChilds then indexed BomHead.Rows[-1] - the live crash
+                // "There is no row at position -1"; selectedRecord is now always set below.)
+                this.selectedRecord = -1;
+                _pageFirstId = 0;
+                _pageLastId = 0;
+                Helpers.ResetControls(pnl_header);
+                dataBindingBomComponents.DataSource = BomDetail.Clone();
+                return;
             }
 
-            if (records.bom_head.Count != 0 && records.bom_details.Count != 0)
-            {
-                Bind(true);
-            }
+            _pageFirstId = records.bom_head.First().id;
+            _pageLastId = records.bom_head.Last().id;
+            this.selectedRecord = selectRow == LAST_ROW
+                ? BomHead.Rows.Count - 1
+                : Math.Min(Math.Max(selectRow, 0), BomHead.Rows.Count - 1);
 
+            // Was bound only when the load also carried component lines, so a page whose BOMs
+            // had none showed nothing at all. The header binds on its own.
+            Bind(true);
             ApplyPesoFormat(txt_labor_rate, txt_production_cost);
-            // Also handle if Enabled changes later
-            txt_labor_rate.EnabledChanged += (s, ev) => ApplyPesoFormat(txt_labor_rate);
-            txt_production_cost.EnabledChanged += (s, ev) => ApplyPesoFormat(txt_production_cost);
+        }
 
-            Helpers.Loading.HideLoading(dg_bom);
+        // Every page turn is a round trip, so it gets the loading screen. A second click while
+        // one is on its way is dropped rather than queued behind it.
+        private async Task LoadPage(int? after = null, int? before = null, int? at = null, int selectRow = 0)
+        {
+            if (_isLoadingPage) return;
+            _isLoadingPage = true;
+
+            Helpers.Loading.ShowLoading(dg_bom);
+            try
+            {
+                await FetchBomPage(after, before, at, selectRow);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ShowDialogMessage("error", "Failed to load the bill of materials.\n" + ex.Message);
+            }
+            finally
+            {
+                Helpers.Loading.HideLoading(dg_bom);
+                _isLoadingPage = false;
+            }
+        }
+
+        // The page on screen again, on the same row - after Close, Save of an existing BOM, or
+        // Delete. Opening at the page's first id keeps it the same 20 unless one of them is gone.
+        private Task ReloadCurrentPage()
+        {
+            if (_pageFirstId > 0)
+                return LoadPage(at: _pageFirstId, selectRow: Math.Max(this.selectedRecord, 0));
+
+            return LoadPage();
+        }
+
+        // Walks within the loaded page, and fetches the next or previous one at its edges.
+        private async Task ChangeRecord(int step)
+        {
+            if (_isLoadingPage) return;
+
+            int newIndex = this.selectedRecord + step;
+
+            if (BomHead.Rows.Count == 0
+                || (newIndex < 0 && !_hasPrevPage)
+                || (newIndex >= BomHead.Rows.Count && !_hasNextPage))
+            {
+                MessageBox.Show("No record found", "SMPC SOFTWARE", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (newIndex < 0)
+            {
+                await LoadPage(before: _pageFirstId, selectRow: LAST_ROW);
+                return;
+            }
+
+            if (newIndex >= BomHead.Rows.Count)
+            {
+                await LoadPage(after: _pageLastId);
+                return;
+            }
+
+            this.selectedRecord = newIndex;
+            Bind(true);
+            ApplyPesoFormat(txt_labor_rate, txt_production_cost);
         }
 
         private void Bind(bool isBind = false)
@@ -596,42 +681,21 @@ namespace smpc_inventory_app.Pages
             dataBindingBomComponents.DataSource = filteredTable;
         }
 
-        private void btn_search_Click(object sender, EventArgs e)
+        // Searches every BOM on the server (BomPagedSearchModal), then opens the page that starts
+        // at the chosen one. The old BomSearch filtered the downloaded heads - now only the 20 on
+        // screen - and it also refused to open until the unrelated item-picker list had arrived.
+        private async void btn_search_Click(object sender, EventArgs e)
         {
-            if (bomItemList == null || bomItemList.Rows.Count == 0)
+            int chosenId;
+            using (BomPagedSearchModal bomSearch = new BomPagedSearchModal())
             {
-                MessageBox.Show("No items available for selection.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                if (bomSearch.ShowDialog() != DialogResult.OK || bomSearch.SelectedBomId <= 0)
+                    return;
+
+                chosenId = bomSearch.SelectedBomId;
             }
 
-            string[] columnsToShow = { "item_id", "general_name", "item_code", "item_model", "short_desc" };
-
-            using (BomSearch bomSearch = new BomSearch("Search Items", BomHead, columnsToShow))
-            {
-                if (bomSearch.ShowDialog() == DialogResult.OK && bomSearch.SelectedItem != null)
-                {
-                    // get item_id from the selected row
-                    string selectedItemId = bomSearch.SelectedItem["item_id"].ToString();
-
-                    // assign it into txt_item_id
-                    txt_item_id.Text = selectedItemId;
-
-                    // find the corresponding record in BomHead
-                    DataRow[] foundRows = BomHead.Select($"item_id = '{selectedItemId}'");
-                    if (foundRows.Length > 0)
-                    {
-                        // get the index of that row
-                        this.selectedRecord = BomHead.Rows.IndexOf(foundRows[0]);
-
-                        // bind to panel
-                        Bind(true);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Selected item not found in BOM records.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
+            await LoadPage(at: chosenId);
         }
 
         private void CalculateProductionCost()

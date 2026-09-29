@@ -33,6 +33,9 @@ namespace smpc_inventory_app.Data
         public static string SOCIALS = "/setup/social";
         public static string POSITION = "/setup/position";
         public static string BOM = "/setup/bom";
+        // The BOM screen, 20 BOMs a page, and its server-side Search (2026-09-26).
+        public static string BOM_PAGED = "/setup/bom/paged";
+        public static string BOM_SEARCH = "/setup/bom/search";
         public static string BomItemList = "/setup/bom/item_list";
         public static string BomAllItemList = "/setup/all_bom/item_list";
         public static string BOQ = "/setup/boq";
