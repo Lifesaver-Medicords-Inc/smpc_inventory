@@ -34,7 +34,7 @@ namespace Inventory_SMPC.Pages
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Business Partner Info");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Purchasing List");
             System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Purchase Order");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Purchase Reqiusition");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Purchase Requisition");
             System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Purchase Return");
             System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Purchasing", new System.Windows.Forms.TreeNode[] {
             treeNode4,
@@ -257,7 +257,7 @@ namespace Inventory_SMPC.Pages
             treeNode5.Name = "PURCHASE ORDER";
             treeNode5.Text = "Purchase Order";
             treeNode6.Name = "PURCHASE REQUISITION";
-            treeNode6.Text = "Purchase Reqiusition";
+            treeNode6.Text = "Purchase Requisition";
             treeNode7.Name = "PURCHASE RETURN";
             treeNode7.Text = "Purchase Return";
             treeNode8.Name = "parent";

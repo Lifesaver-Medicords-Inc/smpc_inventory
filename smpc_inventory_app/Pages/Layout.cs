@@ -141,27 +141,42 @@ namespace Inventory_SMPC.Pages
 
         }
 
-        // Sidebar entries this app lists but does not implement yet.
-        //
-        // The access-level workbook's warehouse menu names screens that either live in
-        // another app today - Item Release, Sales Order List and Logistics Calendar are
-        // dispatching's, Item Request is engineering's - or exist nowhere yet, like the
-        // Inventory Report list. They are listed here so a warehouse user sees the menu the
-        // workbook describes rather than a shorter one, and opening any of them says plainly
-        // that it has not been built here yet.
-        //
-        // Deleting a name from this list is what "the module now exists" looks like: the
-        // click then falls through to RouteServices like every other entry.
+        // Sidebar entries this app lists but does not implement yet. Opening one says plainly
+        // that it has not been built. Deleting a name from this list is what "the module now
+        // exists" looks like: the click then falls through to RouteServices like every other
+        // entry.
         private static readonly string[] NotYetBuilt =
         {
             "DASHBOARD",
-            "PURCHASE REQUISITION",
+        };
+
+        // The access-level workbook's warehouse menu, beyond what the designer's tree holds.
+        // They open screens that live elsewhere (2026-09-29, "search on the system and
+        // reference to connect to this"): Item Request is engineering's, Item Release, the
+        // Sales Order List and the Logistics Calendar are dispatching's - hosted in a tab here
+        // (RouteServices, Pages/Hosted) - and the Inventory Report is this app's own report
+        // builder, until now reachable only from the Inventory Logbook. Added in code: the
+        // designer has nothing of its own to hold for them.
+        private static readonly string[] WarehouseMenuNodes =
+        {
             "INVENTORY REPORT LIST",
             "ITEM REQUEST LIST",
             "ITEM RELEASE LIST",
             "SALES ORDER LIST",
             "LOGISTICS CALENDAR",
         };
+
+        // The Inventory Report (spec 10.3) is a builder dialog, not a page: it picks the year and
+        // month itself and writes each report out as a file, and no list of past reports is kept
+        // anywhere to show in a tab. So the entry opens the builder, as the Logbook's MAKE
+        // REPORT button does, with no period chosen in advance.
+        private void OpenInventoryReportBuilder()
+        {
+            using (var builder = new smpc_inventory_app.Pages.Inventory.InventoryLogbookModals.InventoryReport())
+            {
+                builder.ShowDialog(this);
+            }
+        }
 
         // Purchase Requisition sits under the Purchasing heading in the designer, but raising
         // one is not a purchasing job - the workbook lists it for warehouse, sales,
@@ -182,14 +197,12 @@ namespace Inventory_SMPC.Pages
             Sidebar.Nodes.Add(requisition);
         }
 
-        // Added in code rather than in the designer: they carry no form of their own yet, so
-        // there is nothing for the designer to hold, and the sidebar stays one list to read.
-        private void AddNotYetBuiltNodes()
+        private void AddWarehouseMenuNodes()
         {
-            foreach (string name in NotYetBuilt)
+            foreach (string name in WarehouseMenuNodes)
             {
-                if (Sidebar.Nodes.ContainsKey(name) || name == "DASHBOARD" || name == "PURCHASE REQUISITION")
-                    continue; // already in the designer's tree
+                if (Sidebar.Nodes.ContainsKey(name))
+                    continue; // already in the tree
 
                 Sidebar.Nodes.Add(name, ToTitleCase(name));
             }
@@ -211,6 +224,12 @@ namespace Inventory_SMPC.Pages
                 if (NotYetBuilt.Any(name => string.Equals(e.Node.Name, name, StringComparison.OrdinalIgnoreCase)))
                 {
                     Helpers.ShowDialogMessage("error", "This module is not yet created.");
+                    return;
+                }
+
+                if (e.Node.Name == "INVENTORY REPORT LIST")
+                {
+                    OpenInventoryReportBuilder();
                     return;
                 }
 
@@ -263,7 +282,7 @@ namespace Inventory_SMPC.Pages
 
                 // Listed before the filter runs, so they are hidden or kept on the same
                 // access rules as everything else in the sidebar.
-                AddNotYetBuiltNodes();
+                AddWarehouseMenuNodes();
                 MovePurchaseRequisitionToTopLevel();
 
                 // Everything else the position has no access to goes the same way, from the
