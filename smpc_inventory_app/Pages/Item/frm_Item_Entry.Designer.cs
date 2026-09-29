@@ -72,11 +72,11 @@
             this.txt_additional_specs_based_id = new System.Windows.Forms.TextBox();
             this.txt_weight = new System.Windows.Forms.TextBox();
             this.txt_volume = new System.Windows.Forms.TextBox();
-            this.txt_liquid_type = new System.Windows.Forms.TextBox();
+            this.cmb_liquid_type = new System.Windows.Forms.ComboBox();
             this.txt_service_factor = new System.Windows.Forms.TextBox();
-            this.txt_motor_manufacturer = new System.Windows.Forms.TextBox();
-            this.txt_motor_enclosure = new System.Windows.Forms.TextBox();
-            this.txt_driver_type = new System.Windows.Forms.TextBox();
+            this.cmb_motor_manufacturer = new System.Windows.Forms.ComboBox();
+            this.cmb_motor_enclosure = new System.Windows.Forms.ComboBox();
+            this.cmb_driver_type = new System.Windows.Forms.ComboBox();
             this.txt_suction_pressure = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
@@ -580,11 +580,11 @@
             this.pnl_additional_specs.Controls.Add(this.txt_additional_specs_based_id);
             this.pnl_additional_specs.Controls.Add(this.txt_weight);
             this.pnl_additional_specs.Controls.Add(this.txt_volume);
-            this.pnl_additional_specs.Controls.Add(this.txt_liquid_type);
+            this.pnl_additional_specs.Controls.Add(this.cmb_liquid_type);
             this.pnl_additional_specs.Controls.Add(this.txt_service_factor);
-            this.pnl_additional_specs.Controls.Add(this.txt_motor_manufacturer);
-            this.pnl_additional_specs.Controls.Add(this.txt_motor_enclosure);
-            this.pnl_additional_specs.Controls.Add(this.txt_driver_type);
+            this.pnl_additional_specs.Controls.Add(this.cmb_motor_manufacturer);
+            this.pnl_additional_specs.Controls.Add(this.cmb_motor_enclosure);
+            this.pnl_additional_specs.Controls.Add(this.cmb_driver_type);
             this.pnl_additional_specs.Controls.Add(this.txt_suction_pressure);
             this.pnl_additional_specs.Controls.Add(this.label19);
             this.pnl_additional_specs.Controls.Add(this.label15);
@@ -857,12 +857,14 @@
             this.txt_volume.Size = new System.Drawing.Size(110, 20);
             this.txt_volume.TabIndex = 118;
             // 
-            // txt_liquid_type
+            // cmb_liquid_type
             // 
-            this.txt_liquid_type.Location = new System.Drawing.Point(188, 177);
-            this.txt_liquid_type.Name = "txt_liquid_type";
-            this.txt_liquid_type.Size = new System.Drawing.Size(168, 20);
-            this.txt_liquid_type.TabIndex = 116;
+            this.cmb_liquid_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_liquid_type.FormattingEnabled = true;
+            this.cmb_liquid_type.Location = new System.Drawing.Point(188, 177);
+            this.cmb_liquid_type.Name = "cmb_liquid_type";
+            this.cmb_liquid_type.Size = new System.Drawing.Size(168, 21);
+            this.cmb_liquid_type.TabIndex = 116;
             // 
             // txt_service_factor
             // 
@@ -871,26 +873,32 @@
             this.txt_service_factor.Size = new System.Drawing.Size(168, 20);
             this.txt_service_factor.TabIndex = 114;
             // 
-            // txt_motor_manufacturer
+            // cmb_motor_manufacturer
             // 
-            this.txt_motor_manufacturer.Location = new System.Drawing.Point(188, 135);
-            this.txt_motor_manufacturer.Name = "txt_motor_manufacturer";
-            this.txt_motor_manufacturer.Size = new System.Drawing.Size(168, 20);
-            this.txt_motor_manufacturer.TabIndex = 112;
+            this.cmb_motor_manufacturer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_motor_manufacturer.FormattingEnabled = true;
+            this.cmb_motor_manufacturer.Location = new System.Drawing.Point(188, 135);
+            this.cmb_motor_manufacturer.Name = "cmb_motor_manufacturer";
+            this.cmb_motor_manufacturer.Size = new System.Drawing.Size(168, 21);
+            this.cmb_motor_manufacturer.TabIndex = 112;
             // 
-            // txt_motor_enclosure
+            // cmb_motor_enclosure
             // 
-            this.txt_motor_enclosure.Location = new System.Drawing.Point(188, 114);
-            this.txt_motor_enclosure.Name = "txt_motor_enclosure";
-            this.txt_motor_enclosure.Size = new System.Drawing.Size(168, 20);
-            this.txt_motor_enclosure.TabIndex = 110;
+            this.cmb_motor_enclosure.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_motor_enclosure.FormattingEnabled = true;
+            this.cmb_motor_enclosure.Location = new System.Drawing.Point(188, 114);
+            this.cmb_motor_enclosure.Name = "cmb_motor_enclosure";
+            this.cmb_motor_enclosure.Size = new System.Drawing.Size(168, 21);
+            this.cmb_motor_enclosure.TabIndex = 110;
             // 
-            // txt_driver_type
+            // cmb_driver_type
             // 
-            this.txt_driver_type.Location = new System.Drawing.Point(188, 93);
-            this.txt_driver_type.Name = "txt_driver_type";
-            this.txt_driver_type.Size = new System.Drawing.Size(168, 20);
-            this.txt_driver_type.TabIndex = 108;
+            this.cmb_driver_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_driver_type.FormattingEnabled = true;
+            this.cmb_driver_type.Location = new System.Drawing.Point(188, 93);
+            this.cmb_driver_type.Name = "cmb_driver_type";
+            this.cmb_driver_type.Size = new System.Drawing.Size(168, 21);
+            this.cmb_driver_type.TabIndex = 108;
             // 
             // txt_suction_pressure
             // 
@@ -3110,11 +3118,11 @@
         private System.Windows.Forms.TextBox txt_additional_specs_based_id;
         private System.Windows.Forms.TextBox txt_weight;
         private System.Windows.Forms.TextBox txt_volume;
-        private System.Windows.Forms.TextBox txt_liquid_type;
+        private System.Windows.Forms.ComboBox cmb_liquid_type;
         private System.Windows.Forms.TextBox txt_service_factor;
-        private System.Windows.Forms.TextBox txt_motor_manufacturer;
-        private System.Windows.Forms.TextBox txt_motor_enclosure;
-        private System.Windows.Forms.TextBox txt_driver_type;
+        private System.Windows.Forms.ComboBox cmb_motor_manufacturer;
+        private System.Windows.Forms.ComboBox cmb_motor_enclosure;
+        private System.Windows.Forms.ComboBox cmb_driver_type;
         private System.Windows.Forms.TextBox txt_suction_pressure;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label15;

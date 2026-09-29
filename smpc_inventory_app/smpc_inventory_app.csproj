@@ -249,6 +249,7 @@
     <Compile Include="Data\ENUM_SHIPPED_TYPE.cs" />
     <Compile Include="Data\ENUM_TAX_CODE.cs" />
     <Compile Include="Data\ENUM_WARRANTY.cs" />
+    <Compile Include="Data\STATIC_ADDITIONAL_SPECS.cs" />
     <Compile Include="Data\TableContentChanged.cs" />
     <Compile Include="Intefaces\ISetupService.cs" />
     <Compile Include="Model\NavigationAccess.cs" />

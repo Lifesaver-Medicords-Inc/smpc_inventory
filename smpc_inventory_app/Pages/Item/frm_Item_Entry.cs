@@ -76,6 +76,7 @@ namespace smpc_inventory_app.Pages.Item
         private List<PictureBox> imageBoxes = new List<PictureBox>();
         private List<int> currentSelectedPumpTypeIds = new List<int>();
         private List<int> currentSelectedTradeTypeIds = new List<int>();
+        private Dictionary<ComboBox, string[]> _fixedSpecLists;
         private Dictionary<int, string> imageFilePaths = new Dictionary<int, string>();
         private Dictionary<string, object> imageData = new Dictionary<string, object>();
         private List<Dictionary<string, object>> newbase64Images = new List<Dictionary<string, object>>();
@@ -157,6 +158,7 @@ namespace smpc_inventory_app.Pages.Item
             InitializeListViewContextMenu();
             InitializeContextMenu();
             SpecsTemplateVisibility();
+            InitializeFixedSpecLists();
         }
 
         // The standard page-wide loading screen (spec 2.1), which this page had none of.
@@ -441,6 +443,18 @@ namespace smpc_inventory_app.Pages.Item
             else
             {
                 Helpers.ResetControls(pnl_additional_specs);
+            }
+
+            // The fixed-list dropdowns are placed here rather than by BindControls, which can
+            // only select an exact entry and leaves everything else blank.
+            DataRowView savedSpec = dvAdditionalSpecs.Count > 0 ? dvAdditionalSpecs[0] : null;
+            foreach (ComboBox comboBox in _fixedSpecLists.Keys)
+            {
+                string column = comboBox.Name.Replace("cmb_", "");
+                string saved = savedSpec != null && savedSpec.DataView.Table.Columns.Contains(column)
+                    ? savedSpec[column]?.ToString()
+                    : null;
+                ShowFixedSpecValue(comboBox, saved);
             }
 
             // ---- Item Images ---- (always runs)
@@ -783,6 +797,14 @@ namespace smpc_inventory_app.Pages.Item
             additionalspecs.Remove("pump_type_compatability_id");
             additionalspecs.Remove("pump_type_compatability");
             additionalspecs["pump_type_compatibility_id"] = txt_pump_type_compatability.Tag as List<int> ?? currentSelectedPumpTypeIds;
+
+            // A fixed-list dropdown left on --SELECT-- is unanswered: it saves as nothing, not as
+            // the words "--SELECT--" (which is what Connection Type has been storing).
+            foreach (ComboBox comboBox in _fixedSpecLists.Keys)
+            {
+                if (comboBox.SelectedIndex <= 0)
+                    additionalspecs[comboBox.Name.Replace("cmb_", "")] = "";
+            }
 
             additionalspecs["weight"] = float.TryParse(additionalspecs["weight"]?.ToString(), out float weight) ? weight : 0f;
             additionalspecs["volume"] = float.TryParse(additionalspecs["volume"]?.ToString(), out float volume) ? volume : 0f;
@@ -1425,6 +1447,9 @@ namespace smpc_inventory_app.Pages.Item
 
             ResetCheckboxes(chk_is_stop_selling, chk_special_item);
 
+            foreach (ComboBox comboBox in _fixedSpecLists.Keys)
+                ShowFixedSpecValue(comboBox, null);
+
             if (dgv_template.Columns["title"] != null)
                 dgv_template.Columns["title"].ReadOnly = true;
 
@@ -1814,6 +1839,47 @@ namespace smpc_inventory_app.Pages.Item
             {
                 checkBox.Checked = false;
             }
+        }
+        // Driver Type, Motor Enclosure, Motor Manufacturer and Liquid Type: fixed lists (spec
+        // 4.2.3, 17.5), the same ones Project Quote's Advanced Conditions offers. The item keeps
+        // the text of the choice.
+        private void InitializeFixedSpecLists()
+        {
+            _fixedSpecLists = new Dictionary<ComboBox, string[]>
+            {
+                { cmb_driver_type,        STATIC_ADDITIONAL_SPECS.DRIVER_TYPE },
+                { cmb_motor_enclosure,    STATIC_ADDITIONAL_SPECS.MOTOR_ENCLOSURE },
+                { cmb_motor_manufacturer, STATIC_ADDITIONAL_SPECS.MOTOR_MANUFACTURER },
+                { cmb_liquid_type,        STATIC_ADDITIONAL_SPECS.LIQUID_TYPE },
+            };
+
+            foreach (ComboBox comboBox in _fixedSpecLists.Keys)
+                ShowFixedSpecValue(comboBox, null);
+        }
+
+        // Shows the saved value, or --SELECT-- when there is none. Matched regardless of case, so
+        // "ELECTRIC MOTOR" typed before these were dropdowns lands on "Electric Motor". A saved
+        // value that is on no list is shown as an extra entry rather than blanked: a dropdown
+        // that could not show it would write over it on the next save, with nobody the wiser.
+        private void ShowFixedSpecValue(ComboBox comboBox, string saved)
+        {
+            string[] values = _fixedSpecLists[comboBox];
+            string value = (saved ?? "").Trim();
+
+            comboBox.BeginUpdate();
+            comboBox.Items.Clear();
+            comboBox.Items.Add(STATIC_ADDITIONAL_SPECS.SELECT_TEXT);
+            comboBox.Items.AddRange(values);
+
+            int index = 0;
+            if (value.Length > 0)
+            {
+                int match = Array.FindIndex(values, v => string.Equals(v, value, StringComparison.OrdinalIgnoreCase));
+                index = match >= 0 ? match + 1 : comboBox.Items.Add(value);
+            }
+
+            comboBox.SelectedIndex = index;
+            comboBox.EndUpdate();
         }
         private void ResetPanels(params Panel[] panels)
         {
