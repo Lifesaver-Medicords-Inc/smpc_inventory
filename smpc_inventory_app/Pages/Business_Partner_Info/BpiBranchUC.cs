@@ -334,8 +334,6 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
                 dataBindingFinancePending.DataSource = dataViewFinancePending;
             }
 
-            EnsurePendingSoRefColumn();
-
             // Fetch Bpi Finance Transactions - the same partner, as PENDING above.
             BindFinanceTransactions(finance_transactions == null ? null : new DataView(finance_transactions)
             {
@@ -552,9 +550,7 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             {
                 RowFilter = $"finance_pending_branch_id = '{parentId}'"
             };
-            DataTable filteredPending = financePendingView.ToTable();
-            dataBindingFinancePending.DataSource = filteredPending;
-            ShowAccountBalance(filteredPending);
+            dataBindingFinancePending.DataSource = financePendingView.ToTable();
 
             // ---- Finance Transactions ----
             // Resolved to the partner's main branch by the view, the same way as PENDING.
@@ -1948,8 +1944,10 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             ApplyTaxRateLock(code, rate);
         }
 
-        // TRANSACTIONS (spec 4.1.7): one row per finished SO - SALES ORDER, its POs (stacked), the
-        // SALES INVOICE and the PAYMENT RECEIPT, each with its date. The designer columns were
+        // TRANSACTIONS (spec 4.1.7): one row per SO - SALES ORDER, its POs (stacked), the SALES
+        // INVOICE and the PAYMENT RECEIPT, each with its date - then what the SO is worth, what
+        // was paid on its invoices and the BALANCE, which ACCOUNT BALANCE adds up. Every SO since
+        // 2026-09-29 (user instruction), not only the finished ones. The designer columns were
         // never bound to anything and nothing filled the grid (user-reported 2026-09-26); the
         // last pair was headed OFFICIAL RECEIPT, but the spec's settlement column is the Payment
         // Receipt - the OR belongs to Billing (spec 12.5).
@@ -1964,15 +1962,22 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             grid.AutoGenerateColumns = false;
             grid.Columns.Clear();
 
-            void Add(string property, string header)
+            void Add(string property, string header, bool amount = false)
             {
-                grid.Columns.Add(new DataGridViewTextBoxColumn
+                var column = new DataGridViewTextBoxColumn
                 {
                     Name = "finance_trans_" + property,
                     DataPropertyName = property,
                     HeaderText = header,
                     SortMode = DataGridViewColumnSortMode.NotSortable,
-                });
+                };
+                if (amount)
+                {
+                    column.DefaultCellStyle.Format = "N2";
+                    column.DefaultCellStyle.FormatProvider = CultureInfo.GetCultureInfo("en-PH");
+                    column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopRight;
+                }
+                grid.Columns.Add(column);
             }
 
             Add("sales_order", "SALES ORDER");
@@ -1983,6 +1988,9 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
             Add("sales_invoice_dates", "DATE");
             Add("payment_receipts", "PAYMENT RECEIPT");
             Add("payment_receipt_dates", "DATE");
+            Add("total_amount_due", "TOTAL AMOUNT DUE", amount: true);
+            Add("paid", "PAID", amount: true);
+            Add("balance", "BALANCE", amount: true);
 
             // Several POs (or receipts) against one SO sit in the SO's own row, one per line.
             grid.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
@@ -1995,42 +2003,27 @@ namespace smpc_inventory_app.Pages.Business_Partner_Info
         private void BindFinanceTransactions(DataView rows)
         {
             EnsureFinanceTransactionsGrid();
-            dg_finance_transactions.DataSource = rows == null
+            DataTable bound = rows == null
                 ? (finance_transactions?.Clone() ?? new DataTable())
                 : rows.ToTable();
+            dg_finance_transactions.DataSource = bound;
+            ShowAccountBalance(bound);
         }
 
-        // SO REF # on PENDING (spec 4.1.7), next to QUOTE REF. The designer never had it.
-        private void EnsurePendingSoRefColumn()
-        {
-            if (dg_finance_pending.Columns.Contains("pending_so_ref")) return;
-
-            int at = dg_finance_pending.Columns.Contains("qoute_ref")
-                ? dg_finance_pending.Columns["qoute_ref"].Index + 1
-                : dg_finance_pending.Columns.Count;
-
-            dg_finance_pending.Columns.Insert(at, new DataGridViewTextBoxColumn
-            {
-                Name = "pending_so_ref",
-                DataPropertyName = "so_ref",
-                HeaderText = "SO REF",
-            });
-        }
-
-        // ACCOUNT BALANCE is the total of the quotations listed under PENDING (user
-        // instruction 2026-09-17). It is computed, never typed: 4.1.7 leaves only ACCOUNT,
+        // ACCOUNT BALANCE is what the partner owes: the sum of the BALANCE column under
+        // TRANSACTIONS - every sales order, less what was paid on its invoices (user
+        // instruction 2026-09-29; it was the total of the quotes under PENDING, 2026-09-17,
+        // but a quote is not owed). It is computed, never typed: 4.1.7 leaves only ACCOUNT,
         // PAYMENT TERMS and TAX CODE editable.
-        private void ShowAccountBalance(DataTable pending)
+        private void ShowAccountBalance(DataTable transactions)
         {
-            EnsurePendingSoRefColumn();
-
             decimal total = 0;
-            if (pending != null && pending.Columns.Contains("total_price"))
+            if (transactions != null && transactions.Columns.Contains("balance"))
             {
-                foreach (DataRow row in pending.Rows)
+                foreach (DataRow row in transactions.Rows)
                 {
-                    if (!row.IsNull("total_price"))
-                        total += Convert.ToDecimal(row["total_price"], CultureInfo.InvariantCulture);
+                    if (!row.IsNull("balance"))
+                        total += Convert.ToDecimal(row["balance"], CultureInfo.InvariantCulture);
                 }
             }
 
