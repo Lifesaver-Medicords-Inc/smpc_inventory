@@ -40,7 +40,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.chb_combine_brand = new System.Windows.Forms.CheckBox();
             this.label12 = new System.Windows.Forms.Label();
             this.cmb_graph = new System.Windows.Forms.CheckBox();
-            this.cmb_graph_abc_analysis = new System.Windows.Forms.CheckBox();
             this.cmb_graph_charts = new System.Windows.Forms.CheckBox();
             this.btn_preview = new System.Windows.Forms.Button();
             this.btn_create = new System.Windows.Forms.Button();
@@ -81,7 +80,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.pnl_main.Controls.Add(this.btn_create);
             this.pnl_main.Controls.Add(this.btn_preview);
             this.pnl_main.Controls.Add(this.cmb_graph_charts);
-            this.pnl_main.Controls.Add(this.cmb_graph_abc_analysis);
             this.pnl_main.Controls.Add(this.cmb_graph);
             this.pnl_main.Controls.Add(this.label12);
             this.pnl_main.Controls.Add(this.chb_combine_brand);
@@ -209,16 +207,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
             this.cmb_graph.TabIndex = 36;
             this.cmb_graph.Text = "GRAPHS";
             this.cmb_graph.UseVisualStyleBackColor = true;
-            // 
-            // cmb_graph_abc_analysis
-            // 
-            this.cmb_graph_abc_analysis.AutoSize = true;
-            this.cmb_graph_abc_analysis.Location = new System.Drawing.Point(386, 506);
-            this.cmb_graph_abc_analysis.Name = "cmb_graph_abc_analysis";
-            this.cmb_graph_abc_analysis.Size = new System.Drawing.Size(102, 17);
-            this.cmb_graph_abc_analysis.TabIndex = 37;
-            this.cmb_graph_abc_analysis.Text = "ABC ANALYSIS";
-            this.cmb_graph_abc_analysis.UseVisualStyleBackColor = true;
             // 
             // cmb_graph_charts
             // 
@@ -520,7 +508,6 @@ namespace smpc_inventory_app.Pages.Inventory.InventoryLogbookModals
         private System.Windows.Forms.Button btn_create;
         private System.Windows.Forms.Button btn_preview;
         private System.Windows.Forms.CheckBox cmb_graph_charts;
-        private System.Windows.Forms.CheckBox cmb_graph_abc_analysis;
         private System.Windows.Forms.CheckBox cmb_graph;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.CheckBox chb_combine_brand;
